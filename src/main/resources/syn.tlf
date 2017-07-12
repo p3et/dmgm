@@ -1,0 +1,1285 @@
+t # 0
+v 0 B
+v 1 S
+v 2 A
+v 3 A
+v 4 A
+v 5 B
+v 6 B
+v 7 B
+v 8 B
+v 9 B
+v 10 A
+v 11 A
+v 12 A
+v 13 A
+v 14 A
+v 15 A
+v 16 B
+v 17 B
+v 18 B
+e 2 11 s
+e 1 11 1
+e 11 12 p
+e 16 7 m
+e 7 6 m
+e 12 11 p
+e 2 3 m
+e 18 9 c
+e 8 0 s
+e 3 13 m
+e 15 4 c
+e 10 15 c
+e 5 0 p
+e 5 5 l
+e 15 11 s
+e 12 11 p
+e 12 12 l
+e 2 14 m
+e 8 18 c
+e 9 8 c
+e 14 13 m
+e 4 10 c
+e 1 0 1
+e 0 5 p
+e 16 17 m
+e 16 0 s
+e 17 6 m
+e 5 0 p
+t # 1
+v 0 B
+v 1 S
+v 2 C
+v 3 A
+v 4 A
+v 5 A
+v 6 C
+v 7 C
+v 8 B
+v 9 B
+v 10 B
+v 11 B
+v 12 B
+v 13 A
+v 14 A
+v 15 C
+v 16 C
+v 17 A
+v 18 A
+v 19 A
+v 20 A
+v 21 C
+v 22 C
+v 23 C
+v 24 B
+v 25 B
+v 26 B
+v 27 C
+e 3 4 m
+e 1 14 2
+e 14 13 p
+e 1 27 2
+e 15 27 p
+e 27 15 p
+e 26 12 c
+e 11 8 s
+e 24 0 m
+e 0 10 m
+e 13 14 p
+e 4 17 m
+e 3 14 s
+e 2 6 m
+e 23 7 c
+e 22 23 c
+e 6 16 m
+e 2 27 s
+e 19 5 c
+e 20 19 c
+e 9 8 p
+e 9 9 l
+e 13 13 l
+e 13 14 p
+e 15 27 p
+e 15 15 l
+e 11 26 c
+e 12 11 c
+e 24 25 m
+e 25 10 m
+e 24 8 s
+e 3 18 m
+e 18 17 m
+e 5 20 c
+e 19 14 s
+e 2 21 m
+e 7 22 c
+e 23 27 s
+e 21 16 m
+e 1 8 2
+e 8 9 p
+e 9 8 p
+t # 2
+v 0 B
+v 1 A
+v 2 A
+v 3 A
+v 4 A
+v 5 A
+v 6 D
+v 7 C
+v 8 D
+v 9 C
+v 10 C
+v 11 C
+v 12 C
+v 13 D
+v 14 A
+v 15 B
+v 16 B
+v 17 C
+v 18 B
+v 19 S
+v 20 B
+v 21 A
+v 22 A
+v 23 A
+v 24 B
+v 25 D
+v 26 D
+v 27 D
+v 28 C
+v 29 D
+v 30 C
+v 31 D
+v 32 D
+v 33 C
+v 34 B
+v 35 B
+v 36 B
+e 23 14 c
+e 2 1 p
+e 20 36 c
+e 0 34 m
+e 21 4 m
+e 29 26 p
+e 10 17 s
+e 9 12 m
+e 11 11 l
+e 8 6 m
+e 31 13 c
+e 8 29 s
+e 19 24 3
+e 18 24 p
+e 35 34 m
+e 19 1 3
+e 2 1 p
+e 36 24 s
+e 22 3 m
+e 14 5 c
+e 26 29 p
+e 10 28 c
+e 30 33 m
+e 30 17 s
+e 17 11 p
+e 8 25 m
+e 13 32 c
+e 18 18 l
+e 24 18 p
+e 36 16 c
+e 15 0 m
+e 15 24 s
+e 2 2 l
+e 4 3 m
+e 26 29 p
+e 28 7 c
+e 19 29 3
+e 30 9 m
+e 11 17 p
+e 6 27 m
+e 32 31 c
+e 5 1 s
+e 15 35 m
+e 18 24 p
+e 1 2 p
+e 16 20 c
+e 19 17 3
+e 21 22 m
+e 21 1 s
+e 5 23 c
+e 26 26 l
+e 7 10 c
+e 33 12 m
+e 11 17 p
+e 25 27 m
+e 31 29 s
+t # 3
+v 0 C
+v 1 A
+v 2 A
+v 3 A
+v 4 A
+v 5 A
+v 6 D
+v 7 E
+v 8 E
+v 9 E
+v 10 E
+v 11 E
+v 12 E
+v 13 C
+v 14 C
+v 15 C
+v 16 D
+v 17 D
+v 18 A
+v 19 B
+v 20 B
+v 21 B
+v 22 C
+v 23 C
+v 24 C
+v 25 A
+v 26 S
+v 27 A
+v 28 A
+v 29 B
+v 30 D
+v 31 D
+v 32 C
+v 33 D
+v 34 D
+v 35 C
+v 36 E
+v 37 E
+v 38 E
+v 39 D
+v 40 D
+v 41 B
+v 42 B
+v 43 B
+v 44 B
+v 45 B
+e 26 34 4
+e 3 3 l
+e 5 4 m
+e 1 2 s
+e 33 34 p
+e 32 15 c
+e 24 13 m
+e 23 22 p
+e 17 30 m
+e 9 7 s
+e 40 39 c
+e 12 12 l
+e 11 8 m
+e 29 41 p
+e 19 29 s
+e 19 20 m
+e 44 21 c
+e 35 0 m
+e 27 28 m
+e 2 3 p
+e 23 22 p
+e 37 38 m
+e 9 36 c
+e 37 7 s
+e 31 30 m
+e 7 12 p
+e 39 34 s
+e 15 14 c
+e 33 33 l
+e 27 2 s
+e 1 25 c
+e 41 29 p
+e 19 43 m
+e 26 22 4
+e 21 45 c
+e 34 33 p
+e 13 0 m
+e 27 5 m
+e 3 2 p
+e 25 18 c
+e 16 17 m
+e 14 22 s
+e 23 23 l
+e 16 34 s
+e 12 7 p
+e 37 11 m
+e 36 10 c
+e 39 6 c
+e 26 29 4
+e 41 29 p
+e 20 42 m
+e 45 44 c
+e 14 32 c
+e 26 2 4
+e 3 2 p
+e 28 4 m
+e 24 22 s
+e 16 31 m
+e 33 34 p
+e 24 35 m
+e 38 8 m
+e 10 9 c
+e 26 7 4
+e 12 7 p
+e 6 40 c
+e 18 1 c
+e 41 41 l
+e 43 42 m
+e 22 23 p
+e 44 29 s
+t # 4
+v 0 E
+v 1 D
+v 2 A
+v 3 A
+v 4 B
+v 5 B
+v 6 D
+v 7 D
+v 8 F
+v 9 E
+v 10 F
+v 11 F
+v 12 C
+v 13 B
+v 14 C
+v 15 A
+v 16 A
+v 17 A
+v 18 B
+v 19 D
+v 20 D
+v 21 E
+v 22 F
+v 23 E
+v 24 E
+v 25 C
+v 26 C
+v 27 D
+v 28 S
+v 29 A
+v 30 B
+v 31 B
+v 32 D
+v 33 D
+v 34 C
+v 35 F
+v 36 F
+v 37 E
+v 38 F
+v 39 B
+v 40 C
+v 41 C
+v 42 A
+v 43 A
+v 44 A
+v 45 F
+v 46 E
+v 47 D
+v 48 E
+v 49 F
+v 50 E
+v 51 B
+v 52 B
+v 53 C
+v 54 C
+e 17 44 c
+e 15 43 p
+e 28 43 5
+e 3 42 m
+e 12 25 s
+e 27 1 p
+e 47 33 m
+e 19 32 c
+e 14 34 c
+e 28 46 5
+e 9 50 m
+e 21 48 c
+e 8 8 l
+e 24 46 p
+e 11 35 m
+e 38 36 s
+e 4 4 l
+e 5 31 m
+e 25 53 p
+e 39 30 s
+e 12 40 m
+e 34 41 c
+e 15 15 l
+e 16 42 m
+e 44 43 s
+e 24 24 l
+e 38 45 c
+e 22 49 m
+e 22 36 s
+e 23 50 m
+e 48 46 s
+e 36 8 p
+e 27 1 p
+e 28 1 5
+e 18 51 m
+e 20 7 m
+e 32 6 c
+e 18 30 s
+e 53 25 p
+e 12 54 m
+e 39 52 c
+e 30 4 p
+e 29 43 s
+e 4 30 p
+e 22 11 m
+e 45 10 c
+e 46 24 p
+e 37 9 m
+e 48 0 c
+e 8 36 p
+e 37 46 s
+e 43 15 p
+e 29 3 m
+e 44 2 c
+e 27 27 l
+e 33 7 m
+e 6 1 s
+e 41 14 c
+e 53 25 p
+e 28 25 5
+e 40 26 m
+e 52 13 c
+e 18 5 m
+e 28 30 5
+e 2 17 c
+e 15 43 p
+e 29 16 m
+e 14 25 s
+e 8 36 p
+e 0 21 c
+e 28 36 5
+e 24 46 p
+e 49 35 m
+e 10 38 c
+e 37 23 m
+e 1 27 p
+e 47 20 m
+e 6 19 c
+e 47 1 s
+e 51 31 m
+e 53 53 l
+e 54 26 m
+e 13 39 c
+e 4 30 p
+t # 5
+v 0 E
+v 1 A
+v 2 F
+v 3 D
+v 4 F
+v 5 F
+v 6 E
+v 7 C
+v 8 D
+v 9 D
+v 10 A
+v 11 B
+v 12 B
+v 13 B
+v 14 G
+v 15 D
+v 16 C
+v 17 A
+v 18 A
+v 19 F
+v 20 G
+v 21 E
+v 22 E
+v 23 E
+v 24 C
+v 25 D
+v 26 A
+v 27 B
+v 28 C
+v 29 G
+v 30 G
+v 31 D
+v 32 B
+v 33 S
+v 34 A
+v 35 F
+v 36 F
+v 37 F
+v 38 E
+v 39 C
+v 40 C
+v 41 D
+v 42 D
+v 43 B
+v 44 B
+v 45 G
+v 46 G
+v 47 E
+v 48 A
+v 49 F
+v 50 F
+v 51 G
+v 52 A
+v 53 A
+v 54 E
+v 55 E
+v 56 C
+v 57 C
+v 58 D
+v 59 B
+v 60 B
+v 61 C
+v 62 G
+v 63 G
+e 7 28 s
+e 1 53 m
+e 20 51 p
+e 17 52 p
+e 26 48 c
+e 33 47 6
+e 44 32 s
+e 14 45 m
+e 30 46 c
+e 12 43 m
+e 11 11 l
+e 37 50 c
+e 33 8 6
+e 17 17 l
+e 18 53 m
+e 48 52 s
+e 51 20 p
+e 19 49 m
+e 35 2 p
+e 27 32 s
+e 14 62 m
+e 46 63 c
+e 38 0 m
+e 55 6 c
+e 2 35 p
+e 19 4 m
+e 50 5 c
+e 51 20 p
+e 47 23 p
+e 34 52 s
+e 45 29 m
+e 63 30 c
+e 33 28 6
+e 38 22 m
+e 8 41 p
+e 58 25 m
+e 23 47 p
+e 6 21 c
+e 3 15 c
+e 51 51 l
+e 49 36 m
+e 5 37 c
+e 2 35 p
+e 33 32 6
+e 62 29 m
+e 30 20 s
+e 37 35 s
+e 7 39 m
+e 21 55 c
+e 2 2 l
+e 4 36 m
+e 33 52 6
+e 41 8 p
+e 24 40 c
+e 28 61 p
+e 58 42 m
+e 15 31 c
+e 23 47 p
+e 0 54 m
+e 14 20 s
+e 61 28 p
+e 41 8 p
+e 40 57 c
+e 7 56 m
+e 25 9 m
+e 19 35 s
+e 55 47 s
+e 31 3 c
+e 23 23 l
+e 22 54 m
+e 32 11 p
+e 27 59 m
+e 44 60 c
+e 61 28 p
+e 41 41 l
+e 38 47 s
+e 42 9 m
+e 33 20 6
+e 3 8 s
+e 52 17 p
+e 34 1 m
+e 48 10 c
+e 57 24 c
+e 39 16 m
+e 11 32 p
+e 27 12 m
+e 60 13 c
+e 61 61 l
+e 56 16 m
+e 34 18 m
+e 17 52 p
+e 10 26 c
+e 24 28 s
+e 58 8 s
+e 33 35 6
+e 11 32 p
+e 59 43 m
+e 13 44 c
+t # 6
+v 0 A
+v 1 E
+v 2 F
+v 3 G
+v 4 A
+v 5 H
+v 6 G
+v 7 G
+v 8 H
+v 9 A
+v 10 C
+v 11 C
+v 12 C
+v 13 E
+v 14 E
+v 15 D
+v 16 D
+v 17 B
+v 18 D
+v 19 B
+v 20 S
+v 21 A
+v 22 H
+v 23 G
+v 24 G
+v 25 H
+v 26 H
+v 27 F
+v 28 F
+v 29 F
+v 30 C
+v 31 D
+v 32 E
+v 33 D
+v 34 C
+v 35 B
+v 36 B
+v 37 A
+v 38 B
+v 39 A
+v 40 A
+v 41 G
+v 42 G
+v 43 H
+v 44 F
+v 45 F
+v 46 G
+v 47 D
+v 48 C
+v 49 C
+v 50 E
+v 51 E
+v 52 E
+v 53 C
+v 54 B
+v 55 A
+v 56 B
+v 57 A
+v 58 F
+v 59 H
+v 60 G
+v 61 H
+v 62 H
+v 63 F
+v 64 F
+v 65 D
+v 66 D
+v 67 C
+v 68 E
+v 69 E
+v 70 D
+v 71 B
+v 72 B
+e 18 66 p
+e 36 54 c
+e 17 38 m
+e 50 52 s
+e 20 62 7
+e 2 27 s
+e 30 48 c
+e 67 49 m
+e 53 12 p
+e 14 14 l
+e 13 51 m
+e 15 65 m
+e 31 70 c
+e 35 71 p
+e 37 55 c
+e 39 0 p
+e 54 56 c
+e 17 72 m
+e 21 57 m
+e 20 3 7
+e 53 12 p
+e 32 52 s
+e 33 65 m
+e 70 66 s
+e 18 18 l
+e 48 10 c
+e 34 11 m
+e 71 35 p
+e 55 9 c
+e 0 39 p
+e 56 36 c
+e 38 19 m
+e 21 4 m
+e 20 27 7
+e 62 25 p
+e 61 5 c
+e 43 8 m
+e 10 12 s
+e 49 11 m
+e 47 66 s
+e 53 53 l
+e 71 35 p
+e 0 39 p
+e 72 19 m
+e 71 71 l
+e 36 35 s
+e 57 40 m
+e 5 22 c
+e 60 23 m
+e 7 24 c
+e 3 46 p
+e 43 26 m
+e 25 62 p
+e 20 52 7
+e 67 12 s
+e 9 37 c
+e 46 3 p
+e 4 40 m
+e 17 35 s
+e 0 0 l
+e 8 59 m
+e 22 61 c
+e 24 42 c
+e 60 41 m
+e 27 58 p
+e 25 62 p
+e 2 44 m
+e 29 45 c
+e 20 66 7
+e 37 39 s
+e 42 7 c
+e 21 39 s
+e 26 59 m
+e 61 62 s
+e 50 69 c
+e 25 25 l
+e 46 3 p
+e 23 6 m
+e 58 27 p
+e 2 63 m
+e 45 64 c
+e 20 12 7
+e 52 14 p
+e 32 68 m
+e 46 46 l
+e 20 35 7
+e 43 62 s
+e 69 1 c
+e 58 27 p
+e 44 28 m
+e 64 29 c
+e 41 6 m
+e 7 3 s
+e 66 18 p
+e 47 15 m
+e 32 13 m
+e 70 16 c
+e 14 52 p
+e 60 3 s
+e 20 39 7
+e 1 50 c
+e 58 58 l
+e 63 28 m
+e 29 27 s
+e 47 33 m
+e 16 31 c
+e 14 52 p
+e 68 51 m
+e 12 53 p
+e 67 34 m
+e 10 30 c
+e 18 66 p
+t # 7
+v 0 E
+v 1 A
+v 2 A
+v 3 A
+v 4 G
+v 5 G
+v 6 H
+v 7 F
+v 8 F
+v 9 G
+v 10 D
+v 11 J
+v 12 J
+v 13 J
+v 14 C
+v 15 C
+v 16 E
+v 17 E
+v 18 B
+v 19 B
+v 20 C
+v 21 A
+v 22 A
+v 23 C
+v 24 E
+v 25 E
+v 26 D
+v 27 F
+v 28 H
+v 29 H
+v 30 H
+v 31 F
+v 32 F
+v 33 G
+v 34 D
+v 35 D
+v 36 J
+v 37 J
+v 38 B
+v 39 B
+v 40 B
+v 41 E
+v 42 A
+v 43 G
+v 44 H
+v 45 H
+v 46 A
+v 47 A
+v 48 C
+v 49 C
+v 50 D
+v 51 J
+v 52 J
+v 53 J
+v 54 E
+v 55 E
+v 56 D
+v 57 F
+v 58 G
+v 59 G
+v 60 B
+v 61 C
+v 62 E
+v 63 B
+v 64 S
+v 65 A
+v 66 G
+v 67 H
+v 68 H
+v 69 H
+v 70 F
+v 71 D
+v 72 F
+v 73 G
+v 74 F
+v 75 C
+v 76 C
+v 77 D
+v 78 D
+v 79 J
+v 80 B
+v 81 B
+e 26 56 c
+e 24 54 c
+e 55 17 p
+e 62 41 m
+e 9 9 l
+e 7 74 m
+e 32 72 c
+e 27 70 p
+e 4 59 m
+e 43 58 s
+e 6 29 s
+e 34 77 p
+e 10 50 m
+e 64 80 8
+e 27 27 l
+e 56 71 c
+e 64 1 8
+e 61 20 p
+e 33 58 s
+e 31 74 m
+e 72 70 s
+e 25 16 m
+e 54 0 c
+e 55 17 p
+e 23 75 m
+e 77 34 p
+e 10 78 m
+e 64 11 8
+e 49 76 c
+e 23 15 m
+e 20 61 p
+e 81 19 c
+e 77 34 p
+e 50 35 m
+e 76 14 c
+e 71 26 c
+e 57 70 s
+e 64 29 8
+e 55 55 l
+e 41 16 m
+e 0 17 s
+e 80 38 p
+e 60 18 m
+e 64 58 8
+e 65 22 m
+e 1 46 p
+e 20 61 p
+e 19 40 c
+e 60 39 m
+e 26 34 s
+e 62 17 s
+e 75 48 m
+e 77 77 l
+e 78 35 m
+e 11 51 p
+e 79 36 m
+e 13 37 c
+e 14 49 c
+e 3 21 c
+e 38 80 p
+e 46 1 p
+e 65 47 m
+e 38 80 p
+e 40 81 c
+e 18 63 m
+e 20 20 l
+e 10 34 s
+e 64 70 8
+e 6 44 m
+e 29 67 p
+e 15 48 m
+e 49 61 s
+e 28 45 c
+e 51 11 p
+e 79 52 m
+e 37 53 c
+e 21 42 c
+e 22 2 m
+e 46 1 p
+e 81 80 s
+e 39 63 m
+e 38 38 l
+e 33 73 m
+e 43 66 c
+e 58 9 p
+e 67 29 p
+e 6 68 m
+e 64 17 8
+e 23 61 s
+e 45 69 c
+e 51 11 p
+e 36 12 m
+e 53 13 c
+e 42 3 c
+e 33 4 m
+e 47 2 m
+e 46 46 l
+e 60 80 s
+e 64 34 8
+e 69 28 c
+e 51 51 l
+e 52 12 m
+e 13 11 s
+e 72 8 c
+e 9 58 p
+e 70 27 p
+e 66 5 c
+e 67 29 p
+e 44 30 m
+e 57 7 m
+e 3 1 s
+e 5 43 c
+e 64 61 8
+e 65 1 s
+e 9 58 p
+e 8 32 c
+e 27 70 p
+e 67 67 l
+e 68 30 m
+e 73 59 m
+e 57 31 m
+e 17 55 p
+e 62 25 m
+e 0 24 c
+e 28 29 s
+e 79 11 s
+t # 8
+v 0 A
+v 1 B
+v 2 S
+v 3 E
+v 4 G
+v 5 F
+v 6 H
+v 7 J
+v 8 H
+v 9 K
+v 10 K
+v 11 K
+v 12 H
+v 13 G
+v 14 F
+v 15 F
+v 16 C
+v 17 C
+v 18 B
+v 19 B
+v 20 D
+v 21 D
+v 22 D
+v 23 A
+v 24 A
+v 25 J
+v 26 K
+v 27 K
+v 28 H
+v 29 J
+v 30 J
+v 31 F
+v 32 G
+v 33 G
+v 34 G
+v 35 E
+v 36 E
+v 37 F
+v 38 C
+v 39 C
+v 40 A
+v 41 B
+v 42 B
+v 43 D
+v 44 E
+v 45 C
+v 46 B
+v 47 E
+v 48 G
+v 49 H
+v 50 E
+v 51 F
+v 52 F
+v 53 C
+v 54 A
+v 55 A
+v 56 B
+v 57 J
+v 58 K
+v 59 K
+v 60 K
+v 61 H
+v 62 H
+v 63 J
+v 64 F
+v 65 D
+v 66 D
+v 67 D
+v 68 B
+v 69 C
+v 70 A
+v 71 A
+v 72 E
+v 73 G
+v 74 G
+v 75 J
+v 76 J
+v 77 H
+v 78 J
+v 79 K
+v 80 H
+v 81 G
+v 82 E
+v 83 F
+v 84 C
+v 85 A
+v 86 B
+v 87 D
+v 88 D
+v 89 E
+v 90 C
+e 31 64 c
+e 0 24 s
+e 7 29 s
+e 8 8 l
+e 12 61 m
+e 62 49 s
+e 2 90 9
+e 44 89 p
+e 13 81 m
+e 34 73 c
+e 32 74 p
+e 3 47 m
+e 51 14 p
+e 83 52 m
+e 36 50 c
+e 89 44 p
+e 67 22 p
+e 43 87 m
+e 65 88 c
+e 2 1 9
+e 28 49 s
+e 2 10 9
+e 64 5 c
+e 32 32 l
+e 33 81 m
+e 3 72 m
+e 73 74 s
+e 50 82 c
+e 37 15 m
+e 51 14 p
+e 48 74 s
+e 69 16 c
+e 2 24 9
+e 5 14 s
+e 2 29 9
+e 47 35 m
+e 82 36 c
+e 51 51 l
+e 52 15 m
+e 53 17 m
+e 90 45 p
+e 43 21 m
+e 22 67 p
+e 88 20 c
+e 89 44 p
+e 19 42 c
+e 45 90 p
+e 16 38 c
+e 53 39 m
+e 87 66 m
+e 20 65 c
+e 89 89 l
+e 22 67 p
+e 1 46 p
+e 86 41 m
+e 2 49 9
+e 79 26 m
+e 9 27 c
+e 10 58 p
+e 72 35 m
+e 36 44 s
+e 83 14 s
+e 42 68 c
+e 24 71 p
+e 17 84 m
+e 45 90 p
+e 86 56 m
+e 22 22 l
+e 21 66 m
+e 65 67 s
+e 38 69 c
+e 0 54 m
+e 40 55 c
+e 46 1 p
+e 2 74 9
+e 29 75 p
+e 58 10 p
+e 79 59 m
+e 7 63 m
+e 25 57 c
+e 3 44 s
+e 27 60 c
+e 45 45 l
+e 0 85 m
+e 68 19 c
+e 71 24 p
+e 39 84 m
+e 41 18 m
+e 69 90 s
+e 43 67 s
+e 55 70 c
+e 46 1 p
+e 7 76 m
+e 57 78 c
+e 58 10 p
+e 26 11 m
+e 2 14 9
+e 60 9 c
+e 75 29 p
+e 28 77 m
+e 62 80 c
+e 49 8 p
+e 54 23 m
+e 74 32 p
+e 48 13 m
+e 73 4 c
+e 9 10 s
+e 53 90 s
+e 19 1 s
+e 56 18 m
+e 2 44 9
+e 71 24 p
+e 70 40 c
+e 46 46 l
+e 8 49 p
+e 58 58 l
+e 59 11 m
+e 63 30 m
+e 78 25 c
+e 28 12 m
+e 80 6 c
+e 75 29 p
+e 85 23 m
+e 2 67 9
+e 86 1 s
+e 71 71 l
+e 40 24 s
+e 76 30 m
+e 25 29 s
+e 79 10 s
+e 8 49 p
+e 77 61 m
+e 6 62 c
+e 75 75 l
+e 5 31 c
+e 32 74 p
+e 48 33 m
+e 4 34 c
+e 14 51 p
+e 83 37 m
+t # 9
+v 0 S
+v 1 A
+v 2 A
+v 3 A
+v 4 A
+v 5 A
+v 6 A
+v 7 A
+v 8 A
+v 9 A
+e 0 4 10
+e 4 5 p
+e 5 4 p
+e 1 2 m
+e 2 6 m
+e 1 4 s
+e 8 3 c
+e 9 8 c
+e 5 4 p
+e 5 5 l
+e 1 7 m
+e 7 6 m
+e 3 9 c
+e 8 4 s
