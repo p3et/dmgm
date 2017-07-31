@@ -1,15 +1,15 @@
-package org.biiig.dmgspan.model;
+package org.biiig.dmgm.tfsm.dmg_gspan.model.labeled_graph;
 
 /**
  * Created by peet on 12.07.17.
  */
-public class Edge {
+public class LabeledEdge {
   private int source;
   private final int label;
   private int target;
   private int id;
 
-  public Edge(int id, int source, int label, int target) {
+  public LabeledEdge(int id, int source, int label, int target) {
     this.id = id;
     this.source = source;
     this.label = label;

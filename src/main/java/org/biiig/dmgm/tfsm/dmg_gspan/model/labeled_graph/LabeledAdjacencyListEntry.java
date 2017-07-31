@@ -1,9 +1,6 @@
-package org.biiig.dmgspan.model;
+package org.biiig.dmgm.tfsm.dmg_gspan.model.labeled_graph;
 
-/**
- * Created by peet on 12.07.17.
- */
-public class AdjacencyListEntry implements  Comparable<AdjacencyListEntry> {
+public class LabeledAdjacencyListEntry implements  Comparable<LabeledAdjacencyListEntry> {
   private final boolean loop;
   private final boolean outgoing;
   private final int edgeId;
@@ -11,7 +8,7 @@ public class AdjacencyListEntry implements  Comparable<AdjacencyListEntry> {
   private final int toId;
   private final int toLabel;
 
-  public AdjacencyListEntry(
+  public LabeledAdjacencyListEntry(
     boolean loop, boolean outgoing, int edgeId, int edgeLabel, int toId, int toLabel) {
     this.loop = loop;
     this.outgoing = outgoing;
@@ -42,13 +39,14 @@ public class AdjacencyListEntry implements  Comparable<AdjacencyListEntry> {
   }
 
   @Override
-  public int compareTo(AdjacencyListEntry that) {
+  public int compareTo(LabeledAdjacencyListEntry that) {
 
     int comparison;
 
     if (this.loop == that.loop) {
       if (this.outgoing == that.outgoing) {
-        comparison = this.edgeLabel - that.edgeLabel;
+
+          comparison = this.edgeLabel - that.edgeLabel;
 
         if (comparison == 0) {
           comparison = this.toLabel - that.toLabel;
@@ -65,7 +63,11 @@ public class AdjacencyListEntry implements  Comparable<AdjacencyListEntry> {
 
   @Override
   public String toString() {
-    return loop + ":" + edgeLabel + ">" + toLabel + ":" + toId;
+    return
+      (outgoing ? "-" : "<") +
+      edgeLabel +
+      (outgoing ? (loop ? "^" : ">") : "-") +
+      toId + ":" + toLabel;
   }
 
   public int getEdgeId() {

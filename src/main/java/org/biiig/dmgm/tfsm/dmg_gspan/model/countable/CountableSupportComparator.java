@@ -1,4 +1,4 @@
-package org.biiig.dmgspan.model;
+package org.biiig.dmgm.tfsm.dmg_gspan.model.countable;
 
 import java.util.Comparator;
 

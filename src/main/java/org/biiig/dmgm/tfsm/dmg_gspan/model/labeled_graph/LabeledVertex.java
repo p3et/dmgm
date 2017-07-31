@@ -1,10 +1,10 @@
-package org.biiig.dmgspan.model;
+package org.biiig.dmgm.tfsm.dmg_gspan.model.labeled_graph;
 
-public class Vertex implements Comparable<Vertex> {
+public class LabeledVertex implements Comparable<LabeledVertex> {
   private int id;
   private final int label;
 
-  public Vertex(int id, int label) {
+  public LabeledVertex(int id, int label) {
     this.id = id;
     this.label = label;
   }
@@ -19,12 +19,12 @@ public class Vertex implements Comparable<Vertex> {
 
   @Override
   public String toString() {
-    return "(" + label + ":" + id + ")";
+    return "(" + id + ":" + label + ")";
   }
 
 
   @Override
-  public int compareTo(Vertex that) {
+  public int compareTo(LabeledVertex that) {
     return this.label - that.label;
   }
 

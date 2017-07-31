@@ -1,8 +1,11 @@
-package org.biiig.dmgspan.gspan;
+package org.biiig.dmgm.tfsm.dmg_gspan.gspan;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Arrays;
+import java.util.Objects;
 
-public class DFSCode {
+public class DFSCode implements Comparable<DFSCode> {
   private static final int TRUE_VALUE = 0;
   private static final int FALSE_VALUE = 1;
   private static final int EDGE_LENGTH = 6;
@@ -15,10 +18,19 @@ public class DFSCode {
   private static final int EDGE_LABEL = 4;
   private static final int TO_LABEL = 5;
   private int[][] steps;
+  private final LexicographicDFSCodeComparator comparator = new LexicographicDFSCodeComparator();
 
   public DFSCode(int fromTime, int toTime, int fromLabel, boolean outgoing, int edgeLabel,
     int toLabel) {
 
+    int[] step = getStep(fromTime, toTime, fromLabel, outgoing, edgeLabel, toLabel);
+
+    this.steps = new int[][] {step};
+
+  }
+
+  private int[] getStep(int fromTime, int toTime, int fromLabel, boolean outgoing, int edgeLabel,
+    int toLabel) {
     int[] step = new int[EDGE_LENGTH];
 
     step[FROM_TIME] = fromTime;
@@ -27,9 +39,11 @@ public class DFSCode {
     step[OUTGOING] = outgoing ? TRUE_VALUE : FALSE_VALUE;
     step[EDGE_LABEL] = edgeLabel;
     step[TO_LABEL] = toLabel;
+    return step;
+  }
 
-    this.steps = new int[][] {step};
-
+  private DFSCode(int[][] steps) {
+    this.steps = steps;
   }
 
   public int size() {
@@ -104,5 +118,72 @@ public class DFSCode {
   @Override
   public int hashCode() {
     return Arrays.deepHashCode(steps);
+  }
+
+  @Override
+  public int compareTo(DFSCode that) {
+    return comparator.compare(this, that);
+  }
+
+  public DFSCode deepCopy() {
+    int[][] steps = new int[this.steps.length][];
+
+    for (int i = 0; i<steps.length; i++){
+      steps[i] = this.steps[i].clone();
+    }
+
+    return new DFSCode(steps);
+  }
+
+  public void grow(
+    int fromTime, int toTime, int fromLabel, boolean outgoing, int edgeLabel,
+    int toLabel) {
+
+    int[] step = getStep(fromTime, toTime, fromLabel, outgoing, edgeLabel, toLabel);
+
+    this.steps = ArrayUtils.add(this.steps, step);
+
+  }
+
+  public boolean parentOf(DFSCode child) {
+    boolean parent = this.size() <= child.size();
+
+    if (parent) {
+      for (int i = 0; i < this.size(); i++) {
+        parent = Objects.deepEquals(this.steps[i], child.steps[i]);
+        if (!parent) {
+          break;
+        }
+      }
+    }
+
+    return parent;
+  }
+
+  public int getVertexCount() {
+    int vertexCount = 0;
+
+    for (int[] step : steps) {
+      vertexCount = Math.max(vertexCount, step[TO_TIME]);
+    }
+
+    return vertexCount + 1;
+  }
+
+  public void setVertexLabel(int vertexTime, int label) {
+    for (int i =0; i < steps.length; i++) {
+      int[] step = steps[i];
+
+      if (step[FROM_TIME] == vertexTime) {
+        step = step.clone();
+        step[FROM_LABEL] = label;
+        steps[i] = step;
+      }
+      if (step[TO_TIME] == vertexTime) {
+        step = step.clone();
+        step[TO_LABEL] = label;
+        steps[i] = step;
+      }
+    }
   }
 }
