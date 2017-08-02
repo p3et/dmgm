@@ -1,9 +1,12 @@
 package org.biiig.dmgm.tfsm.dmg_gspan;
 
 import org.apache.commons.lang3.time.StopWatch;
-import org.biiig.dmgm.tfsm.dmg_gspan.vector_mining.CrossLevelFrequentVectors;
-import org.biiig.dmgm.tfsm.dmg_gspan.vector_mining.CrossLevelFrequentVectorsBottomUp;
-import org.biiig.dmgm.tfsm.dmg_gspan.vector_mining.CrossLevelFrequentVectorsTopDown;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.mining.DircetedMulitgraphGSpan;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.mining.GenSpan;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.mining.GenSpanBaseline;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.vector_mining.CrossLevelFrequentVectors;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.vector_mining.CrossLevelFrequentVectorsBottomUp;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.vector_mining.CrossLevelFrequentVectorsTopDown;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -18,7 +21,7 @@ public class GenSpanBench {
 
   @Test
   public void mineGSpan() throws IOException {
-    DMGgSpan gSpan = new DMGgSpan(inputPath, THRESHOLD, K_MAX);
+    DircetedMulitgraphGSpan gSpan = new DircetedMulitgraphGSpan(inputPath, THRESHOLD, K_MAX);
     gSpan.mine();
   }
 
@@ -55,7 +58,7 @@ public class GenSpanBench {
           for (int kmax : new int[] {3, 5, 7}) {
             StopWatch watch = new StopWatch();
             watch.start();
-            DMGgSpan gSpan = new DMGgSpan(inputPath, threshold, kmax);
+            DircetedMulitgraphGSpan gSpan = new DircetedMulitgraphGSpan(inputPath, threshold, kmax);
             gSpan.mine();
             watch.stop();
             System.out.println(

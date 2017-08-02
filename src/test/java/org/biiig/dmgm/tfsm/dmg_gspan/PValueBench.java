@@ -4,16 +4,17 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.time.StopWatch;
-import org.biiig.dmgm.tfsm.dmg_gspan.gspan.DFSCode;
-import org.biiig.dmgm.tfsm.dmg_gspan.model.countable.Countable;
-import org.biiig.dmgm.tfsm.dmg_gspan.model.multilevel_graph.MultiLevelVertex;
-import org.biiig.dmgm.tfsm.dmg_gspan.pvalues.CalculatePValue;
-import org.biiig.dmgm.tfsm.dmg_gspan.pvalues.model.EdgeData;
-import org.biiig.dmgm.tfsm.dmg_gspan.pvalues.model.MultiEdgeLabelDistributionKey;
-import org.biiig.dmgm.tfsm.dmg_gspan.pvalues.model.VertexDegreeKey;
-import org.biiig.dmgm.tfsm.dmg_gspan.model.labeled_graph.LabeledEdge;
-import org.biiig.dmgm.tfsm.dmg_gspan.model.multilevel_graph.MultiLevelGraph;
-import org.biiig.dmgm.tfsm.dmg_gspan.vector_mining.CrossLevelFrequentVectorsTopDown;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.gspan.DFSCode;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.mining.GenSpan;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.model.countable.Countable;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.model.multilevel_graph.MultiLevelVertex;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.pvalues.CalculatePValue;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.pvalues.model.EdgeData;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.pvalues.model.MultiEdgeLabelDistributionKey;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.pvalues.model.VertexDegreeKey;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.model.labeled_graph.LabeledEdge;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.model.multilevel_graph.MultiLevelGraph;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.vector_mining.CrossLevelFrequentVectorsTopDown;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -35,14 +36,15 @@ public class PValueBench {
       for (int kmax : new int[] {10}) {
         System.out.println("start mining");
 
-        GenSpan gSpan = new GenSpan(inputPath, threshold, new CrossLevelFrequentVectorsTopDown(), kmax);
+        GenSpan
+          gSpan = new GenSpan(inputPath, threshold, new CrossLevelFrequentVectorsTopDown(), kmax);
         gSpan.mine();
 
         System.out.println("start statistics");
 
         List<MultiLevelGraph> graphs = gSpan.getGraphs();
-        Map<Integer, String> vertexDictionary = gSpan.reverseVertexDictionary;
-        Map<Integer, String> edgeDictionary = gSpan.reverseEdgeDictionary;
+        Map<Integer, String> vertexDictionary = gSpan.getReverseVertexDictionary();
+        Map<Integer, String> edgeDictionary = gSpan.getReverseVertexDictionary();
         edgeDictionary.put(Integer.MAX_VALUE, "isA");
 
         Long globalVertexCount = 0L;

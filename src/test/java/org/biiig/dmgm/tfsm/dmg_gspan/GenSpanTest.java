@@ -1,8 +1,11 @@
 package org.biiig.dmgm.tfsm.dmg_gspan;
 
-import org.biiig.dmgm.tfsm.dmg_gspan.vector_mining.CrossLevelFrequentVectors;
-import org.biiig.dmgm.tfsm.dmg_gspan.vector_mining.CrossLevelFrequentVectorsBottomUp;
-import org.biiig.dmgm.tfsm.dmg_gspan.vector_mining.CrossLevelFrequentVectorsTopDown;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.mining.DircetedMulitgraphGSpan;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.mining.GenSpan;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.mining.GenSpanBaseline;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.vector_mining.CrossLevelFrequentVectors;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.vector_mining.CrossLevelFrequentVectorsBottomUp;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.vector_mining.CrossLevelFrequentVectorsTopDown;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -18,7 +21,7 @@ public class GenSpanTest {
 
   @Test
   public void mineGSpan() throws IOException {
-    DMGgSpan gSpan = new DMGgSpan(inputPath, THRESHOLD, K_MAX);
+    DircetedMulitgraphGSpan gSpan = new DircetedMulitgraphGSpan(inputPath, THRESHOLD, K_MAX);
     gSpan.mine();
     assertEquals(7, gSpan.getResult().size());
   }

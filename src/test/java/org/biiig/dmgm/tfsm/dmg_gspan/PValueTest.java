@@ -2,13 +2,15 @@ package org.biiig.dmgm.tfsm.dmg_gspan;
 
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.tfsm.dmg_gspan.model.labeled_graph.LabeledEdge;
-import org.biiig.dmgm.tfsm.dmg_gspan.model.labeled_graph.LabeledGraph;
-import org.biiig.dmgm.tfsm.dmg_gspan.pvalues.CalculatePValue;
-import org.biiig.dmgm.tfsm.dmg_gspan.pvalues.model.EdgeData;
-import org.biiig.dmgm.tfsm.dmg_gspan.pvalues.model.MultiEdgeLabelDistributionKey;
-import org.biiig.dmgm.tfsm.dmg_gspan.pvalues.model.VertexDegreeKey;
-import org.biiig.dmgm.tfsm.dmg_gspan.model.labeled_graph.LabeledVertex;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.mining.GenSpan;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.mining.GenSpanBaseline;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.model.labeled_graph.LabeledEdge;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.model.labeled_graph.LabeledGraph;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.pvalues.CalculatePValue;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.pvalues.model.EdgeData;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.pvalues.model.MultiEdgeLabelDistributionKey;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.pvalues.model.VertexDegreeKey;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.model.labeled_graph.LabeledVertex;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -30,8 +32,8 @@ public class PValueTest {
     gSpan.mine();
 
     List<LabeledGraph> graphs = gSpan.getGraphs();
-    Map<Integer, String> vertexDictionary = gSpan.reverseVertexDictionary;
-    Map<Integer, String> edgeDictionary = gSpan.reverseEdgeDictionary;
+    Map<Integer, String> vertexDictionary = gSpan.getReverseVertexDictionary();
+    Map<Integer, String> edgeDictionary = gSpan.getReverseEdgeDictionary();
     edgeDictionary.put(Integer.MAX_VALUE, "isA");
 
     Long globalVertexCount = 0L;
