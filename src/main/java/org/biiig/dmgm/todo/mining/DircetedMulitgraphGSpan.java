@@ -3,7 +3,7 @@ package org.biiig.dmgm.todo.mining;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.todo.gspan.DFSCode;
+import org.biiig.dmgm.impl.model.DFSCode;
 import org.biiig.dmgm.todo.gspan.GSpanTreeNode;
 import org.biiig.dmgm.todo.model.countable.Countable;
 import org.biiig.dmgm.todo.gspan.DFSEmbedding;
@@ -81,7 +81,7 @@ public class DircetedMulitgraphGSpan extends GSpanBase {
     for (GSpanTreeNode node : children) {
       int support = node.getSupport();
       if (support >= minSupport) {
-        int size = node.getDfsCode().size();
+        int size = node.getDfsCode().getEdgeCount();
         if (size == 1 || isMinimal(node.getDfsCode())) {
 
           if (size < kMax ) {
@@ -266,7 +266,7 @@ public class DircetedMulitgraphGSpan extends GSpanBase {
     int[] rightmostPathTimes;
 
     // 1-edge pattern
-    if (dfsCode.size() == 1) {
+    if (dfsCode.getEdgeCount() == 1) {
       // loop
       if (dfsCode.getFromTime(0) == dfsCode.getToTime( 0)) {
         rightmostPathTimes = new int[] {0};
@@ -276,7 +276,7 @@ public class DircetedMulitgraphGSpan extends GSpanBase {
     } else {
       rightmostPathTimes = new int[0];
 
-      for (int edgeTime = dfsCode.size() - 1; edgeTime >= 0; edgeTime--) {
+      for (int edgeTime = dfsCode.getEdgeCount() - 1; edgeTime >= 0; edgeTime--) {
         int fromTime = dfsCode.getFromTime(edgeTime);
         int toTime = dfsCode.getToTime(edgeTime);
         boolean firstStep = rightmostPathTimes.length == 0;
@@ -330,12 +330,9 @@ public class DircetedMulitgraphGSpan extends GSpanBase {
 
             // grow backwards
             if (rightmost && toTime >= 0) {
-              DFSCode childCode = parentCode.deepCopy();
-
-              childCode.grow(
+              DFSCode childCode = parentCode.growChild(
                 fromTime,
                 toTime,
-                graph.getVertices()[fromId].getLabel(),
                 entry.isOutgoing(),
                 entry.getEdgeLabel(),
                 graph.getVertices()[toId].getLabel()
@@ -351,13 +348,9 @@ public class DircetedMulitgraphGSpan extends GSpanBase {
 
               // grow backwards from to
             } else if (toTime < 0) {
-              DFSCode childCode = parentCode.deepCopy();
-              toTime = parentEmbedding.getVertexCount();
-
-              childCode.grow(
+              DFSCode childCode = parentCode.growChild(
                 fromTime,
                 toTime,
-                graph.getVertices()[fromId].getLabel(),
                 entry.isOutgoing(),
                 entry.getEdgeLabel(),
                 graph.getVertices()[toId].getLabel()

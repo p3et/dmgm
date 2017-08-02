@@ -2,7 +2,7 @@ package org.biiig.dmgm.todo.model.labeled_graph;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.biiig.dmgm.todo.gspan.DFSCode;
+import org.biiig.dmgm.impl.model.DFSCode;
 
 import java.util.Arrays;
 
@@ -19,14 +19,14 @@ public class LabeledGraph {
   public LabeledGraph(DFSCode dfsCode) {
     this.id = 0;
 
-    for (int edgeId = 0; edgeId < dfsCode.size(); edgeId++) {
+    for (int edgeId = 0; edgeId < dfsCode.getEdgeCount(); edgeId++) {
 
       int fromTime = dfsCode.getFromTime(edgeId);
       int toTime = dfsCode.getToTime(edgeId);
-      int fromLabel = dfsCode.getFromLabel(edgeId);
+      int fromLabel = dfsCode.getVertexLabel(fromTime);
       boolean outgoing = dfsCode.isOutgoing(edgeId);
       int edgeLabel = dfsCode.getEdgeLabel(edgeId);
-      int toLabel = dfsCode.getToLabel(edgeId);
+      int toLabel = dfsCode.getVertexLabel(toTime);
 
       if (vertices == null) {
         vertices = new LabeledVertex[] {new LabeledVertex(fromTime, fromLabel)};

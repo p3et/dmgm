@@ -2,7 +2,7 @@ package org.biiig.dmgm.todo.pvalues.algorithm;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.mutable.MutableDouble;
-import org.biiig.dmgm.todo.gspan.DFSCode;
+import org.biiig.dmgm.impl.model.DFSCode;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -21,23 +21,24 @@ public class GraphUtility {
 
     String[][][] edgeLabels = new String[numNodes][numNodes][];
 
-    nodeLabels[0] = vertexDictionary.get(dfsCode.getFromLabel(0));
-    for (int i = 0; i < dfsCode.size(); i++) {
+    nodeLabels[0] = vertexDictionary.get(dfsCode.getVertexLabel(0));
+    for (int edgeTime = 0; edgeTime < dfsCode.getEdgeCount(); edgeTime++) {
       int sourceId;
       int targetId;
 
-      boolean outgoing = dfsCode.isOutgoing(i);
+      boolean outgoing = dfsCode.isOutgoing(edgeTime);
+      int toTime = dfsCode.getToTime(edgeTime);
       if (outgoing) {
-        sourceId = dfsCode.getFromTime(i);
-        targetId = dfsCode.getToTime(i);
+        sourceId = dfsCode.getFromTime(edgeTime);
+        targetId = toTime;
       } else {
-        sourceId = dfsCode.getToTime(i);
-        targetId = dfsCode.getFromTime(i);
+        sourceId = toTime;
+        targetId = dfsCode.getFromTime(edgeTime);
       }
 
-      String edgeLabel = edgeDictionary.get(dfsCode.getEdgeLabel(i));
+      String edgeLabel = edgeDictionary.get(dfsCode.getEdgeLabel(edgeTime));
       edgeLabels[sourceId][targetId] = ArrayUtils.add(edgeLabels[sourceId][targetId], edgeLabel);
-      nodeLabels[dfsCode.getToTime(i)] = vertexDictionary.get(dfsCode.getToLabel(i));
+      nodeLabels[toTime] = vertexDictionary.get(dfsCode.getVertexLabel(toTime));
     }
     for (int i = 0; i < edgeLabels.length; i++) {
       for (int j = 0; j < edgeLabels[i].length; j++) {

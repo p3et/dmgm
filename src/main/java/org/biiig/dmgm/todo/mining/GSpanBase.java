@@ -1,7 +1,6 @@
 package org.biiig.dmgm.todo.mining;
 
 import com.google.common.collect.Maps;
-import org.biiig.dmgm.todo.gspan.DFSCode;
 import org.biiig.dmgm.todo.model.countable.Countable;
 import org.biiig.dmgm.todo.model.countable.CountableSupportComparator;
 
@@ -28,23 +27,23 @@ public class GSpanBase {
     this.kMax = kMax;
   }
 
-  protected String format(DFSCode dfsCode) {
-    StringBuilder builder = new StringBuilder();
-
-    reverseEdgeDictionary.put(IS_A_EDGE_LABEL, "isA");
-
-    for (int i = 0; i < dfsCode.size(); i++) {
-      builder
-        .append(dfsCode.getFromTime(i)).append(":")
-        .append(reverseVertexDictionary.get(dfsCode.getFromLabel(i)))
-        .append(dfsCode.isOutgoing(i) ? "-" : "<-")
-        .append(reverseEdgeDictionary.get(dfsCode.getEdgeLabel(i)))
-        .append(dfsCode.isOutgoing(i) ? "->" : "-")
-        .append(dfsCode.getToTime(i)).append(":")
-        .append(reverseVertexDictionary.get(dfsCode.getToLabel(i))).append(" ");
-    }
-    return builder.toString();
-  }
+//  protected String format(DFSCode dfsCode) {
+//    StringBuilder builder = new StringBuilder();
+//
+//    reverseEdgeDictionary.put(IS_A_EDGE_LABEL, "isA");
+//
+//    for (int i = 0; i < dfsCode.getEdgeCount(); i++) {
+//      builder
+//        .append(dfsCode.getFromTime(i)).append(":")
+//        .append(reverseVertexDictionary.get(dfsCode.getFromLabel(i)))
+//        .append(dfsCode.isOutgoing(i) ? "-" : "<-")
+//        .append(reverseEdgeDictionary.get(dfsCode.getEdgeLabel(i)))
+//        .append(dfsCode.isOutgoing(i) ? "->" : "-")
+//        .append(dfsCode.getToTime(i)).append(":")
+//        .append(reverseVertexDictionary.get(dfsCode.getToLabel(i))).append(" ");
+//    }
+//    return builder.toString();
+//  }
 
   protected void createDictionaries(List<Countable<String>> vertexLabels,
     List<Countable<String>> edgeLabels) {

@@ -22,7 +22,7 @@ public abstract class DirectedGraphTest {
     DirectedGraph graph = factory.create(2, 2);
 
     int[] data0 = new int[] {0};
-    int[] data1 = new int[] {1, 1};
+    int[] data1 = new int[] {1};
 
     graph.setVertex(0, data0);
     graph.setVertex(1, data1);
@@ -31,11 +31,11 @@ public abstract class DirectedGraphTest {
     graph.setEdge(1, 0, 1, data1);
 
     assertEquals("vertex count", 2, graph.getVertexCount());
-    assertEquals("vertex data 0", data0, graph.getVertexData(0));
-    assertEquals("vertex data 1", data1, graph.getVertexData(1));
+    assertArrayEquals("vertex data 0", data0, graph.getVertexData(0));
+    assertArrayEquals("vertex data 1", data1, graph.getVertexData(1));
     assertEquals("edge count", 2, graph.getEdgeCount());
-    assertEquals("edge data 0", data0, graph.getEdgeData(0));
-    assertEquals("edge data 1", data1, graph.getEdgeData(1));
+    assertArrayEquals("edge data 0", data0, graph.getEdgeData(0));
+    assertArrayEquals("edge data 1", data1, graph.getEdgeData(1));
     assertEquals("edge source 0", 0, graph.getSourceId(0));
     assertEquals("edge target 0", 0, graph.getTargetId(0));
     assertEquals("edge source 1", 0, graph.getSourceId(1));

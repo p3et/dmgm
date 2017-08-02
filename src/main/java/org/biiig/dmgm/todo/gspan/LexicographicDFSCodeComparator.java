@@ -16,6 +16,8 @@ package org.biiig.dmgm.todo.gspan;/*
  */
 
 
+import org.biiig.dmgm.impl.model.DFSCode;
+
 import java.io.Serializable;
 import java.util.Comparator;
 
@@ -28,8 +30,8 @@ public class LexicographicDFSCodeComparator implements Comparator<DFSCode>, Seri
   public int compare(DFSCode a, DFSCode b) {
     int comparison;
 
-    boolean thisIsRoot = a.size() == 0;
-    boolean thatIsRoot = b.size() == 0;
+    boolean thisIsRoot = a.getEdgeCount() == 0;
+    boolean thatIsRoot = b.getEdgeCount() == 0;
 
     // root is always smaller
     if (thisIsRoot && ! thatIsRoot) {
@@ -42,8 +44,8 @@ public class LexicographicDFSCodeComparator implements Comparator<DFSCode>, Seri
     } else {
       comparison = 0;
 
-      int thisSize = a.size();
-      int thatSize = b.size();
+      int thisSize = a.getEdgeCount();
+      int thatSize = b.getEdgeCount();
 
       boolean sameSize = thisSize == thatSize;
 
@@ -62,8 +64,8 @@ public class LexicographicDFSCodeComparator implements Comparator<DFSCode>, Seri
         if (thisFromTime == thatFromTime && thisToTime == thatToTime) {
 
           // compare from Labels
-          int thisFromLabel = a.getFromLabel(edgeTime);
-          int thatFromLabel = b.getFromLabel(edgeTime);
+          int thisFromLabel = a.getVertexLabel(thisFromTime);
+          int thatFromLabel = b.getVertexLabel(thatFromTime);
 
           comparison = thisFromLabel - thatFromLabel;
 
@@ -88,8 +90,8 @@ public class LexicographicDFSCodeComparator implements Comparator<DFSCode>, Seri
               if (comparison == 0) {
 
                 // compare to Labels
-                int thisToLabel = a.getToLabel(edgeTime);
-                int thatToLabel = b.getToLabel(edgeTime);
+                int thisToLabel = a.getVertexLabel(thisToTime);
+                int thatToLabel = b.getVertexLabel(thatToTime);
 
                 comparison = thisToLabel - thatToLabel;
               }

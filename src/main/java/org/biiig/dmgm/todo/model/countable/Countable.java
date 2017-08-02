@@ -102,7 +102,7 @@ public class Countable<T extends Comparable<T>> implements Comparable<Countable<
 //  private static <T extends Comparable<T>> Countable<T>[] aggregate(
 //    Countable<T>[] list, Comparator<Countable<T>> comparator, boolean includeSupport) {
 //
-//    if (list.size() > 1) {
+//    if (list.getEdgeCount() > 1) {
 //      list.sort(new CountableObjectComparator<>());
 //
 //      Iterator<Countable<T>> iterator = list.iterator();

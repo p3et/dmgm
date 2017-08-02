@@ -1,6 +1,7 @@
 package org.biiig.dmgm.todo.gspan;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.biiig.dmgm.impl.model.DFSCode;
 
 import java.util.Iterator;
 import java.util.List;

@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.time.StopWatch;
-import org.biiig.dmgm.todo.gspan.DFSCode;
+import org.biiig.dmgm.impl.model.DFSCode;
 import org.biiig.dmgm.todo.mining.GenSpan;
 import org.biiig.dmgm.todo.model.countable.Countable;
 import org.biiig.dmgm.todo.model.multilevel_graph.MultiLevelVertex;
@@ -238,7 +238,7 @@ public class PValueBench {
         Map<Integer, List<Countable<DFSCode>>> map = Maps.newHashMap();
 
         for (Countable<DFSCode> code : gSpan.getResult()) {
-          int size = code.getObject().size();
+          int size = code.getObject().getEdgeCount();
 
           List<Countable<DFSCode>> siblings = map.get(size);
           if (siblings == null) {

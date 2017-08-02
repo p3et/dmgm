@@ -46,14 +46,6 @@ public class SourceTargetMux extends DirectedGraphBase {
     return getIncidentEdgeIds(vertexId, false);
   }
 
-  private int getSourceMuxIndex(int edgeId) {
-    return edgeId * 2;
-  }
-
-  private int getTargetMuxIndex(int edgeId) {
-    return getSourceMuxIndex(edgeId) + 1;
-  }
-
   private int[] getIncidentEdgeIds(int vertexId, boolean outgoing) {
     int i = 0;
     int edgeCount = getEdgeCount();
@@ -78,4 +70,14 @@ public class SourceTargetMux extends DirectedGraphBase {
 
     return edgeIds;
   }
+
+  private int getSourceMuxIndex(int edgeId) {
+    return edgeId * 2;
+  }
+
+  private int getTargetMuxIndex(int edgeId) {
+    return getSourceMuxIndex(edgeId) + 1;
+  }
+
+
 }

@@ -4,7 +4,7 @@ import org.biiig.dmgm.todo.model.countable.Countable;
 import org.biiig.dmgm.todo.pvalues.algorithm.MathUtility;
 import org.biiig.dmgm.todo.pvalues.algorithm.Occurrence;
 import org.biiig.dmgm.todo.pvalues.model.MultiEdgeLabelDistributionKey;
-import org.biiig.dmgm.todo.gspan.DFSCode;
+import org.biiig.dmgm.impl.model.DFSCode;
 import org.biiig.dmgm.todo.pvalues.algorithm.EDDModel;
 import org.biiig.dmgm.todo.pvalues.algorithm.GraphUtility;
 import org.biiig.dmgm.todo.pvalues.algorithm.PolyaAeppli;

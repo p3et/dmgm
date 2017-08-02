@@ -2,6 +2,7 @@ package org.biiig.dmgm.todo.gspan;
 
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.ArrayUtils;
+import org.biiig.dmgm.impl.model.DFSCode;
 import org.biiig.dmgm.todo.model.Vector;
 import org.biiig.dmgm.todo.model.countable.Countable;
 

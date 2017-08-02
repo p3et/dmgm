@@ -30,7 +30,6 @@ public class GenSpanTest {
   public void mineBaseLine() throws IOException {
     GenSpanBaseline gSpan = new GenSpanBaseline(inputPath, THRESHOLD, K_MAX);
     gSpan.mine();
-    gSpan.printResult();
     assertEquals(35, gSpan.getResult().size());
   }
 
