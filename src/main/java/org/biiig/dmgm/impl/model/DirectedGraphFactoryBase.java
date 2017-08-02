@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.model;
 
-import org.biiig.dmgm.model.DirectedGraph;
-import org.biiig.dmgm.model.DirectedGraphFactory;
+import org.biiig.dmgm.api.model.DirectedGraph;
+import org.biiig.dmgm.api.model.DirectedGraphFactory;
 
 public abstract class DirectedGraphFactoryBase implements DirectedGraphFactory {
   @Override

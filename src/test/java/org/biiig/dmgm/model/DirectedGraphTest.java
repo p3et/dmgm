@@ -1,17 +1,20 @@
 package org.biiig.dmgm.model;
 
-import org.biiig.dmgm.impl.model.SourceTargetMuxFactory;
+import org.apache.commons.lang3.ArrayUtils;
+import org.biiig.dmgm.api.model.DirectedGraph;
+import org.biiig.dmgm.api.model.DirectedGraphFactory;
 import org.junit.Test;
 
 import java.util.Objects;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by peet on 02.08.17.
  */
-public class DirectedGraphTest {
-
+public abstract class DirectedGraphTest {
   @Test
   public void testGetterAndSetter() throws Exception {
     DirectedGraphFactory factory = getFactory();
@@ -50,9 +53,5 @@ public class DirectedGraphTest {
     assertArrayEquals("incoming edges 1", new int[] {1}, graph.getIncomingEdgeIds(1));
   }
 
-
-  DirectedGraphFactory getFactory() {
-    return new SourceTargetMuxFactory();
-  }
-
+  abstract DirectedGraphFactory getFactory();
 }

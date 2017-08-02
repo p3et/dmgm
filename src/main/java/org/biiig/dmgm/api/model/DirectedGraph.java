@@ -1,4 +1,4 @@
-package org.biiig.dmgm.model;
+package org.biiig.dmgm.api.model;
 
 /**
  * A directed graph.
