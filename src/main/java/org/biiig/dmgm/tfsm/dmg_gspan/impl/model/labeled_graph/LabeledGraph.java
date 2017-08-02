@@ -3,6 +3,9 @@ package org.biiig.dmgm.tfsm.dmg_gspan.impl.model.labeled_graph;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.tfsm.dmg_gspan.impl.gspan.DFSCode;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.model.labeled_graph.LabeledAdjacencyListEntry;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.model.labeled_graph.LabeledEdge;
+import org.biiig.dmgm.tfsm.dmg_gspan.impl.model.labeled_graph.LabeledVertex;
 
 import java.util.Arrays;
 
