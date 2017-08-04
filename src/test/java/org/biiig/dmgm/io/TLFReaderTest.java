@@ -21,6 +21,6 @@ public class TLFReaderTest {
 
     DataSource reader = new TLFFileReader(inputPath);
 
-    reader.load(database, new SourceTargetMuxFactory());
+    reader.load(database, new SourceTargetMuxFactory(), 0.8f);
   }
 }

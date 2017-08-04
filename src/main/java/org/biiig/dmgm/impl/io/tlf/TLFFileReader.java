@@ -23,18 +23,25 @@ public class TLFFileReader implements DataSource {
   }
 
   @Override
-  public void load(Database database, DirectedGraphFactory graphFactory) throws IOException {
+  public void load(
+    Database database,
+    DirectedGraphFactory graphFactory,
+    Float minSupportThreshold
+  ) throws IOException {
 
     TLFLabelReporterFactory labelReporterFactory = new TLFLabelReporterFactory();
     readSplits(labelReporterFactory);
 
+    int count = labelReporterFactory.getGraphCount();
+    int minSupport = (int) (count * minSupportThreshold);
+
     LabelDictionary vertexDictionary =
-      createDictionary(labelReporterFactory.getVertexLabelFrequencies());
+      createDictionary(labelReporterFactory.getVertexLabelFrequencies(), minSupport);
 
     database.setVertexDictionary(vertexDictionary);
 
     LabelDictionary edgeDictionary =
-      createDictionary(labelReporterFactory.getEdgeLabelFrequencies());
+      createDictionary(labelReporterFactory.getEdgeLabelFrequencies(), minSupport);
 
     database.setEdgeDictionary(edgeDictionary);
 
@@ -42,12 +49,15 @@ public class TLFFileReader implements DataSource {
     System.out.println(edgeDictionary);
   }
 
-  private LabelDictionary createDictionary(List<Countable<String>> labelFrequencies) throws
-    IOException {
+  private LabelDictionary createDictionary(
+    List<Countable<String>> labelFrequencies, int minSupport) throws IOException {
     // prepare list for aggregation
     List<Countable<String>> globalFrequencies = Lists.newLinkedList(labelFrequencies);
     // aggregate frequencies
     Countable.sumSupportAndFrequency(globalFrequencies);
+    // filter infrequent labels
+    globalFrequencies.removeIf(c -> c.getSupport() < minSupport);
+    // create dictionary
     return new LabelDictionary(globalFrequencies);
   }
 

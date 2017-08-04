@@ -5,30 +5,37 @@ import org.biiig.dmgm.impl.model.countable.Countable;
 
 import java.util.List;
 import java.util.Queue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by peet on 04.08.17.
  */
 public class TLFLabelReporter extends TLFSplitReader {
-  protected final List<Countable<String>> globalVertexLabelFrequencies;
-  protected final List<Countable<String>> partitionVertexLabelFrequencies = Lists.newLinkedList();
-  protected final List<Countable<String>> graphVertexLabelFrequencies = Lists.newLinkedList();
-  protected final List<Countable<String>> globalEdgeLabelFrequencies;
-  protected final List<Countable<String>> partitionEdgeLabelFrequencies = Lists.newLinkedList();
-  protected final List<Countable<String>> graphEdgeLabelFrequencies = Lists.newLinkedList();
+
+  private final AtomicInteger globalGraphCount;
+  private int partitionGraphCount = 0;
+
+  private final List<Countable<String>> globalVertexLabelFrequencies;
+  private final List<Countable<String>> partitionVertexLabelFrequencies = Lists.newLinkedList();
+  private final List<Countable<String>> graphVertexLabelFrequencies = Lists.newLinkedList();
+  private final List<Countable<String>> globalEdgeLabelFrequencies;
+  private final List<Countable<String>> partitionEdgeLabelFrequencies = Lists.newLinkedList();
+  private final List<Countable<String>> graphEdgeLabelFrequencies = Lists.newLinkedList();
 
   public TLFLabelReporter(Queue<String[]> splits, boolean reachedEOF,
-    List<Countable<String>> globalVertexLabelFrequencies,
+    AtomicInteger globalGraphCount, List<Countable<String>> globalVertexLabelFrequencies,
     List<Countable<String>> globalEdgeLabelFrequencies) {
     super(splits, reachedEOF);
+    this.globalGraphCount = globalGraphCount;
     this.globalVertexLabelFrequencies = globalVertexLabelFrequencies;
     this.globalEdgeLabelFrequencies = globalEdgeLabelFrequencies;
   }
 
   @Override
   protected void process(String[] split) {
-    readVertices(split);
+    partitionGraphCount++;
 
+    readVertices(split);
 
     Countable.sumFrequency(graphVertexLabelFrequencies);
     partitionVertexLabelFrequencies.addAll(graphVertexLabelFrequencies);
@@ -70,6 +77,7 @@ public class TLFLabelReporter extends TLFSplitReader {
 
   @Override
   protected void finish() {
+    globalGraphCount.addAndGet(partitionGraphCount);
     globalVertexLabelFrequencies.addAll(partitionVertexLabelFrequencies);
     globalEdgeLabelFrequencies.addAll(partitionEdgeLabelFrequencies);
   }
