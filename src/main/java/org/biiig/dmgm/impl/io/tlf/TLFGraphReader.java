@@ -20,7 +20,7 @@ public class TLFGraphReader extends TLFSplitReader {
 
   @Override
   protected void process(String[] split) {
-    System.out.println(split.length);
+    System.out.println("Parse Graph");
   }
 
   @Override

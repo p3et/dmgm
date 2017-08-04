@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Created by peet on 04.08.17.
  */
-public class TLFLabelReporter extends TLFSplitReader {
+public class TLFLabelReader extends TLFSplitReader {
 
   private final AtomicInteger globalGraphCount;
   private int partitionGraphCount = 0;
@@ -22,7 +22,7 @@ public class TLFLabelReporter extends TLFSplitReader {
   private final List<Countable<String>> partitionEdgeLabelFrequencies = Lists.newLinkedList();
   private final List<Countable<String>> graphEdgeLabelFrequencies = Lists.newLinkedList();
 
-  public TLFLabelReporter(Queue<String[]> splits, boolean reachedEOF,
+  public TLFLabelReader(Queue<String[]> splits, boolean reachedEOF,
     AtomicInteger globalGraphCount, List<Countable<String>> globalVertexLabelFrequencies,
     List<Countable<String>> globalEdgeLabelFrequencies) {
     super(splits, reachedEOF);

@@ -15,10 +15,10 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
-public class TLFFileReader implements DataSource {
+public class TLFDataSource implements DataSource {
   private final String inputPath;
 
-  public TLFFileReader(String inputPath) {
+  public TLFDataSource(String inputPath) {
     this.inputPath = inputPath;
   }
 
@@ -29,21 +29,23 @@ public class TLFFileReader implements DataSource {
     Float minSupportThreshold
   ) throws IOException {
 
-    TLFLabelReporterFactory labelReporterFactory = new TLFLabelReporterFactory();
-    readSplits(labelReporterFactory);
+    TLFLabelReaderFactory labelReaderFactory = new TLFLabelReaderFactory();
+    readSplits(labelReaderFactory);
 
-    int count = labelReporterFactory.getGraphCount();
+    int count = labelReaderFactory.getGraphCount();
     int minSupport = (int) (count * minSupportThreshold);
 
     LabelDictionary vertexDictionary =
-      createDictionary(labelReporterFactory.getVertexLabelFrequencies(), minSupport);
-
-    database.setVertexDictionary(vertexDictionary);
+      createDictionary(labelReaderFactory.getVertexLabelFrequencies(), minSupport);
 
     LabelDictionary edgeDictionary =
-      createDictionary(labelReporterFactory.getEdgeLabelFrequencies(), minSupport);
+      createDictionary(labelReaderFactory.getEdgeLabelFrequencies(), minSupport);
 
+    database.setVertexDictionary(vertexDictionary);
     database.setEdgeDictionary(edgeDictionary);
+
+    TLFGraphReaderFactory graphReaderFactory = new TLFGraphReaderFactory(graphFactory, database);
+    readSplits(graphReaderFactory);
 
     System.out.println(vertexDictionary);
     System.out.println(edgeDictionary);

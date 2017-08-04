@@ -3,7 +3,7 @@ package org.biiig.dmgm.io;
 import org.biiig.dmgm.api.Database;
 import org.biiig.dmgm.api.io.DataSource;
 import org.biiig.dmgm.impl.InMemoryDatabase;
-import org.biiig.dmgm.impl.io.tlf.TLFFileReader;
+import org.biiig.dmgm.impl.io.tlf.TLFDataSource;
 import org.biiig.dmgm.impl.model.graph.SourceTargetMuxFactory;
 import org.junit.Test;
 
@@ -16,10 +16,10 @@ public class TLFReaderTest {
 
   @Test
   public void testRead() throws IOException {
-    String inputPath = TLFFileReader.class.getResource("/samples/predictable.tlf").getFile();
+    String inputPath = TLFDataSource.class.getResource("/samples/predictable.tlf").getFile();
     Database database = new InMemoryDatabase();
 
-    DataSource reader = new TLFFileReader(inputPath);
+    DataSource reader = new TLFDataSource(inputPath);
 
     reader.load(database, new SourceTargetMuxFactory(), 0.8f);
   }

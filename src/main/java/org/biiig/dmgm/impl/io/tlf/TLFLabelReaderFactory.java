@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class TLFLabelReporterFactory implements TLFSplitReaderFactory {
+public class TLFLabelReaderFactory implements TLFSplitReaderFactory {
 
   private AtomicInteger graphCount = new AtomicInteger(0);
 
@@ -17,8 +17,8 @@ public class TLFLabelReporterFactory implements TLFSplitReaderFactory {
   private final List<Countable<String>> edgeLabelFrequencies = Lists.newCopyOnWriteArrayList();
 
   @Override
-  public Runnable create(Queue<String[]> splits, Boolean reachedEOF) {
-    return new TLFLabelReporter(
+  public TLFSplitReader create(Queue<String[]> splits, Boolean reachedEOF) {
+    return new TLFLabelReader(
       splits, reachedEOF, graphCount, vertexLabelFrequencies, edgeLabelFrequencies) {
     };
   }
