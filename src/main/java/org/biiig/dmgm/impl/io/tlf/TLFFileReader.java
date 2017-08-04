@@ -25,25 +25,27 @@ public class TLFFileReader implements DataSource {
   @Override
   public void load(Database database, DirectedGraphFactory graphFactory) throws IOException {
 
-    TLFVertexLabelReporterFactory vertexReporterFactory = new TLFVertexLabelReporterFactory();
-    LabelDictionary vertexDictionary = createDictionary(vertexReporterFactory);
+    TLFLabelReporterFactory labelReporterFactory = new TLFLabelReporterFactory();
+    readSplits(labelReporterFactory);
+
+    LabelDictionary vertexDictionary =
+      createDictionary(labelReporterFactory.getVertexLabelFrequencies());
+
     database.setVertexDictionary(vertexDictionary);
 
-    TLFEdgeLabelReporterFactory edgeReporterFactory =
-      new TLFEdgeLabelReporterFactory(vertexDictionary);
-    LabelDictionary edgeDictionary = createDictionary(edgeReporterFactory);
+    LabelDictionary edgeDictionary =
+      createDictionary(labelReporterFactory.getEdgeLabelFrequencies());
+
     database.setEdgeDictionary(edgeDictionary);
 
     System.out.println(vertexDictionary);
     System.out.println(edgeDictionary);
   }
 
-  private LabelDictionary createDictionary(TLFLabelReporterFactory labelReporterFactory) throws IOException {
-    // read file and determine partition frequencies
-    readSplits(labelReporterFactory);
+  private LabelDictionary createDictionary(List<Countable<String>> labelFrequencies) throws
+    IOException {
     // prepare list for aggregation
-    List<Countable<String>> globalFrequencies =
-      Lists.newLinkedList(labelReporterFactory.getGlobalFrequencies());
+    List<Countable<String>> globalFrequencies = Lists.newLinkedList(labelFrequencies);
     // aggregate frequencies
     Countable.sumSupportAndFrequency(globalFrequencies);
     return new LabelDictionary(globalFrequencies);

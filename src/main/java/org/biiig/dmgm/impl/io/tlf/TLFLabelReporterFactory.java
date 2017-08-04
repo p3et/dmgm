@@ -5,14 +5,24 @@ import org.biiig.dmgm.api.io.tlf.TLFSplitReaderFactory;
 import org.biiig.dmgm.impl.model.countable.Countable;
 
 import java.util.List;
+import java.util.Queue;
 
-/**
- * Created by peet on 04.08.17.
- */
-public abstract class TLFLabelReporterFactory implements TLFSplitReaderFactory {
-  protected final List<Countable<String>> globalFrequencies = Lists.newCopyOnWriteArrayList();
+public class TLFLabelReporterFactory implements TLFSplitReaderFactory {
+  protected final List<Countable<String>> globalVertexLabelFrequencies = Lists.newCopyOnWriteArrayList();
+  protected final List<Countable<String>> globalEdgeLabelFrequencies = Lists.newCopyOnWriteArrayList();
 
-  public List<Countable<String>> getGlobalFrequencies() {
-    return globalFrequencies;
+  @Override
+  public Runnable create(Queue<String[]> splits, Boolean reachedEOF) {
+    return new TLFLabelReporter(
+      splits, reachedEOF, globalVertexLabelFrequencies, globalEdgeLabelFrequencies) {
+    };
+  }
+
+  public List<Countable<String>> getVertexLabelFrequencies() {
+    return globalVertexLabelFrequencies;
+  }
+
+  public List<Countable<String>> getEdgeLabelFrequencies() {
+    return globalEdgeLabelFrequencies;
   }
 }

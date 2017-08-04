@@ -10,9 +10,15 @@ import java.util.List;
 public class InMemoryDatabase implements Database {
   private final List<DirectedGraph> graphs = new ArrayList<>();
   private LabelDictionary vertexDictionary;
+  private LabelDictionary edgeDictionary;
 
   @Override
-  public void setVertexDictionary(LabelDictionary vertexDictionary) {
-    this.vertexDictionary = vertexDictionary;
+  public void setVertexDictionary(LabelDictionary dictionary) {
+    this.vertexDictionary = dictionary;
+  }
+
+  @Override
+  public void setEdgeDictionary(LabelDictionary dictionary) {
+    this.edgeDictionary = dictionary;
   }
 }
