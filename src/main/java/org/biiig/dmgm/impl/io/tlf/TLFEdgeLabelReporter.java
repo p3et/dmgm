@@ -1,5 +1,6 @@
 package org.biiig.dmgm.impl.io.tlf;
 
+import org.biiig.dmgm.impl.db.LabelDictionary;
 import org.biiig.dmgm.impl.model.countable.Countable;
 
 import java.util.List;
@@ -7,8 +8,8 @@ import java.util.Queue;
 
 public class TLFEdgeLabelReporter extends TLFLabelReporter {
 
-  TLFEdgeLabelReporter(
-    Queue<String[]> splits, boolean reachedEOF, List<Countable<String>> globalFrequencies) {
+  TLFEdgeLabelReporter(Queue<String[]> splits, boolean reachedEOF,
+    List<Countable<String>> globalFrequencies, LabelDictionary vertexDictionary) {
     super(splits, reachedEOF, globalFrequencies);
   }
 

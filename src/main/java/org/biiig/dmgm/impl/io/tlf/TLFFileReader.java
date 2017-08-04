@@ -24,32 +24,29 @@ public class TLFFileReader implements DataSource {
 
   @Override
   public void load(Database database, DirectedGraphFactory graphFactory) throws IOException {
-    List<Countable<String>> globalLabelFrequencies = Lists.newCopyOnWriteArrayList();
-    TLFSplitReaderFactory readerFactory = new TLFVertexLabelReporterFactory(globalLabelFrequencies);
 
-    LabelDictionary vertexDictionary = createDictionary(globalLabelFrequencies, readerFactory);
+    TLFVertexLabelReporterFactory vertexReporterFactory = new TLFVertexLabelReporterFactory();
+    LabelDictionary vertexDictionary = createDictionary(vertexReporterFactory);
     database.setVertexDictionary(vertexDictionary);
 
+    TLFEdgeLabelReporterFactory edgeReporterFactory =
+      new TLFEdgeLabelReporterFactory(vertexDictionary);
+    LabelDictionary edgeDictionary = createDictionary(edgeReporterFactory);
+    database.setEdgeDictionary(edgeDictionary);
+
     System.out.println(vertexDictionary);
-
-
-    globalLabelFrequencies = Lists.newCopyOnWriteArrayList();
-    readerFactory = new TLFEdgeLabelReporterFactory(globalLabelFrequencies);
-
-    LabelDictionary edgeDictionary = createDictionary(globalLabelFrequencies, readerFactory);
-
     System.out.println(edgeDictionary);
   }
 
-  private LabelDictionary createDictionary(List<Countable<String>> globalLabelFrequencies,
-    TLFSplitReaderFactory labelReporterFactory) throws IOException {
+  private LabelDictionary createDictionary(TLFLabelReporterFactory labelReporterFactory) throws IOException {
     // read file and determine partition frequencies
     readSplits(labelReporterFactory);
     // prepare list for aggregation
-    globalLabelFrequencies = Lists.newLinkedList(globalLabelFrequencies);
+    List<Countable<String>> globalFrequencies =
+      Lists.newLinkedList(labelReporterFactory.getGlobalFrequencies());
     // aggregate frequencies
-    Countable.sumSupportAndFrequency(globalLabelFrequencies);
-    return new LabelDictionary(globalLabelFrequencies);
+    Countable.sumSupportAndFrequency(globalFrequencies);
+    return new LabelDictionary(globalFrequencies);
   }
 
   /**

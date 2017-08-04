@@ -4,5 +4,7 @@ import org.biiig.dmgm.impl.db.LabelDictionary;
 
 
 public interface Database {
-  void setVertexDictionary(LabelDictionary labelFrequencies);
+  void setVertexDictionary(LabelDictionary dictionary);
+
+  void setEdgeDictionary(LabelDictionary dictionary);
 }

@@ -1,9 +1,7 @@
 package org.biiig.dmgm.impl.io.tlf;
 
-import org.biiig.dmgm.api.io.tlf.TLFSplitReaderFactory;
-import org.biiig.dmgm.impl.model.countable.Countable;
+import org.biiig.dmgm.impl.db.LabelDictionary;
 
-import java.util.List;
 import java.util.Queue;
 
 /**
@@ -11,12 +9,14 @@ import java.util.Queue;
  */
 public class TLFEdgeLabelReporterFactory extends TLFLabelReporterFactory {
 
-  public TLFEdgeLabelReporterFactory(List<Countable<String>> globalLabelFrequencies) {
-    super(globalLabelFrequencies);
+  private final LabelDictionary vertexDictionary;
+
+  public TLFEdgeLabelReporterFactory(LabelDictionary vertexDictionary) {
+    this.vertexDictionary = vertexDictionary;
   }
 
   @Override
   public Runnable create(Queue<String[]> splits, Boolean reachedEOF) {
-    return new TLFEdgeLabelReporter(splits, reachedEOF, globalLabelFrequencies);
+    return new TLFEdgeLabelReporter(splits, reachedEOF, globalFrequencies, vertexDictionary);
   }
 }
