@@ -1,7 +1,7 @@
 package org.biiig.dmgm.todo.vector_mining;
 
 import org.biiig.dmgm.todo.model.Vector;
-import org.biiig.dmgm.todo.model.countable.Countable;
+import org.biiig.dmgm.impl.model.countable.Countable;
 
 import java.util.Iterator;
 import java.util.List;

@@ -1,4 +1,4 @@
-package org.biiig.dmgm.todo.model.countable;
+package org.biiig.dmgm.impl.model.countable;
 
 import java.util.Comparator;
 

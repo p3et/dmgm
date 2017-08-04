@@ -1,8 +1,8 @@
 package org.biiig.dmgm.todo.mining;
 
 import com.google.common.collect.Maps;
-import org.biiig.dmgm.todo.model.countable.Countable;
-import org.biiig.dmgm.todo.model.countable.CountableSupportComparator;
+import org.biiig.dmgm.impl.model.countable.Countable;
+import org.biiig.dmgm.impl.model.countable.CountableDescendingComparator;
 
 import java.util.List;
 import java.util.Map;
@@ -47,8 +47,8 @@ public class GSpanBase {
 
   protected void createDictionaries(List<Countable<String>> vertexLabels,
     List<Countable<String>> edgeLabels) {
-    Countable.aggregateSupport(vertexLabels);
-    vertexLabels.sort(new CountableSupportComparator<>());
+    Countable.sumSupportAndFrequency(vertexLabels);
+    vertexLabels.sort(new CountableDescendingComparator<>());
     int translation = 1;
     for (Countable<String> countable : vertexLabels) {
       if (countable.getSupport() >= minSupport) {
@@ -58,8 +58,8 @@ public class GSpanBase {
       }
     }
 
-    Countable.aggregateSupport(edgeLabels);
-    edgeLabels.sort(new CountableSupportComparator<>());
+    Countable.sumSupportAndFrequency(edgeLabels);
+    edgeLabels.sort(new CountableDescendingComparator<>());
     translation = 1;
     for (Countable<String> countable : edgeLabels) {
       if (countable.getSupport() >= minSupport) {

@@ -16,7 +16,7 @@ package org.biiig.dmgm.todo.gspan;/*
  */
 
 
-import org.biiig.dmgm.impl.model.DFSCode;
+import org.biiig.dmgm.impl.model.graph.DFSCode;
 
 import java.io.Serializable;
 import java.util.Comparator;

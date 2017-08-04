@@ -3,9 +3,9 @@ package org.biiig.dmgm.todo.mining;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.impl.model.DFSCode;
+import org.biiig.dmgm.impl.model.graph.DFSCode;
 import org.biiig.dmgm.todo.gspan.GSpanTreeNode;
-import org.biiig.dmgm.todo.model.countable.Countable;
+import org.biiig.dmgm.impl.model.countable.Countable;
 import org.biiig.dmgm.todo.gspan.DFSEmbedding;
 import org.biiig.dmgm.todo.gspan.GraphDFSEmbeddings;
 import org.biiig.dmgm.todo.model.labeled_graph.LabeledAdjacencyListEntry;
@@ -198,11 +198,11 @@ public class GenSpanBaseline extends GSpanBase {
       if (fields[0].equals("t")) {
         graphCount++;
 
-        Countable.aggregateFrequency(graphVertexLabels);
+        Countable.sumFrequency(graphVertexLabels);
         vertexLabels.addAll(graphVertexLabels);
         graphVertexLabels.clear();
 
-        Countable.aggregateFrequency(graphEdgeLabels);
+        Countable.sumFrequency(graphEdgeLabels);
         edgeLabels.addAll(graphEdgeLabels);
         graphEdgeLabels.clear();
 
@@ -215,10 +215,10 @@ public class GenSpanBaseline extends GSpanBase {
       }
     }
 
-    Countable.aggregateFrequency(graphVertexLabels);
+    Countable.sumFrequency(graphVertexLabels);
     vertexLabels.addAll(graphVertexLabels);
 
-    Countable.aggregateFrequency(graphEdgeLabels);
+    Countable.sumFrequency(graphEdgeLabels);
     edgeLabels.addAll(graphEdgeLabels);
 
     createDictionaries(vertexLabels, edgeLabels);

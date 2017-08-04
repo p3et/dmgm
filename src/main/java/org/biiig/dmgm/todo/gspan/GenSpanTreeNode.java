@@ -2,9 +2,9 @@ package org.biiig.dmgm.todo.gspan;
 
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.impl.model.DFSCode;
+import org.biiig.dmgm.impl.model.graph.DFSCode;
 import org.biiig.dmgm.todo.model.Vector;
-import org.biiig.dmgm.todo.model.countable.Countable;
+import org.biiig.dmgm.impl.model.countable.Countable;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -49,7 +49,7 @@ public class GenSpanTreeNode implements Comparable<GenSpanTreeNode> {
       }
 
       for (GenSpanTreeNode vectors : list) {
-        Countable.aggregateFrequency(vectors.vectors);
+        Countable.sumFrequency(vectors.vectors);
       }
     }
   }
@@ -74,7 +74,7 @@ public class GenSpanTreeNode implements Comparable<GenSpanTreeNode> {
       }
 
       for (GenSpanTreeNode vectors : list) {
-        Countable.aggregateSupport(vectors.vectors);
+        Countable.sumSupportAndFrequency(vectors.vectors);
       }
     }
   }

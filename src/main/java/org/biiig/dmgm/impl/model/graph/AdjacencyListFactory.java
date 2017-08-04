@@ -1,6 +1,6 @@
-package org.biiig.dmgm.impl.model;
+package org.biiig.dmgm.impl.model.graph;
 
-import org.biiig.dmgm.api.model.DirectedGraph;
+import org.biiig.dmgm.api.model.graph.DirectedGraph;
 
 /**
  * Created by peet on 02.08.17.

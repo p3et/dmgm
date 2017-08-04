@@ -1,4 +1,4 @@
-package org.biiig.dmgm.impl.io;
+package org.biiig.dmgm.impl.io.tlf;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -22,7 +22,7 @@ class TLFFileSplitter  {
     while (iterator.hasNext()) {
       String line = iterator.next();
 
-      if (line.startsWith(TLFConstants.GRAPH_PREFIX)) {
+      if (line.startsWith(TLFConstants.GRAPH_SYMBOL)) {
         if (graphLines.length > 0) {
           splits.add(graphLines);
         }

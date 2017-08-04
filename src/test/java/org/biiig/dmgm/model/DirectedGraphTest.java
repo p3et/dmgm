@@ -1,8 +1,7 @@
 package org.biiig.dmgm.model;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.api.model.DirectedGraph;
-import org.biiig.dmgm.api.model.DirectedGraphFactory;
+import org.biiig.dmgm.api.model.graph.DirectedGraph;
+import org.biiig.dmgm.api.model.graph.DirectedGraphFactory;
 import org.junit.Test;
 
 import java.util.Objects;

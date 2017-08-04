@@ -1,11 +1,10 @@
-package org.biiig.dmgm.impl.model;
+package org.biiig.dmgm.impl.model.graph;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.api.model.DirectedGraph;
+import org.biiig.dmgm.api.model.graph.DirectedGraph;
 import org.biiig.dmgm.todo.gspan.LexicographicDFSCodeComparator;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 public class DFSCode implements Comparable<DFSCode>, DirectedGraph {
 

@@ -1,4 +1,4 @@
-package org.biiig.dmgm.api.model;
+package org.biiig.dmgm.api.model.graph;
 
 /**
  * A factory to create directed graphs.

@@ -1,7 +1,8 @@
 package org.biiig.dmgm.api;
 
-/**
- * Created by peet on 04.08.17.
- */
+import org.biiig.dmgm.impl.db.LabelDictionary;
+
+
 public interface Database {
+  void setVertexDictionary(LabelDictionary labelFrequencies);
 }
