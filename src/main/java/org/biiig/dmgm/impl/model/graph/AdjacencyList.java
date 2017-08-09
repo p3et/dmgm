@@ -1,6 +1,7 @@
 package org.biiig.dmgm.impl.model.graph;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.NotImplementedException;
 
 public class AdjacencyList extends SourceTargetMux {
 
@@ -19,8 +20,8 @@ public class AdjacencyList extends SourceTargetMux {
   }
 
   @Override
-  public void setEdge(int edgeId, int sourceId, int targetId, int[] labels) {
-    super.setEdge(edgeId, sourceId, targetId, labels);
+  public void setEdge(int edgeId, int sourceId, int targetId, int[] data) {
+    super.setEdge(edgeId, sourceId, targetId, data);
     outgoingEdgeIds[sourceId] = ArrayUtils.add(outgoingEdgeIds[sourceId], edgeId);
     incomingEdgeIds[targetId] = ArrayUtils.add(incomingEdgeIds[targetId], edgeId);
   }
@@ -33,5 +34,10 @@ public class AdjacencyList extends SourceTargetMux {
   @Override
   public int[] getIncomingEdgeIds(int vertexId) {
     return incomingEdgeIds[vertexId];
+  }
+
+  @Override
+  public void trim() {
+    throw new NotImplementedException("trimming not yet implemented for adjacency lists.");
   }
 }

@@ -53,12 +53,12 @@ public class DFSCode implements Comparable<DFSCode>, DirectedGraph {
   }
 
   @Override
-  public void setVertex(int vertexId, int[] labels) {
-    if (labels.length != 1) {
+  public void setVertex(int vertexId, int[] data) {
+    if (data.length != 1) {
       throw new IllegalArgumentException(
-        "A vertex must exactly have 1 data field (label) but has " + ArrayUtils.toString(labels));
+        "A vertex must exactly have 1 data field (label) but has " + ArrayUtils.toString(data));
     } else {
-      setVertex(vertexId, labels[0]);
+      setVertex(vertexId, data[0]);
     }
   }
 
@@ -80,13 +80,13 @@ public class DFSCode implements Comparable<DFSCode>, DirectedGraph {
   }
 
   @Override
-  public void setEdge(int edgeId, int sourceId, int targetId, int[] labels) {
+  public void setEdge(int edgeId, int sourceId, int targetId, int[] data) {
 
-    if (labels.length != 1) {
+    if (data.length != 1) {
       throw new IllegalArgumentException(
-        "An edge must exactly have 1 data field (label) but has " + ArrayUtils.toString(labels));
+        "An edge must exactly have 1 data field (label) but has " + ArrayUtils.toString(data));
     } else {
-      setEdge(edgeId, sourceId, targetId, labels[0]);
+      setEdge(edgeId, sourceId, targetId, data[0]);
     }
   }
 

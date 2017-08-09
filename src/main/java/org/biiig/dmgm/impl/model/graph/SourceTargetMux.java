@@ -24,8 +24,13 @@ public class SourceTargetMux extends DirectedGraphBase {
   }
 
   @Override
-  public void setVertex(int vertexId, int[] labels) {
-    vertexData[vertexId] = labels;
+  public void setVertex(int vertexId, int[] data) {
+    vertexData[vertexId] = data;
+  }
+
+  @Override
+  public int getVertexLabel(int vertexId) {
+    return getVertexData(vertexId)[0];
   }
 
   @Override
@@ -34,10 +39,15 @@ public class SourceTargetMux extends DirectedGraphBase {
   }
 
   @Override
-  public void setEdge(int edgeId, int sourceId, int targetId, int[] labels) {
+  public void setEdge(int edgeId, int sourceId, int targetId, int[] data) {
     sourceTargetMux[getSourceMuxIndex(edgeId)] = sourceId;
     sourceTargetMux[getTargetMuxIndex(edgeId)] = targetId;
-    edgeData[edgeId] = labels;
+    edgeData[edgeId] = data;
+  }
+
+  @Override
+  public int getEdgeLabel(int edgeId) {
+    return getEdgeData(edgeId)[0];
   }
 
   @Override

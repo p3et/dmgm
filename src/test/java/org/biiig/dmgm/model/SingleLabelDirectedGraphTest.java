@@ -13,28 +13,28 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by peet on 02.08.17.
  */
-public abstract class DirectedGraphTest {
+public abstract class SingleLabelDirectedGraphTest {
   @Test
   public void testGetterAndSetter() throws Exception {
     DirectedGraphFactory factory = getFactory();
 
     DirectedGraph graph = factory.create(2, 2);
 
-    int[] data0 = new int[] {0};
-    int[] data1 = new int[] {1};
+    int lab0 = 0;
+    int lab1 = 1;
 
-    graph.setVertex(0, data0);
-    graph.setVertex(1, data1);
+    graph.setVertex(0, lab0);
+    graph.setVertex(1, lab1);
 
-    graph.setEdge(0, 0, 0, data0);
-    graph.setEdge(1, 0, 1, data1);
+    graph.setEdge(0, 0, 0, lab0);
+    graph.setEdge(1, 0, 1, lab1);
 
     assertEquals("vertex count", 2, graph.getVertexCount());
-    assertArrayEquals("vertex data 0", data0, graph.getVertexData(0));
-    assertArrayEquals("vertex data 1", data1, graph.getVertexData(1));
+    assertEquals("vertex label 0", lab0, graph.getVertexLabel(0));
+    assertEquals("vertex label 1", lab1, graph.getVertexLabel(1));
     assertEquals("edge count", 2, graph.getEdgeCount());
-    assertArrayEquals("edge data 0", data0, graph.getEdgeData(0));
-    assertArrayEquals("edge data 1", data1, graph.getEdgeData(1));
+    assertEquals("edge label 0", lab0, graph.getEdgeLabel(0));
+    assertEquals("edge label 1", lab1, graph.getEdgeLabel(1));
     assertEquals("edge source 0", 0, graph.getSourceId(0));
     assertEquals("edge target 0", 0, graph.getTargetId(0));
     assertEquals("edge source 1", 0, graph.getSourceId(1));
