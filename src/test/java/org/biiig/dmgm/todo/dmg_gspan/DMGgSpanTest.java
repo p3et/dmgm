@@ -1,6 +1,6 @@
 package org.biiig.dmgm.todo.dmg_gspan;
 
-import org.biiig.dmgm.todo.mining.DircetedMulitgraphGSpan;
+import org.biiig.dmgm.impl.algorithms.tfsm.DirectedMultigraphGSpan;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -16,8 +16,8 @@ public class DMGgSpanTest {
   }
 
   private void mine(float minSupportThreshold, int expectedResultSize) throws IOException {
-    String inputPath = DircetedMulitgraphGSpan.class.getResource("/samples/predictable.tlf").getFile();
-    DircetedMulitgraphGSpan gSpan = new DircetedMulitgraphGSpan(inputPath, minSupportThreshold, 15);
+    String inputPath = DirectedMultigraphGSpan.class.getResource("/samples/predictable.tlf").getFile();
+    DirectedMultigraphGSpan gSpan = new DirectedMultigraphGSpan(inputPath, minSupportThreshold, 15);
     gSpan.mine();
     assertEquals(expectedResultSize, gSpan.getResult().size());
   }

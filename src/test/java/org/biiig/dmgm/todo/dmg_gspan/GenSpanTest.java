@@ -1,6 +1,6 @@
 package org.biiig.dmgm.todo.dmg_gspan;
 
-import org.biiig.dmgm.todo.mining.DircetedMulitgraphGSpan;
+import org.biiig.dmgm.impl.algorithms.tfsm.DirectedMultigraphGSpan;
 import org.biiig.dmgm.todo.mining.GenSpan;
 import org.biiig.dmgm.todo.mining.GenSpanBaseline;
 import org.biiig.dmgm.todo.vector_mining.CrossLevelFrequentVectors;
@@ -21,7 +21,7 @@ public class GenSpanTest {
 
   @Test
   public void mineGSpan() throws IOException {
-    DircetedMulitgraphGSpan gSpan = new DircetedMulitgraphGSpan(inputPath, THRESHOLD, K_MAX);
+    DirectedMultigraphGSpan gSpan = new DirectedMultigraphGSpan(inputPath, THRESHOLD, K_MAX);
     gSpan.mine();
     assertEquals(7, gSpan.getResult().size());
   }

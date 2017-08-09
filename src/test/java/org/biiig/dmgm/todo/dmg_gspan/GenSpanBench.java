@@ -1,7 +1,8 @@
 package org.biiig.dmgm.todo.dmg_gspan;
 
 import org.apache.commons.lang3.time.StopWatch;
-import org.biiig.dmgm.todo.mining.DircetedMulitgraphGSpan;
+import org.biiig.dmgm.api.algorithms.tfsm.TransactionalFSM;
+import org.biiig.dmgm.impl.algorithms.tfsm.DirectedMultigraphGSpan;
 import org.biiig.dmgm.todo.mining.GenSpan;
 import org.biiig.dmgm.todo.mining.GenSpanBaseline;
 import org.biiig.dmgm.todo.vector_mining.CrossLevelFrequentVectors;
@@ -21,7 +22,7 @@ public class GenSpanBench {
 
   @Test
   public void mineGSpan() throws IOException {
-    DircetedMulitgraphGSpan gSpan = new DircetedMulitgraphGSpan(inputPath, THRESHOLD, K_MAX);
+    TransactionalFSM gSpan = new DirectedMultigraphGSpan(inputPath, THRESHOLD, K_MAX);
     gSpan.mine();
   }
 
@@ -58,7 +59,7 @@ public class GenSpanBench {
           for (int kmax : new int[] {3, 5, 7}) {
             StopWatch watch = new StopWatch();
             watch.start();
-            DircetedMulitgraphGSpan gSpan = new DircetedMulitgraphGSpan(inputPath, threshold, kmax);
+            DirectedMultigraphGSpan gSpan = new DirectedMultigraphGSpan(inputPath, threshold, kmax);
             gSpan.mine();
             watch.stop();
             System.out.println(

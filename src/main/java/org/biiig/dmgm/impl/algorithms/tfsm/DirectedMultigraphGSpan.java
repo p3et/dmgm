@@ -1,13 +1,16 @@
-package org.biiig.dmgm.todo.mining;
+package org.biiig.dmgm.impl.algorithms.tfsm;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.ArrayUtils;
+import org.biiig.dmgm.api.Database;
+import org.biiig.dmgm.api.algorithms.tfsm.TransactionalFSM;
 import org.biiig.dmgm.impl.model.graph.DFSCode;
 import org.biiig.dmgm.todo.gspan.GSpanTreeNode;
 import org.biiig.dmgm.impl.model.countable.Countable;
 import org.biiig.dmgm.todo.gspan.DFSEmbedding;
 import org.biiig.dmgm.todo.gspan.GraphDFSEmbeddings;
+import org.biiig.dmgm.todo.mining.GSpanBase;
 import org.biiig.dmgm.todo.model.labeled_graph.LabeledAdjacencyListEntry;
 import org.biiig.dmgm.todo.model.labeled_graph.LabeledEdge;
 import org.biiig.dmgm.todo.model.labeled_graph.LabeledGraph;
@@ -25,7 +28,7 @@ import java.util.stream.Stream;
 /**
  * Directed Multigraph gSpan
  */
-public class DircetedMulitgraphGSpan extends GSpanBase {
+public class DirectedMultigraphGSpan extends GSpanBase implements TransactionalFSM {
   private final String inputPath;
 
   private final List<LabeledGraph> graphs = Lists.newArrayList();
@@ -35,12 +38,13 @@ public class DircetedMulitgraphGSpan extends GSpanBase {
   private final List<Countable<DFSCode>> result = Lists.newArrayList();
 
 
-  public DircetedMulitgraphGSpan(String inputPath, Float minSupportThreshold, int kMax) {
+  public DirectedMultigraphGSpan(String inputPath, Float minSupportThreshold, int kMax) {
     super(minSupportThreshold, kMax);
     this.inputPath = inputPath;
   }
 
-  public void mine() throws IOException {
+  @Override
+  public void mine(Database database, int fromId, int toId) throws IOException {
     createDictionaries(inputPath);
     readGraphs(inputPath);
 
