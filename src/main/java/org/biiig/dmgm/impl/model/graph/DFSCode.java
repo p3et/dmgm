@@ -1,6 +1,7 @@
 package org.biiig.dmgm.impl.model.graph;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.NotImplementedException;
 import org.biiig.dmgm.api.model.graph.DirectedGraph;
 import org.biiig.dmgm.todo.gspan.LexicographicDFSCodeComparator;
 
@@ -157,6 +158,11 @@ public class DFSCode implements Comparable<DFSCode>, DirectedGraph {
   @Override
   public int getEdgeCount() {
     return directionIndicators.length;
+  }
+
+  @Override
+  public void trim() {
+    throw new NotImplementedException("trimming not yet implemented for DFS codes.");
   }
 
   public int getFromTime(int edgeTime) {

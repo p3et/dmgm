@@ -60,6 +60,24 @@ public class SourceTargetMux extends DirectedGraphBase {
     return getIncidentEdgeIds(vertexId, false);
   }
 
+  @Override
+  public void trim() {
+    for (int v = 0; v < getVertexCount(); v++) {
+      if (getVertexData(v) == null) {
+        vertexData = ArrayUtils.subarray(vertexData, 0, v);
+        break;
+      }
+    }
+
+    for (int e = 0; e < getEdgeCount(); e++) {
+      if (getEdgeData(e) == null) {
+        sourceTargetMux = ArrayUtils.subarray(sourceTargetMux, 0, 2 * e);
+        edgeData = ArrayUtils.subarray(edgeData, 0, e);
+        break;
+      }
+    }
+  }
+
   private int[] getIncidentEdgeIds(int vertexId, boolean outgoing) {
     int i = 0;
     int edgeCount = getEdgeCount();

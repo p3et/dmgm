@@ -33,6 +33,8 @@ public class TLFGraphReader extends TLFSplitReader {
     readVertices(split, firstEdgeIndex, graph);
     readEdges(split, firstEdgeIndex, graph);
 
+    graph.trim();
+
     System.out.println(graph);
   }
 

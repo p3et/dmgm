@@ -20,4 +20,6 @@ public interface DirectedGraph {
 
   int getVertexCount();
   int getEdgeCount();
+
+  void trim();
 }
