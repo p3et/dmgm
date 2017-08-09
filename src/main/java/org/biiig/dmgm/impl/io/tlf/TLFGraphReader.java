@@ -35,7 +35,7 @@ public class TLFGraphReader extends TLFSplitReader {
 
     graph.trim();
 
-    System.out.println(graph);
+    database.store(graph);
   }
 
   private int getFirstEdgeIndex(String[] split) {
