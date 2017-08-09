@@ -9,6 +9,9 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static org.junit.Assert.assertEquals;
+
+
 /**
  * Created by peet on 04.08.17.
  */
@@ -22,5 +25,11 @@ public class TLFReaderTest {
     DataSource reader = new TLFDataSource(inputPath);
 
     reader.load(database, new SourceTargetMuxFactory(), 0.8f);
+
+    assertEquals("vertex dictionary size", 4, database.getVertexDictionary().size());
+    assertEquals("edge dictionary size", 5, database.getEdgeDictionary().size());
+    assertEquals("graph count", 10, database.getGraphCount());
+
+
   }
 }

@@ -5,10 +5,12 @@ package org.biiig.dmgm.api.model.graph;
  */
 public interface DirectedGraph {
   int[] getVertexData(int vertexId);
-  void setVertex(int vertexId, int[] data);
+  void setVertex(int vertexId, int label);
+  void setVertex(int vertexId, int[] labels);
 
   int[] getEdgeData(int edgeId);
-  void setEdge(int edgeId, int sourceId, int targetId, int[] data);
+  void setEdge(int edgeId, int sourceId, int targetId, int label);
+  void setEdge(int edgeId, int sourceId, int targetId, int[] labels);
 
   int getSourceId(int edgeId);
   int getTargetId(int edgeId);

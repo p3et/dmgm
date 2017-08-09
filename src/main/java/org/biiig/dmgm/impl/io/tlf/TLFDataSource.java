@@ -26,7 +26,7 @@ public class TLFDataSource implements DataSource {
   public void load(
     Database database,
     DirectedGraphFactory graphFactory,
-    Float minSupportThreshold
+    float minSupportThreshold
   ) throws IOException {
 
     TLFLabelReaderFactory labelReaderFactory = new TLFLabelReaderFactory();
@@ -46,9 +46,6 @@ public class TLFDataSource implements DataSource {
 
     TLFGraphReaderFactory graphReaderFactory = new TLFGraphReaderFactory(graphFactory, database);
     readSplits(graphReaderFactory);
-
-    System.out.println(vertexDictionary);
-    System.out.println(edgeDictionary);
   }
 
   private LabelDictionary createDictionary(

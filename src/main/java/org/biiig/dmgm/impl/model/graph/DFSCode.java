@@ -47,12 +47,17 @@ public class DFSCode implements Comparable<DFSCode>, DirectedGraph {
   }
 
   @Override
-  public void setVertex(int vertexId, int[] data) {
-    if (data.length != 1) {
+  public void setVertex(int vertexId, int label) {
+    vertexLabels[vertexId] = label;
+  }
+
+  @Override
+  public void setVertex(int vertexId, int[] labels) {
+    if (labels.length != 1) {
       throw new IllegalArgumentException(
-        "A vertex must exactly have 1 data field (label) but has " + ArrayUtils.toString(data));
+        "A vertex must exactly have 1 data field (label) but has " + ArrayUtils.toString(labels));
     } else {
-      vertexLabels[vertexId] = data[0];
+      setVertex(vertexId, labels[0]);
     }
   }
 
@@ -66,16 +71,21 @@ public class DFSCode implements Comparable<DFSCode>, DirectedGraph {
   }
 
   @Override
-  public void setEdge(int edgeId, int sourceId, int targetId, int[] data) {
+  public void setEdge(int edgeId, int sourceId, int targetId, int label) {
+    setFromTime(edgeId, sourceId);
+    setEdgeLabel(edgeId, label);
+    setToTime(edgeId, targetId);
+    directionIndicators[edgeId] = true;
+  }
 
-    if (data.length != 1) {
+  @Override
+  public void setEdge(int edgeId, int sourceId, int targetId, int[] labels) {
+
+    if (labels.length != 1) {
       throw new IllegalArgumentException(
-        "An edge must exactly have 1 data field (label) but has " + ArrayUtils.toString(data));
+        "An edge must exactly have 1 data field (label) but has " + ArrayUtils.toString(labels));
     } else {
-      setFromTime(edgeId, sourceId);
-      setEdgeLabel(edgeId, data[0]);
-      setToTime(edgeId, targetId);
-      directionIndicators[edgeId] = true;
+      setEdge(edgeId, sourceId, targetId, labels[0]);
     }
   }
 

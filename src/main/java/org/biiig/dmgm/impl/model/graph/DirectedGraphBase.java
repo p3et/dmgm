@@ -1,6 +1,11 @@
 package org.biiig.dmgm.impl.model.graph;
 
+import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.model.graph.DirectedGraph;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by peet on 02.08.17.
@@ -32,5 +37,22 @@ public abstract class DirectedGraphBase implements DirectedGraph {
   @Override
   public int getEdgeCount() {
     return edgeData.length;
+  }
+
+  @Override
+  public String toString() {
+    return "g=\n" +
+      "Lv=" + toString(vertexData) + "\n" +
+      "Le=" + toString(edgeData);
+  }
+
+  private String toString(int[][] data) {
+    List<String> elementStrings = Lists.newArrayListWithExpectedSize(data.length);
+
+    for (int i = 0; i < data.length; i++) {
+      elementStrings.add(String.valueOf(i) + ":" + Arrays.toString(data[i]));
+    }
+
+    return StringUtils.join(elementStrings, ",");
   }
 }

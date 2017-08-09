@@ -19,8 +19,8 @@ public class AdjacencyList extends SourceTargetMux {
   }
 
   @Override
-  public void setEdge(int edgeId, int sourceId, int targetId, int[] data) {
-    super.setEdge(edgeId, sourceId, targetId, data);
+  public void setEdge(int edgeId, int sourceId, int targetId, int[] labels) {
+    super.setEdge(edgeId, sourceId, targetId, labels);
     outgoingEdgeIds[sourceId] = ArrayUtils.add(outgoingEdgeIds[sourceId], edgeId);
     incomingEdgeIds[targetId] = ArrayUtils.add(incomingEdgeIds[targetId], edgeId);
   }

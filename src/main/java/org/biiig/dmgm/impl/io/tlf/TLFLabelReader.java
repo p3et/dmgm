@@ -3,6 +3,7 @@ package org.biiig.dmgm.impl.io.tlf;
 import com.google.common.collect.Lists;
 import org.biiig.dmgm.impl.model.countable.Countable;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -57,8 +58,8 @@ public class TLFLabelReader extends TLFSplitReader {
       } else {
         String[] fields = line.split(TLFConstants.FIELD_SEPARATOR);
 
-        for (int j = 2; j < fields.length; j++) {
-          graphVertexLabelFrequencies.add(new Countable<>(fields[j]));
+        for (int f = 2; f < fields.length; f++) {
+          graphVertexLabelFrequencies.add(new Countable<>(fields[f]));
         }
       }
     }

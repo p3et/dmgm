@@ -10,6 +10,6 @@ public interface DataSource {
   void load(
     Database database,
     DirectedGraphFactory graphFactory,
-    Float minSupportThreshold
+    float minSupportThreshold
   ) throws IOException;
 }

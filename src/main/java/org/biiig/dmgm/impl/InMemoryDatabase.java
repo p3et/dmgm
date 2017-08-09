@@ -21,4 +21,19 @@ public class InMemoryDatabase implements Database {
   public void setEdgeDictionary(LabelDictionary dictionary) {
     this.edgeDictionary = dictionary;
   }
+
+  @Override
+  public LabelDictionary getVertexDictionary() {
+    return vertexDictionary;
+  }
+
+  @Override
+  public LabelDictionary getEdgeDictionary() {
+    return edgeDictionary;
+  }
+
+  @Override
+  public int getGraphCount() {
+    return graphs.size();
+  }
 }

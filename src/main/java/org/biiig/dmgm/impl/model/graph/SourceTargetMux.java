@@ -1,6 +1,10 @@
 package org.biiig.dmgm.impl.model.graph;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
 
 /**
  * Graph representation without indexes.
@@ -15,15 +19,25 @@ public class SourceTargetMux extends DirectedGraphBase {
   }
 
   @Override
-  public void setVertex(int vertexId, int[] data) {
-    vertexData[vertexId] = data;
+  public void setVertex(int vertexId, int label) {
+    setVertex(vertexId, new int[] {label});
   }
 
   @Override
-  public void setEdge(int edgeId, int sourceId, int targetId, int[] data) {
+  public void setVertex(int vertexId, int[] labels) {
+    vertexData[vertexId] = labels;
+  }
+
+  @Override
+  public void setEdge(int edgeId, int sourceId, int targetId, int label) {
+    setEdge(edgeId, sourceId, targetId, new int[] {label});
+  }
+
+  @Override
+  public void setEdge(int edgeId, int sourceId, int targetId, int[] labels) {
     sourceTargetMux[getSourceMuxIndex(edgeId)] = sourceId;
     sourceTargetMux[getTargetMuxIndex(edgeId)] = targetId;
-    edgeData[edgeId] = data;
+    edgeData[edgeId] = labels;
   }
 
   @Override
@@ -79,5 +93,16 @@ public class SourceTargetMux extends DirectedGraphBase {
     return getSourceMuxIndex(edgeId) + 1;
   }
 
+  @Override
+  public String toString() {
 
+    List<String> edgeStrings = Lists.newArrayListWithExpectedSize(getEdgeCount());
+
+    for (int i = 0; i < getEdgeCount(); i++) {
+      edgeStrings.add(String.valueOf(i) + ":<" + getSourceId(i) + ";" + getTargetId(i) + ">");
+    }
+
+    return super.toString() + "\n" +
+      "E=" + StringUtils.join(edgeStrings, ",");
+  }
 }

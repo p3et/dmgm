@@ -28,4 +28,12 @@ public class LabelDictionary {
   public String toString() {
     return integerString.toString();
   }
+
+  public int size() {
+    return stringInteger.size();
+  }
+
+  public Integer translate(String value) {
+    return stringInteger.get(value);
+  }
 }

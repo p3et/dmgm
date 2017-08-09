@@ -38,7 +38,8 @@ public abstract class TLFSplitReader implements Runnable {
     finish();
   }
 
-  protected abstract void finish();
+  protected void finish() {
+  }
 
   protected abstract void process(String[] split);
 }

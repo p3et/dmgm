@@ -7,4 +7,10 @@ public interface Database {
   void setVertexDictionary(LabelDictionary dictionary);
 
   void setEdgeDictionary(LabelDictionary dictionary);
+
+  LabelDictionary getVertexDictionary();
+
+  LabelDictionary getEdgeDictionary();
+
+  int getGraphCount();
 }
