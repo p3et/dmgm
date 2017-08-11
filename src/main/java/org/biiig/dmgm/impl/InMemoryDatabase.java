@@ -4,6 +4,7 @@ import org.biiig.dmgm.api.Database;
 import org.biiig.dmgm.api.model.graph.DirectedGraph;
 import org.biiig.dmgm.impl.db.LabelDictionary;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -11,6 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class InMemoryDatabase implements Database {
   private final AtomicInteger newGraphId = new AtomicInteger();
   private final Map<Integer, DirectedGraph> graphs = new ConcurrentHashMap<>();
+
   private LabelDictionary vertexDictionary;
   private LabelDictionary edgeDictionary;
 
@@ -41,6 +43,7 @@ public class InMemoryDatabase implements Database {
 
   @Override
   public void store(DirectedGraph graph) {
-    graphs.put(newGraphId.getAndIncrement(), graph);
+    int graphId = newGraphId.getAndIncrement();
+    graphs.put(graphId, graph);
   }
 }

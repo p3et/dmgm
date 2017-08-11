@@ -3,6 +3,7 @@ package org.biiig.dmgm.todo.mining;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.ArrayUtils;
+import org.biiig.dmgm.impl.algorithms.tfsm.TFSMConfig;
 import org.biiig.dmgm.impl.model.graph.DFSCode;
 import org.biiig.dmgm.todo.gspan.GSpanTreeNode;
 import org.biiig.dmgm.impl.model.countable.Countable;
@@ -26,7 +27,6 @@ import java.util.stream.Stream;
  * Directed Multigraph gSpan
  */
 public class GenSpanBaseline extends GSpanBase {
-  private final String inputPath;
 
   private final List<LabeledGraph> graphs = Lists.newArrayList();
   private final Deque<GSpanTreeNode> parents = Lists.newLinkedList();
@@ -34,16 +34,12 @@ public class GenSpanBaseline extends GSpanBase {
   private final List<GSpanTreeNode> children = Lists.newLinkedList();
   private final List<Countable<DFSCode>> result = Lists.newArrayList();
 
-
-  public GenSpanBaseline(String inputPath, Float minSupportThreshold, int kMax) {
-    super(minSupportThreshold, kMax);
-    this.inputPath = inputPath;
+  public GenSpanBaseline(TFSMConfig config) {
+    super(config);
   }
 
-  public void mine() throws IOException {
-    createDictionaries(inputPath);
-    readGraphs(inputPath);
 
+  public void mine() throws IOException {
     this.minSupport = Math.round((float) graphCount * minSupportThreshold);
 
     initSingleEdgePatterns();

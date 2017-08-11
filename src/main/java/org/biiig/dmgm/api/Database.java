@@ -3,6 +3,8 @@ package org.biiig.dmgm.api;
 import org.biiig.dmgm.api.model.graph.DirectedGraph;
 import org.biiig.dmgm.impl.db.LabelDictionary;
 
+import java.util.Collection;
+
 
 public interface Database {
   void setVertexDictionary(LabelDictionary dictionary);
@@ -16,4 +18,5 @@ public interface Database {
   int getGraphCount();
 
   void store(DirectedGraph graph);
+
 }

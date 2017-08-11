@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.Database;
 import org.biiig.dmgm.api.algorithms.tfsm.TransactionalFSM;
+import org.biiig.dmgm.api.model.graph.DirectedGraph;
 import org.biiig.dmgm.impl.model.graph.DFSCode;
 import org.biiig.dmgm.todo.gspan.GSpanTreeNode;
 import org.biiig.dmgm.impl.model.countable.Countable;
@@ -12,13 +13,12 @@ import org.biiig.dmgm.todo.gspan.DFSEmbedding;
 import org.biiig.dmgm.todo.gspan.GraphDFSEmbeddings;
 import org.biiig.dmgm.todo.mining.GSpanBase;
 import org.biiig.dmgm.todo.model.labeled_graph.LabeledAdjacencyListEntry;
-import org.biiig.dmgm.todo.model.labeled_graph.LabeledEdge;
 import org.biiig.dmgm.todo.model.labeled_graph.LabeledGraph;
-import org.biiig.dmgm.todo.model.labeled_graph.LabeledVertex;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
@@ -29,32 +29,31 @@ import java.util.stream.Stream;
  * Directed Multigraph gSpan
  */
 public class DirectedMultigraphGSpan extends GSpanBase implements TransactionalFSM {
-  private final String inputPath;
-
   private final List<LabeledGraph> graphs = Lists.newArrayList();
   private final Deque<GSpanTreeNode> parents = Lists.newLinkedList();
   private final List<GSpanTreeNode> reports = Lists.newArrayList();
   private final List<GSpanTreeNode> children = Lists.newLinkedList();
   private final List<Countable<DFSCode>> result = Lists.newArrayList();
 
-
-  public DirectedMultigraphGSpan(String inputPath, Float minSupportThreshold, int kMax) {
-    super(minSupportThreshold, kMax);
-    this.inputPath = inputPath;
+  public DirectedMultigraphGSpan(TFSMConfig config) {
+    super(config);
   }
 
   @Override
-  public void mine(Database database, int fromId, int toId) throws IOException {
-    createDictionaries(inputPath);
-    readGraphs(inputPath);
-
-    this.minSupport = Math.round((float) graphCount * minSupportThreshold);
+  public List<DirectedGraph> mine(Database database, int inputColIdx, int outputColIdx) throws IOException {
+    this.minSupport = Math.round((float) database.getGraphCount() * minSupportThreshold);
 
     initSingleEdgePatterns();
 
     while (! parents.isEmpty()) {
       growForNextParent();
     }
+    List<DirectedGraph> frequentPatterns = Lists.newArrayList();
+
+    for (Countable<DFSCode> codeCountable : result) {
+      frequentPatterns.add(codeCountable.getObject());
+    }
+    return frequentPatterns;
   }
 
   private void growForNextParent() {
@@ -217,52 +216,6 @@ public class DirectedMultigraphGSpan extends GSpanBase implements TransactionalF
     edgeLabels.addAll(graphEdgeLabels);
 
     createDictionaries(vertexLabels, edgeLabels);
-  }
-
-  private void readGraphs(String input) throws IOException {
-    Stream<String> stream = Files.lines(Paths.get(input));
-    Iterator<String> iterator = stream.iterator();
-
-    LabeledGraph graph = new LabeledGraph(-1);
-    Map<Integer, Integer> vertexIdMap = Maps.newHashMap();
-
-    while (iterator.hasNext()) {
-      String line = iterator.next();
-      String[] fields = line.split(" ");
-
-      if (fields[0].equals("t")) {
-        graph = new LabeledGraph(graphs.size());
-        graphs.add(graph);
-        vertexIdMap.clear();
-      } else if (fields[0].equals("e")) {
-        Integer label = edgeDictionary.get(fields[3]);
-
-        if (label != null) {
-          Integer source = vertexIdMap.get(Integer.valueOf(fields[1]));
-
-          if (source != null) {
-            Integer target = vertexIdMap.get(Integer.valueOf(fields[2]));
-
-            if (target != null) {
-              int id = graph.getEdgeCount();
-              LabeledEdge edge = new LabeledEdge(id, source, label, target);
-              graph.add(edge);
-            }
-          }
-        }
-      } else {
-        int sourceId = Integer.valueOf(fields[1]);
-        Integer label = vertexDictionary.get(fields[2]);
-
-        if (label != null) {
-          int targetId = vertexIdMap.size();
-          vertexIdMap.put(sourceId, targetId);
-
-          LabeledVertex vertex = new LabeledVertex(targetId, label);
-          graph.add(vertex);
-        }
-      }
-    }
   }
 
   public int[] getRightmostPathTimes(DFSCode dfsCode) {

@@ -7,9 +7,5 @@ import java.io.IOException;
 
 public interface DataSource {
 
-  void load(
-    Database database,
-    DirectedGraphFactory graphFactory,
-    float minSupportThreshold
-  ) throws IOException;
+  void load(Database database, DirectedGraphFactory graphFactory, float minSupportThreshold) throws IOException;
 }

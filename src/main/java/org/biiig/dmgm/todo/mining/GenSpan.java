@@ -3,6 +3,7 @@ package org.biiig.dmgm.todo.mining;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.ArrayUtils;
+import org.biiig.dmgm.impl.algorithms.tfsm.TFSMConfig;
 import org.biiig.dmgm.impl.model.graph.DFSCode;
 import org.biiig.dmgm.todo.gspan.DFSEmbedding;
 import org.biiig.dmgm.todo.gspan.GenSpanTreeNode;
@@ -14,6 +15,7 @@ import org.biiig.dmgm.todo.model.labeled_graph.LabeledEdge;
 import org.biiig.dmgm.todo.model.multilevel_graph.MultiLevelGraph;
 import org.biiig.dmgm.todo.model.multilevel_graph.MultiLevelVertex;
 import org.biiig.dmgm.todo.vector_mining.CrossLevelFrequentVectors;
+import org.biiig.dmgm.todo.vector_mining.CrossLevelFrequentVectorsBottomUp;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,26 +30,20 @@ import java.util.stream.Stream;
  * Directed Multigraph gSpan
  */
 public class GenSpan extends GSpanBase {
-  private final String inputPath;
 
   private final List<MultiLevelGraph> graphs = Lists.newArrayList();
   private final Deque<GenSpanTreeNode> parents = Lists.newLinkedList();
   private final List<GenSpanTreeNode> reports = Lists.newArrayList();
   private final List<GenSpanTreeNode> children = Lists.newLinkedList();
   private final List<Countable<DFSCode>> result = Lists.newArrayList();
-  private final CrossLevelFrequentVectors gfvm;
+  private final CrossLevelFrequentVectors gfvm = new CrossLevelFrequentVectorsBottomUp();
 
-
-  public GenSpan(String inputPath, Float minSupportThreshold, CrossLevelFrequentVectors gfvm, int kMax) {
-    super(minSupportThreshold, kMax);
-    this.inputPath = inputPath;
-    this.gfvm = gfvm;
+  public GenSpan(TFSMConfig config) {
+    super(config);
   }
 
-  public void mine() throws IOException {
-    createDictionaries(inputPath);
-    readGraphs(inputPath);
 
+  public void mine() throws IOException {
     this.minSupport = Math.round((float) graphCount * minSupportThreshold);
 
     initSingleEdgePatterns();

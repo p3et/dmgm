@@ -1,6 +1,7 @@
 package org.biiig.dmgm.todo.mining;
 
 import com.google.common.collect.Maps;
+import org.biiig.dmgm.impl.algorithms.tfsm.TFSMConfig;
 import org.biiig.dmgm.impl.model.countable.Countable;
 import org.biiig.dmgm.impl.model.countable.CountableDescendingComparator;
 
@@ -22,10 +23,11 @@ public class GSpanBase {
   protected int minSupport;
   protected final int kMax;
 
-  public GSpanBase(Float minSupportThreshold, int kMax) {
-    this.minSupportThreshold = minSupportThreshold;
-    this.kMax = kMax;
+  public GSpanBase(TFSMConfig config) {
+    this.minSupportThreshold = config.getMinSupport();
+    this.kMax = config.getMaxEdgeCount();
   }
+
 
 //  protected String format(DFSCode dfsCode) {
 //    StringBuilder builder = new StringBuilder();
