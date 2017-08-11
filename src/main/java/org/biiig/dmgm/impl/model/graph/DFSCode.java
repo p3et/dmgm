@@ -24,7 +24,7 @@ public class DFSCode implements Comparable<DFSCode>, DirectedGraph {
   public DFSCode(
     int fromTime, int toTime, int fromLabel, boolean outgoing, int edgeLabel, int toLabel) {
 
-    vertexLabels = new int[toTime];
+    vertexLabels = new int[toTime + 1];
 
     vertexLabels[fromTime] = fromLabel;
     vertexLabels[toTime] = toLabel;

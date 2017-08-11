@@ -138,7 +138,7 @@ public class DirectedMultigraphGSpan implements TransactionalFSM {
     }
 
     for (int threadId = 0; threadId < PARALLELISM; threadId++) {
-      new Thread(new SingleEdgePatternReporter(database, graphIdQueue, reports));
+      new Thread(new SingleEdgePatternReporter(database, graphIdQueue, reports)).start();
     }
 
 //    countAndPrune();
@@ -152,33 +152,7 @@ public class DirectedMultigraphGSpan implements TransactionalFSM {
 //
 //    graph.createAdjacencyList();
 //
-//    int fromId = 0;
-//    for (LabeledAdjacencyListEntry[] row : graph.getAdjacencyList()) {
-//      int fromLabel = graph.getVertices()[fromId].getLabel();
-//
-//      for (LabeledAdjacencyListEntry entry : row) {
-//        int edgeId = entry.getEdgeId();
-//        int toLabel = entry.getToLabel();
-//        boolean outgoing = entry.isOutgoing();
-//
-//        if (fromLabel < toLabel || fromLabel == toLabel && outgoing) {
-//
-//          int toTime = entry.isLoop() ? 0 : 1;
-//          int edgeLabel = entry.getEdgeLabel();
-//          int toId = entry.getToId();
-//
-//          DFSCode dfsCode = new DFSCode(
-//            fromTime, toTime, fromLabel, outgoing, edgeLabel, toLabel);
-//
-//          DFSEmbedding embedding = new DFSEmbedding(fromId, edgeId, toId);
-//
-//          GraphDFSEmbeddings embeddings = new GraphDFSEmbeddings(graph.getId(), embedding);
-//
-//          reports.add(new GSpanTreeNode(dfsCode, embeddings));
-//        }
-//      }
-//      fromId++;
-//    }
+
 //    GSpanTreeNode.aggregateForGraph(reports);
 //  }
 //

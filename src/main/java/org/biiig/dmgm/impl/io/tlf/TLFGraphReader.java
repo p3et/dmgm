@@ -129,7 +129,6 @@ public class TLFGraphReader extends TLFSplitReader {
               graph.setEdge(edgeId, sourceId, targetId, labels);
             }
 
-            vertexIdMap.put(fields[1], edgeId);
             edgeId++;
           }
         }
