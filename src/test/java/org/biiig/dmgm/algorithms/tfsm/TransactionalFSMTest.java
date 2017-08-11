@@ -5,6 +5,7 @@ import org.biiig.dmgm.api.algorithms.tfsm.TransactionalFSM;
 import org.biiig.dmgm.api.model.graph.DirectedGraph;
 import org.biiig.dmgm.impl.InMemoryDatabase;
 import org.biiig.dmgm.impl.algorithms.tfsm.TFSMConfig;
+import org.biiig.dmgm.io.DMGMTestBase;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.util.Collection;
 
 import static junit.framework.TestCase.assertEquals;
 
-public abstract class TransactionalFSMTest {
+public abstract class TransactionalFSMTest extends DMGMTestBase {
 
   abstract TransactionalFSM getMiner(TFSMConfig config);
 
@@ -29,7 +30,7 @@ public abstract class TransactionalFSMTest {
   private void mine(float minSupportThreshold, int expectedResultSize) throws IOException {
     TFSMConfig config = new TFSMConfig(minSupportThreshold, 100);
     TransactionalFSM fsm = getMiner(config);
-    Database database = new InMemoryDatabase();
+    Database database = getPredictableDatabase(minSupportThreshold);
 
     Collection<DirectedGraph> result = fsm.mine(database, 0 , 1);
     assertEquals(expectedResultSize, result.size());

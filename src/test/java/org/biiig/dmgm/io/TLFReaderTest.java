@@ -12,19 +12,17 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 
 
-public class TLFReaderTest {
+public class TLFReaderTest extends DMGMTestBase {
 
   @Test
   public void testRead() throws IOException {
-    String inputPath = TLFDataSource.class.getResource("/samples/predictable.tlf").getFile();
-    Database database = new InMemoryDatabase();
+    float minSupportThreshold = 0.8f;
 
-    DataSource reader = new TLFDataSource(inputPath);
-
-    reader.load(database, new SourceTargetMuxFactory(), 0.8f);
+    Database database = getPredictableDatabase(minSupportThreshold);
 
     assertEquals("vertex dictionary size", 4, database.getVertexDictionary().size());
     assertEquals("edge dictionary size", 5, database.getEdgeDictionary().size());
     assertEquals("graph count", 10, database.getGraphCount());
   }
+
 }

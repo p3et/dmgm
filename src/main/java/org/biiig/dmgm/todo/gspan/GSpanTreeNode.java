@@ -18,10 +18,6 @@ public class GSpanTreeNode implements Comparable<GSpanTreeNode> {
     this.embeddings = new GraphDFSEmbeddings[] {embeddings};
   }
 
-
-
-
-
   public static void aggregateForGraph(List<GSpanTreeNode> list) {
     if (list.size() > 1) {
       list.sort(GSpanTreeNode::compareTo);

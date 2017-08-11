@@ -46,4 +46,9 @@ public class InMemoryDatabase implements Database {
     int graphId = newGraphId.getAndIncrement();
     graphs.put(graphId, graph);
   }
+
+  @Override
+  public DirectedGraph getGraph(int graphId) {
+    return graphs.get(graphId);
+  }
 }

@@ -19,4 +19,5 @@ public interface Database {
 
   void store(DirectedGraph graph);
 
+  DirectedGraph getGraph(int graphId);
 }
