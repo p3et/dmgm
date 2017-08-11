@@ -137,9 +137,10 @@ public class DirectedMultigraphGSpan implements TransactionalFSM {
       graphIdQueue.add(graphId);
     }
 
-    for (int threadId = 0; threadId < PARALLELISM; threadId++) {
+    for (int threadId = 1; threadId < PARALLELISM; threadId++) {
       new Thread(new SingleEdgePatternReporter(database, graphIdQueue, reports)).start();
     }
+    new SingleEdgePatternReporter(database, graphIdQueue, reports).run();
 
 //    countAndPrune();
     return reports;

@@ -86,7 +86,13 @@ public class SingleEdgePatternReporter implements Runnable {
       }
     }
 
+    System.out.println(localReports.size());
+
     GSpanTreeNode.aggregateForGraph(localReports);
+
+    System.out.println(localReports.size());
+
     globalReports.add(localReports);
+
   }
 }
