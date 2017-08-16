@@ -7,32 +7,37 @@ import org.biiig.dmgm.impl.model.graph.DFSCode;
 import org.biiig.dmgm.todo.gspan.DFSEmbedding;
 import org.biiig.dmgm.todo.gspan.GSpanTreeNode;
 import org.biiig.dmgm.todo.gspan.GraphDFSEmbeddings;
-import org.biiig.dmgm.todo.model.labeled_graph.LabeledAdjacencyListEntry;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Queue;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.RunnableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
-public class SingleEdgePatternReporter implements Runnable {
+public class SingleEdgePatternReporter implements RunnableFuture<List<GSpanTreeNode>> {
   private final Database database;
   private final Queue<Integer> graphIdQueue;
-  private final Collection<List<GSpanTreeNode>> globalReports;
-  private final List<GSpanTreeNode> localReports = Lists.newLinkedList();
+  private final List<GSpanTreeNode> graphReports = Lists.newLinkedList();
+  private final List<GSpanTreeNode> partitionReports = Lists.newLinkedList();
+  private boolean cancelled = false;
+  private boolean done = false;
 
-  public SingleEdgePatternReporter(Database database, Queue<Integer> graphIdQueue,
-    Collection<List<GSpanTreeNode>> reports) {
+
+  public SingleEdgePatternReporter(Database database, Queue<Integer> graphIdQueue) {
 
     this.database = database;
     this.graphIdQueue = graphIdQueue;
-    this.globalReports = reports;
   }
 
   @Override
   public void run() {
-    while (!graphIdQueue.isEmpty()) {
+    while (!graphIdQueue.isEmpty() && !isCancelled()) {
       Integer graphId = graphIdQueue.poll();
 
       if (graphId != null) {
+        graphReports.clear();
+
         DirectedGraph graph = database.getGraph(graphId);
 
         for (int edgeId = 0; edgeId < graph.getEdgeCount(); edgeId++) {
@@ -81,18 +86,45 @@ public class SingleEdgePatternReporter implements Runnable {
 
           GraphDFSEmbeddings embeddings = new GraphDFSEmbeddings(graphId, embedding);
 
-          localReports.add(new GSpanTreeNode(dfsCode, embeddings));
+          graphReports.add(new GSpanTreeNode(dfsCode, embeddings));
         }
+
+        GSpanTreeNode.aggregateForGraph(graphReports);
+        partitionReports.addAll(graphReports);
       }
     }
+    GSpanTreeNode.aggregate(partitionReports);
+    done = true;
+  }
 
-    System.out.println(localReports.size());
+  @Override
+  public boolean cancel(boolean mayInterruptIfRunning) {
+    this.cancelled = true;
+    return isCancelled();
+  }
 
-    GSpanTreeNode.aggregateForGraph(localReports);
+  @Override
+  public boolean isCancelled() {
+    return cancelled;
+  }
 
-    System.out.println(localReports.size());
+  @Override
+  public boolean isDone() {
+    return done;
+  }
 
-    globalReports.add(localReports);
+  @Override
+  public List<GSpanTreeNode> get() throws InterruptedException, ExecutionException {
+    while (!done) {
+      Thread.sleep(100);
+    }
 
+    return partitionReports;
+  }
+
+  @Override
+  public List<GSpanTreeNode> get(long timeout, TimeUnit unit) throws InterruptedException,
+    ExecutionException, TimeoutException {
+    return get();
   }
 }
