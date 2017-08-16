@@ -2,129 +2,98 @@ package org.biiig.dmgm.impl.algorithms.tfsm;
 
 import com.google.common.collect.Lists;
 import org.biiig.dmgm.api.Database;
+import org.biiig.dmgm.api.concurrency.TaskWithOutput;
 import org.biiig.dmgm.api.model.graph.DirectedGraph;
+import org.biiig.dmgm.impl.concurrency.DequeProcessor;
 import org.biiig.dmgm.impl.model.graph.DFSCode;
 import org.biiig.dmgm.todo.gspan.DFSEmbedding;
 import org.biiig.dmgm.todo.gspan.GSpanTreeNode;
 import org.biiig.dmgm.todo.gspan.GraphDFSEmbeddings;
 
+import java.util.Collection;
+import java.util.Deque;
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.RunnableFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class SingleEdgePatternReporter implements RunnableFuture<List<GSpanTreeNode>> {
+public class SingleEdgePatternReporter
+  extends DequeProcessor<Integer> implements TaskWithOutput<List<GSpanTreeNode>> {
+
   private final Database database;
-  private final Queue<Integer> graphIdQueue;
-  private final List<GSpanTreeNode> graphReports = Lists.newLinkedList();
-  private final List<GSpanTreeNode> partitionReports = Lists.newLinkedList();
-  private boolean cancelled = false;
-  private boolean done = false;
 
+  private final List<GSpanTreeNode> output = Lists.newLinkedList();
+  private final List<GSpanTreeNode> supportedNodes = Lists.newLinkedList();
+  private final Collection<Integer> emptyCollection = Lists.newArrayListWithCapacity(0);
 
-  public SingleEdgePatternReporter(Database database, Queue<Integer> graphIdQueue) {
-
+  public SingleEdgePatternReporter(
+    AtomicInteger activeCount, Deque<Integer> deque, Database database) {
+    super(deque, activeCount);
     this.database = database;
-    this.graphIdQueue = graphIdQueue;
+  }
+
+
+  @Override
+  public List<GSpanTreeNode> getOutput() {
+    return output;
   }
 
   @Override
-  public void run() {
-    while (!graphIdQueue.isEmpty() && !isCancelled()) {
-      Integer graphId = graphIdQueue.poll();
+  protected Collection<Integer> process(Integer graphId) {
+    supportedNodes.clear();
 
-      if (graphId != null) {
-        graphReports.clear();
+    DirectedGraph graph = database.getGraph(graphId);
 
-        DirectedGraph graph = database.getGraph(graphId);
+    for (int edgeId = 0; edgeId < graph.getEdgeCount(); edgeId++) {
 
-        for (int edgeId = 0; edgeId < graph.getEdgeCount(); edgeId++) {
+      int sourceId = graph.getSourceId(edgeId);
+      int targetId = graph.getTargetId(edgeId);
+      boolean loop = sourceId == targetId;
 
-          int sourceId = graph.getSourceId(edgeId);
-          int targetId = graph.getTargetId(edgeId);
-          boolean loop = sourceId == targetId;
+      int fromTime = 0;
+      int toTime = loop ? 0 : 1;
 
-          int fromTime = 0;
-          int toTime = loop ? 0 : 1;
+      int fromLabel;
+      boolean outgoing;
+      int edgeLabel = graph.getEdgeLabel(edgeId);
+      int toLabel;
 
-          int fromLabel;
-          boolean outgoing;
-          int edgeLabel = graph.getEdgeLabel(edgeId);
-          int toLabel;
+      int fromId;
+      int toId;
 
-          int fromId;
-          int toId;
+      int sourceLabel = graph.getVertexLabel(sourceId);
+      int targetLabel = graph.getVertexLabel(targetId);
 
-          int sourceLabel = graph.getVertexLabel(sourceId);
-          int targetLabel = graph.getVertexLabel(targetId);
+      if (sourceLabel <= targetLabel) {
+        fromId = sourceId;
+        fromLabel = sourceLabel;
 
-          if (sourceLabel <= targetLabel) {
-            fromId = sourceId;
-            fromLabel = sourceLabel;
+        outgoing = true;
 
-            outgoing = true;
+        toId = targetId;
+        toLabel = sourceLabel;
+      } else {
+        fromId = targetId;
+        fromLabel = targetLabel;
 
-            toId = targetId;
-            toLabel = sourceLabel;
-          } else {
-            fromId = targetId;
-            fromLabel = targetLabel;
+        outgoing = false;
 
-            outgoing = false;
-
-            toId = sourceId;
-            toLabel = sourceLabel;
-          }
-
-
-          DFSCode dfsCode = new DFSCode(
-            fromTime, toTime, fromLabel, outgoing, edgeLabel, toLabel);
-
-          DFSEmbedding embedding = new DFSEmbedding(fromId, edgeId, toId);
-
-          GraphDFSEmbeddings embeddings = new GraphDFSEmbeddings(graphId, embedding);
-
-          graphReports.add(new GSpanTreeNode(dfsCode, embeddings));
-        }
-
-        GSpanTreeNode.aggregateForGraph(graphReports);
-        partitionReports.addAll(graphReports);
+        toId = sourceId;
+        toLabel = sourceLabel;
       }
-    }
-    GSpanTreeNode.aggregate(partitionReports);
-    done = true;
-  }
 
-  @Override
-  public boolean cancel(boolean mayInterruptIfRunning) {
-    this.cancelled = true;
-    return isCancelled();
-  }
 
-  @Override
-  public boolean isCancelled() {
-    return cancelled;
-  }
+      DFSCode dfsCode = new DFSCode(
+        fromTime, toTime, fromLabel, outgoing, edgeLabel, toLabel);
 
-  @Override
-  public boolean isDone() {
-    return done;
-  }
+      DFSEmbedding embedding = new DFSEmbedding(fromId, edgeId, toId);
 
-  @Override
-  public List<GSpanTreeNode> get() throws InterruptedException, ExecutionException {
-    while (!done) {
-      Thread.sleep(100);
+      GraphDFSEmbeddings embeddings = new GraphDFSEmbeddings(graphId, embedding);
+
+      supportedNodes.add(new GSpanTreeNode(dfsCode, embeddings));
     }
 
-    return partitionReports;
-  }
+    GSpanTreeNode.aggregateForGraph(supportedNodes);
+    output.addAll(supportedNodes);
 
-  @Override
-  public List<GSpanTreeNode> get(long timeout, TimeUnit unit) throws InterruptedException,
-    ExecutionException, TimeoutException {
-    return get();
+    return emptyCollection;
   }
 }

@@ -9,10 +9,12 @@ import org.biiig.dmgm.todo.gspan.GSpanTreeNode;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
  * Directed Multigraph gSpan
@@ -29,47 +31,48 @@ public class DirectedMultigraphGSpan implements TransactionalFSM {
   @Override
   public List<DirectedGraph> mine(
     Database database, int inputColIdx, int outputColIdx) throws IOException {
-    List<DirectedGraph> result = Lists.newArrayList();
 
+    Deque<GSpanTreeNode> parents = new ConcurrentLinkedDeque<>();
+    List<DirectedGraph> result = Lists.newArrayList();
 
     int minSupport = Math.round((float) database.getGraphCount() * config.getMinSupport());
 
     Collection<List<GSpanTreeNode>> reports = initSingleEdgePatterns(database, minSupport);
 
-    Iterator<List<GSpanTreeNode>> reportIterator = reports.iterator();
-    List<GSpanTreeNode> report = reportIterator.next();
-    while (reportIterator.hasNext()) {
-      report.addAll(reportIterator.next());
-    }
-    GSpanTreeNode.aggregate(report);
+    List<GSpanTreeNode> children = getFrequentChildren(reports, minSupport);
+    parents.addAll(children);
 
-
-    for (GSpanTreeNode child : report) {
-      if (child.getSupport() >= minSupport) {
-        result.add(child.getDfsCode());
-      }
-    }
-
-//    private final Deque<GSpanTreeNode> parents = Lists.newLinkedList();
-//    private final List<GSpanTreeNode> children = Lists.newLinkedList();
-//    private final List<DirectedGraph> result = Lists.newArrayList();
-
+//    while (!parents.isEmpty()) {
+//      parents.forEach(p -> result.add(p.getDfsCode()));
 //
-//    while (! parents.isEmpty()) {
-//      growForNextParent();
+//      reports = growChildren(parents);
+//      children = getFrequentChildren(reports, minSupport);
+//      parents.addAll(children);
 //    }
-//    List<DirectedGraph> frequentPatterns = Lists.newArrayList();
-//
-//    for (Countable<DFSCode> codeCountable : result) {
-//      frequentPatterns.add(codeCountable.getObject());
-//    }
+
 
     System.out.println(result);
 
     return result;
   }
 
-//  private void growForNextParent() {
+  private Collection<List<GSpanTreeNode>> growChildren(Deque<GSpanTreeNode> parents) {
+    return null;
+  }
+
+  private List<GSpanTreeNode> getFrequentChildren(Collection<List<GSpanTreeNode>> reports, int minSupport) {
+    Iterator<List<GSpanTreeNode>> reportIterator = reports.iterator();
+    List<GSpanTreeNode> children = reportIterator.next();
+    while (reportIterator.hasNext()) {
+      children.addAll(reportIterator.next());
+    }
+
+    GSpanTreeNode.aggregate(children);
+    children.removeIf(c -> c.getSupport() < minSupport);
+    return children;
+  }
+
+  //  private void growForNextParent() {
 //    children.clear();
 //    GSpanTreeNode parent = parents.pollLast();
 //
@@ -92,7 +95,7 @@ public class DirectedMultigraphGSpan implements TransactionalFSM {
 //  }
 //
 //  private void countAndPrune() {
-//    GSpanTreeNode.aggregate(children);
+//    GSpanTreeNode.reduce(children);
 //
 //    for (GSpanTreeNode node : children) {
 //      int support = node.getSupport();
@@ -143,13 +146,12 @@ public class DirectedMultigraphGSpan implements TransactionalFSM {
 //
   private Collection<List<GSpanTreeNode>> initSingleEdgePatterns(Database database, int minSupport) {
     // generate and report single edge patterns for each graph
-    Queue<Integer> graphIdQueue = new ArrayBlockingQueue<>(database.getGraphCount());
+    Deque<Integer> graphIdQueue = new ConcurrentLinkedDeque<>();
     for (int graphId = 0; graphId < database.getGraphCount(); graphId++) {
       graphIdQueue.add(graphId);
     }
 
-    return ConcurrencyUtil.processQueue(
-      graphIdQueue, new SingleEdgePatternReporterFactory(database));
+    return ConcurrencyUtil.runParallel(new SingleEdgePatternReporterFactory(database, graphIdQueue));
   }
 //
 //  private void reportSingleEdges(LabeledGraph graph) {
@@ -251,7 +253,7 @@ public class DirectedMultigraphGSpan implements TransactionalFSM {
 //    int[] rightmostPath) {
 //    reports.clear();
 //
-//    Map<DFSEmbedding, DFSCode> map = Maps.newHashMap();
+//    Map<DFSEmbedding, DFSCode> process = Maps.newHashMap();
 //
 //    DFSEmbedding[] embeddings = graphEmbeddings.getEmbeddings();
 //
