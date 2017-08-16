@@ -12,8 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConcurrencyUtil {
 
-  public static <OUT> Collection<OUT> runParallel(
-    TaskWithOutputFactory<OUT> taskFactory) {
+  public static <OUT> Collection<OUT> runParallel(TaskWithOutputFactory<OUT> taskFactory) {
 
     // create parallel environment
     int parallelism = Runtime.getRuntime().availableProcessors();
@@ -38,8 +37,6 @@ public class ConcurrencyUtil {
     for (TaskWithOutput<OUT> task : tasks) {
       output.add(task.getOutput());
     }
-
-    System.out.println(output);
 
     return output;
   }

@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import org.biiig.dmgm.api.Database;
 import org.biiig.dmgm.api.concurrency.TaskWithOutput;
 import org.biiig.dmgm.api.model.graph.DirectedGraph;
-import org.biiig.dmgm.impl.concurrency.DequeProcessor;
+import org.biiig.dmgm.impl.concurrency.DequeUpdateTask;
 import org.biiig.dmgm.impl.model.graph.DFSCode;
 import org.biiig.dmgm.todo.gspan.DFSEmbedding;
 import org.biiig.dmgm.todo.gspan.GSpanTreeNode;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SingleEdgePatternReporter
-  extends DequeProcessor<Integer> implements TaskWithOutput<List<GSpanTreeNode>> {
+  extends DequeUpdateTask<Integer> implements TaskWithOutput<List<GSpanTreeNode>> {
 
   private final Database database;
 

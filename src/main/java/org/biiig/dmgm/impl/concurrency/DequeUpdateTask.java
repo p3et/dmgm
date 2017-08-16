@@ -4,13 +4,13 @@ import java.util.Collection;
 import java.util.Deque;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class DequeProcessor<I> implements Runnable {
+public abstract class DequeUpdateTask<I> implements Runnable {
 
   private final Deque<I> deque;
   private final AtomicInteger activeCount;
   private boolean active;
 
-  public DequeProcessor(Deque<I> deque, AtomicInteger activeCount) {
+  public DequeUpdateTask(Deque<I> deque, AtomicInteger activeCount) {
     this.deque = deque;
     this.activeCount = activeCount;
   }
@@ -42,8 +42,6 @@ public abstract class DequeProcessor<I> implements Runnable {
       } else {
         activeCount.decrementAndGet();
       }
-
-      System.out.println(x + " + " + active + "->" + activeCount);
 
       this.active = active;
     }

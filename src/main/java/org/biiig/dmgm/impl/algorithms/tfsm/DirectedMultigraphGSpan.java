@@ -12,8 +12,6 @@ import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
@@ -38,35 +36,44 @@ public class DirectedMultigraphGSpan implements TransactionalFSM {
     int minSupport = Math.round((float) database.getGraphCount() * config.getMinSupport());
 
     Collection<List<GSpanTreeNode>> reports = initSingleEdgePatterns(database, minSupport);
+    List<GSpanTreeNode> children = combine(reports);
+    children = getFrequentChildren(children, minSupport);
 
-    List<GSpanTreeNode> children = getFrequentChildren(reports, minSupport);
     parents.addAll(children);
 
 //    while (!parents.isEmpty()) {
 //      parents.forEach(p -> result.add(p.getDfsCode()));
-//
+
 //      reports = growChildren(parents);
 //      children = getFrequentChildren(reports, minSupport);
 //      parents.addAll(children);
 //    }
 
 
-    System.out.println(result);
+    System.out.println(parents);
 
     return result;
+  }
+
+  private List<GSpanTreeNode> combine(Collection<List<GSpanTreeNode>> reports) {
+    // parallel aggregation
+    reports.parallelStream().forEach(GSpanTreeNode::aggregate);
+
+    // single thread combination
+    Iterator<List<GSpanTreeNode>> iterator = reports.iterator();
+    List<GSpanTreeNode> combination = iterator.next();
+    while (iterator.hasNext()) {
+      combination.addAll(iterator.next());
+    }
+
+    return combination;
   }
 
   private Collection<List<GSpanTreeNode>> growChildren(Deque<GSpanTreeNode> parents) {
     return null;
   }
 
-  private List<GSpanTreeNode> getFrequentChildren(Collection<List<GSpanTreeNode>> reports, int minSupport) {
-    Iterator<List<GSpanTreeNode>> reportIterator = reports.iterator();
-    List<GSpanTreeNode> children = reportIterator.next();
-    while (reportIterator.hasNext()) {
-      children.addAll(reportIterator.next());
-    }
-
+  private List<GSpanTreeNode> getFrequentChildren(List<GSpanTreeNode> children, int minSupport) {
     GSpanTreeNode.aggregate(children);
     children.removeIf(c -> c.getSupport() < minSupport);
     return children;
