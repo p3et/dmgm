@@ -5,7 +5,8 @@ import org.biiig.dmgm.api.Database;
 import org.biiig.dmgm.api.algorithms.tfsm.TransactionalFSM;
 import org.biiig.dmgm.api.model.graph.DirectedGraph;
 import org.biiig.dmgm.impl.concurrency.ConcurrencyUtil;
-import org.biiig.dmgm.todo.gspan.GSpanTreeNode;
+import org.biiig.dmgm.impl.model.graph.DFSCode;
+import org.biiig.dmgm.todo.gspan.DFSTreeNode;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -30,38 +31,40 @@ public class DirectedMultigraphGSpan implements TransactionalFSM {
   public List<DirectedGraph> mine(
     Database database, int inputColIdx, int outputColIdx) throws IOException {
 
-    Deque<GSpanTreeNode> parents = new ConcurrentLinkedDeque<>();
-    List<DirectedGraph> result = Lists.newArrayList();
-
+    // calculate min support
     int minSupport = Math.round((float) database.getGraphCount() * config.getMinSupport());
 
-    Collection<List<GSpanTreeNode>> reports = initSingleEdgePatterns(database, minSupport);
-    List<GSpanTreeNode> children = combine(reports);
-    children = getFrequentChildren(children, minSupport);
 
-    parents.addAll(children);
+    Deque<DFSTreeNode> dfsTree = new ConcurrentLinkedDeque<>();
 
-//    while (!parents.isEmpty()) {
-//      parents.forEach(p -> result.add(p.getDfsCode()));
+    // generate and report single edge patterns for each graph
+    Deque<Integer> graphIdQueue = new ConcurrentLinkedDeque<>();
+    for (int graphId = 0; graphId < database.getGraphCount(); graphId++) {
+      graphIdQueue.add(graphId);
+    }
 
-//      reports = growChildren(parents);
-//      children = getFrequentChildren(reports, minSupport);
-//      parents.addAll(children);
-//    }
+    Collection<List<DFSTreeNode>> dfsTreePartitions = ConcurrencyUtil
+      .runParallel(new SingleEdgeNodeCreatorFactory(database, graphIdQueue));
 
+    // parallel aggregation
+    dfsTreePartitions.parallelStream().forEach(DFSTreeNode::aggregate);
 
-    System.out.println(parents);
+    List<DFSTreeNode> children = combine(dfsTreePartitions);
+    DFSTreeNode.aggregate(children);
+    children.removeIf(c -> c.getSupport() < minSupport);
+    dfsTree.addAll(children);
 
-    return result;
+    Collection<List<DirectedGraph>> resultPartitions = ConcurrencyUtil
+      .runParallel(new DFSTreeTraverserFactory(database, dfsTree));
+
+    return combine(resultPartitions);
   }
 
-  private List<GSpanTreeNode> combine(Collection<List<GSpanTreeNode>> reports) {
-    // parallel aggregation
-    reports.parallelStream().forEach(GSpanTreeNode::aggregate);
+  private <T> List<T> combine(Collection<List<T>> reports) {
 
     // single thread combination
-    Iterator<List<GSpanTreeNode>> iterator = reports.iterator();
-    List<GSpanTreeNode> combination = iterator.next();
+    Iterator<List<T>> iterator = reports.iterator();
+    List<T> combination = iterator.next();
     while (iterator.hasNext()) {
       combination.addAll(iterator.next());
     }
@@ -69,13 +72,8 @@ public class DirectedMultigraphGSpan implements TransactionalFSM {
     return combination;
   }
 
-  private Collection<List<GSpanTreeNode>> growChildren(Deque<GSpanTreeNode> parents) {
-    return null;
-  }
+  private List<DFSTreeNode> getFrequentChildren(List<DFSTreeNode> children, int minSupport) {
 
-  private List<GSpanTreeNode> getFrequentChildren(List<GSpanTreeNode> children, int minSupport) {
-    GSpanTreeNode.aggregate(children);
-    children.removeIf(c -> c.getSupport() < minSupport);
     return children;
   }
 
@@ -151,15 +149,6 @@ public class DirectedMultigraphGSpan implements TransactionalFSM {
 //    return minimal;
 //  }
 //
-  private Collection<List<GSpanTreeNode>> initSingleEdgePatterns(Database database, int minSupport) {
-    // generate and report single edge patterns for each graph
-    Deque<Integer> graphIdQueue = new ConcurrentLinkedDeque<>();
-    for (int graphId = 0; graphId < database.getGraphCount(); graphId++) {
-      graphIdQueue.add(graphId);
-    }
-
-    return ConcurrencyUtil.runParallel(new SingleEdgePatternReporterFactory(database, graphIdQueue));
-  }
 //
 //  private void reportSingleEdges(LabeledGraph graph) {
 //    reports.clear();

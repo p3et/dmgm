@@ -5,7 +5,7 @@ import com.google.common.collect.Maps;
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.impl.algorithms.tfsm.TFSMConfig;
 import org.biiig.dmgm.impl.model.graph.DFSCode;
-import org.biiig.dmgm.todo.gspan.GSpanTreeNode;
+import org.biiig.dmgm.todo.gspan.DFSTreeNode;
 import org.biiig.dmgm.impl.model.countable.Countable;
 import org.biiig.dmgm.todo.gspan.DFSEmbedding;
 import org.biiig.dmgm.todo.gspan.GraphDFSEmbeddings;
@@ -29,9 +29,9 @@ import java.util.stream.Stream;
 public class GenSpanBaseline extends GSpanBase {
 
   private final List<LabeledGraph> graphs = Lists.newArrayList();
-  private final Deque<GSpanTreeNode> parents = Lists.newLinkedList();
-  private final List<GSpanTreeNode> reports = Lists.newArrayList();
-  private final List<GSpanTreeNode> children = Lists.newLinkedList();
+  private final Deque<DFSTreeNode> parents = Lists.newLinkedList();
+  private final List<DFSTreeNode> reports = Lists.newArrayList();
+  private final List<DFSTreeNode> children = Lists.newLinkedList();
   private final List<Countable<DFSCode>> result = Lists.newArrayList();
 
   public GenSpanBaseline(TFSMConfig config) {
@@ -51,7 +51,7 @@ public class GenSpanBaseline extends GSpanBase {
 
   private void growForNextParent() {
     children.clear();
-    GSpanTreeNode parent = parents.pollLast();
+    DFSTreeNode parent = parents.pollLast();
 
     DFSCode dfsCode = parent.getDfsCode();
     int support = 0;
@@ -65,16 +65,16 @@ public class GenSpanBaseline extends GSpanBase {
 
       growForGraph(
         graphs.get(graphEmbeddings.getGraphId()), graphEmbeddings, dfsCode, rightmostPathTimes);
-      GSpanTreeNode.aggregateForGraph(reports);
+      DFSTreeNode.aggregateForGraph(reports);
       children.addAll(reports);
     }
     countAndPrune();
   }
 
   private void countAndPrune() {
-    GSpanTreeNode.aggregate(children);
+    DFSTreeNode.aggregate(children);
 
-    for (GSpanTreeNode node : children) {
+    for (DFSTreeNode node : children) {
       int support = node.getSupport();
       if (support >= minSupport) {
         int size = node.getDfsCode().getEdgeCount();
@@ -104,7 +104,7 @@ public class GenSpanBaseline extends GSpanBase {
     graph.createAdjacencyList();
     reportSingleEdges(graph);
 
-    GSpanTreeNode minParentNode = reports.get(0);
+    DFSTreeNode minParentNode = reports.get(0);
     boolean minimal = minParentNode.getDfsCode().parentOf(dfsCode);
 
     while (minimal) {
@@ -116,7 +116,7 @@ public class GenSpanBaseline extends GSpanBase {
 
       growForGraph(graph, embeddings[0], minDFSCode, rightmostPath);
 
-      GSpanTreeNode.aggregateForGraph(reports);
+      DFSTreeNode.aggregateForGraph(reports);
 
       if (reports.isEmpty()) {
         break;
@@ -169,12 +169,12 @@ public class GenSpanBaseline extends GSpanBase {
 
           GraphDFSEmbeddings embeddings = new GraphDFSEmbeddings(graph.getId(), embedding);
 
-          reports.add(new GSpanTreeNode(dfsCode, embeddings));
+          reports.add(new DFSTreeNode(dfsCode, embeddings));
         }
       }
       fromId++;
     }
-    GSpanTreeNode.aggregateForGraph(reports);
+    DFSTreeNode.aggregateForGraph(reports);
   }
 
   private void createDictionaries(String input) throws IOException {
@@ -361,7 +361,7 @@ public class GenSpanBaseline extends GSpanBase {
               GraphDFSEmbeddings
                 childEmbeddings = new GraphDFSEmbeddings(graph.getId(), childEmbedding);
 
-              GSpanTreeNode childNode = new GSpanTreeNode(childCode, childEmbeddings);
+              DFSTreeNode childNode = new DFSTreeNode(childCode, childEmbeddings);
               reports.add(childNode);
 
               // grow backwards from to
@@ -379,7 +379,7 @@ public class GenSpanBaseline extends GSpanBase {
               GraphDFSEmbeddings
                 childEmbeddings = new GraphDFSEmbeddings(graph.getId(), childEmbedding);
 
-              GSpanTreeNode childNode = new GSpanTreeNode(childCode, childEmbeddings);
+              DFSTreeNode childNode = new DFSTreeNode(childCode, childEmbeddings);
               reports.add(childNode);
             }
           }
@@ -398,7 +398,7 @@ public class GenSpanBaseline extends GSpanBase {
     graph.createAdjacencyList();
     reportSingleEdges(graph);
 
-    GSpanTreeNode minParentNode = reports.get(0);
+    DFSTreeNode minParentNode = reports.get(0);
 
     for (int i = 1; i < graph.getEdgeCount(); i++) {
       DFSCode minDFSCode = minParentNode.getDfsCode();

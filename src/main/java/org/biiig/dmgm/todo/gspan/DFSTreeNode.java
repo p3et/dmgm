@@ -9,25 +9,25 @@ import java.util.List;
 /**
  * Created by peet on 12.07.17.
  */
-public class GSpanTreeNode implements Comparable<GSpanTreeNode> {
+public class DFSTreeNode implements Comparable<DFSTreeNode> {
   private final DFSCode dfsCode;
   private GraphDFSEmbeddings[] embeddings;
 
-  public GSpanTreeNode(DFSCode dfsCode, GraphDFSEmbeddings embeddings) {
+  public DFSTreeNode(DFSCode dfsCode, GraphDFSEmbeddings embeddings) {
     this.dfsCode = dfsCode;
     this.embeddings = new GraphDFSEmbeddings[] {embeddings};
   }
 
-  public static void aggregateForGraph(List<GSpanTreeNode> list) {
+  public static void aggregateForGraph(List<DFSTreeNode> list) {
     if (list.size() > 1) {
-      list.sort(GSpanTreeNode::compareTo);
+      list.sort(DFSTreeNode::compareTo);
 
-      Iterator<GSpanTreeNode> iterator = list.iterator();
+      Iterator<DFSTreeNode> iterator = list.iterator();
 
-      GSpanTreeNode last = iterator.next();
+      DFSTreeNode last = iterator.next();
 
       while (iterator.hasNext()) {
-        GSpanTreeNode next = iterator.next();
+        DFSTreeNode next = iterator.next();
 
         if (last.getDfsCode().equals(next.getDfsCode())) {
           last.getEmbeddings()[0].merge(next.getEmbeddings()[0]);
@@ -39,16 +39,16 @@ public class GSpanTreeNode implements Comparable<GSpanTreeNode> {
     }
   }
 
-  public static void aggregate(List<GSpanTreeNode> list) {
+  public static void aggregate(List<DFSTreeNode> list) {
     if (list.size() > 1) {
-      list.sort(GSpanTreeNode::compareTo);
+      list.sort(DFSTreeNode::compareTo);
 
-      Iterator<GSpanTreeNode> iterator = list.iterator();
+      Iterator<DFSTreeNode> iterator = list.iterator();
 
-      GSpanTreeNode last = iterator.next();
+      DFSTreeNode last = iterator.next();
 
       while (iterator.hasNext()) {
-        GSpanTreeNode next = iterator.next();
+        DFSTreeNode next = iterator.next();
 
         if (last.getDfsCode().equals(next.getDfsCode())) {
           last.merge(next);
@@ -60,7 +60,7 @@ public class GSpanTreeNode implements Comparable<GSpanTreeNode> {
     }
   }
 
-  private void merge(GSpanTreeNode that) {
+  private void merge(DFSTreeNode that) {
     this.embeddings = ArrayUtils.addAll(this.embeddings, that.embeddings);
   }
 
@@ -74,7 +74,7 @@ public class GSpanTreeNode implements Comparable<GSpanTreeNode> {
 
 
   @Override
-  public int compareTo(GSpanTreeNode that) {
+  public int compareTo(DFSTreeNode that) {
     return this.dfsCode.compareTo(that.dfsCode);
   }
 

@@ -7,7 +7,7 @@ import org.biiig.dmgm.api.model.graph.DirectedGraph;
 import org.biiig.dmgm.impl.concurrency.DequeUpdateTask;
 import org.biiig.dmgm.impl.model.graph.DFSCode;
 import org.biiig.dmgm.todo.gspan.DFSEmbedding;
-import org.biiig.dmgm.todo.gspan.GSpanTreeNode;
+import org.biiig.dmgm.todo.gspan.DFSTreeNode;
 import org.biiig.dmgm.todo.gspan.GraphDFSEmbeddings;
 
 import java.util.Collection;
@@ -15,16 +15,16 @@ import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class SingleEdgePatternReporter
-  extends DequeUpdateTask<Integer> implements TaskWithOutput<List<GSpanTreeNode>> {
+public class SingleEdgeNodeCreator
+  extends DequeUpdateTask<Integer> implements TaskWithOutput<List<DFSTreeNode>> {
 
   private final Database database;
 
-  private final List<GSpanTreeNode> output = Lists.newLinkedList();
-  private final List<GSpanTreeNode> supportedNodes = Lists.newLinkedList();
+  private final List<DFSTreeNode> output = Lists.newLinkedList();
+  private final List<DFSTreeNode> supportedNodes = Lists.newLinkedList();
   private final Collection<Integer> emptyCollection = Lists.newArrayListWithCapacity(0);
 
-  public SingleEdgePatternReporter(
+  public SingleEdgeNodeCreator(
     AtomicInteger activeCount, Deque<Integer> deque, Database database) {
     super(deque, activeCount);
     this.database = database;
@@ -32,7 +32,7 @@ public class SingleEdgePatternReporter
 
 
   @Override
-  public List<GSpanTreeNode> getOutput() {
+  public List<DFSTreeNode> getOutput() {
     return output;
   }
 
@@ -88,10 +88,10 @@ public class SingleEdgePatternReporter
 
       GraphDFSEmbeddings embeddings = new GraphDFSEmbeddings(graphId, embedding);
 
-      supportedNodes.add(new GSpanTreeNode(dfsCode, embeddings));
+      supportedNodes.add(new DFSTreeNode(dfsCode, embeddings));
     }
 
-    GSpanTreeNode.aggregateForGraph(supportedNodes);
+    DFSTreeNode.aggregateForGraph(supportedNodes);
     output.addAll(supportedNodes);
 
     return emptyCollection;
