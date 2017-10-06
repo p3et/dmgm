@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
-import org.biiig.dmgm.api.DMGraphDatabase;
 import org.biiig.dmgm.api.algorithms.tfsm.TransactionalFSM;
+import org.biiig.dmgm.api.model.collection.DMGraphCollection;
 import org.biiig.dmgm.api.model.graph.DMGraph;
 import org.biiig.dmgm.impl.concurrency.ConcurrencyUtil;
 import org.biiig.dmgm.todo.gspan.DFSTreeNode;
@@ -16,18 +16,18 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 /**
  * Directed Multigraph gSpan
  */
-public class DirectedMultigraphGSpan implements TransactionalFSM {
+public class DMGSpan implements TransactionalFSM {
 
   public static final int PARALLELISM = Runtime.getRuntime().availableProcessors();
   private final TFSMConfig config;
 
-  public DirectedMultigraphGSpan(TFSMConfig config) {
+  public DMGSpan(TFSMConfig config) {
     this.config = config;
   }
 
   @Override
   public List<DMGraph> mine(
-    DMGraphDatabase database, int inputColIdx, int outputColIdx) throws IOException {
+    DMGraphCollection database, int inputColIdx, int outputColIdx) throws IOException {
 
     // calculate min support
     int minSupport = Math.round((float) database.getGraphCount() * config.getMinSupport());

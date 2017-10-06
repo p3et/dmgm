@@ -1,12 +1,13 @@
-package org.biiig.dmgm.impl.io.gdl;
+package org.biiig.dmgm.impl.model.source.gdl;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.biiig.dmgm.api.DMGraphDatabase;
-import org.biiig.dmgm.api.io.DMGraphDataSource;
+import org.biiig.dmgm.api.model.collection.DMGraphCollection;
+import org.biiig.dmgm.api.model.collection.LabelDictionary;
 import org.biiig.dmgm.api.model.graph.DMGraph;
 import org.biiig.dmgm.api.model.graph.DMGraphFactory;
-import org.biiig.dmgm.impl.db.LabelDictionary;
+import org.biiig.dmgm.api.model.source.DMGraphDataSource;
+import org.biiig.dmgm.impl.model.collection.InMemoryLabelDictionary;
 import org.biiig.dmgm.impl.model.countable.Countable;
 import org.s1ck.gdl.GDLHandler;
 import org.s1ck.gdl.model.Edge;
@@ -26,13 +27,13 @@ public class GDLDataSource implements DMGraphDataSource {
   }
 
   @Override
-  public void loadWithMinLabelSupport(DMGraphDatabase database, DMGraphFactory graphFactory,
+  public void loadWithMinLabelSupport(DMGraphCollection database, DMGraphFactory graphFactory,
     float minSupportThreshold) throws IOException {
     load(database, graphFactory);
   }
 
   @Override
-  public void load(DMGraphDatabase database, DMGraphFactory graphFactory) {
+  public void load(DMGraphCollection database, DMGraphFactory graphFactory) {
     GDLHandler gdlHandler = new GDLHandler.Builder().buildFromString(gdlString);
 
 
@@ -54,7 +55,7 @@ public class GDLDataSource implements DMGraphDataSource {
         labelFrequencies.add(new Countable<>(vertex.getLabel()));
       }
     }
-    LabelDictionary dictionary = new LabelDictionary(labelFrequencies);
+    LabelDictionary dictionary = new InMemoryLabelDictionary(labelFrequencies);
     database.setVertexDictionary(dictionary);
 
     // read edges
@@ -66,7 +67,7 @@ public class GDLDataSource implements DMGraphDataSource {
         labelFrequencies.add(new Countable<>(edge.getLabel()));
       }
     }
-    dictionary = new LabelDictionary(labelFrequencies);
+    dictionary = new InMemoryLabelDictionary(labelFrequencies);
     database.setEdgeDictionary(dictionary);
 
     // write graphs

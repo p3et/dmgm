@@ -1,7 +1,7 @@
 package org.biiig.dmgm.todo.mining;
 
 import com.google.common.collect.Maps;
-import org.biiig.dmgm.api.DMGraphDatabase;
+import org.biiig.dmgm.api.model.collection.DMGraphCollection;
 import org.biiig.dmgm.impl.algorithms.tfsm.TFSMConfig;
 import org.biiig.dmgm.impl.model.countable.Countable;
 import org.biiig.dmgm.impl.model.countable.CountableDescendingComparator;
@@ -23,7 +23,7 @@ public class GSpanBase {
   protected int graphCount = 0;
   protected int minSupport;
   protected final int kMax;
-  public DMGraphDatabase database;
+  public DMGraphCollection database;
 
   public GSpanBase(TFSMConfig config) {
     this.minSupportThreshold = config.getMinSupport();

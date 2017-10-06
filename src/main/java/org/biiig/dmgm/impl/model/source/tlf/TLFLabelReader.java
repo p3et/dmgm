@@ -1,9 +1,8 @@
-package org.biiig.dmgm.impl.io.tlf;
+package org.biiig.dmgm.impl.model.source.tlf;
 
 import com.google.common.collect.Lists;
 import org.biiig.dmgm.impl.model.countable.Countable;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicInteger;

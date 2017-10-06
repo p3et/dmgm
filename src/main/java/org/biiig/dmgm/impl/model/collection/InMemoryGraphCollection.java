@@ -1,14 +1,14 @@
-package org.biiig.dmgm.impl;
+package org.biiig.dmgm.impl.model.collection;
 
-import org.biiig.dmgm.api.DMGraphDatabase;
+import org.biiig.dmgm.api.model.collection.DMGraphCollection;
+import org.biiig.dmgm.api.model.collection.LabelDictionary;
 import org.biiig.dmgm.api.model.graph.DMGraph;
-import org.biiig.dmgm.impl.db.LabelDictionary;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class InMemoryDatabase implements DMGraphDatabase {
+public class InMemoryGraphCollection implements DMGraphCollection {
   private final AtomicInteger newGraphId = new AtomicInteger();
   private final Map<Integer, DMGraph> graphs = new ConcurrentHashMap<>();
 

@@ -1,7 +1,7 @@
-package org.biiig.dmgm.impl.io.tlf;
+package org.biiig.dmgm.impl.model.source.tlf;
 
-import org.biiig.dmgm.api.DMGraphDatabase;
-import org.biiig.dmgm.api.io.tlf.TLFSplitReaderFactory;
+import org.biiig.dmgm.api.model.collection.DMGraphCollection;
+import org.biiig.dmgm.api.model.source.tlf.TLFSplitReaderFactory;
 import org.biiig.dmgm.api.model.graph.DMGraphFactory;
 
 import java.util.Queue;
@@ -9,9 +9,9 @@ import java.util.Queue;
 public class TLFGraphReaderFactory implements TLFSplitReaderFactory {
 
   private final DMGraphFactory graphFactory;
-  private final DMGraphDatabase database;
+  private final DMGraphCollection database;
 
-  public TLFGraphReaderFactory(DMGraphFactory graphFactory, DMGraphDatabase database) {
+  public TLFGraphReaderFactory(DMGraphFactory graphFactory, DMGraphCollection database) {
     this.graphFactory = graphFactory;
     this.database = database;
   }

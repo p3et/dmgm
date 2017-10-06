@@ -1,6 +1,6 @@
 //package org.biiig.dmgm.todo.dmg_gspan;
 //
-//import org.biiig.dmgm.impl.InMemoryDatabase;
+//import org.biiig.dmgm.impl.model.source.InMemoryDatabase;
 //import org.biiig.dmgm.impl.algorithms.tfsm.DirectedMultigraphGSpan;
 //import org.biiig.dmgm.todo.mining.GenSpan;
 //import org.biiig.dmgm.todo.mining.GenSpanBaseline;
@@ -9,7 +9,7 @@
 //import org.biiig.dmgm.todo.vector_mining.CrossLevelFrequentVectorsTopDown;
 //import org.junit.Test;
 //
-//import java.io.IOException;
+//import java.source.IOException;
 //
 //import static org.junit.Assert.assertEquals;
 //

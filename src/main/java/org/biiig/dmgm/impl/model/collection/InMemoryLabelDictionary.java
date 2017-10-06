@@ -1,18 +1,19 @@
-package org.biiig.dmgm.impl.db;
+package org.biiig.dmgm.impl.model.collection;
 
 import com.google.common.collect.Maps;
+import org.biiig.dmgm.api.model.collection.LabelDictionary;
 import org.biiig.dmgm.impl.model.countable.Countable;
 import org.biiig.dmgm.impl.model.countable.CountableAscendingComparator;
 
 import java.util.List;
 import java.util.Map;
 
-public class LabelDictionary {
+public class InMemoryLabelDictionary implements LabelDictionary {
 
-  Map<String, Integer> stringInteger = Maps.newHashMap();
-  Map<Integer, String> integerString = Maps.newHashMap();
+  private Map<String, Integer> stringInteger = Maps.newHashMap();
+  private Map<Integer, String> integerString = Maps.newHashMap();
 
-  public LabelDictionary(List<Countable<String>> labelFrequencies) {
+  public InMemoryLabelDictionary(List<Countable<String>> labelFrequencies) {
     labelFrequencies.sort(new CountableAscendingComparator<>());
 
     int translation = 0;
@@ -29,11 +30,19 @@ public class LabelDictionary {
     return integerString.toString();
   }
 
+  @Override
   public int size() {
     return stringInteger.size();
   }
 
-  public Integer translate(String value) {
+  @Override
+  public int translate(String value) {
     return stringInteger.get(value);
   }
+
+  @Override
+  public String translate(int value) {
+    return integerString.get(value);
+  }
+
 }

@@ -1,8 +1,8 @@
-package org.biiig.dmgm.impl.io.gdl;
+package org.biiig.dmgm.impl.model.source.gdl;
 
-import org.biiig.dmgm.api.DMGraphDatabase;
-import org.biiig.dmgm.api.io.DMGraphDataSource;
-import org.biiig.dmgm.impl.InMemoryDatabase;
+import org.biiig.dmgm.api.model.collection.DMGraphCollection;
+import org.biiig.dmgm.api.model.source.DMGraphDataSource;
+import org.biiig.dmgm.impl.model.collection.InMemoryGraphCollection;
 import org.biiig.dmgm.impl.model.graph.SourceTargetMuxFactory;
 import org.junit.Test;
 
@@ -16,7 +16,7 @@ public class GDLDataSourceTest {
   public void testSimpleGraph() throws IOException {
     String gdl = "g1[(v1:A)-[:a]->(v1)-[:b]->(:B)], g2[(v1:A)-[:a]->(v1)-[:c]->(:C)]";
 
-    DMGraphDatabase database = new InMemoryDatabase();
+    DMGraphCollection database = new InMemoryGraphCollection();
     DMGraphDataSource dataSource = new GDLDataSource(gdl);
     dataSource.load(database, new SourceTargetMuxFactory());
 

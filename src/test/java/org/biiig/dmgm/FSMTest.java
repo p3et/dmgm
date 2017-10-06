@@ -1,50 +1,65 @@
 package org.biiig.dmgm;
 
+import org.biiig.dmgm.api.model.collection.DMGraphCollection;
+import org.biiig.dmgm.api.model.graph.DMGraphFactory;
+import org.biiig.dmgm.impl.model.collection.InMemoryGraphCollection;
+import org.biiig.dmgm.impl.model.source.gdl.GDLDataSource;
+import org.biiig.dmgm.impl.model.graph.SourceTargetMuxFactory;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class FSMTest {
 
   @Test
   public void testSingleEdge() {
-    test(FSMTestData.FSM_SINGLE_EDGE, "g1,g2,g3,g4", "s1");
+    test(FSMTestData.SINGLE_EDGE_INPUT, FSMTestData.SINGLE_EDGE_EXPECTED);
   }
 
 
   @Test
   public void tedtSimpleGraph() {
-    test(FSMTestData.FSM_SIMPLE_GRAPH,"g1,g2,g3","s1,s2,s3,s4,s5");
+    test(FSMTestData.SIMPLE_GRAPH_INPUT,FSMTestData.SIMPLE_GRAPH_EXPECTED);
   }
 
   @Test
   public void testParallelEdges() {
-    test(FSMTestData.FSM_PARALLEL_EDGES,"g1,g2,g3","s1,s2");
+    test(FSMTestData.PARALLEL_EDGES_INPUT,FSMTestData.PARALLEL_EDGES_EXPECTED);
   }
 
   @Test
   public void testLoop() {
-    test(FSMTestData.FSM_LOOP,"g1,g2,g3,g4","s1,s2,s3");
+    test(FSMTestData.LOOP_INPUT,FSMTestData.LOOP_EXPECTED);
   }
 
   @Test
   public void testDiamond() {
-    test(FSMTestData.FSM_DIAMOND,"g1,g2,g3","s1,s2,s3,s4,s5,s6,s7");
+    test(FSMTestData.DIAMOND_INPUT,FSMTestData.DIAMOND_EXPECTED);
   }
 
   @Test
   public void testCircleWithBranch() {
-    test(FSMTestData.FSM_CIRCLE_WITH_BRANCH,
-      "g1,g2,g3","s1,s2,s3,s4,s5,s6,s7,s8,s9,s10");
+    test(FSMTestData.CIRCLE_WITH_BRANCH_INPUT, FSMTestData.CIRCLE_WITH_BRANCH_EXPECTED);
   }
 
   @Test
   public void testMultiLabeledCircle() {
-    test(FSMTestData.MULTI_LABELED_CIRCLE,"g1,g2","s1,s2,s3,s4,s5,s6,s7");
+    test(FSMTestData.MULTI_LABELED_CIRCLE_INPUT,FSMTestData.MULTI_LABELED_CIRCLE_EXPECTED);
   }
 
-  private void test(String data, String inputGraphs, String outputGraphs) {
-    System.out.println("Hello!");
+  private void test(String inputGDL, String expectedGDL) {
+    DMGraphFactory graphFactory = new SourceTargetMuxFactory();
 
+    DMGraphCollection inputDB = new InMemoryGraphCollection();
+    DMGraphCollection expectedDB = new InMemoryGraphCollection();
+    DMGraphCollection outputDB = new InMemoryGraphCollection();
 
+    new GDLDataSource(inputGDL).load(inputDB, graphFactory);
+    new GDLDataSource(inputGDL).load(expectedDB, graphFactory);
+
+    DirectedMultigraphMiner.frequentSubgraphs(inputDB, outputDB, 0.6f);
+
+    assertEquals("graph count", inputDB.getGraphCount(), outputDB.getGraphCount());
   }
 
 }

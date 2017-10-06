@@ -1,4 +1,4 @@
-package org.biiig.dmgm.impl.io.tlf;
+package org.biiig.dmgm.impl.model.source.tlf;
 
 /**
  * Created by peet on 04.08.17.

@@ -1,6 +1,6 @@
-package org.biiig.dmgm.api.io.tlf;
+package org.biiig.dmgm.api.model.source.tlf;
 
-import org.biiig.dmgm.impl.io.tlf.TLFSplitReader;
+import org.biiig.dmgm.impl.model.source.tlf.TLFSplitReader;
 
 import java.util.Queue;
 

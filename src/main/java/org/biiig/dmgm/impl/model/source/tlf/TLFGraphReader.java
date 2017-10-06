@@ -1,21 +1,21 @@
-package org.biiig.dmgm.impl.io.tlf;
+package org.biiig.dmgm.impl.model.source.tlf;
 
 import com.google.common.collect.Maps;
-import org.biiig.dmgm.api.DMGraphDatabase;
+import org.biiig.dmgm.api.model.collection.DMGraphCollection;
+import org.biiig.dmgm.api.model.collection.LabelDictionary;
 import org.biiig.dmgm.api.model.graph.DMGraph;
 import org.biiig.dmgm.api.model.graph.DMGraphFactory;
-import org.biiig.dmgm.impl.db.LabelDictionary;
 
 import java.util.Map;
 import java.util.Queue;
 
 public class TLFGraphReader extends TLFSplitReader {
-  private final DMGraphDatabase database;
+  private final DMGraphCollection database;
   private final DMGraphFactory graphFactory;
   private final Map<String, Integer> vertexIdMap = Maps.newHashMap();
 
   public TLFGraphReader(Queue<String[]> splits, boolean reachedEOF,
-    DMGraphFactory graphFactory, DMGraphDatabase database) {
+    DMGraphFactory graphFactory, DMGraphCollection database) {
     super(splits, reachedEOF);
     this.graphFactory = graphFactory;
     this.database = database;

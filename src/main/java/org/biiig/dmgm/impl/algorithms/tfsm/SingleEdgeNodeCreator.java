@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
 import com.google.common.collect.Lists;
-import org.biiig.dmgm.api.DMGraphDatabase;
+import org.biiig.dmgm.api.model.collection.DMGraphCollection;
 import org.biiig.dmgm.api.concurrency.TaskWithOutput;
 import org.biiig.dmgm.api.model.graph.DMGraph;
 import org.biiig.dmgm.impl.concurrency.DequeUpdateTask;
@@ -18,14 +18,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SingleEdgeNodeCreator
   extends DequeUpdateTask<Integer> implements TaskWithOutput<List<DFSTreeNode>> {
 
-  private final DMGraphDatabase database;
+  private final DMGraphCollection database;
 
   private final List<DFSTreeNode> output = Lists.newLinkedList();
   private final List<DFSTreeNode> supportedNodes = Lists.newLinkedList();
   private final Collection<Integer> emptyCollection = Lists.newArrayListWithCapacity(0);
 
   public SingleEdgeNodeCreator(
-    AtomicInteger activeCount, Deque<Integer> deque, DMGraphDatabase database) {
+    AtomicInteger activeCount, Deque<Integer> deque, DMGraphCollection database) {
     super(deque, activeCount);
     this.database = database;
   }

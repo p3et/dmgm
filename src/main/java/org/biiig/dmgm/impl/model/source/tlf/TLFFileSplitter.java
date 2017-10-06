@@ -1,4 +1,4 @@
-package org.biiig.dmgm.impl.io.tlf;
+package org.biiig.dmgm.impl.model.source.tlf;
 
 import org.apache.commons.lang3.ArrayUtils;
 

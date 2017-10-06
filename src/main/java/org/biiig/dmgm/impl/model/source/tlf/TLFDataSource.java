@@ -1,11 +1,13 @@
-package org.biiig.dmgm.impl.io.tlf;
+package org.biiig.dmgm.impl.model.source.tlf;
 
 import com.google.common.collect.Lists;
-import org.biiig.dmgm.api.DMGraphDatabase;
-import org.biiig.dmgm.api.io.DMGraphDataSource;
-import org.biiig.dmgm.api.io.tlf.TLFSplitReaderFactory;
+import org.biiig.dmgm.api.model.collection.DMGraphCollection;
+import org.biiig.dmgm.api.model.collection.LabelDictionary;
+import org.biiig.dmgm.api.model.source.DMGraphDataSource;
+import org.biiig.dmgm.api.model.source.tlf.TLFSplitReaderFactory;
 import org.biiig.dmgm.api.model.graph.DMGraphFactory;
-import org.biiig.dmgm.impl.db.LabelDictionary;
+import org.biiig.dmgm.impl.model.collection.InMemoryGraphCollection;
+import org.biiig.dmgm.impl.model.collection.InMemoryLabelDictionary;
 import org.biiig.dmgm.impl.model.countable.Countable;
 
 import java.io.IOException;
@@ -23,7 +25,7 @@ public class TLFDataSource implements DMGraphDataSource {
   }
 
   @Override
-  public void loadWithMinLabelSupport(DMGraphDatabase database, DMGraphFactory graphFactory, float minSupportThreshold) throws IOException {
+  public void loadWithMinLabelSupport(DMGraphCollection database, DMGraphFactory graphFactory, float minSupportThreshold) throws IOException {
 
     TLFLabelReaderFactory labelReaderFactory = new TLFLabelReaderFactory();
     readSplits(labelReaderFactory);
@@ -47,7 +49,7 @@ public class TLFDataSource implements DMGraphDataSource {
   }
 
   @Override
-  public void load(DMGraphDatabase database, DMGraphFactory graphFactory) throws IOException {
+  public void load(DMGraphCollection database, DMGraphFactory graphFactory) throws IOException {
     loadWithMinLabelSupport(database, graphFactory, 1.0f);
   }
 
@@ -60,7 +62,7 @@ public class TLFDataSource implements DMGraphDataSource {
     // filter infrequent labels
     globalFrequencies.removeIf(c -> c.getSupport() < minSupport);
     // create dictionary
-    return new LabelDictionary(globalFrequencies);
+    return new InMemoryLabelDictionary(globalFrequencies);
   }
 
   /**
