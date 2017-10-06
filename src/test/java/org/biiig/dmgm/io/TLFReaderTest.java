@@ -19,7 +19,7 @@ public class TLFReaderTest extends DMGMTestBase {
 
     DMGraphCollection database = getPredictableDatabase(minSupportThreshold);
 
-    for (int graphId = 0; graphId < database.getGraphCount(); graphId++) {
+    for (int graphId = 0; graphId < database.size(); graphId++) {
       DMGraph graph = database.getGraph(graphId);
 
       for (int edgeId = 0; edgeId < graph.getEdgeCount(); edgeId++) {
@@ -33,7 +33,7 @@ public class TLFReaderTest extends DMGMTestBase {
 
     assertEquals("vertex dictionary size", 4, database.getVertexDictionary().size());
     assertEquals("edge dictionary size", 5, database.getEdgeDictionary().size());
-    assertEquals("graph count", 10, database.getGraphCount());
+    assertEquals("graph count", 10, database.size());
   }
 
 }

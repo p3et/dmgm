@@ -9,6 +9,6 @@ import java.util.List;
 /**
  * Created by peet on 09.08.17.
  */
-public interface TransactionalFSM {
-  List<DMGraph> mine(DMGraphCollection database, int inputColIdx, int outputColIdx) throws IOException;
+public interface Algorithm {
+  void execute(DMGraphCollection input, DMGraphCollection output);
 }

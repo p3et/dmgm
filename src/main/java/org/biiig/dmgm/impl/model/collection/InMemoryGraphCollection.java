@@ -4,6 +4,7 @@ import org.biiig.dmgm.api.model.collection.DMGraphCollection;
 import org.biiig.dmgm.api.model.collection.LabelDictionary;
 import org.biiig.dmgm.api.model.graph.DMGraph;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -36,7 +37,7 @@ public class InMemoryGraphCollection implements DMGraphCollection {
   }
 
   @Override
-  public int getGraphCount() {
+  public int size() {
     return graphs.size();
   }
 
@@ -49,5 +50,10 @@ public class InMemoryGraphCollection implements DMGraphCollection {
   @Override
   public DMGraph getGraph(int graphId) {
     return graphs.get(graphId);
+  }
+
+  @Override
+  public Iterator<DMGraph> iterator() {
+    return new InMemoryGraphCollectionIterator(graphs);
   }
 }

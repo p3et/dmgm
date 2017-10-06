@@ -23,31 +23,31 @@
 //  @Test
 //  public void mineGSpan() throws IOException {
 //    DirectedMultigraphGSpan gSpan = new DirectedMultigraphGSpan(inputPath, THRESHOLD, K_MAX);
-//    gSpan.mine(new InMemoryDatabase());
+//    gSpan.execute(new InMemoryDatabase());
 //    assertEquals(7, gSpan.getResult().size());
 //  }
 //
 //  @Test
 //  public void mineBaseLine() throws IOException {
 //    GenSpanBaseline gSpan = new GenSpanBaseline(inputPath, THRESHOLD, K_MAX);
-//    gSpan.mine();
+//    gSpan.execute();
 //    assertEquals(35, gSpan.getResult().size());
 //  }
 //
 //  @Test
 //  public void mineBottomUp() throws Exception {
-//    mine(THRESHOLD, 35, new CrossLevelFrequentVectorsBottomUp());
+//    execute(THRESHOLD, 35, new CrossLevelFrequentVectorsBottomUp());
 //  }
 //
 //  @Test
 //  public void mineTopDown() throws Exception {
-//    mine(THRESHOLD, 35, new CrossLevelFrequentVectorsTopDown());
+//    execute(THRESHOLD, 35, new CrossLevelFrequentVectorsTopDown());
 //  }
 //
-//  private void mine(float minSupportThreshold, int expectedResultSize,
+//  private void execute(float minSupportThreshold, int expectedResultSize,
 //    CrossLevelFrequentVectors gfvm) throws IOException {
 //    GenSpan gSpan = new GenSpan(inputPath, minSupportThreshold, gfvm, K_MAX);
-//    gSpan.mine();
+//    gSpan.execute();
 //    gSpan.printResult();
 //    assertEquals(expectedResultSize, gSpan.getResult().size());
 //  }

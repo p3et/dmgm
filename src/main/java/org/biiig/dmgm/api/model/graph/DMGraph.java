@@ -26,5 +26,4 @@ public interface DMGraph {
   int getEdgeCount();
 
   void trim();
-
 }

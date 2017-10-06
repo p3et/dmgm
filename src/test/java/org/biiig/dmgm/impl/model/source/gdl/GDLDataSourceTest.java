@@ -20,7 +20,7 @@ public class GDLDataSourceTest {
     DMGraphDataSource dataSource = new GDLDataSource(gdl);
     dataSource.load(database, new SourceTargetMuxFactory());
 
-    assertEquals("graph count", 2, database.getGraphCount());
+    assertEquals("graph count", 2, database.size());
   }
 
 }

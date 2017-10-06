@@ -29,7 +29,7 @@
 //  @Test
 //  public void mineBaseLine() throws IOException {
 //    GenSpanBaseline gSpan = new GenSpanBaseline(inputPath, THRESHOLD, K_MAX);
-//    gSpan.mine();
+//    gSpan.execute();
 //
 //    List<LabeledGraph> graphs = gSpan.getGraphs();
 //    Map<Integer, String> vertexDictionary = gSpan.getReverseVertexDictionary();

@@ -2,14 +2,18 @@ package org.biiig.dmgm;
 
 import org.biiig.dmgm.api.model.collection.DMGraphCollection;
 import org.biiig.dmgm.api.model.graph.DMGraphFactory;
+import org.biiig.dmgm.impl.algorithms.tfsm.TFSMConfig;
 import org.biiig.dmgm.impl.model.collection.InMemoryGraphCollection;
-import org.biiig.dmgm.impl.model.source.gdl.GDLDataSource;
 import org.biiig.dmgm.impl.model.graph.SourceTargetMuxFactory;
+import org.biiig.dmgm.impl.model.source.gdl.GDLDataSource;
+import org.biiig.dmgm.io.DMGMTestBase;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-public class FSMTest {
+public class FSMTest extends DMGMTestBase {
+
+  private static final TFSMConfig TFSM_CONFIG = new TFSMConfig(0.6f, 10);
 
   @Test
   public void testSingleEdge() {
@@ -18,7 +22,7 @@ public class FSMTest {
 
 
   @Test
-  public void tedtSimpleGraph() {
+  public void testSimpleGraph() {
     test(FSMTestData.SIMPLE_GRAPH_INPUT,FSMTestData.SIMPLE_GRAPH_EXPECTED);
   }
 
@@ -55,11 +59,11 @@ public class FSMTest {
     DMGraphCollection outputDB = new InMemoryGraphCollection();
 
     new GDLDataSource(inputGDL).load(inputDB, graphFactory);
-    new GDLDataSource(inputGDL).load(expectedDB, graphFactory);
+    new GDLDataSource(expectedGDL).load(expectedDB, graphFactory);
 
-    DirectedMultigraphMiner.frequentSubgraphs(inputDB, outputDB, 0.6f);
+    DirectedMultigraphMiner.frequentSubgraphs(inputDB, outputDB, TFSM_CONFIG);
 
-    assertEquals("graph count", inputDB.getGraphCount(), outputDB.getGraphCount());
+    assertTrue("graph count", equal(expectedDB, outputDB));
   }
 
 }

@@ -1,12 +1,11 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
-import org.biiig.dmgm.api.algorithms.tfsm.TransactionalFSM;
+import org.biiig.dmgm.api.algorithms.tfsm.Algorithm;
 import org.biiig.dmgm.api.model.collection.DMGraphCollection;
 import org.biiig.dmgm.api.model.graph.DMGraph;
 import org.biiig.dmgm.impl.concurrency.ConcurrencyUtil;
 import org.biiig.dmgm.todo.gspan.DFSTreeNode;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
@@ -16,7 +15,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 /**
  * Directed Multigraph gSpan
  */
-public class DMGSpan implements TransactionalFSM {
+public class DMGSpan implements Algorithm {
 
   public static final int PARALLELISM = Runtime.getRuntime().availableProcessors();
   private final TFSMConfig config;
@@ -26,23 +25,21 @@ public class DMGSpan implements TransactionalFSM {
   }
 
   @Override
-  public List<DMGraph> mine(
-    DMGraphCollection database, int inputColIdx, int outputColIdx) throws IOException {
+  public void execute(DMGraphCollection input, DMGraphCollection output) {
 
     // calculate min support
-    int minSupport = Math.round((float) database.getGraphCount() * config.getMinSupport());
-
+    int minSupport = Math.round((float) input.size() * config.getMinSupport());
 
     Deque<DFSTreeNode> dfsTree = new ConcurrentLinkedDeque<>();
 
     // generate and report single edge patterns for each graph
     Deque<Integer> graphIdQueue = new ConcurrentLinkedDeque<>();
-    for (int graphId = 0; graphId < database.getGraphCount(); graphId++) {
+    for (int graphId = 0; graphId < input.size(); graphId++) {
       graphIdQueue.add(graphId);
     }
 
     Collection<List<DFSTreeNode>> dfsTreePartitions = ConcurrencyUtil
-      .runParallel(new SingleEdgeNodeCreatorFactory(database, graphIdQueue));
+      .runParallel(new SingleEdgeNodeCreatorFactory(input, graphIdQueue));
 
     // parallel aggregation
     dfsTreePartitions.parallelStream().forEach(DFSTreeNode::aggregate);
@@ -53,9 +50,14 @@ public class DMGSpan implements TransactionalFSM {
     dfsTree.addAll(children);
 
     Collection<List<DMGraph>> resultPartitions = ConcurrencyUtil
-      .runParallel(new DFSTreeTraverserFactory(database, dfsTree));
+      .runParallel(new DFSTreeTraverserFactory(input, dfsTree));
 
-    return combine(resultPartitions);
+    output.setVertexDictionary(input.getVertexDictionary());
+    output.setEdgeDictionary(input.getEdgeDictionary());
+
+    for (DMGraph graph : combine(resultPartitions)) {
+      output.store(graph);
+    }
   }
 
   private <T> List<T> combine(Collection<List<T>> reports) {

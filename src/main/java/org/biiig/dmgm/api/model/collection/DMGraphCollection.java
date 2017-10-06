@@ -3,7 +3,7 @@ package org.biiig.dmgm.api.model.collection;
 import org.biiig.dmgm.api.model.graph.DMGraph;
 
 
-public interface DMGraphCollection {
+public interface DMGraphCollection extends Iterable<DMGraph> {
   void setVertexDictionary(LabelDictionary dictionary);
 
   void setEdgeDictionary(LabelDictionary dictionary);
@@ -12,7 +12,7 @@ public interface DMGraphCollection {
 
   LabelDictionary getEdgeDictionary();
 
-  int getGraphCount();
+  int size();
 
   void store(DMGraph graph);
 
