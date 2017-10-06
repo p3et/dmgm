@@ -1,9 +1,8 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
 import com.google.common.collect.Lists;
-import org.biiig.dmgm.api.Database;
 import org.biiig.dmgm.api.concurrency.TaskWithOutput;
-import org.biiig.dmgm.api.model.graph.DirectedGraph;
+import org.biiig.dmgm.api.model.graph.DMGraph;
 import org.biiig.dmgm.impl.concurrency.DequeUpdateTask;
 import org.biiig.dmgm.todo.gspan.DFSTreeNode;
 
@@ -13,9 +12,9 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class DFSTreeTraverser
-  extends DequeUpdateTask<DFSTreeNode> implements TaskWithOutput<List<DirectedGraph>> {
+  extends DequeUpdateTask<DFSTreeNode> implements TaskWithOutput<List<DMGraph>> {
 
-  private List<DirectedGraph> output = Lists.newArrayList();
+  private List<DMGraph> output = Lists.newArrayList();
   private Collection<DFSTreeNode> children = Lists.newLinkedList();
 
 
@@ -24,7 +23,7 @@ public class DFSTreeTraverser
   }
 
   @Override
-  public List<DirectedGraph> getOutput() {
+  public List<DMGraph> getOutput() {
     return output;
   }
 

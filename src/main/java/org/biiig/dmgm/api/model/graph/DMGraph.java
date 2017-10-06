@@ -3,7 +3,7 @@ package org.biiig.dmgm.api.model.graph;
 /**
  * A directed graph.
  */
-public interface DirectedGraph {
+public interface DMGraph {
   int[] getVertexData(int vertexId);
   void setVertex(int vertexId, int[] data);
 

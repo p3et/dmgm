@@ -1,12 +1,10 @@
 package org.biiig.dmgm.api;
 
-import org.biiig.dmgm.api.model.graph.DirectedGraph;
+import org.biiig.dmgm.api.model.graph.DMGraph;
 import org.biiig.dmgm.impl.db.LabelDictionary;
 
-import java.util.Collection;
 
-
-public interface Database {
+public interface DMGraphDatabase {
   void setVertexDictionary(LabelDictionary dictionary);
 
   void setEdgeDictionary(LabelDictionary dictionary);
@@ -17,7 +15,7 @@ public interface Database {
 
   int getGraphCount();
 
-  void store(DirectedGraph graph);
+  void store(DMGraph graph);
 
-  DirectedGraph getGraph(int graphId);
+  DMGraph getGraph(int graphId);
 }

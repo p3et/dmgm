@@ -2,7 +2,7 @@ package org.biiig.dmgm.impl.model.graph;
 
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
-import org.biiig.dmgm.api.model.graph.DirectedGraph;
+import org.biiig.dmgm.api.model.graph.DMGraph;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by peet on 02.08.17.
  */
-public abstract class DirectedGraphBase implements DirectedGraph {
+public abstract class DirectedGraphBase implements DMGraph {
   protected int[][] vertexData;
   protected int[][] edgeData;
 

@@ -1,18 +1,18 @@
 package org.biiig.dmgm.impl.model.graph;
 
-import org.biiig.dmgm.api.model.graph.DirectedGraph;
-import org.biiig.dmgm.api.model.graph.DirectedGraphFactory;
+import org.biiig.dmgm.api.model.graph.DMGraph;
+import org.biiig.dmgm.api.model.graph.DMGraphFactory;
 
-public abstract class DirectedGraphFactoryBase implements DirectedGraphFactory {
+public abstract class DirectedGraphFactoryBase implements DMGraphFactory {
   @Override
-  public abstract DirectedGraph create(int vertexCount, int edgeCount);
+  public abstract DMGraph create(int vertexCount, int edgeCount);
 
   @Override
-  public DirectedGraph convert(DirectedGraph fromGraph) {
+  public DMGraph convert(DMGraph fromGraph) {
     int vertexCount = fromGraph.getVertexCount();
     int edgeCount = fromGraph.getEdgeCount();
 
-    DirectedGraph toGraph = create(vertexCount, edgeCount);
+    DMGraph toGraph = create(vertexCount, edgeCount);
 
     for (int vertexId = 0; vertexId < vertexCount; vertexId++) {
       toGraph.setVertex(vertexId, fromGraph.getVertexData(vertexId));

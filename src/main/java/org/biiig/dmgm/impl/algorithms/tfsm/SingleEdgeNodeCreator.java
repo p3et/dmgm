@@ -1,9 +1,9 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
 import com.google.common.collect.Lists;
-import org.biiig.dmgm.api.Database;
+import org.biiig.dmgm.api.DMGraphDatabase;
 import org.biiig.dmgm.api.concurrency.TaskWithOutput;
-import org.biiig.dmgm.api.model.graph.DirectedGraph;
+import org.biiig.dmgm.api.model.graph.DMGraph;
 import org.biiig.dmgm.impl.concurrency.DequeUpdateTask;
 import org.biiig.dmgm.impl.model.graph.DFSCode;
 import org.biiig.dmgm.todo.gspan.DFSEmbedding;
@@ -18,14 +18,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SingleEdgeNodeCreator
   extends DequeUpdateTask<Integer> implements TaskWithOutput<List<DFSTreeNode>> {
 
-  private final Database database;
+  private final DMGraphDatabase database;
 
   private final List<DFSTreeNode> output = Lists.newLinkedList();
   private final List<DFSTreeNode> supportedNodes = Lists.newLinkedList();
   private final Collection<Integer> emptyCollection = Lists.newArrayListWithCapacity(0);
 
   public SingleEdgeNodeCreator(
-    AtomicInteger activeCount, Deque<Integer> deque, Database database) {
+    AtomicInteger activeCount, Deque<Integer> deque, DMGraphDatabase database) {
     super(deque, activeCount);
     this.database = database;
   }
@@ -40,7 +40,7 @@ public class SingleEdgeNodeCreator
   protected Collection<Integer> process(Integer graphId) {
     supportedNodes.clear();
 
-    DirectedGraph graph = database.getGraph(graphId);
+    DMGraph graph = database.getGraph(graphId);
 
     for (int edgeId = 0; edgeId < graph.getEdgeCount(); edgeId++) {
 

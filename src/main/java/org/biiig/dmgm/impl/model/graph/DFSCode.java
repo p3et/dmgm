@@ -2,12 +2,12 @@ package org.biiig.dmgm.impl.model.graph;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.NotImplementedException;
-import org.biiig.dmgm.api.model.graph.DirectedGraph;
+import org.biiig.dmgm.api.model.graph.DMGraph;
 import org.biiig.dmgm.todo.gspan.LexicographicDFSCodeComparator;
 
 import java.util.Arrays;
 
-public class DFSCode implements Comparable<DFSCode>, DirectedGraph {
+public class DFSCode implements Comparable<DFSCode>, DMGraph {
 
   private final int[] vertexLabels;
   private final int[] edgeMux;

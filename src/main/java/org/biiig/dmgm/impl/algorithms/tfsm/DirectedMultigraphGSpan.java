@@ -1,11 +1,9 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
-import com.google.common.collect.Lists;
-import org.biiig.dmgm.api.Database;
+import org.biiig.dmgm.api.DMGraphDatabase;
 import org.biiig.dmgm.api.algorithms.tfsm.TransactionalFSM;
-import org.biiig.dmgm.api.model.graph.DirectedGraph;
+import org.biiig.dmgm.api.model.graph.DMGraph;
 import org.biiig.dmgm.impl.concurrency.ConcurrencyUtil;
-import org.biiig.dmgm.impl.model.graph.DFSCode;
 import org.biiig.dmgm.todo.gspan.DFSTreeNode;
 
 import java.io.IOException;
@@ -28,8 +26,8 @@ public class DirectedMultigraphGSpan implements TransactionalFSM {
   }
 
   @Override
-  public List<DirectedGraph> mine(
-    Database database, int inputColIdx, int outputColIdx) throws IOException {
+  public List<DMGraph> mine(
+    DMGraphDatabase database, int inputColIdx, int outputColIdx) throws IOException {
 
     // calculate min support
     int minSupport = Math.round((float) database.getGraphCount() * config.getMinSupport());
@@ -54,7 +52,7 @@ public class DirectedMultigraphGSpan implements TransactionalFSM {
     children.removeIf(c -> c.getSupport() < minSupport);
     dfsTree.addAll(children);
 
-    Collection<List<DirectedGraph>> resultPartitions = ConcurrencyUtil
+    Collection<List<DMGraph>> resultPartitions = ConcurrencyUtil
       .runParallel(new DFSTreeTraverserFactory(database, dfsTree));
 
     return combine(resultPartitions);

@@ -1,17 +1,16 @@
 package org.biiig.dmgm.impl;
 
-import org.biiig.dmgm.api.Database;
-import org.biiig.dmgm.api.model.graph.DirectedGraph;
+import org.biiig.dmgm.api.DMGraphDatabase;
+import org.biiig.dmgm.api.model.graph.DMGraph;
 import org.biiig.dmgm.impl.db.LabelDictionary;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class InMemoryDatabase implements Database {
+public class InMemoryDatabase implements DMGraphDatabase {
   private final AtomicInteger newGraphId = new AtomicInteger();
-  private final Map<Integer, DirectedGraph> graphs = new ConcurrentHashMap<>();
+  private final Map<Integer, DMGraph> graphs = new ConcurrentHashMap<>();
 
   private LabelDictionary vertexDictionary;
   private LabelDictionary edgeDictionary;
@@ -42,13 +41,13 @@ public class InMemoryDatabase implements Database {
   }
 
   @Override
-  public void store(DirectedGraph graph) {
+  public void store(DMGraph graph) {
     int graphId = newGraphId.getAndIncrement();
     graphs.put(graphId, graph);
   }
 
   @Override
-  public DirectedGraph getGraph(int graphId) {
+  public DMGraph getGraph(int graphId) {
     return graphs.get(graphId);
   }
 }

@@ -1,11 +1,7 @@
 package org.biiig.dmgm.io;
 
-import org.biiig.dmgm.api.Database;
-import org.biiig.dmgm.api.io.DataSource;
-import org.biiig.dmgm.api.model.graph.DirectedGraph;
-import org.biiig.dmgm.impl.InMemoryDatabase;
-import org.biiig.dmgm.impl.io.tlf.TLFDataSource;
-import org.biiig.dmgm.impl.model.graph.SourceTargetMuxFactory;
+import org.biiig.dmgm.api.DMGraphDatabase;
+import org.biiig.dmgm.api.model.graph.DMGraph;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -21,10 +17,10 @@ public class TLFReaderTest extends DMGMTestBase {
   public void testRead() throws IOException {
     float minSupportThreshold = 0.8f;
 
-    Database database = getPredictableDatabase(minSupportThreshold);
+    DMGraphDatabase database = getPredictableDatabase(minSupportThreshold);
 
     for (int graphId = 0; graphId < database.getGraphCount(); graphId++) {
-      DirectedGraph graph = database.getGraph(graphId);
+      DMGraph graph = database.getGraph(graphId);
 
       for (int edgeId = 0; edgeId < graph.getEdgeCount(); edgeId++) {
         int sourceId = graph.getSourceId(edgeId);

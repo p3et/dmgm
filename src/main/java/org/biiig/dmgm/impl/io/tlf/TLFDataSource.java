@@ -1,10 +1,10 @@
 package org.biiig.dmgm.impl.io.tlf;
 
 import com.google.common.collect.Lists;
-import org.biiig.dmgm.api.Database;
-import org.biiig.dmgm.api.io.DataSource;
+import org.biiig.dmgm.api.DMGraphDatabase;
+import org.biiig.dmgm.api.io.DMGraphDataSource;
 import org.biiig.dmgm.api.io.tlf.TLFSplitReaderFactory;
-import org.biiig.dmgm.api.model.graph.DirectedGraphFactory;
+import org.biiig.dmgm.api.model.graph.DMGraphFactory;
 import org.biiig.dmgm.impl.db.LabelDictionary;
 import org.biiig.dmgm.impl.model.countable.Countable;
 
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
-public class TLFDataSource implements DataSource {
+public class TLFDataSource implements DMGraphDataSource {
   private final String inputPath;
 
   public TLFDataSource(String inputPath) {
@@ -23,7 +23,7 @@ public class TLFDataSource implements DataSource {
   }
 
   @Override
-  public void load(Database database, DirectedGraphFactory graphFactory, float minSupportThreshold) throws IOException {
+  public void loadWithMinLabelSupport(DMGraphDatabase database, DMGraphFactory graphFactory, float minSupportThreshold) throws IOException {
 
     TLFLabelReaderFactory labelReaderFactory = new TLFLabelReaderFactory();
     readSplits(labelReaderFactory);
@@ -44,6 +44,11 @@ public class TLFDataSource implements DataSource {
       new TLFGraphReaderFactory(graphFactory, database);
 
     readSplits(graphReaderFactory);
+  }
+
+  @Override
+  public void load(DMGraphDatabase database, DMGraphFactory graphFactory) throws IOException {
+    loadWithMinLabelSupport(database, graphFactory, 1.0f);
   }
 
   private LabelDictionary createDictionary(

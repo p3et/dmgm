@@ -1,6 +1,6 @@
 package org.biiig.dmgm.impl.model.graph;
 
-import org.biiig.dmgm.api.model.graph.DirectedGraph;
+import org.biiig.dmgm.api.model.graph.DMGraph;
 
 /**
  * Created by peet on 02.08.17.
@@ -8,7 +8,7 @@ import org.biiig.dmgm.api.model.graph.DirectedGraph;
 public class AdjacencyListFactory extends DirectedGraphFactoryBase {
 
   @Override
-  public DirectedGraph create(int vertexCount, int edgeCount) {
+  public DMGraph create(int vertexCount, int edgeCount) {
     return new AdjacencyList(vertexCount, edgeCount);
   }
 }
