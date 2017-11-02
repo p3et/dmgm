@@ -69,7 +69,7 @@ public class SingleEdgeNodeCreator
         outgoing = true;
 
         toId = targetId;
-        toLabel = sourceLabel;
+        toLabel = targetLabel;
       } else {
         fromId = targetId;
         fromLabel = targetLabel;
@@ -79,7 +79,6 @@ public class SingleEdgeNodeCreator
         toId = sourceId;
         toLabel = sourceLabel;
       }
-
 
       DFSCode dfsCode = new DFSCode(
         fromTime, toTime, fromLabel, outgoing, edgeLabel, toLabel);
