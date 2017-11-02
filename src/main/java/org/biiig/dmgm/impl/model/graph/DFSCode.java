@@ -14,6 +14,7 @@ public class DFSCode implements Comparable<DFSCode>, DMGraph {
   private final boolean[] directionIndicators;
 
   private final LexicographicDFSCodeComparator comparator = new LexicographicDFSCodeComparator();
+  private int[] rightmostPath;
 
   public DFSCode(int vertexCount, int edgeCount) {
     vertexLabels = new int[vertexCount];
@@ -247,7 +248,7 @@ public class DFSCode implements Comparable<DFSCode>, DMGraph {
     int[] edgeMuxCopy = Arrays.copyOf(edgeMux, newEdgeCount);
     boolean[] directionIndicatorsCopy = Arrays.copyOf(this.directionIndicators, newEdgeCount);
 
-    // create child
+    // aggregateReports child
     DFSCode child = new DFSCode(vertexLabelsCopy, edgeMuxCopy, directionIndicatorsCopy);
 
     // set data of extension
@@ -314,5 +315,48 @@ public class DFSCode implements Comparable<DFSCode>, DMGraph {
   }
 
 
+  public int[] getRightmostPath() {
+    if (rightmostPath == null) {
+      setRightmostPath();
+    }
+    return rightmostPath;
+  }
 
+  private void setRightmostPath() {
+    // 1-edge pattern
+    if (this.getEdgeCount() == 1) {
+      // loop
+      if (this.getFromTime(0) == this.getToTime( 0)) {
+        rightmostPath = new int[] {0};
+      } else {
+        rightmostPath = new int[] {1, 0};
+      }
+    } else {
+      rightmostPath = new int[0];
+
+      for (int edgeTime = this.getEdgeCount() - 1; edgeTime >= 0; edgeTime--) {
+        int fromTime = this.getFromTime(edgeTime);
+        int toTime = this.getToTime(edgeTime);
+        boolean firstStep = rightmostPath.length == 0;
+
+        // forwards
+        if (toTime > fromTime) {
+
+          // first step, add both times
+          if (firstStep) {
+            rightmostPath = ArrayUtils.add(rightmostPath, toTime);
+            rightmostPath = ArrayUtils.add(rightmostPath, fromTime);
+
+            // add from time
+          } else if (ArrayUtils.indexOf(rightmostPath, toTime) >= 0) {
+            rightmostPath = ArrayUtils.add(rightmostPath, fromTime);
+          }
+
+          // first step and loop
+        } else if (firstStep && fromTime == toTime) {
+          rightmostPath = ArrayUtils.add(rightmostPath, 0);
+        }
+      }
+    }
+  }
 }

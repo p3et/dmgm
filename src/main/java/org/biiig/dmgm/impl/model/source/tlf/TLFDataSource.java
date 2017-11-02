@@ -61,7 +61,7 @@ public class TLFDataSource implements DMGraphDataSource {
     Countable.sumSupportAndFrequency(globalFrequencies);
     // filter infrequent labels
     globalFrequencies.removeIf(c -> c.getSupport() < minSupport);
-    // create dictionary
+    // aggregateReports dictionary
     return new InMemoryLabelDictionary(globalFrequencies);
   }
 

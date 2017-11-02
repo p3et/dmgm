@@ -3,7 +3,6 @@ package org.biiig.dmgm.impl.algorithms.tfsm;
 import org.biiig.dmgm.api.model.collection.DMGraphCollection;
 import org.biiig.dmgm.api.concurrency.TaskWithOutput;
 import org.biiig.dmgm.api.concurrency.TaskWithOutputFactory;
-import org.biiig.dmgm.todo.gspan.DFSTreeNode;
 
 import java.util.Deque;
 import java.util.List;

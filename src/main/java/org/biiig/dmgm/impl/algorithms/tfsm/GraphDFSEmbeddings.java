@@ -1,17 +1,16 @@
-package org.biiig.dmgm.todo.gspan;
+package org.biiig.dmgm.impl.algorithms.tfsm;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public class GraphDFSEmbeddings {
-  private final int graphId;
+  private int graphId;
   private DFSEmbedding[] embeddings;
 
   public GraphDFSEmbeddings(int graphId, DFSEmbedding embedding) {
     this.graphId = graphId;
     this.embeddings = new DFSEmbedding[] {embedding};
   }
-
 
   @Override
   public String toString() {

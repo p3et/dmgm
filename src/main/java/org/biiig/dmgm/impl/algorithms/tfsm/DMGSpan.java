@@ -4,7 +4,6 @@ import org.biiig.dmgm.api.algorithms.tfsm.Algorithm;
 import org.biiig.dmgm.api.model.collection.DMGraphCollection;
 import org.biiig.dmgm.api.model.graph.DMGraph;
 import org.biiig.dmgm.impl.concurrency.ConcurrencyUtil;
-import org.biiig.dmgm.todo.gspan.DFSTreeNode;
 
 import java.util.Collection;
 import java.util.Deque;
@@ -87,11 +86,11 @@ public class DMGSpan implements Algorithm {
 //
 //    int[] rightmostPathTimes = getRightmostPathTimes(dfsCode);
 //
-//    for (GraphDFSEmbeddings graphEmbeddings : parent.getEmbeddings()) {
+//    for (GraphDFSEmbeddings graphEmbeddings : parent.getEmbedding()) {
 //      support++;
-//      frequency += graphEmbeddings.getEmbeddings().length;
+//      frequency += graphEmbeddings.getEmbedding().length;
 //
-//      growForGraph(
+//      growChildren(
 //        database, graphEmbeddings, dfsCode, rightmostPathTimes);
 //      GSpanTreeNode.aggregateForGraph(reports);
 //      children.addAll(reports);
@@ -118,36 +117,7 @@ public class DMGSpan implements Algorithm {
 //    }
 //  }
 //
-//  private boolean isMinimal(DFSCode dfsCode) {
-//
-//    LabeledGraph graph = new LabeledGraph(dfsCode);
-//    graph.createAdjacencyList();
-//    reportSingleEdges(graph);
-//
-//    GSpanTreeNode minParentNode = reports.get(0);
-//    boolean minimal = minParentNode.getDfsCode().parentOf(dfsCode);
-//
-//    while (minimal) {
-//      DFSCode minDFSCode = minParentNode.getDfsCode();
-//
-//
-//      GraphDFSEmbeddings[] embeddings = minParentNode.getEmbeddings();
-//      int[] rightmostPath = getRightmostPathTimes(minDFSCode);
-//
-//      growForGraph(graph, embeddings[0], minDFSCode, rightmostPath);
-//
-//      GSpanTreeNode.aggregateForGraph(reports);
-//
-//      if (reports.isEmpty()) {
-//        break;
-//      } else {
-//        minParentNode = reports.get(0);
-//        minimal = minParentNode.getDfsCode().parentOf(dfsCode);
-//      }
-//    }
-//
-//    return minimal;
-//  }
+
 //
 //
 //  private void reportSingleEdges(LabeledGraph graph) {
@@ -202,138 +172,13 @@ public class DMGSpan implements Algorithm {
 //    createDictionaries(vertexLabels, edgeLabels);
 //  }
 //
-//  public int[] getRightmostPathTimes(DFSCode dfsCode) {
+
 //
-//    int[] rightmostPathTimes;
 //
-//    // 1-edge pattern
-//    if (dfsCode.getEdgeCount() == 1) {
-//      // loop
-//      if (dfsCode.getFromTime(0) == dfsCode.getToTime( 0)) {
-//        rightmostPathTimes = new int[] {0};
-//      } else {
-//        rightmostPathTimes = new int[] {1, 0};
-//      }
-//    } else {
-//      rightmostPathTimes = new int[0];
-//
-//      for (int edgeTime = dfsCode.getEdgeCount() - 1; edgeTime >= 0; edgeTime--) {
-//        int fromTime = dfsCode.getFromTime(edgeTime);
-//        int toTime = dfsCode.getToTime(edgeTime);
-//        boolean firstStep = rightmostPathTimes.length == 0;
-//
-//        // forwards
-//        if (toTime > fromTime) {
-//
-//          // first step, add both times
-//          if (firstStep) {
-//            rightmostPathTimes = ArrayUtils.add(rightmostPathTimes, toTime);
-//            rightmostPathTimes = ArrayUtils.add(rightmostPathTimes, fromTime);
-//
-//            // add from time
-//          } else if (ArrayUtils.indexOf(rightmostPathTimes, toTime) >= 0) {
-//            rightmostPathTimes = ArrayUtils.add(rightmostPathTimes, fromTime);
-//          }
-//
-//          // first step and loop
-//        } else if (firstStep && fromTime == toTime) {
-//          rightmostPathTimes = ArrayUtils.add(rightmostPathTimes, 0);
-//        }
-//      }
-//    }
-//
-//    return rightmostPathTimes;
-//  }
-//
-//  private void growForGraph(LabeledGraph graph, GraphDFSEmbeddings graphEmbeddings, DFSCode parentCode,
-//    int[] rightmostPath) {
-//    reports.clear();
-//
-//    Map<DFSEmbedding, DFSCode> process = Maps.newHashMap();
-//
-//    DFSEmbedding[] embeddings = graphEmbeddings.getEmbeddings();
-//
-//    for (DFSEmbedding parentEmbedding : embeddings) {
-//      boolean rightmost = true;
-//      for (int fromTime : rightmostPath) {
-//        int fromId = parentEmbedding.getVertexId(fromTime);
-//
-//        for (LabeledAdjacencyListEntry entry : graph.getAdjacencyList()[fromId]) {
-//          // if not contained in parent embedding
-//          int edgeId = entry.getEdgeId();
-//          if (! parentEmbedding.containsEdgeId(edgeId)) {
-//
-//            // determine times of incident vertices in parent embedding
-//            int toId = entry.getToId();
-//            int toTime = parentEmbedding.getVertexTime(toId);
-//
-//            // CHECK FOR BACKWARDS GROWTH OPTIONS
-//
-//            // grow backwards
-//            if (rightmost && toTime >= 0) {
-//              DFSCode childCode = parentCode.growChild(
-//                fromTime,
-//                toTime,
-//                entry.isOutgoing(),
-//                entry.getEdgeLabel(),
-//                graph.getVertices()[toId].getLabel()
-//              );
-//
-//              DFSEmbedding childEmbedding = parentEmbedding.expandByEdgeId(edgeId);
-//
-//              GraphDFSEmbeddings
-//                childEmbeddings = new GraphDFSEmbeddings(graph.getId(), childEmbedding);
-//
-//              GSpanTreeNode childNode = new GSpanTreeNode(childCode, childEmbeddings);
-//              reports.add(childNode);
-//
-//              // grow backwards from to
-//            } else if (toTime < 0) {
-//              DFSCode childCode = parentCode.growChild(
-//                fromTime,
-//                toTime,
-//                entry.isOutgoing(),
-//                entry.getEdgeLabel(),
-//                graph.getVertices()[toId].getLabel()
-//              );
-//
-//              DFSEmbedding childEmbedding = parentEmbedding.expandByEdgeIdAndVertexId(edgeId, toId);
-//
-//              GraphDFSEmbeddings
-//                childEmbeddings = new GraphDFSEmbeddings(graph.getId(), childEmbedding);
-//
-//              GSpanTreeNode childNode = new GSpanTreeNode(childCode, childEmbeddings);
-//              reports.add(childNode);
-//            }
-//          }
-//        }
-//
-//        rightmost = false;
-//      }
-//    }
-//  }
 //
 //  public List<Countable<DFSCode>> getResult() {
 //    return result;
 //  }
 //
-//  private DFSCode getMinDFSCode(LabeledGraph graph) {
-//    graph.createAdjacencyList();
-//    reportSingleEdges(graph);
-//
-//    GSpanTreeNode minParentNode = reports.get(0);
-//
-//    for (int i = 1; i < graph.getEdgeCount(); i++) {
-//      DFSCode minDFSCode = minParentNode.getDfsCode();
-//
-//      GraphDFSEmbeddings[] embeddings = minParentNode.getEmbeddings();
-//      int[] rightmostPath = getRightmostPathTimes(minDFSCode);
-//
-//      growForGraph(graph, embeddings[0], minDFSCode, rightmostPath);
-//
-//      minParentNode = reports.get(0);
-//    }
-//
-//    return minParentNode.getDfsCode();
-//  }
+
 }

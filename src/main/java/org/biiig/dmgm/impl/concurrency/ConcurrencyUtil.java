@@ -14,7 +14,7 @@ public class ConcurrencyUtil {
 
   public static <OUT> Collection<OUT> runParallel(TaskWithOutputFactory<OUT> taskFactory) {
 
-    // create parallel environment
+    // aggregateReports parallel environment
     int parallelism = Runtime.getRuntime().availableProcessors();
     AtomicInteger activeCount = new AtomicInteger(0);
     ExecutorService executor = Executors.newFixedThreadPool(parallelism);

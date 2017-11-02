@@ -4,7 +4,6 @@ import org.biiig.dmgm.api.model.collection.DMGraphCollection;
 import org.biiig.dmgm.api.concurrency.TaskWithOutput;
 import org.biiig.dmgm.api.concurrency.TaskWithOutputFactory;
 import org.biiig.dmgm.api.model.graph.DMGraph;
-import org.biiig.dmgm.todo.gspan.DFSTreeNode;
 
 import java.util.Deque;
 import java.util.List;
@@ -24,6 +23,6 @@ public class DFSTreeTraverserFactory implements TaskWithOutputFactory<List<DMGra
 
   @Override
   public TaskWithOutput<List<DMGraph>> create(AtomicInteger activeCount) {
-    return new DFSTreeTraverser(dfsTree, activeCount);
+    return new DFSTreeTraverser(dfsTree, activeCount, input);
   }
 }

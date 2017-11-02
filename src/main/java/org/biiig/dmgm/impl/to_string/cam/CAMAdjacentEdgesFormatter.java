@@ -40,7 +40,7 @@ public abstract class CAMAdjacentEdgesFormatter {
       edgeLabels.put(adjacentVertexId, parallelEdgeLabels);
     }
 
-    // create outgoing edge strings
+    // aggregateReports outgoing edge strings
 
     String[] adjacencyStrings = new String[edgeLabels.size()];
     int vertexNumber = 0;

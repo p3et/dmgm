@@ -1,4 +1,4 @@
-package org.biiig.dmgm.todo.gspan;
+package org.biiig.dmgm.impl.algorithms.tfsm;
 
 import org.apache.commons.lang3.ArrayUtils;
 

@@ -1,10 +1,12 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.tuple.Pair;
 import org.biiig.dmgm.api.concurrency.TaskWithOutput;
+import org.biiig.dmgm.api.model.collection.DMGraphCollection;
 import org.biiig.dmgm.api.model.graph.DMGraph;
 import org.biiig.dmgm.impl.concurrency.DequeUpdateTask;
-import org.biiig.dmgm.todo.gspan.DFSTreeNode;
+import org.biiig.dmgm.impl.model.graph.DFSCode;
 
 import java.util.Collection;
 import java.util.Deque;
@@ -14,12 +16,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class DFSTreeTraverser
   extends DequeUpdateTask<DFSTreeNode> implements TaskWithOutput<List<DMGraph>> {
 
+  private final DMGraphCollection input;
   private List<DMGraph> output = Lists.newArrayList();
-  private Collection<DFSTreeNode> children = Lists.newLinkedList();
+  private final GSpanLogic gSpan = new GSpanLogic();
+  private final Aggregator aggregator = new Aggregator();
 
 
-  public DFSTreeTraverser(Deque<DFSTreeNode> deque, AtomicInteger activeCount) {
+  public DFSTreeTraverser(Deque<DFSTreeNode> deque, AtomicInteger activeCount,
+    DMGraphCollection input) {
     super(deque, activeCount);
+    this.input = input;
   }
 
   @Override
@@ -29,14 +35,31 @@ public class DFSTreeTraverser
 
   @Override
   protected Collection<DFSTreeNode> process(DFSTreeNode next) {
-    children.clear();
 
-    output.add(next.getDfsCode());
+    DFSCode parentCode = next.getDfsCode();
 
-    // TODO pattern growth
+    output.add(parentCode);
+
+    List<DFSTreeNode> childNodes = Lists.newLinkedList();
 
 
+    // for each graph supporting the parent code
+    for (GraphDFSEmbeddings graphEmbeddings : next.getEmbeddings()) {
+      int graphId = graphEmbeddings.getGraphId();
+      DMGraph graph = input.getGraph(graphId);
 
-    return children;
+      List<DFSCodeEmbeddingPair> reports = gSpan
+        .growChildren(graph, parentCode, graphEmbeddings.getEmbeddings());
+
+      childNodes.addAll(aggregator.aggregateReports(reports));
+    }
+
+    childNodes = aggregator.aggregate(childNodes);
+
+    return childNodes;
   }
+
+
+
+
 }
