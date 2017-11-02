@@ -1,6 +1,7 @@
 package org.biiig.dmgm;
 
 import org.biiig.dmgm.api.model.collection.DMGraphCollection;
+import org.biiig.dmgm.api.model.graph.DMGraph;
 import org.biiig.dmgm.api.model.graph.DMGraphFactory;
 import org.biiig.dmgm.impl.algorithms.tfsm.TFSMConfig;
 import org.biiig.dmgm.impl.model.collection.InMemoryGraphCollection;
@@ -63,7 +64,38 @@ public class FSMTest extends DMGMTestBase {
 
     DirectedMultigraphMiner.frequentSubgraphs(inputDB, outputDB, TFSM_CONFIG);
 
-    assertTrue("graph count", equal(expectedDB, outputDB));
+    assertTrue("constistent", isConsistent(outputDB));
+    assertTrue("equals", equal(expectedDB, outputDB));
+  }
+
+  private boolean isConsistent(DMGraphCollection collection) {
+    boolean consistent = true;
+
+    for (DMGraph graph : collection) {
+      for (int vertexId = 0; vertexId < graph.getVertexCount(); vertexId++ ) {
+        int vertexLabel = graph.getVertexLabel(vertexId);
+        String translation = collection.getVertexDictionary().translate(vertexLabel);
+
+        consistent = consistent && translation != null;
+
+        if (translation == null) {
+          System.out.println("no translation found for integer vertex label " + vertexLabel);
+        }
+      }
+
+      for (int edgeId = 0; edgeId < graph.getEdgeCount(); edgeId++ ) {
+        int edgeLabel = graph.getEdgeLabel(edgeId);
+        String translation = collection.getEdgeDictionary().translate(edgeLabel);
+
+        consistent = consistent && translation != null;
+
+        if (translation == null) {
+          System.out.println("no translation found for integer edge label " + edgeLabel);
+        }
+      }
+    }
+
+    return consistent;
   }
 
 }

@@ -55,6 +55,8 @@ public abstract class CAMAdjacentEdgesFormatter {
 
       adjacencyStrings[vertexNumber] = formatEdge(edgeLabelsString) +
         vertexDictionary.translate(graph.getVertexLabel(adjacentVertexId));
+
+      vertexNumber++;
     }
 
     Arrays.sort(adjacencyStrings);
