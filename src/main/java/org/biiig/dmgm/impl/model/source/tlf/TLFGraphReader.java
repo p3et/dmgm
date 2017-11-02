@@ -56,7 +56,7 @@ public class TLFGraphReader extends TLFSplitReader {
     for (int l = 1; l < firstEdgeIndex; l++) {
       String[] fields = split[l].split(TLFConstants.FIELD_SEPARATOR);
 
-      // if vertex has frequent label
+      // if vertex has frequent format
       Integer firstLabel = dictionary.translate(fields[2]);
       if (firstLabel != null) {
 
@@ -77,7 +77,7 @@ public class TLFGraphReader extends TLFSplitReader {
 
           graph.setVertex(vertexId, labels);
 
-          // single label
+          // single format
         } else {
           graph.setVertex(vertexId, firstLabel);
         }
@@ -95,19 +95,19 @@ public class TLFGraphReader extends TLFSplitReader {
     for (int l = firstEdgeIndex; l < split.length; l++) {
       String[] fields = split[l].split(TLFConstants.FIELD_SEPARATOR);
 
-      // if source has frequent label
+      // if source has frequent format
       Integer sourceId = vertexIdMap.get(fields[1]);
       if (sourceId != null) {
 
-        // if target has frequent label
+        // if target has frequent format
         Integer targetId = vertexIdMap.get(fields[2]);
         if (targetId != null) {
 
-          // if edge has frequent label
+          // if edge has frequent format
           Integer firstLabel = dictionary.translate(fields[3]);
           if (firstLabel != null) {
 
-            // single label
+            // single format
             if (fields.length == 4) {
               graph.setEdge(edgeId, sourceId, targetId, firstLabel);
 

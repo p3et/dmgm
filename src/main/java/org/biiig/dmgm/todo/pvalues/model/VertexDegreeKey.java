@@ -2,7 +2,7 @@ package org.biiig.dmgm.todo.pvalues.model;
 
 
 /**
- * (outgoing, multiplicity, label)
+ * (outgoing, multiplicity, format)
  */
 public class VertexDegreeKey implements Comparable<VertexDegreeKey> {
 

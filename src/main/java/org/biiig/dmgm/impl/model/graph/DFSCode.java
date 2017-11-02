@@ -56,7 +56,7 @@ public class DFSCode implements Comparable<DFSCode>, DMGraph {
   public void setVertex(int vertexId, int[] data) {
     if (data.length != 1) {
       throw new IllegalArgumentException(
-        "A vertex must exactly have 1 data field (label) but has " + ArrayUtils.toString(data));
+        "A vertex must exactly have 1 data field (format) but has " + ArrayUtils.toString(data));
     } else {
       setVertex(vertexId, data[0]);
     }
@@ -84,7 +84,7 @@ public class DFSCode implements Comparable<DFSCode>, DMGraph {
 
     if (data.length != 1) {
       throw new IllegalArgumentException(
-        "An edge must exactly have 1 data field (label) but has " + ArrayUtils.toString(data));
+        "An edge must exactly have 1 data field (format) but has " + ArrayUtils.toString(data));
     } else {
       setEdge(edgeId, sourceId, targetId, data[0]);
     }

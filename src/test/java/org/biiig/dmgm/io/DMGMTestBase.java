@@ -29,9 +29,10 @@ public class DMGMTestBase {
     } else {
 
       String[] expectedStrings = new String[expected.size()];
-      String[] actualStrings = new String[expected.size()];
+      String[] actualStrings = new String[actual.size()];
 
-      DMGraphFormatter formatter = new CAMFormatter();
+      DMGraphFormatter formatter =
+        new CAMFormatter(expected.getVertexDictionary(), expected.getEdgeDictionary());
 
       for (DMGraph graph : expected) {
         System.out.println(formatter.format(graph));

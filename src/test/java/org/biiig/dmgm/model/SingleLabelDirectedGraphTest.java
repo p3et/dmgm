@@ -30,11 +30,11 @@ public abstract class SingleLabelDirectedGraphTest {
     graph.setEdge(1, 0, 1, lab1);
 
     assertEquals("vertex count", 2, graph.getVertexCount());
-    assertEquals("vertex label 0", lab0, graph.getVertexLabel(0));
-    assertEquals("vertex label 1", lab1, graph.getVertexLabel(1));
+    assertEquals("vertex format 0", lab0, graph.getVertexLabel(0));
+    assertEquals("vertex format 1", lab1, graph.getVertexLabel(1));
     assertEquals("edge count", 2, graph.getEdgeCount());
-    assertEquals("edge label 0", lab0, graph.getEdgeLabel(0));
-    assertEquals("edge label 1", lab1, graph.getEdgeLabel(1));
+    assertEquals("edge format 0", lab0, graph.getEdgeLabel(0));
+    assertEquals("edge format 1", lab1, graph.getEdgeLabel(1));
     assertEquals("edge source 0", 0, graph.getSourceId(0));
     assertEquals("edge target 0", 0, graph.getTargetId(0));
     assertEquals("edge source 1", 0, graph.getSourceId(1));

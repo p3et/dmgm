@@ -143,7 +143,7 @@
 //      }
 //    }
 //
-//    //Compute vertex label distribution
+//    //Compute vertex format distribution
 //    Map<String, Float> vertexLabelDistribution=new HashMap<>();
 //    for (LabeledGraph graph : graphs)
 //    {
@@ -158,7 +158,7 @@
 //      }
 //    }
 //
-//    //Compute edge label distributions conditioned on source and target labels
+//    //Compute edge format distributions conditioned on source and target labels
 //    Map<MultiEdgeLabelDistributionKey, Float> edgeLabelDistribution=new HashMap<>();
 //    Map<String,Integer> mapEdgeCounts=new HashMap<>();
 //    for(EdgeData edge : edgeData)
