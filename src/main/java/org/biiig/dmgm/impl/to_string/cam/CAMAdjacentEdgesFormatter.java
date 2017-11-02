@@ -1,4 +1,4 @@
-package org.biiig.dmgm.impl.to_string;
+package org.biiig.dmgm.impl.to_string.cam;
 
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.ArrayUtils;

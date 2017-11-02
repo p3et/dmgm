@@ -55,17 +55,17 @@ public class FSMTest extends DMGMTestBase {
   private void test(String inputGDL, String expectedGDL) {
     DMGraphFactory graphFactory = new SourceTargetMuxFactory();
 
-    DMGraphCollection inputDB = new InMemoryGraphCollection();
-    DMGraphCollection expectedDB = new InMemoryGraphCollection();
-    DMGraphCollection outputDB = new InMemoryGraphCollection();
+    DMGraphCollection input = new InMemoryGraphCollection();
+    DMGraphCollection expected = new InMemoryGraphCollection();
+    DMGraphCollection output = new InMemoryGraphCollection();
 
-    new GDLDataSource(inputGDL).load(inputDB, graphFactory);
-    new GDLDataSource(expectedGDL).load(expectedDB, graphFactory);
+    new GDLDataSource(inputGDL).load(input, graphFactory);
+    new GDLDataSource(expectedGDL).load(expected, graphFactory);
 
-    DirectedMultigraphMiner.frequentSubgraphs(inputDB, outputDB, TFSM_CONFIG);
+    DirectedMultigraphMiner.frequentSubgraphs(input, output, TFSM_CONFIG);
 
-    assertTrue("constistent", isConsistent(outputDB));
-    assertTrue("equals", equal(expectedDB, outputDB));
+    assertTrue("constistent", isConsistent(output));
+    assertTrue("equals", equal(expected, output));
   }
 
   private boolean isConsistent(DMGraphCollection collection) {

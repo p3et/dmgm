@@ -1,4 +1,4 @@
-package org.biiig.dmgm.impl.to_string;
+package org.biiig.dmgm.impl.to_string.cam;
 
 import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.model.collection.LabelDictionary;
@@ -9,10 +9,10 @@ public class CAMGraphFormatter implements DMGraphFormatter {
 
   private static final char VERTEX_SEPARATOR = '\n';
 
-  private final org.biiig.dmgm.impl.to_string.CAMVertexFormatter vertexLabeler;
+  private final CAMVertexFormatter vertexFormatter;
 
   public CAMGraphFormatter(LabelDictionary vertexLabelDictionary, LabelDictionary edgeLabelDictionary) {
-    this.vertexLabeler = new org.biiig.dmgm.impl.to_string.CAMVertexFormatter(vertexLabelDictionary, edgeLabelDictionary);
+    this.vertexFormatter = new CAMVertexFormatter(vertexLabelDictionary, edgeLabelDictionary);
   }
 
 
@@ -22,9 +22,9 @@ public class CAMGraphFormatter implements DMGraphFormatter {
     String[] vertexStrings = new String[graph.getVertexCount()];
 
     for (int vertexId = 0; vertexId < graph.getVertexCount(); vertexId++) {
-      vertexStrings[vertexId] = vertexLabeler.format(graph, vertexId);
+      vertexStrings[vertexId] = vertexFormatter.format(graph, vertexId);
     }
 
-    return "[\n" + StringUtils.join(vertexStrings, VERTEX_SEPARATOR) + "\n]";
+    return StringUtils.join(vertexStrings, VERTEX_SEPARATOR);
   }
 }

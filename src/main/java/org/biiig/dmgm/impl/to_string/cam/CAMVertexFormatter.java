@@ -1,4 +1,4 @@
-package org.biiig.dmgm.impl.to_string;
+package org.biiig.dmgm.impl.to_string.cam;
 
 import org.biiig.dmgm.api.model.collection.LabelDictionary;
 import org.biiig.dmgm.api.model.graph.DMGraph;
