@@ -5,13 +5,13 @@ import org.biiig.dmgm.api.model.collection.LabelDictionary;
 import org.biiig.dmgm.api.model.graph.DMGraph;
 import org.biiig.dmgm.api.model.to_string.DMGraphFormatter;
 
-public class CAMFormatter implements DMGraphFormatter {
+public class CAMGraphFormatter implements DMGraphFormatter {
 
   private static final char VERTEX_SEPARATOR = '\n';
 
   private final org.biiig.dmgm.impl.to_string.CAMVertexFormatter vertexLabeler;
 
-  public CAMFormatter(LabelDictionary vertexLabelDictionary, LabelDictionary edgeLabelDictionary) {
+  public CAMGraphFormatter(LabelDictionary vertexLabelDictionary, LabelDictionary edgeLabelDictionary) {
     this.vertexLabeler = new org.biiig.dmgm.impl.to_string.CAMVertexFormatter(vertexLabelDictionary, edgeLabelDictionary);
   }
 
@@ -25,6 +25,6 @@ public class CAMFormatter implements DMGraphFormatter {
       vertexStrings[vertexId] = vertexLabeler.format(graph, vertexId);
     }
 
-    return StringUtils.join(vertexStrings, VERTEX_SEPARATOR);
+    return "[\n" + StringUtils.join(vertexStrings, VERTEX_SEPARATOR) + "\n]";
   }
 }
