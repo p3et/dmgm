@@ -16,7 +16,7 @@ public class SingleEdgeNodeCreator
 
   private final DMGraphCollection input;
   private final List<DFSTreeNode> output = Lists.newLinkedList();
-  private final GSpanLogic gSpan = new GSpanLogic();
+  private final DFSCodeOperations gSpan = new DFSCodeOperations();
 
   private final List<DFSTreeNode> childNodes = Lists.newLinkedList();
   private final Collection<Integer> emptyCollection = Lists.newArrayListWithCapacity(0);
@@ -38,7 +38,7 @@ public class SingleEdgeNodeCreator
 
     DMGraph graph = input.getGraph(graphId);
 
-    gSpan.addSingleEdgeDFSTreeNodes(childNodes, graphId, graph);
+    gSpan.initSingleEdgeDFSCodes(graph);
     output.addAll(childNodes);
 
     return emptyCollection;

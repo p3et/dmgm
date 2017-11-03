@@ -86,11 +86,11 @@ public class DMGSpan implements Algorithm {
 //
 //    int[] rightmostPathTimes = getRightmostPathTimes(dfsCode);
 //
-//    for (GraphDFSEmbeddings graphEmbeddings : parent.getEmbedding()) {
+//    for (GraphDFSEmbeddings graphEmbeddings : parent.getEmbeddings()) {
 //      support++;
-//      frequency += graphEmbeddings.getEmbedding().length;
+//      frequency += graphEmbeddings.getEmbeddings().length;
 //
-//      growChildren(
+//      growChildDFSCodes(
 //        database, graphEmbeddings, dfsCode, rightmostPathTimes);
 //      GSpanTreeNode.aggregateForGraph(reports);
 //      children.addAll(reports);

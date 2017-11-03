@@ -1,7 +1,6 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
 import com.google.common.collect.Lists;
-import org.apache.commons.lang3.tuple.Pair;
 import org.biiig.dmgm.api.concurrency.TaskWithOutput;
 import org.biiig.dmgm.api.model.collection.DMGraphCollection;
 import org.biiig.dmgm.api.model.graph.DMGraph;
@@ -18,7 +17,7 @@ public class DFSTreeTraverser
 
   private final DMGraphCollection input;
   private List<DMGraph> output = Lists.newArrayList();
-  private final GSpanLogic gSpan = new GSpanLogic();
+  private final DFSCodeOperations gSpan = new DFSCodeOperations();
   private final Aggregator aggregator = new Aggregator();
 
 
@@ -49,7 +48,7 @@ public class DFSTreeTraverser
       DMGraph graph = input.getGraph(graphId);
 
       List<DFSCodeEmbeddingPair> reports = gSpan
-        .growChildren(graph, parentCode, graphEmbeddings.getEmbeddings());
+        .growChildDFSCodes(graph, parentCode, graphEmbeddings.getEmbeddings());
 
       childNodes.addAll(aggregator.aggregateReports(reports));
     }
