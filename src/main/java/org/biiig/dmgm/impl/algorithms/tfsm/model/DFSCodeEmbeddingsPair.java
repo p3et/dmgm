@@ -1,4 +1,4 @@
-package org.biiig.dmgm.impl.algorithms.tfsm;
+package org.biiig.dmgm.impl.algorithms.tfsm.model;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.impl.model.graph.DFSCode;

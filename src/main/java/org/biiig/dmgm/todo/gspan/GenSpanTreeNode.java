@@ -2,7 +2,7 @@ package org.biiig.dmgm.todo.gspan;
 
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.impl.algorithms.tfsm.GraphDFSEmbeddings;
+import org.biiig.dmgm.impl.algorithms.tfsm.model.GraphIdEmbeddingPair;
 import org.biiig.dmgm.impl.model.graph.DFSCode;
 import org.biiig.dmgm.todo.model.Vector;
 import org.biiig.dmgm.impl.model.countable.Countable;
@@ -19,15 +19,15 @@ public class GenSpanTreeNode implements Comparable<GenSpanTreeNode> {
   private final DFSCode dfsCode;
   private final int[] fieldMapping;
   private List<Countable<Vector>> vectors;
-  private GraphDFSEmbeddings[] embeddings;
+  private GraphIdEmbeddingPair[] embeddings;
 
   public GenSpanTreeNode(DFSCode dfsCode, int[] fieldMapping, Vector vector,
-    GraphDFSEmbeddings embeddings) {
+    GraphIdEmbeddingPair embeddings) {
     this.dfsCode = dfsCode;
     this.fieldMapping = fieldMapping;
     this.vectors = Lists.newLinkedList();
     this.vectors.add(new Countable<>(vector));
-    this.embeddings = new GraphDFSEmbeddings[] {embeddings};
+    this.embeddings = new GraphIdEmbeddingPair[] {embeddings};
   }
 
   public static void aggregateForGraph(List<GenSpanTreeNode> list) {
@@ -90,7 +90,7 @@ public class GenSpanTreeNode implements Comparable<GenSpanTreeNode> {
     return dfsCode;
   }
 
-  public GraphDFSEmbeddings[] getEmbeddings() {
+  public GraphIdEmbeddingPair[] getEmbeddings() {
     return embeddings;
   }
 

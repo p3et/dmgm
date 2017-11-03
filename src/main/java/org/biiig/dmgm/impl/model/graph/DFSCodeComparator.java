@@ -1,4 +1,4 @@
-package org.biiig.dmgm.todo.gspan;/*
+package org.biiig.dmgm.impl.model.graph;/*
  * This file is part of Gradoop.
  *
  * Gradoop is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ import java.util.Comparator;
  * Comparator for DFS codes based on gSpan lexicographical order.
  * See <a href="https://www.cs.ucsb.edu/~xyan/software/gSpan.htm">gSpan</a>
  */
-public class LexicographicDFSCodeComparator implements Comparator<DFSCode>, Serializable {
+public class DFSCodeComparator implements Comparator<DFSCode>, Serializable {
 
   public int compare(DFSCode a, DFSCode b) {
     int comparison;

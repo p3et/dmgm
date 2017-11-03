@@ -1,12 +1,15 @@
-package org.biiig.dmgm.impl.algorithms.tfsm;
+package org.biiig.dmgm.impl.algorithms.tfsm.logic;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.model.graph.DMGraph;
+import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSCodeEmbeddingPair;
+import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSEmbedding;
 import org.biiig.dmgm.impl.model.graph.DFSCode;
 
-public abstract class EdgeGrower implements PatternGrower {
+public abstract class PatternGrowerBase implements PatternGrower {
+
   @Override
-  public DFSCodeEmbeddingPair[] growChildren(
+  public DFSCodeEmbeddingPair[] growChildDFSCodes(
     DMGraph graph, DFSCode parentCode, DFSEmbedding[] parentEmbeddings) {
 
     DFSCodeEmbeddingPair[] children = new DFSCodeEmbeddingPair[0];

@@ -3,6 +3,10 @@ package org.biiig.dmgm.impl.algorithms.tfsm;
 import org.biiig.dmgm.api.algorithms.tfsm.Algorithm;
 import org.biiig.dmgm.api.model.collection.DMGraphCollection;
 import org.biiig.dmgm.api.model.graph.DMGraph;
+import org.biiig.dmgm.impl.algorithms.tfsm.concurrency.DFSTreeTraverserFactory;
+import org.biiig.dmgm.impl.algorithms.tfsm.concurrency.DFSTreeInitializerFactory;
+import org.biiig.dmgm.impl.algorithms.tfsm.logic.DFSTreeNodeAggregator;
+import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSTreeNode;
 import org.biiig.dmgm.impl.concurrency.ConcurrencyUtil;
 
 import java.util.Collection;
@@ -37,7 +41,7 @@ public class DMGSpan implements Algorithm {
     }
 
     Collection<List<DFSTreeNode>> dfsTreePartitions = ConcurrencyUtil
-      .runParallel(new SingleEdgeNodeCreatorFactory(input, graphIdQueue));
+      .runParallel(new DFSTreeInitializerFactory(input, graphIdQueue));
 
     // aggregate partitions in parallel
     dfsTreePartitions.parallelStream()

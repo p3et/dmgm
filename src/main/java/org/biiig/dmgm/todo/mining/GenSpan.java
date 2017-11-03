@@ -5,9 +5,9 @@ import com.google.common.collect.Maps;
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.impl.algorithms.tfsm.TFSMConfig;
 import org.biiig.dmgm.impl.model.graph.DFSCode;
-import org.biiig.dmgm.impl.algorithms.tfsm.DFSEmbedding;
+import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSEmbedding;
 import org.biiig.dmgm.todo.gspan.GenSpanTreeNode;
-import org.biiig.dmgm.impl.algorithms.tfsm.GraphDFSEmbeddings;
+import org.biiig.dmgm.impl.algorithms.tfsm.model.GraphIdEmbeddingPair;
 import org.biiig.dmgm.todo.model.Vector;
 import org.biiig.dmgm.impl.model.countable.Countable;
 import org.biiig.dmgm.todo.model.labeled_graph.LabeledAdjacencyListEntry;
@@ -61,7 +61,7 @@ public class GenSpan extends GSpanBase {
 
     int[] rightmostPathTimes = getRightmostPathTimes(dfsCode);
 
-    for (GraphDFSEmbeddings graphEmbeddings : parent.getEmbeddings()) {
+    for (GraphIdEmbeddingPair graphEmbeddings : parent.getEmbeddings()) {
 
       growForGraph(
         graphs.get(graphEmbeddings.getGraphId()), graphEmbeddings, dfsCode, rightmostPathTimes);
@@ -138,7 +138,7 @@ public class GenSpan extends GSpanBase {
       DFSCode minDFSCode = minParentNode.getDfsCode();
 
 
-      GraphDFSEmbeddings[] embeddings = minParentNode.getEmbeddings();
+      GraphIdEmbeddingPair[] embeddings = minParentNode.getEmbeddings();
       int[] rightmostPath = getRightmostPathTimes(minDFSCode);
 
       growForGraph(graph, embeddings[0], minDFSCode, rightmostPath);
@@ -195,7 +195,7 @@ public class GenSpan extends GSpanBase {
 
           DFSEmbedding embedding = new DFSEmbedding(fromId, edgeId, toId);
 
-          GraphDFSEmbeddings embeddings = new GraphDFSEmbeddings(graph.getId(), null);
+          GraphIdEmbeddingPair embeddings = new GraphIdEmbeddingPair(graph.getId(), null);
 
           Vector vector = new Vector();
           int[] fieldMapping = new int[0];
@@ -364,7 +364,7 @@ public class GenSpan extends GSpanBase {
     return rightmostPathTimes;
   }
 
-  private void growForGraph(MultiLevelGraph graph, GraphDFSEmbeddings graphEmbeddings, DFSCode parentCode,
+  private void growForGraph(MultiLevelGraph graph, GraphIdEmbeddingPair graphEmbeddings, DFSCode parentCode,
     int[] rightmostPath) {
     reports.clear();
 
@@ -400,8 +400,8 @@ public class GenSpan extends GSpanBase {
 
               DFSEmbedding childEmbedding = parentEmbedding.expandByEdgeId(edgeId);
 
-              GraphDFSEmbeddings
-                childEmbeddings = new GraphDFSEmbeddings(graph.getId(), null);
+              GraphIdEmbeddingPair
+                childEmbeddings = new GraphIdEmbeddingPair(graph.getId(), null);
 
               Vector vector = new Vector();
               int[] fieldMapping = new int[0];
@@ -431,8 +431,8 @@ public class GenSpan extends GSpanBase {
 
               DFSEmbedding childEmbedding = parentEmbedding.expandByEdgeIdAndVertexId(edgeId, toId);
 
-              GraphDFSEmbeddings
-                childEmbeddings = new GraphDFSEmbeddings(graph.getId(), null);
+              GraphIdEmbeddingPair
+                childEmbeddings = new GraphIdEmbeddingPair(graph.getId(), null);
 
               Vector vector = new Vector();
               int[] fieldMapping = new int[0];
@@ -471,7 +471,7 @@ public class GenSpan extends GSpanBase {
     for (int i = 1; i < graph.getEdgeCount(); i++) {
       DFSCode minDFSCode = minParentNode.getDfsCode();
 
-      GraphDFSEmbeddings[] embeddings = minParentNode.getEmbeddings();
+      GraphIdEmbeddingPair[] embeddings = minParentNode.getEmbeddings();
       int[] rightmostPath = getRightmostPathTimes(minDFSCode);
 
       growForGraph(graph, embeddings[0], minDFSCode, rightmostPath);

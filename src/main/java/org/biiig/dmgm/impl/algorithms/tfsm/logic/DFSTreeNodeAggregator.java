@@ -1,4 +1,6 @@
-package org.biiig.dmgm.impl.algorithms.tfsm;
+package org.biiig.dmgm.impl.algorithms.tfsm.logic;
+
+import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSTreeNode;
 
 import java.util.Iterator;
 import java.util.List;

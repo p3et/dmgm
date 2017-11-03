@@ -1,7 +1,10 @@
-package org.biiig.dmgm.impl.algorithms.tfsm;
+package org.biiig.dmgm.impl.algorithms.tfsm.logic;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.model.graph.DMGraph;
+import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSCodeEmbeddingPair;
+import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSCodeEmbeddingsPair;
+import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSEmbedding;
 import org.biiig.dmgm.impl.model.graph.DFSCode;
 
 import java.util.Arrays;
@@ -14,11 +17,11 @@ public class DFSCodeOperations {
   /**
    * Logic to grow children of DFS codes by outgoing edges.
    */
-  private static final EdgeGrower outgoingGrower = new OutgoingEdgeGrower();
+  private static final PatternGrowerBase outgoingGrower = new OutgoingEdgePatternGrower();
   /**
    * Logic to grow children of DFS codes by incoming edges.
    */
-  private static final EdgeGrower incomingGrower = new IncomingEdgeGrower();
+  private static final PatternGrowerBase incomingGrower = new IncomingEdgePatternGrower();
 
   /**
    * Creates all 1-edge DFS codes supported by a given graph.
@@ -91,11 +94,11 @@ public class DFSCodeOperations {
 
     // grow all children by traversing outgoing edges
     DFSCodeEmbeddingPair[] outgoingChildren =
-      outgoingGrower.growChildren(graph, dfsCode, embeddings);
+      outgoingGrower.growChildDFSCodes(graph, dfsCode, embeddings);
 
     // grow all children by traversing incoming edges
     DFSCodeEmbeddingPair[] incomingChildren =
-      incomingGrower.growChildren(graph, dfsCode, embeddings);
+      incomingGrower.growChildDFSCodes(graph, dfsCode, embeddings);
 
     // union children, sort and sortAndAggregate to a single entry per child DFS Code
     DFSCodeEmbeddingPair[] allChildren = ArrayUtils.addAll(outgoingChildren, incomingChildren);

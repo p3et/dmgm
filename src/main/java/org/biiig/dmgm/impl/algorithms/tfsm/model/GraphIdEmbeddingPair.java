@@ -1,13 +1,13 @@
-package org.biiig.dmgm.impl.algorithms.tfsm;
+package org.biiig.dmgm.impl.algorithms.tfsm.model;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
-public class GraphDFSEmbeddings {
+public class GraphIdEmbeddingPair {
   private int graphId;
   private DFSEmbedding[] embeddings;
 
-  public GraphDFSEmbeddings(int graphId, DFSEmbedding[] embeddings) {
+  public GraphIdEmbeddingPair(int graphId, DFSEmbedding[] embeddings) {
     this.graphId = graphId;
     this.embeddings = embeddings;
   }
@@ -17,7 +17,7 @@ public class GraphDFSEmbeddings {
     return StringUtils.join(embeddings, ",");
   }
 
-  public void merge(GraphDFSEmbeddings that) {
+  public void merge(GraphIdEmbeddingPair that) {
     this.embeddings = ArrayUtils.addAll(this.embeddings, that.embeddings);
   }
 

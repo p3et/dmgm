@@ -1,9 +1,14 @@
-package org.biiig.dmgm.impl.algorithms.tfsm;
+package org.biiig.dmgm.impl.algorithms.tfsm.concurrency;
 
 import com.google.common.collect.Lists;
 import org.biiig.dmgm.api.concurrency.TaskWithOutput;
 import org.biiig.dmgm.api.model.collection.DMGraphCollection;
 import org.biiig.dmgm.api.model.graph.DMGraph;
+import org.biiig.dmgm.impl.algorithms.tfsm.logic.DFSCodeOperations;
+import org.biiig.dmgm.impl.algorithms.tfsm.logic.DFSTreeNodeAggregator;
+import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSCodeEmbeddingsPair;
+import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSTreeNode;
+import org.biiig.dmgm.impl.algorithms.tfsm.model.GraphIdEmbeddingPair;
 import org.biiig.dmgm.impl.concurrency.DequeUpdateTask;
 import org.biiig.dmgm.impl.model.graph.DFSCode;
 
@@ -42,7 +47,7 @@ public class DFSTreeTraverser
     List<DFSTreeNode> children = Lists.newLinkedList();
 
     // for each graph supporting the parent code
-    for (GraphDFSEmbeddings graphEmbeddings : next.getEmbeddings()) {
+    for (GraphIdEmbeddingPair graphEmbeddings : next.getEmbeddings()) {
       int graphId = graphEmbeddings.getGraphId();
       DMGraph graph = input.getGraph(graphId);
 
@@ -50,7 +55,7 @@ public class DFSTreeTraverser
         .growChildDFSCodes(graph, parentCode, graphEmbeddings.getEmbeddings());
 
       for (DFSCodeEmbeddingsPair pair : childDFSCodes) {
-        GraphDFSEmbeddings childGraphEmbeddings = new GraphDFSEmbeddings(graphId, pair.getEmbeddings());
+        GraphIdEmbeddingPair childGraphEmbeddings = new GraphIdEmbeddingPair(graphId, pair.getEmbeddings());
         children.add(new DFSTreeNode(pair.getDfsCode(), childGraphEmbeddings));
       }
     }

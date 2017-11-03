@@ -1,4 +1,4 @@
-package org.biiig.dmgm.impl.algorithms.tfsm;
+package org.biiig.dmgm.impl.algorithms.tfsm.model;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.impl.model.graph.DFSCode;
@@ -8,18 +8,18 @@ import org.biiig.dmgm.impl.model.graph.DFSCode;
  */
 public class DFSTreeNode implements Comparable<DFSTreeNode> {
   private final DFSCode dfsCode;
-  private GraphDFSEmbeddings[] embeddings;
+  private GraphIdEmbeddingPair[] embeddings;
 
-  public DFSTreeNode(DFSCode dfsCode, GraphDFSEmbeddings embeddings) {
+  public DFSTreeNode(DFSCode dfsCode, GraphIdEmbeddingPair embeddings) {
     this.dfsCode = dfsCode;
-    this.embeddings = new GraphDFSEmbeddings[] {embeddings};
+    this.embeddings = new GraphIdEmbeddingPair[] {embeddings};
   }
 
   public DFSCode getDfsCode() {
     return dfsCode;
   }
 
-  public GraphDFSEmbeddings[] getEmbeddings() {
+  public GraphIdEmbeddingPair[] getEmbeddings() {
     return embeddings;
   }
 
@@ -44,7 +44,7 @@ public class DFSTreeNode implements Comparable<DFSTreeNode> {
   public int getFrequency() {
     int frequency = 0;
 
-    for (GraphDFSEmbeddings embeddings : embeddings) {
+    for (GraphIdEmbeddingPair embeddings : embeddings) {
       frequency += embeddings.size();
     }
 
