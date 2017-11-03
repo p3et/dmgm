@@ -56,7 +56,7 @@ public class DFSTreeTraverser
     }
 
     children = aggregator.aggregate(children);
-    children.removeIf(c -> c.getSupport() < minSupport);
+    children.removeIf(c -> c.getSupport() < minSupport || !gSpan.isMinimal(c.getDfsCode()));
 
     return children;
   }

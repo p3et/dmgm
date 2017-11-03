@@ -24,7 +24,7 @@ public class DFSCodeOperations {
    * Creates all 1-edge DFS codes supported by a given graph.
    *
    * @param graph graph
-   * @return pairs of DFS codes and their embeddings
+   * @return pairs of DFS codes and their embeddings in lexicographical order (min first)
    */
   public DFSCodeEmbeddingsPair[] initSingleEdgeDFSCodes(DMGraph graph) {
     DFSCodeEmbeddingPair[] dfsCodeEmbeddingParis = new DFSCodeEmbeddingPair[graph.getEdgeCount()];
@@ -140,31 +140,26 @@ public class DFSCodeOperations {
     return aggregates;
   }
 
-  //  private boolean isMinimal(DFSCode dfsCode) {
-//    List<DFSTreeNode> childNodes = Lists.newLinkedList();
-//    initSingleEdgeDFSCodes(dfsCode);
-//
-//    DFSTreeNode minParentNode = childNodes.get(0);
-//    boolean minimal = minParentNode.getDfsCode().parentOf(dfsCode);
-//
-//    while (minimal) {
-//      DFSCode minDFSCode = minParentNode.getDfsCode();
-//
-//      GraphDFSEmbeddings[] embeddings = minParentNode.getEmbeddings();
-//
-//      growChildDFSCodes(dfsCode, minDFSCode, embeddings[0].getEmbeddings());
-//
-//      DFSTreeNode.aggregateForGraph(childNodes);
-//
-//      if (childNodes.isEmpty()) {
-//        break;
-//      } else {
-//        minParentNode = childNodes.get(0);
-//        minimal = minParentNode.getDfsCode().parentOf(dfsCode);
-//      }
-//    }
-//
-//    return minimal;
-//  }
+  public boolean isMinimal(DFSCode dfsCode) {
+    DFSCodeEmbeddingsPair minParentPair = initSingleEdgeDFSCodes(dfsCode)[0];
+
+    boolean minimal = minParentPair.getDfsCode().parentOf(dfsCode);
+
+    while (minimal) {
+      DFSCode minDFSCode = minParentPair.getDfsCode();
+      DFSEmbedding[] embeddings = minParentPair.getEmbeddings();
+
+      DFSCodeEmbeddingsPair[] children = growChildDFSCodes(dfsCode, minDFSCode, embeddings);
+
+      if (children.length == 0) {
+        break;
+      } else {
+        minParentPair = children[0];
+        minimal = minParentPair.getDfsCode().parentOf(dfsCode);
+      }
+    }
+
+    return minimal;
+  }
 
 }
