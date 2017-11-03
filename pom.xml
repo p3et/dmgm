@@ -50,7 +50,11 @@
             <scope>test</scope>
         </dependency>
 
-
+        <dependency>
+            <groupId>com.github.s1ck</groupId>
+            <artifactId>gdl</artifactId>
+            <version>0.3</version>
+        </dependency>
     </dependencies>
 
 </project>
