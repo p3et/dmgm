@@ -3,7 +3,7 @@ package org.biiig.dmgm.impl.algorithms.tfsm;
 import java.util.Iterator;
 import java.util.List;
 
-public class Aggregator {
+public class DFSTreeNodeAggregator {
 
   public List<DFSTreeNode> aggregate(List<DFSTreeNode> list) {
     if (list.size() > 1) {

@@ -195,7 +195,7 @@ public class GenSpan extends GSpanBase {
 
           DFSEmbedding embedding = new DFSEmbedding(fromId, edgeId, toId);
 
-          GraphDFSEmbeddings embeddings = new GraphDFSEmbeddings(graph.getId(), embedding);
+          GraphDFSEmbeddings embeddings = new GraphDFSEmbeddings(graph.getId(), null);
 
           Vector vector = new Vector();
           int[] fieldMapping = new int[0];
@@ -401,7 +401,7 @@ public class GenSpan extends GSpanBase {
               DFSEmbedding childEmbedding = parentEmbedding.expandByEdgeId(edgeId);
 
               GraphDFSEmbeddings
-                childEmbeddings = new GraphDFSEmbeddings(graph.getId(), childEmbedding);
+                childEmbeddings = new GraphDFSEmbeddings(graph.getId(), null);
 
               Vector vector = new Vector();
               int[] fieldMapping = new int[0];
@@ -432,7 +432,7 @@ public class GenSpan extends GSpanBase {
               DFSEmbedding childEmbedding = parentEmbedding.expandByEdgeIdAndVertexId(edgeId, toId);
 
               GraphDFSEmbeddings
-                childEmbeddings = new GraphDFSEmbeddings(graph.getId(), childEmbedding);
+                childEmbeddings = new GraphDFSEmbeddings(graph.getId(), null);
 
               Vector vector = new Vector();
               int[] fieldMapping = new int[0];

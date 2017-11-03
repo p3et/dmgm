@@ -7,9 +7,9 @@ public class GraphDFSEmbeddings {
   private int graphId;
   private DFSEmbedding[] embeddings;
 
-  public GraphDFSEmbeddings(int graphId, DFSEmbedding embedding) {
+  public GraphDFSEmbeddings(int graphId, DFSEmbedding[] embeddings) {
     this.graphId = graphId;
-    this.embeddings = new DFSEmbedding[] {embedding};
+    this.embeddings = embeddings;
   }
 
   @Override

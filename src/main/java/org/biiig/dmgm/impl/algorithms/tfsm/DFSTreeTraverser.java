@@ -18,7 +18,7 @@ public class DFSTreeTraverser
   private final DMGraphCollection input;
   private List<DMGraph> output = Lists.newArrayList();
   private final DFSCodeOperations gSpan = new DFSCodeOperations();
-  private final Aggregator aggregator = new Aggregator();
+  private final DFSTreeNodeAggregator DFSTreeNodeAggregator = new DFSTreeNodeAggregator();
 
 
   public DFSTreeTraverser(Deque<DFSTreeNode> deque, AtomicInteger activeCount,
@@ -42,18 +42,18 @@ public class DFSTreeTraverser
     List<DFSTreeNode> childNodes = Lists.newLinkedList();
 
 
-    // for each graph supporting the parent code
-    for (GraphDFSEmbeddings graphEmbeddings : next.getEmbeddings()) {
-      int graphId = graphEmbeddings.getGraphId();
-      DMGraph graph = input.getGraph(graphId);
-
-      List<DFSCodeEmbeddingPair> reports = gSpan
-        .growChildDFSCodes(graph, parentCode, graphEmbeddings.getEmbeddings());
-
-      childNodes.addAll(aggregator.aggregateReports(reports));
-    }
-
-    childNodes = aggregator.aggregate(childNodes);
+//    // for each graph supporting the parent code
+//    for (GraphDFSEmbeddings graphEmbeddings : next.getEmbeddings()) {
+//      int graphId = graphEmbeddings.getGraphId();
+//      DMGraph graph = input.getGraph(graphId);
+//
+//      List<DFSCodeEmbeddingPair> reports = gSpan
+//        .growChildDFSCodes(graph, parentCode, graphEmbeddings.getEmbeddings());
+//
+//      childNodes.addAll(aggregator.aggregateReports(reports));
+//    }
+//
+//    childNodes = aggregator.aggregate(childNodes);
 
     return childNodes;
   }

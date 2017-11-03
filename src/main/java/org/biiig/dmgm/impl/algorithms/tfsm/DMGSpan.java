@@ -41,10 +41,12 @@ public class DMGSpan implements Algorithm {
       .runParallel(new SingleEdgeNodeCreatorFactory(input, graphIdQueue));
 
     // parallel aggregation
-    dfsTreePartitions.parallelStream().forEach(DFSTreeNode::aggregate);
+//    dfsTreePartitions.parallelStream().forEach(DFSTreeNode::aggregate);
 
     List<DFSTreeNode> children = combine(dfsTreePartitions);
-    DFSTreeNode.aggregate(children);
+
+    children = new DFSTreeNodeAggregator().aggregate(children);
+
     children.removeIf(c -> c.getSupport() < minSupport);
     dfsTree.addAll(children);
 

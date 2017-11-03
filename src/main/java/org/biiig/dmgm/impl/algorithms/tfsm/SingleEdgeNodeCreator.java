@@ -38,7 +38,13 @@ public class SingleEdgeNodeCreator
 
     DMGraph graph = input.getGraph(graphId);
 
-    gSpan.initSingleEdgeDFSCodes(graph);
+    DFSCodeEmbeddingsPair[] sinleEdgeDFSCodes = gSpan.initSingleEdgeDFSCodes(graph);
+
+    for (DFSCodeEmbeddingsPair pair : sinleEdgeDFSCodes) {
+      GraphDFSEmbeddings graphEmbeddings = new GraphDFSEmbeddings(graphId, pair.getEmbeddings());
+      output.add(new DFSTreeNode(pair.getDfsCode(), graphEmbeddings));
+    }
+
     output.addAll(childNodes);
 
     return emptyCollection;

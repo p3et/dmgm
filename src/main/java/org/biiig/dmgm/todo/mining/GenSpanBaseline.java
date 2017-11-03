@@ -65,14 +65,14 @@ public class GenSpanBaseline extends GSpanBase {
 
       growForGraph(
         graphs.get(graphEmbeddings.getGraphId()), graphEmbeddings, dfsCode, rightmostPathTimes);
-      DFSTreeNode.aggregateForGraph(reports);
+//      DFSTreeNode.aggregateForGraph(reports);
       children.addAll(reports);
     }
     countAndPrune();
   }
 
   private void countAndPrune() {
-    DFSTreeNode.aggregate(children);
+//    DFSTreeNode.aggregate(children);
 
     for (DFSTreeNode node : children) {
       int support = node.getSupport();
@@ -116,7 +116,7 @@ public class GenSpanBaseline extends GSpanBase {
 
       growForGraph(graph, embeddings[0], minDFSCode, rightmostPath);
 
-      DFSTreeNode.aggregateForGraph(reports);
+//      DFSTreeNode.aggregateForGraph(reports);
 
       if (reports.isEmpty()) {
         break;
@@ -167,14 +167,14 @@ public class GenSpanBaseline extends GSpanBase {
 
           DFSEmbedding embedding = new DFSEmbedding(fromId, edgeId, toId);
 
-          GraphDFSEmbeddings embeddings = new GraphDFSEmbeddings(graph.getId(), embedding);
+          GraphDFSEmbeddings embeddings = new GraphDFSEmbeddings(graph.getId(), null);
 
           reports.add(new DFSTreeNode(dfsCode, embeddings));
         }
       }
       fromId++;
     }
-    DFSTreeNode.aggregateForGraph(reports);
+//    DFSTreeNode.aggregateForGraph(reports);
   }
 
   private void createDictionaries(String input) throws IOException {
@@ -359,7 +359,7 @@ public class GenSpanBaseline extends GSpanBase {
               DFSEmbedding childEmbedding = parentEmbedding.expandByEdgeId(edgeId);
 
               GraphDFSEmbeddings
-                childEmbeddings = new GraphDFSEmbeddings(graph.getId(), childEmbedding);
+                childEmbeddings = new GraphDFSEmbeddings(graph.getId(), null);
 
               DFSTreeNode childNode = new DFSTreeNode(childCode, childEmbeddings);
               reports.add(childNode);
@@ -377,7 +377,7 @@ public class GenSpanBaseline extends GSpanBase {
               DFSEmbedding childEmbedding = parentEmbedding.expandByEdgeIdAndVertexId(edgeId, toId);
 
               GraphDFSEmbeddings
-                childEmbeddings = new GraphDFSEmbeddings(graph.getId(), childEmbedding);
+                childEmbeddings = new GraphDFSEmbeddings(graph.getId(), null);
 
               DFSTreeNode childNode = new DFSTreeNode(childCode, childEmbeddings);
               reports.add(childNode);

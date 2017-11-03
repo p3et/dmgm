@@ -13,11 +13,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by peet on 18.08.17.
  */
 public class DFSTreeTraverserFactory implements TaskWithOutputFactory<List<DMGraph>> {
-  private final DMGraphCollection database;
+  private final DMGraphCollection input;
   private final Deque<DFSTreeNode> dfsTree;
 
-  public DFSTreeTraverserFactory(DMGraphCollection database, Deque<DFSTreeNode> dfsTree) {
-    this.database = database;
+  public DFSTreeTraverserFactory(DMGraphCollection input, Deque<DFSTreeNode> dfsTree) {
+    this.input = input;
     this.dfsTree = dfsTree;
   }
 
