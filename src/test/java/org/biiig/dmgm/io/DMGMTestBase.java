@@ -32,7 +32,7 @@ public class DMGMTestBase {
     boolean equal = expected.size() == actual.size();
 
     if (!equal) {
-      System.out.println("Expected " + expected.size() + " graphs but found only " + actual.size() );
+      System.out.println("Expected " + expected.size() + " graphs but found " + actual.size() );
     }
 
     Map<String, String> expectedLabels = getCanonicalPrintLabelMap(expected);
@@ -51,7 +51,7 @@ public class DMGMTestBase {
       print(notFound);
     }
 
-    equal = notExpected.isEmpty() && notFound.isEmpty();
+    equal = equal && notExpected.isEmpty() && notFound.isEmpty();
 
     return equal;
   }

@@ -43,6 +43,8 @@ public abstract class EdgeGrower implements PatternGrower {
 
               // grow backwards from to
             } else if (toTime < 0) {
+              toTime = parentCode.getVertexCount();
+
               DFSCode childCode = parentCode.growChild(
                 fromTime,
                 toTime,

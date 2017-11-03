@@ -15,14 +15,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class DFSTreeTraverserFactory implements TaskWithOutputFactory<List<DMGraph>> {
   private final DMGraphCollection input;
   private final Deque<DFSTreeNode> dfsTree;
+  private final int minSupport;
 
-  public DFSTreeTraverserFactory(DMGraphCollection input, Deque<DFSTreeNode> dfsTree) {
+  public DFSTreeTraverserFactory(DMGraphCollection input, Deque<DFSTreeNode> dfsTree,
+    int minSupport) {
     this.input = input;
     this.dfsTree = dfsTree;
+    this.minSupport = minSupport;
   }
 
   @Override
   public TaskWithOutput<List<DMGraph>> create(AtomicInteger activeCount) {
-    return new DFSTreeTraverser(dfsTree, activeCount, input);
+    return new DFSTreeTraverser(dfsTree, activeCount, input, minSupport);
   }
 }

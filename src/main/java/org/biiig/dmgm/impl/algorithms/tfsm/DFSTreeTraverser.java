@@ -16,15 +16,17 @@ public class DFSTreeTraverser
   extends DequeUpdateTask<DFSTreeNode> implements TaskWithOutput<List<DMGraph>> {
 
   private final DMGraphCollection input;
-  private List<DMGraph> output = Lists.newArrayList();
+  private List<DMGraph> output = Lists.newLinkedList();
   private final DFSCodeOperations gSpan = new DFSCodeOperations();
-  private final DFSTreeNodeAggregator DFSTreeNodeAggregator = new DFSTreeNodeAggregator();
+  private final DFSTreeNodeAggregator aggregator = new DFSTreeNodeAggregator();
+  private final int minSupport;
 
 
   public DFSTreeTraverser(Deque<DFSTreeNode> deque, AtomicInteger activeCount,
-    DMGraphCollection input) {
+    DMGraphCollection input, int minSupport) {
     super(deque, activeCount);
     this.input = input;
+    this.minSupport = minSupport;
   }
 
   @Override
@@ -34,31 +36,29 @@ public class DFSTreeTraverser
 
   @Override
   protected Collection<DFSTreeNode> process(DFSTreeNode next) {
-
     DFSCode parentCode = next.getDfsCode();
-
     output.add(parentCode);
 
-    List<DFSTreeNode> childNodes = Lists.newLinkedList();
+    List<DFSTreeNode> children = Lists.newLinkedList();
 
+    // for each graph supporting the parent code
+    for (GraphDFSEmbeddings graphEmbeddings : next.getEmbeddings()) {
+      int graphId = graphEmbeddings.getGraphId();
+      DMGraph graph = input.getGraph(graphId);
 
-//    // for each graph supporting the parent code
-//    for (GraphDFSEmbeddings graphEmbeddings : next.getEmbeddings()) {
-//      int graphId = graphEmbeddings.getGraphId();
-//      DMGraph graph = input.getGraph(graphId);
-//
-//      List<DFSCodeEmbeddingPair> reports = gSpan
-//        .growChildDFSCodes(graph, parentCode, graphEmbeddings.getEmbeddings());
-//
-//      childNodes.addAll(aggregator.aggregateReports(reports));
-//    }
-//
-//    childNodes = aggregator.aggregate(childNodes);
+      DFSCodeEmbeddingsPair[] childDFSCodes = gSpan
+        .growChildDFSCodes(graph, parentCode, graphEmbeddings.getEmbeddings());
 
-    return childNodes;
+      for (DFSCodeEmbeddingsPair pair : childDFSCodes) {
+        GraphDFSEmbeddings childGraphEmbeddings = new GraphDFSEmbeddings(graphId, pair.getEmbeddings());
+        children.add(new DFSTreeNode(pair.getDfsCode(), childGraphEmbeddings));
+      }
+    }
+
+    children = aggregator.aggregate(children);
+    children.removeIf(c -> c.getSupport() < minSupport);
+
+    return children;
   }
-
-
-
 
 }

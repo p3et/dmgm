@@ -34,8 +34,6 @@ public abstract class DequeUpdateTask<I> implements Runnable {
   protected abstract Collection<I> process(I next);
 
   private void setActive(boolean active) {
-    String x = activeCount.toString();
-
     if (this.active != active) {
       if (active) {
         activeCount.incrementAndGet();

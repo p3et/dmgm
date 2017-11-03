@@ -245,7 +245,7 @@ public class DFSCode implements Comparable<DFSCode>, DMGraph {
     int edgeTime = getEdgeCount();
     int newEdgeCount = edgeTime + 1;
 
-    int[] edgeMuxCopy = Arrays.copyOf(edgeMux, newEdgeCount);
+    int[] edgeMuxCopy = Arrays.copyOf(edgeMux, newEdgeCount * 3);
     boolean[] directionIndicatorsCopy = Arrays.copyOf(this.directionIndicators, newEdgeCount);
 
     // aggregateReports child
