@@ -1,6 +1,6 @@
 package org.biiig.dmgm.impl.algorithms.tfsm.concurrency;
 
-import org.biiig.dmgm.api.model.collection.GraphCollection;
+import org.biiig.dmgm.api.model.collection.IntGraphCollection;
 import org.biiig.dmgm.api.concurrency.TaskWithOutput;
 import org.biiig.dmgm.api.concurrency.TaskWithOutputFactory;
 import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSTreeNode;
@@ -12,10 +12,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class DFSTreeInitializerFactory implements TaskWithOutputFactory<List<DFSTreeNode>> {
 
-  private final GraphCollection database;
+  private final IntGraphCollection database;
   private final Deque<Integer> deque;
 
-  public DFSTreeInitializerFactory(GraphCollection database, Deque<Integer> deque) {
+  public DFSTreeInitializerFactory(IntGraphCollection database, Deque<Integer> deque) {
     this.database = database;
     this.deque = deque;
   }

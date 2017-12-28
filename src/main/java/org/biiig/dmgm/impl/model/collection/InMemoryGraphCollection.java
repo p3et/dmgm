@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.model.collection;
 
-import org.biiig.dmgm.api.algorithms.tfsm.Algorithm;
-import org.biiig.dmgm.api.model.collection.GraphCollection;
+import org.biiig.dmgm.api.algorithms.tfsm.Operator;
+import org.biiig.dmgm.api.model.collection.IntGraphCollection;
 import org.biiig.dmgm.api.model.collection.LabelDictionary;
 import org.biiig.dmgm.api.model.graph.IntGraph;
 
@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class InMemoryGraphCollection implements GraphCollection {
+public class InMemoryGraphCollection implements IntGraphCollection {
   private final AtomicInteger newGraphId = new AtomicInteger();
   private final Map<Integer, IntGraph> graphs = new ConcurrentHashMap<>();
 
@@ -54,7 +54,7 @@ public class InMemoryGraphCollection implements GraphCollection {
   }
 
   @Override
-  public GraphCollection apply(Algorithm algorithm) {
+  public IntGraphCollection apply(Operator operator) {
     return null;
   }
 

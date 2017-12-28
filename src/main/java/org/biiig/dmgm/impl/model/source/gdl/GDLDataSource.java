@@ -2,13 +2,13 @@ package org.biiig.dmgm.impl.model.source.gdl;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.biiig.dmgm.api.model.collection.GraphCollection;
+import org.biiig.dmgm.api.model.collection.IntGraphCollection;
 import org.biiig.dmgm.api.model.collection.LabelDictionary;
 import org.biiig.dmgm.api.model.graph.IntGraph;
 import org.biiig.dmgm.api.model.graph.IntGraphFactory;
 import org.biiig.dmgm.api.model.source.DMGraphDataSource;
+import org.biiig.dmgm.cli.GraphCollection;
 import org.biiig.dmgm.cli.GraphCollectionFactory;
-import org.biiig.dmgm.cli.StringGraphCollection;
 import org.biiig.dmgm.impl.model.collection.InMemoryLabelDictionary;
 import org.biiig.dmgm.impl.model.countable.Countable;
 import org.s1ck.gdl.GDLHandler;
@@ -29,13 +29,13 @@ public class GDLDataSource implements DMGraphDataSource {
   }
 
   @Override
-  public void loadWithMinLabelSupport(GraphCollection database, IntGraphFactory graphFactory,
+  public void loadWithMinLabelSupport(IntGraphCollection database, IntGraphFactory graphFactory,
                                       float minSupportThreshold) throws IOException {
     load(database, graphFactory);
   }
 
   @Override
-  public void load(GraphCollection database, IntGraphFactory graphFactory) {
+  public void load(IntGraphCollection database, IntGraphFactory graphFactory) {
     GDLHandler gdlHandler = new GDLHandler.Builder().buildFromString(gdlString);
 
 
@@ -111,7 +111,7 @@ public class GDLDataSource implements DMGraphDataSource {
   }
 
   @Override
-  public StringGraphCollection getGraphCollection() {
+  public GraphCollection getGraphCollection() {
     return null;
   }
 

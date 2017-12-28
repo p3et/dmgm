@@ -5,6 +5,7 @@ import org.biiig.dmgm.api.model.collection.LabelDictionary;
 import org.biiig.dmgm.impl.model.countable.Countable;
 import org.biiig.dmgm.impl.model.countable.CountableAscendingComparator;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,17 @@ public class InMemoryLabelDictionary implements LabelDictionary {
       stringInteger.put(label, translation);
       integerString.put(translation, label);
       translation++;
+    }
+  }
+
+  public InMemoryLabelDictionary(Collection<String> labels) {
+    int translation = 0;
+    for (String label : labels) {
+      if (!stringInteger.containsKey(label)) {
+        stringInteger.put(label, translation);
+        integerString.put(translation, label);
+        translation++;
+      }
     }
   }
 

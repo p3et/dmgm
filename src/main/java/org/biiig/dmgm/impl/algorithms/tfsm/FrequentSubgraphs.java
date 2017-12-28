@@ -1,24 +1,28 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
-import org.biiig.dmgm.api.algorithms.tfsm.Algorithm;
-import org.biiig.dmgm.api.model.collection.GraphCollection;
+import javafx.util.Pair;
+import org.biiig.dmgm.api.algorithms.tfsm.Operator;
+import org.biiig.dmgm.api.model.collection.IntGraphCollection;
+import org.biiig.dmgm.api.model.collection.LabelDictionary;
 import org.biiig.dmgm.api.model.graph.IntGraph;
+import org.biiig.dmgm.cli.GraphCollection;
 import org.biiig.dmgm.impl.algorithms.tfsm.concurrency.DFSTreeTraverserFactory;
 import org.biiig.dmgm.impl.algorithms.tfsm.concurrency.DFSTreeInitializerFactory;
 import org.biiig.dmgm.impl.algorithms.tfsm.logic.DFSTreeNodeAggregator;
 import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSTreeNode;
 import org.biiig.dmgm.impl.concurrency.ConcurrencyUtil;
+import org.biiig.dmgm.impl.model.collection.InMemoryLabelDictionary;
 
-import java.util.Collection;
-import java.util.Deque;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Directed Multigraph gSpan
  */
-public class FrequentSubgraphs implements Algorithm {
+public class FrequentSubgraphs implements Operator {
 
   private float minSupport;
   private int maxEdgeCount;
@@ -29,7 +33,38 @@ public class FrequentSubgraphs implements Algorithm {
   }
 
   @Override
-  public void execute(GraphCollection input, GraphCollection output) {
+  public GraphCollection apply(GraphCollection graphCollection) {
+
+    Collection<String> frequentVertexLabels = getFrequentLabels(
+      graphCollection
+        .parallelStream()
+        .flatMap(new DistinctVertexLabels())
+    );
+
+    LabelDictionary vertexLabelDictionary = new InMemoryLabelDictionary(frequentVertexLabels);
+
+    Collection<String> frequentEdgeLabels = getFrequentLabels(
+      graphCollection
+        .parallelStream()
+        .flatMap(new DistinctEdgeLabels())
+    );
+
+    return null;
+  }
+
+  private Collection<String> getFrequentLabels(Stream<String> vertexLabels) {
+    return vertexLabels
+      .collect(Collectors.groupingByConcurrent(Function.identity(), Collectors.counting()))
+      .entrySet()
+      .stream()
+      .filter(e -> e.getValue() >= minSupport)
+      .sorted((a, b) -> (int) (b.getValue() - a.getValue()))
+      .map(e -> e.getKey())
+      .collect(Collectors.toList());
+  }
+
+  @Override
+  public void execute(IntGraphCollection input, IntGraphCollection output) {
 
     // calculate min support
     int minSupport = Math.round((float) input.size() * this.minSupport);
@@ -102,4 +137,5 @@ public class FrequentSubgraphs implements Algorithm {
   public void setMaxEdgeCount(int maxEdgeCount) {
     this.maxEdgeCount = maxEdgeCount;
   }
+
 }

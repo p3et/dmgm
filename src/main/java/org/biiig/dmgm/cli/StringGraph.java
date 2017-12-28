@@ -34,4 +34,19 @@ public class StringGraph {
       "\n\t" + "Et=" + ArrayUtils.toString(edgeTargets);
   }
 
+  public int getVertexCount() {
+    return vertexLabels.length;
+  }
+
+  public String getVertexLabel(int id) {
+    return vertexLabels[id];
+  }
+
+  public int getEdgeCount() {
+    return edgeLabels.length;
+  }
+
+  public String getEdgeLabel(int id) {
+    return edgeLabels[id];
+  }
 }

@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.algorithms.tfsm.concurrency;
 
 import com.google.common.collect.Lists;
-import org.biiig.dmgm.api.model.collection.GraphCollection;
+import org.biiig.dmgm.api.model.collection.IntGraphCollection;
 import org.biiig.dmgm.api.concurrency.TaskWithOutput;
 import org.biiig.dmgm.api.model.graph.IntGraph;
 import org.biiig.dmgm.impl.algorithms.tfsm.logic.DFSCodeOperations;
@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class DFSTreeInitializer
   extends DequeUpdateTask<Integer> implements TaskWithOutput<List<DFSTreeNode>> {
 
-  private final GraphCollection input;
+  private final IntGraphCollection input;
   private final List<DFSTreeNode> output = Lists.newLinkedList();
   private final DFSCodeOperations gSpan = new DFSCodeOperations();
 
@@ -26,7 +26,7 @@ public class DFSTreeInitializer
   private final Collection<Integer> emptyCollection = Lists.newArrayListWithCapacity(0);
 
   public DFSTreeInitializer(
-    AtomicInteger activeCount, Deque<Integer> deque, GraphCollection input) {
+    AtomicInteger activeCount, Deque<Integer> deque, IntGraphCollection input) {
     super(deque, activeCount);
     this.input = input;
   }

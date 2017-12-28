@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.model.source.tlf;
 
 import com.google.common.collect.Lists;
-import org.biiig.dmgm.api.model.collection.GraphCollection;
+import org.biiig.dmgm.api.model.collection.IntGraphCollection;
 import org.biiig.dmgm.api.model.collection.LabelDictionary;
 import org.biiig.dmgm.api.model.source.DMGraphDataSource;
 import org.biiig.dmgm.api.model.source.tlf.TLFSplitReaderFactory;
@@ -10,7 +10,6 @@ import org.biiig.dmgm.cli.*;
 import org.biiig.dmgm.impl.model.collection.InMemoryLabelDictionary;
 import org.biiig.dmgm.impl.model.countable.Countable;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -31,7 +30,7 @@ public class TLFDataSource implements DMGraphDataSource {
   }
 
   @Override
-  public StringGraphCollection getGraphCollection() {
+  public GraphCollection getGraphCollection() {
 
     Collection<StringGraph> graphs = null;
     try {
@@ -42,7 +41,7 @@ public class TLFDataSource implements DMGraphDataSource {
       e.printStackTrace();
     }
 
-    return StringGraphCollection
+    return GraphCollection
       .fromCollection(graphs);
   }
 
@@ -53,7 +52,7 @@ public class TLFDataSource implements DMGraphDataSource {
   }
 
   @Override
-  public void loadWithMinLabelSupport(GraphCollection database, IntGraphFactory graphFactory, float minSupportThreshold) throws IOException {
+  public void loadWithMinLabelSupport(IntGraphCollection database, IntGraphFactory graphFactory, float minSupportThreshold) throws IOException {
 
     TLFLabelReaderFactory labelReaderFactory = new TLFLabelReaderFactory();
     readSplits(labelReaderFactory);
@@ -77,7 +76,7 @@ public class TLFDataSource implements DMGraphDataSource {
   }
 
   @Override
-  public void load(GraphCollection database, IntGraphFactory graphFactory) throws IOException {
+  public void load(IntGraphCollection database, IntGraphFactory graphFactory) throws IOException {
     loadWithMinLabelSupport(database, graphFactory, 1.0f);
   }
 
