@@ -1,11 +1,12 @@
 package org.biiig.dmgm.impl.model.graph;
 
 import org.biiig.dmgm.api.model.graph.IntGraph;
+import org.biiig.dmgm.api.model.graph.IntGraphFactory;
 
-public class DFSCodeFactory extends DirectedGraphFactoryBase {
+public class DFSCodeFactory implements IntGraphFactory {
 
   @Override
-  public IntGraph create(int vertexCount, int edgeCount) {
-    return new DFSCode(vertexCount, edgeCount);
+  public IntGraph create() {
+    return new DFSCode();
   }
 }

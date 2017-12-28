@@ -1,6 +1,7 @@
 package org.biiig.dmgm.cli;
 
 import org.biiig.dmgm.api.algorithms.tfsm.Operator;
+import org.biiig.dmgm.api.model.collection.IntGraphCollection;
 import org.biiig.dmgm.impl.algorithms.tfsm.FrequentSubgraphs;
 import org.biiig.dmgm.impl.model.source.tlf.TLFDataSource;
 
@@ -12,7 +13,7 @@ public class FrequentSubgraphMiner {
 
     String path = "/home/peet/pred_10K.tlf";
 
-    GraphCollection input = TLFDataSource
+    IntGraphCollection input = TLFDataSource
       .fromFile(path)
       .getGraphCollection();
 
@@ -23,7 +24,7 @@ public class FrequentSubgraphMiner {
 //      .apply(fsm);
 
    input
-     .apply(fsm)
+//     .apply(fsm)
      .stream()
      .forEach(g -> System.out.println(g));
   }

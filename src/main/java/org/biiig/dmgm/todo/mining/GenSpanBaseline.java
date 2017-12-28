@@ -162,8 +162,12 @@ public class GenSpanBaseline extends GSpanBase {
           int edgeLabel = entry.getEdgeLabel();
           int toId = entry.getToId();
 
-          DFSCode dfsCode = new DFSCode(
-            fromTime, toTime, fromLabel, outgoing, edgeLabel, toLabel);
+          DFSCode dfsCode = new DFSCode();
+
+          dfsCode.addVertex(fromLabel);
+          if (toTime > fromTime) dfsCode.addVertex(toLabel);
+
+          dfsCode.addEdge(fromTime, toTime, edgeLabel, outgoing);
 
           DFSEmbedding embedding = new DFSEmbedding(fromId, edgeId, toId);
 
@@ -348,13 +352,8 @@ public class GenSpanBaseline extends GSpanBase {
 
             // grow backwards
             if (rightmost && toTime >= 0) {
-              DFSCode childCode = parentCode.growChild(
-                fromTime,
-                toTime,
-                entry.isOutgoing(),
-                entry.getEdgeLabel(),
-                graph.getVertices()[toId].getLabel()
-              );
+              DFSCode childCode = parentCode.deepCopy();
+              childCode.addEdge(fromTime, toTime, entry.getEdgeLabel(), entry.isOutgoing());
 
               DFSEmbedding childEmbedding = parentEmbedding.expandByEdgeId(edgeId);
 
@@ -364,15 +363,13 @@ public class GenSpanBaseline extends GSpanBase {
               DFSTreeNode childNode = new DFSTreeNode(childCode, childEmbeddings);
               reports.add(childNode);
 
-              // grow backwards from to
+              // grow forwards
             } else if (toTime < 0) {
-              DFSCode childCode = parentCode.growChild(
-                fromTime,
-                toTime,
-                entry.isOutgoing(),
-                entry.getEdgeLabel(),
-                graph.getVertices()[toId].getLabel()
-              );
+              toTime = parentCode.getVertexCount();
+
+              DFSCode childCode = parentCode.deepCopy();
+              childCode.addVertex(entry.getToLabel());
+              childCode.addEdge(fromTime, toTime, entry.getEdgeLabel(), entry.isOutgoing());
 
               DFSEmbedding childEmbedding = parentEmbedding.expandByEdgeIdAndVertexId(edgeId, toId);
 

@@ -3,11 +3,13 @@ package org.biiig.dmgm.api.model.collection;
 import org.biiig.dmgm.api.algorithms.tfsm.Operator;
 import org.biiig.dmgm.api.model.graph.IntGraph;
 
+import java.util.stream.Stream;
+
 
 public interface IntGraphCollection extends Iterable<IntGraph> {
-  void setVertexDictionary(LabelDictionary dictionary);
+  IntGraphCollection withVertexDictionary(LabelDictionary dictionary);
 
-  void setEdgeDictionary(LabelDictionary dictionary);
+  IntGraphCollection withEdgeDictionary(LabelDictionary dictionary);
 
   LabelDictionary getVertexDictionary();
 
@@ -20,4 +22,6 @@ public interface IntGraphCollection extends Iterable<IntGraph> {
   IntGraph getGraph(int graphId);
 
   IntGraphCollection apply(Operator operator);
+
+  Stream<IntGraph> stream();
 }

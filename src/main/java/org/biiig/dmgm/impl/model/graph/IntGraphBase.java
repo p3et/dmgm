@@ -1,58 +1,86 @@
 package org.biiig.dmgm.impl.model.graph;
 
-import com.google.common.collect.Lists;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.model.graph.IntGraph;
 
 import java.util.Arrays;
-import java.util.List;
 
-/**
- * Created by peet on 02.08.17.
- */
-public abstract class IntGraphBase implements IntGraph {
-  protected int[][] vertexData;
-  protected int[][] edgeData;
-
-  public IntGraphBase(int edgeCount, int vertexCount) {
-    edgeData = new int[edgeCount][];
-    vertexData = new int[vertexCount][];
-  }
+public class IntGraphBase implements IntGraph {
+  protected int[] vertexLabels = new int[0];
+  protected int[] edgeLabels = new int[0];
+  protected int[] sourceIds = new int[0];
+  protected int[] targetIds = new int[0];
 
   @Override
-  public int[] getVertexData(int vertexId) {
-    return vertexData[vertexId];
-  }
-
-  @Override
-  public int[] getEdgeData(int edgeId) {
-    return edgeData[edgeId];
+  public String toString() {
+    return "g=" +
+      "\nV=" + Arrays.toString(vertexLabels) +
+      "\nE=" + Arrays.toString(edgeLabels) +
+      "\nS=" + Arrays.toString(sourceIds) +
+      "\nT=" + Arrays.toString(targetIds);
   }
 
   @Override
   public int getVertexCount() {
-    return vertexData.length;
+    return vertexLabels.length;
   }
 
   @Override
   public int getEdgeCount() {
-    return edgeData.length;
+    return edgeLabels.length;
   }
 
   @Override
-  public String toString() {
-    return "g=\n" +
-      "Lv=" + toString(vertexData) + "\n" +
-      "Le=" + toString(edgeData);
+  public void addVertex(int label) {
+    vertexLabels = ArrayUtils.add(vertexLabels, label);
   }
 
-  private String toString(int[][] data) {
-    List<String> elementStrings = Lists.newArrayListWithExpectedSize(data.length);
+  @Override
+  public void addEdge(int sourceId, int targetId, int label) {
+    edgeLabels = ArrayUtils.add(edgeLabels, label);
+    sourceIds = ArrayUtils.add(sourceIds, sourceId);
+    targetIds = ArrayUtils.add(targetIds, targetId);
+  }
 
-    for (int i = 0; i < data.length; i++) {
-      elementStrings.add(String.valueOf(i) + ":" + Arrays.toString(data[i]));
-    }
+  @Override
+  public int getVertexLabel(int vertexId) {
+    return vertexLabels[vertexId];
+  }
 
-    return StringUtils.join(elementStrings, ",");
+  @Override
+  public int getEdgeLabel(int edgeId) {
+    return edgeLabels[edgeId];
+  }
+
+  @Override
+  public int getSourceId(int edgeId) {
+    return sourceIds[edgeId];
+  }
+
+  @Override
+  public int getTargetId(int edgeId) {
+    return targetIds[edgeId];
+  }
+
+  @Override
+  public int[] getOutgoingEdgeIds(int vertexId) {
+    int[] edgeIds = new int[0];
+
+    for (int edgeId = 0; edgeId < getEdgeCount(); edgeId++)
+      if (sourceIds[edgeId] == vertexId)
+        edgeIds = ArrayUtils.add(edgeIds, edgeId);
+
+    return edgeIds;
+  }
+
+  @Override
+  public int[] getIncomingEdgeIds(int vertexId) {
+    int[] edgeIds = new int[0];
+
+    for (int edgeId = 0; edgeId < getEdgeCount(); edgeId++)
+      if (targetIds[edgeId] == vertexId)
+        edgeIds = ArrayUtils.add(edgeIds, edgeId);
+
+    return edgeIds;
   }
 }

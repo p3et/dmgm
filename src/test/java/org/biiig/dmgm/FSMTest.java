@@ -5,7 +5,7 @@ import org.biiig.dmgm.api.model.graph.IntGraph;
 import org.biiig.dmgm.api.model.graph.IntGraphFactory;
 import org.biiig.dmgm.impl.algorithms.tfsm.TFSMConfig;
 import org.biiig.dmgm.impl.model.collection.InMemoryGraphCollection;
-import org.biiig.dmgm.impl.model.graph.SourceTargetMuxFactory;
+import org.biiig.dmgm.impl.model.graph.IntGraphBaseFactory;
 import org.biiig.dmgm.impl.model.source.gdl.GDLDataSource;
 import org.biiig.dmgm.io.DMGMTestBase;
 import org.junit.Test;
@@ -53,7 +53,7 @@ public class FSMTest extends DMGMTestBase {
   }
 
   private void test(String inputGDL, String expectedGDL) {
-    IntGraphFactory graphFactory = new SourceTargetMuxFactory();
+    IntGraphFactory graphFactory = new IntGraphBaseFactory();
 
     IntGraphCollection input = new InMemoryGraphCollection();
     IntGraphCollection expected = new InMemoryGraphCollection();

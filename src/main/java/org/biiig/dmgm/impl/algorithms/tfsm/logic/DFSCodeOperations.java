@@ -70,8 +70,10 @@ public class DFSCodeOperations {
         toLabel = sourceLabel;
       }
 
-      DFSCode dfsCode = new DFSCode(
-        fromTime, toTime, fromLabel, outgoing, edgeLabel, toLabel);
+      DFSCode dfsCode = new DFSCode();
+      dfsCode.addVertex(fromLabel);
+      if (!loop) dfsCode.addVertex(toLabel);
+      dfsCode.addEdge(fromTime, toTime, edgeLabel, outgoing);
 
       DFSEmbedding embedding = new DFSEmbedding(fromId, edgeId, toId);
 

@@ -7,8 +7,8 @@ import org.biiig.dmgm.api.model.graph.IntGraph;
 import org.biiig.dmgm.api.model.source.DMGraphDataSource;
 import org.biiig.dmgm.api.model.to_string.DMGraphFormatter;
 import org.biiig.dmgm.impl.model.collection.InMemoryGraphCollection;
+import org.biiig.dmgm.impl.model.graph.IntGraphBaseFactory;
 import org.biiig.dmgm.impl.model.source.tlf.TLFDataSource;
-import org.biiig.dmgm.impl.model.graph.SourceTargetMuxFactory;
 import org.biiig.dmgm.impl.to_string.cam.CAMGraphFormatter;
 import org.biiig.dmgm.impl.to_string.edge_list.ELGraphFormatter;
 
@@ -24,7 +24,7 @@ public class DMGMTestBase {
     String inputPath = TLFDataSource.class.getResource("/samples/predictable.tlf").getFile();
     IntGraphCollection database = new InMemoryGraphCollection();
     DMGraphDataSource reader = TLFDataSource.fromFile(inputPath);
-    reader.loadWithMinLabelSupport(database, new SourceTargetMuxFactory(), minSupportThreshold);
+    reader.loadWithMinLabelSupport(database, new IntGraphBaseFactory(), minSupportThreshold);
     return database;
   }
 

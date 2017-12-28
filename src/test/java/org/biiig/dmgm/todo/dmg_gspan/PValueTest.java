@@ -38,14 +38,14 @@
 //
 //    Long globalVertexCount = 0L;
 //
-//    List<EdgeData> edgeData = Lists.newArrayList();
+//    List<EdgeData> edgeLabels = Lists.newArrayList();
 //
 //    for (LabeledGraph graph : graphs) {
 //      globalVertexCount += graph.getVertexCount();
 //
 //      for (LabeledEdge edge : graph.getEdges()) {
 //        //System.out.println(edge.getTopLevelLabel()+" --> "+edgeDictionary.get(edge.getTopLevelLabel()));
-//        edgeData.add(new EdgeData(
+//        edgeLabels.add(new EdgeData(
 //          graph.getId(),
 //          edge.getSource(),
 //          edge.getTarget(),
@@ -57,8 +57,8 @@
 //
 //    // group by source and target and compute max multiplicity
 //    int maxMultiplicity=0;
-//    edgeData.sort(EdgeData::compareTo);
-//    Iterator<EdgeData> iterator = edgeData.iterator();
+//    edgeLabels.sort(EdgeData::compareTo);
+//    Iterator<EdgeData> iterator = edgeLabels.iterator();
 //    EdgeData last = iterator.next();
 //    while (iterator.hasNext()) {
 //      EdgeData next = iterator.next();
@@ -80,7 +80,7 @@
 //    //Compute vertex out- and in-degrees with respect to different multiplicities
 //    Map<Integer,long[]> mapOutDegrees=new HashMap<>();
 //    Map<Integer,long[]> mapInDegrees=new HashMap<>();
-//    for(EdgeData edge: edgeData)
+//    for(EdgeData edge: edgeLabels)
 //    {
 //      int idSource=edge.getSourceId();
 //      int idTarget=edge.getTargetId();
@@ -105,7 +105,7 @@
 //
 //    //Compute vertex degree distribution
 //    Map<VertexDegreeKey, Map<Long, Float>> vertexDegreeDistribution=new HashMap<>();
-//    for (EdgeData edge : edgeData) {
+//    for (EdgeData edge : edgeLabels) {
 //      int multiplicity=edge.getMultiplicity();
 //      long sourceOutDeg=mapOutDegrees.get(edge.getSourceId())[multiplicity];
 //      long targetInDeg=mapInDegrees.get(edge.getTargetId())[multiplicity];
@@ -161,7 +161,7 @@
 //    //Compute edge format distributions conditioned on source and target labels
 //    Map<MultiEdgeLabelDistributionKey, Float> edgeLabelDistribution=new HashMap<>();
 //    Map<String,Integer> mapEdgeCounts=new HashMap<>();
-//    for(EdgeData edge : edgeData)
+//    for(EdgeData edge : edgeLabels)
 //    {
 //      String sourceLab=edge.getSourceLabel();
 //      String targetLab=edge.getTargetLabel();

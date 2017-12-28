@@ -3,25 +3,16 @@ package org.biiig.dmgm.impl.model.graph;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.NotImplementedException;
 
-public class AdjacencyList extends SourceTargetMux {
+public class AdjacencyList extends IntGraphBase {
 
-  private int[][] outgoingEdgeIds;
-  private int[][] incomingEdgeIds;
-
-  AdjacencyList(int edgeCount, int vertexCount) {
-    super(edgeCount, vertexCount);
-    incomingEdgeIds = new int[vertexCount][];
-    outgoingEdgeIds = new int[vertexCount][];
-
-    for (int vertexId = 0; vertexId < vertexCount; vertexId++) {
-      incomingEdgeIds[vertexId] = new int[0];
-      outgoingEdgeIds[vertexId] = new int[0];
-    }
-  }
+  private int[][] outgoingEdgeIds = new int[0][];
+  private int[][] incomingEdgeIds = new int[0][];
 
   @Override
-  public void setEdge(int edgeId, int sourceId, int targetId, int[] data) {
-    super.setEdge(edgeId, sourceId, targetId, data);
+  public void addEdge(int sourceId, int targetId, int label) {
+    super.addEdge(sourceId, targetId, label);
+
+    int edgeId = getEdgeCount() - 1;
     outgoingEdgeIds[sourceId] = ArrayUtils.add(outgoingEdgeIds[sourceId], edgeId);
     incomingEdgeIds[targetId] = ArrayUtils.add(incomingEdgeIds[targetId], edgeId);
   }
@@ -36,8 +27,4 @@ public class AdjacencyList extends SourceTargetMux {
     return incomingEdgeIds[vertexId];
   }
 
-  @Override
-  public void trim() {
-    throw new NotImplementedException("trimming not yet implemented for adjacency lists.");
-  }
 }

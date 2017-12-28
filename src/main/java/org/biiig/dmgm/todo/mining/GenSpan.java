@@ -103,7 +103,7 @@ public class GenSpan extends GSpanBase {
 
 
                 if (label > 0) {
-                  genCode.setVertexLabel(vertexTime, label);
+//                  genCode.setVertexLabel(vertexTime, label);
                 }
               }
 
@@ -190,8 +190,7 @@ public class GenSpan extends GSpanBase {
           int edgeLabel = entry.getEdgeLabel();
           int toId = entry.getToId();
 
-          DFSCode dfsCode = new DFSCode(
-            fromTime, toTime, fromLabel, outgoing, edgeLabel, toLabel);
+          DFSCode dfsCode = new DFSCode();
 
           DFSEmbedding embedding = new DFSEmbedding(fromId, edgeId, toId);
 
@@ -390,13 +389,7 @@ public class GenSpan extends GSpanBase {
 
             // grow backwards
             if (rightmost && toTime >= 0) {
-              DFSCode childCode = parentCode.growChild(
-                fromTime,
-                toTime,
-                entry.isOutgoing(),
-                entry.getEdgeLabel(),
-                graph.getVertices()[fromId].getTopLevelLabel()
-              );
+              DFSCode childCode = parentCode.deepCopy();
 
               DFSEmbedding childEmbedding = parentEmbedding.expandByEdgeId(edgeId);
 
@@ -421,13 +414,7 @@ public class GenSpan extends GSpanBase {
 
               // grow backwards from to
             } else if (toTime < 0) {
-              DFSCode childCode = parentCode.growChild(
-                fromTime,
-                toTime,
-                entry.isOutgoing(),
-                entry.getEdgeLabel(),
-                graph.getVertices()[toId].getTopLevelLabel()
-              );
+              DFSCode childCode = parentCode.deepCopy();
 
               DFSEmbedding childEmbedding = parentEmbedding.expandByEdgeIdAndVertexId(edgeId, toId);
 

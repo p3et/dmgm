@@ -9,44 +9,50 @@ import org.biiig.dmgm.api.model.graph.IntGraphFactory;
 import org.biiig.dmgm.cli.*;
 import org.biiig.dmgm.impl.model.collection.InMemoryLabelDictionary;
 import org.biiig.dmgm.impl.model.countable.Countable;
+import org.biiig.dmgm.impl.model.graph.IntGraphBaseFactory;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collection;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class TLFDataSource implements DMGraphDataSource {
   private final String filePath;
-  private GraphCollectionFactory collectionFactory;
+  private IntGraphCollectionFactory collectionFactory = new InMemoryIntGraphCollectionFactory();
+  private IntGraphFactory graphFactory = new IntGraphBaseFactory();
+
 
   private TLFDataSource(String filePath) {
     this.filePath = filePath;
-    this.collectionFactory = new InMemoryGraphCollectionFactory();
   }
 
   @Override
-  public GraphCollection getGraphCollection() {
+  public IntGraphCollection getGraphCollection() {
 
-    Collection<StringGraph> graphs = null;
+    IntGraphCollection collection = collectionFactory.create();
+
     try {
-      graphs = StreamSupport
-        .stream(new TLFSpliterator(filePath), false)
-        .collect(Collectors.toList());
+      StreamSupport
+        .stream(new TLFSpliterator(
+          filePath,
+          graphFactory,
+          collection.getVertexDictionary(),
+          collection.getEdgeDictionary()),
+          false
+        )
+        .forEach(collection::store);
     } catch (IOException e) {
       e.printStackTrace();
     }
 
-    return GraphCollection
-      .fromCollection(graphs);
+    return collection;
   }
 
   @Override
-  public DMGraphDataSource withCollectionFactory(GraphCollectionFactory collectionFactory) {
+  public DMGraphDataSource withCollectionFactory(IntGraphCollectionFactory collectionFactory) {
     setCollectionFactory(collectionFactory);
     return this;
   }
@@ -66,8 +72,8 @@ public class TLFDataSource implements DMGraphDataSource {
     LabelDictionary edgeDictionary =
       createDictionary(labelReaderFactory.getEdgeLabelFrequencies(), minSupport);
 
-    database.setVertexDictionary(vertexDictionary);
-    database.setEdgeDictionary(edgeDictionary);
+    database.withVertexDictionary(vertexDictionary);
+    database.withEdgeDictionary(edgeDictionary);
 
     TLFGraphReaderFactory graphReaderFactory =
       new TLFGraphReaderFactory(graphFactory, database);
@@ -119,7 +125,7 @@ public class TLFDataSource implements DMGraphDataSource {
     return new TLFDataSource(filePath);
   }
 
-  public void setCollectionFactory(GraphCollectionFactory collectionFactory) {
+  public void setCollectionFactory(IntGraphCollectionFactory collectionFactory) {
     this.collectionFactory = collectionFactory;
   }
 }

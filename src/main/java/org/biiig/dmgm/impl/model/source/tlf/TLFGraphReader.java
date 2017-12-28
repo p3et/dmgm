@@ -26,14 +26,11 @@ public class TLFGraphReader extends TLFSplitReader {
     vertexIdMap.clear();
 
     int firstEdgeIndex = getFirstEdgeIndex(split);
-    int edgeCount = split.length - firstEdgeIndex;
-    int vertexCount = split.length - edgeCount - 1;
 
-    IntGraph graph = graphFactory.create(vertexCount, edgeCount);
+    IntGraph graph = graphFactory.create();
     readVertices(split, firstEdgeIndex, graph);
     readEdges(split, firstEdgeIndex, graph);
 
-    graph.trim();
 
     database.store(graph);
   }
@@ -75,11 +72,11 @@ public class TLFGraphReader extends TLFSplitReader {
             labels[f - 2] = label;
           }
 
-          graph.setVertex(vertexId, labels);
+          graph.addVertex(labels[0]);
 
           // single format
         } else {
-          graph.setVertex(vertexId, firstLabel);
+          graph.addVertex(firstLabel);
         }
 
         vertexIdMap.put(fields[1], vertexId);
@@ -109,7 +106,7 @@ public class TLFGraphReader extends TLFSplitReader {
 
             // single format
             if (fields.length == 4) {
-              graph.setEdge(edgeId, sourceId, targetId, firstLabel);
+              graph.addEdge(sourceId, targetId, firstLabel);
 
               // multiple labels
             } else if (fields.length > 4) {
@@ -126,7 +123,7 @@ public class TLFGraphReader extends TLFSplitReader {
                 labels[f - 3] = label;
               }
 
-              graph.setEdge(edgeId, sourceId, targetId, labels);
+              graph.addEdge(sourceId, targetId, labels[0]);
             }
 
             edgeId++;

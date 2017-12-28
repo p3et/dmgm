@@ -9,8 +9,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 public class InMemoryGraphCollection implements IntGraphCollection {
+
   private final AtomicInteger newGraphId = new AtomicInteger();
   private final Map<Integer, IntGraph> graphs = new ConcurrentHashMap<>();
 
@@ -18,13 +20,15 @@ public class InMemoryGraphCollection implements IntGraphCollection {
   private LabelDictionary edgeDictionary;
 
   @Override
-  public void setVertexDictionary(LabelDictionary dictionary) {
+  public IntGraphCollection withVertexDictionary(LabelDictionary dictionary) {
     this.vertexDictionary = dictionary;
+    return this;
   }
 
   @Override
-  public void setEdgeDictionary(LabelDictionary dictionary) {
+  public IntGraphCollection withEdgeDictionary(LabelDictionary dictionary) {
     this.edgeDictionary = dictionary;
+    return this;
   }
 
   @Override
@@ -56,6 +60,11 @@ public class InMemoryGraphCollection implements IntGraphCollection {
   @Override
   public IntGraphCollection apply(Operator operator) {
     return null;
+  }
+
+  @Override
+  public Stream<IntGraph> stream() {
+    return graphs.values().stream();
   }
 
   @Override

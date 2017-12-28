@@ -13,28 +13,31 @@ public class InMemoryLabelDictionary implements LabelDictionary {
 
   private Map<String, Integer> stringInteger = Maps.newHashMap();
   private Map<Integer, String> integerString = Maps.newHashMap();
+  private int maxTranslation = -1;
 
   public InMemoryLabelDictionary(List<Countable<String>> labelFrequencies) {
     labelFrequencies.sort(new CountableAscendingComparator<>());
 
-    int translation = 0;
     for (Countable<String> labelFrequency : labelFrequencies) {
+      maxTranslation++;
       String label = labelFrequency.getObject();
-      stringInteger.put(label, translation);
-      integerString.put(translation, label);
-      translation++;
+      stringInteger.put(label, maxTranslation);
+      integerString.put(maxTranslation, label);
     }
   }
 
   public InMemoryLabelDictionary(Collection<String> labels) {
-    int translation = 0;
     for (String label : labels) {
       if (!stringInteger.containsKey(label)) {
-        stringInteger.put(label, translation);
-        integerString.put(translation, label);
-        translation++;
+        maxTranslation++;
+        stringInteger.put(label, maxTranslation);
+        integerString.put(maxTranslation, label);
       }
     }
+  }
+
+  public InMemoryLabelDictionary() {
+
   }
 
   @Override
@@ -48,8 +51,18 @@ public class InMemoryLabelDictionary implements LabelDictionary {
   }
 
   @Override
-  public int translate(String value) {
-    return stringInteger.get(value);
+  public int translate(String label) {
+    Integer translation = stringInteger.get(label);
+
+    if (translation == null) {
+      maxTranslation++;
+      stringInteger.put(label, maxTranslation);
+      integerString.put(maxTranslation, label);
+      translation = maxTranslation;
+    }
+
+
+    return translation;
   }
 
   @Override

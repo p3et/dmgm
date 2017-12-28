@@ -1,6 +1,5 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
-import javafx.util.Pair;
 import org.biiig.dmgm.api.algorithms.tfsm.Operator;
 import org.biiig.dmgm.api.model.collection.IntGraphCollection;
 import org.biiig.dmgm.api.model.collection.LabelDictionary;
@@ -104,8 +103,8 @@ public class FrequentSubgraphs implements Operator {
     }
 
     // transfer input dictionaries to output ones
-    output.setVertexDictionary(input.getVertexDictionary());
-    output.setEdgeDictionary(input.getEdgeDictionary());
+    output.withVertexDictionary(input.getVertexDictionary());
+    output.withEdgeDictionary(input.getEdgeDictionary());
   }
 
   private <T> List<T> combine(Collection<List<T>> reports) {

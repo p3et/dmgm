@@ -31,13 +31,8 @@ public abstract class PatternGrowerBase implements PatternGrower {
 
             // grow backwards
             if (rightmost && toTime >= 0) {
-              DFSCode childCode = parentCode.growChild(
-                fromTime,
-                toTime,
-                isOutgoing(),
-                graph.getEdgeLabel(edgeId),
-                graph.getVertexLabel(toId)
-              );
+              DFSCode childCode = parentCode.deepCopy();
+              childCode.addEdge(fromTime, toTime, graph.getEdgeLabel(edgeId), isOutgoing());
 
               DFSEmbedding childEmbedding = parentEmbedding.expandByEdgeId(edgeId);
 
@@ -48,13 +43,9 @@ public abstract class PatternGrowerBase implements PatternGrower {
             } else if (toTime < 0) {
               toTime = parentCode.getVertexCount();
 
-              DFSCode childCode = parentCode.growChild(
-                fromTime,
-                toTime,
-                isOutgoing(),
-                graph.getEdgeLabel(edgeId),
-                graph.getVertexLabel(toId)
-              );
+              DFSCode childCode = parentCode.deepCopy();
+              childCode.addVertex(graph.getVertexLabel(toId));
+              childCode.addEdge(fromTime, toTime, graph.getEdgeLabel(edgeId), isOutgoing());
 
               DFSEmbedding childEmbedding = parentEmbedding.expandByEdgeIdAndVertexId(edgeId, toId);
 

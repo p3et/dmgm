@@ -18,16 +18,16 @@ public abstract class SingleLabelDirectedGraphTest {
   public void testGetterAndSetter() throws Exception {
     IntGraphFactory factory = getFactory();
 
-    IntGraph graph = factory.create(2, 2);
+    IntGraph graph = factory.create();
 
     int lab0 = 0;
     int lab1 = 1;
 
-    graph.setVertex(0, lab0);
-    graph.setVertex(1, lab1);
+    graph.addVertex(lab0);
+    graph.addVertex(lab1);
 
-    graph.setEdge(0, 0, 0, lab0);
-    graph.setEdge(1, 0, 1, lab1);
+    graph.addEdge(0, 0, lab0);
+    graph.addEdge(0, 1, lab1);
 
     assertEquals("vertex count", 2, graph.getVertexCount());
     assertEquals("vertex format 0", lab0, graph.getVertexLabel(0));
