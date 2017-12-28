@@ -16,7 +16,9 @@ public class TLFSpliterator implements Spliterator<StringGraph> {
   private String line;
 
 
-  public TLFSpliterator(String filePath) throws IOException {
+  public TLFSpliterator(
+    String filePath
+  ) throws IOException {
     this.iterator = Files.lines(Paths.get(filePath)).iterator();
     if (iterator.hasNext())
       this.line = iterator.next();
@@ -69,22 +71,26 @@ public class TLFSpliterator implements Spliterator<StringGraph> {
 
   private StringGraph readGraph() {
     String[] split = line.split(TLFConstants.FIELD_SEPARATOR);
-    String[] data = ArrayUtils.subarray(split, TLFConstants.GRAPH_ID_INDEX + 1, split.length);
-    return new StringGraph(data);
+
+    String label = split.length > TLFConstants.GRAPH_LABEL_INDEX ?
+      split[TLFConstants.GRAPH_LABEL_INDEX] :
+      TLFConstants.GRAPH_SYMBOL;
+
+    return new StringGraph(label);
   }
 
   private void readVertex(StringGraph graph) {
     String[] split = line.split(TLFConstants.FIELD_SEPARATOR);
-    String[] data = ArrayUtils.subarray(split, 1, split.length);
-    graph.addVertex(data);
+    String label = split[TLFConstants.VERTEX_LABEL_INDEX];
+    graph.addVertex(label);
   }
 
   private void readEdge(StringGraph graph) {
     String[] split = line.split(TLFConstants.FIELD_SEPARATOR);
     int source = Integer.valueOf(split[TLFConstants.EDGE_SOURCE_INDEX]);
     int target = Integer.valueOf(split[TLFConstants.EDGE_TARGET_INDEX]);
-    String[] data = ArrayUtils.subarray(split, target + 1, split.length);
-    graph.addEdge(source, target, data);
+    String label = split[TLFConstants.EDGE_LABEL_INDEX];
+    graph.addEdge(source, target, label);
   }
 
   @Override

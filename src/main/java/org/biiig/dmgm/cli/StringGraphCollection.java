@@ -1,6 +1,7 @@
 package org.biiig.dmgm.cli;
 
 import java.util.Collection;
+import java.util.stream.Stream;
 
 public class StringGraphCollection {
   private final Collection<StringGraph> graphs;
@@ -15,5 +16,9 @@ public class StringGraphCollection {
 
   public int size() {
     return graphs.size();
+  }
+
+  public Stream<StringGraph> stream() {
+    return graphs.stream();
   }
 }

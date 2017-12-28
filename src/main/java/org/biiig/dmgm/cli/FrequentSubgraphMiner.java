@@ -17,9 +17,11 @@ public class FrequentSubgraphMiner {
 //    Algorithm fsm = new FrequentSubgraphs()
 //      .withMinSupport(1.0f);
 //
-//    GraphCollection output = input
+//    IntGraphCollection output = input
 //      .apply(fsm);
 
-    System.out.println(input.size());
+   input
+     .stream()
+     .forEach(g -> System.out.println(g));
   }
 }

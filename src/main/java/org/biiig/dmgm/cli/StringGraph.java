@@ -1,19 +1,37 @@
 package org.biiig.dmgm.cli;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 public class StringGraph {
 
-  private final String[] data;
+  private String[] vertexLabels;
+  private String[] edgeLabels;
+  private int[] edgeSources;
+  private int[] edgeTargets;
 
-  public StringGraph(String[] data) {
-    this.data = data;
+  private String label;
+
+  public StringGraph(String label) {
+    this.label = label;
   }
 
-  public void addVertex(String[] data) {
-
+  public void addVertex(String label) {
+    vertexLabels = ArrayUtils.add(vertexLabels, label);
   }
 
-  public void addEdge(int source, int target, String[] data) {
+  public void addEdge(int source, int target, String label) {
+    edgeLabels = ArrayUtils.add(edgeLabels, label);
+    edgeSources = ArrayUtils.add(edgeSources, source);
+    edgeTargets = ArrayUtils.add(edgeTargets, target);
+  }
 
+  @Override
+  public String toString() {
+    return "Gl:" + label +
+      "\n\t" + "Vl=" + ArrayUtils.toString(vertexLabels) +
+      "\n\t" + "El=" + ArrayUtils.toString(edgeLabels) +
+      "\n\t" + "Es=" + ArrayUtils.toString(edgeSources) +
+      "\n\t" + "Et=" + ArrayUtils.toString(edgeTargets);
   }
 
 }
