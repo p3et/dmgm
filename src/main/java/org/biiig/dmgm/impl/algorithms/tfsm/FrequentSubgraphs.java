@@ -1,8 +1,8 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
 import org.biiig.dmgm.api.algorithms.tfsm.Algorithm;
-import org.biiig.dmgm.api.model.collection.DMGraphCollection;
-import org.biiig.dmgm.api.model.graph.DMGraph;
+import org.biiig.dmgm.api.model.collection.GraphCollection;
+import org.biiig.dmgm.api.model.graph.IntGraph;
 import org.biiig.dmgm.impl.algorithms.tfsm.concurrency.DFSTreeTraverserFactory;
 import org.biiig.dmgm.impl.algorithms.tfsm.concurrency.DFSTreeInitializerFactory;
 import org.biiig.dmgm.impl.algorithms.tfsm.logic.DFSTreeNodeAggregator;
@@ -18,19 +18,21 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 /**
  * Directed Multigraph gSpan
  */
-public class DMGSpan implements Algorithm {
+public class FrequentSubgraphs implements Algorithm {
 
-  private final TFSMConfig config;
+  private float minSupport;
+  private int maxEdgeCount;
 
-  public DMGSpan(TFSMConfig config) {
-    this.config = config;
+  public FrequentSubgraphs() {
+    this.minSupport = 1.0f;
+    this.maxEdgeCount = 5;
   }
 
   @Override
-  public void execute(DMGraphCollection input, DMGraphCollection output) {
+  public void execute(GraphCollection input, GraphCollection output) {
 
     // calculate min support
-    int minSupport = Math.round((float) input.size() * config.getMinSupport());
+    int minSupport = Math.round((float) input.size() * this.minSupport);
 
     Deque<DFSTreeNode> dfsTree = new ConcurrentLinkedDeque<>();
 
@@ -58,11 +60,11 @@ public class DMGSpan implements Algorithm {
     dfsTree.addAll(children);
 
     // grow children until all frequent children in the tree were traversed
-    Collection<List<DMGraph>> resultPartitions = ConcurrencyUtil
+    Collection<List<IntGraph>> resultPartitions = ConcurrencyUtil
       .runParallel(new DFSTreeTraverserFactory(input, dfsTree, minSupport));
 
     // add partition results to output
-    for (DMGraph graph : combine(resultPartitions)) {
+    for (IntGraph graph : combine(resultPartitions)) {
       output.store(graph);
     }
 
@@ -81,5 +83,23 @@ public class DMGSpan implements Algorithm {
     }
 
     return combination;
+  }
+
+  public FrequentSubgraphs withMinSupport(float minSupport) {
+    setMinSupport(minSupport);
+    return this;
+  }
+
+  public FrequentSubgraphs withMaxEdgeCount(int maxEdgeCount) {
+    setMaxEdgeCount(maxEdgeCount);
+    return this;
+  }
+
+  public void setMinSupport(float minSupport) {
+    this.minSupport = minSupport;
+  }
+
+  public void setMaxEdgeCount(int maxEdgeCount) {
+    this.maxEdgeCount = maxEdgeCount;
   }
 }

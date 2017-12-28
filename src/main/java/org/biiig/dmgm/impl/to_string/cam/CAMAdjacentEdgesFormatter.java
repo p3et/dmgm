@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.model.collection.LabelDictionary;
-import org.biiig.dmgm.api.model.graph.DMGraph;
+import org.biiig.dmgm.api.model.graph.IntGraph;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -23,7 +23,7 @@ public abstract class CAMAdjacentEdgesFormatter {
     this.edgeDictionary = edgeDictionary;
   }
 
-  public String format(DMGraph graph, int vertexId) {
+  public String format(IntGraph graph, int vertexId) {
     // determine outgoing edge labels
     Map<Integer, String[]> edgeLabels = Maps.newHashMap();
 
@@ -65,7 +65,7 @@ public abstract class CAMAdjacentEdgesFormatter {
 
   protected abstract String formatEdge(String edgeLabelsString);
 
-  protected abstract int getAdjacentVertexId(DMGraph graph, int edgeId);
+  protected abstract int getAdjacentVertexId(IntGraph graph, int edgeId);
 
-  protected abstract int[] getEdgeIds(DMGraph graph, int vertexId);
+  protected abstract int[] getEdgeIds(IntGraph graph, int vertexId);
 }

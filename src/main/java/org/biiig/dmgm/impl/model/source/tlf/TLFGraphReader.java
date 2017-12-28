@@ -1,21 +1,21 @@
 package org.biiig.dmgm.impl.model.source.tlf;
 
 import com.google.common.collect.Maps;
-import org.biiig.dmgm.api.model.collection.DMGraphCollection;
+import org.biiig.dmgm.api.model.collection.GraphCollection;
 import org.biiig.dmgm.api.model.collection.LabelDictionary;
-import org.biiig.dmgm.api.model.graph.DMGraph;
-import org.biiig.dmgm.api.model.graph.DMGraphFactory;
+import org.biiig.dmgm.api.model.graph.IntGraph;
+import org.biiig.dmgm.api.model.graph.IntGraphFactory;
 
 import java.util.Map;
 import java.util.Queue;
 
 public class TLFGraphReader extends TLFSplitReader {
-  private final DMGraphCollection database;
-  private final DMGraphFactory graphFactory;
+  private final GraphCollection database;
+  private final IntGraphFactory graphFactory;
   private final Map<String, Integer> vertexIdMap = Maps.newHashMap();
 
   public TLFGraphReader(Queue<String[]> splits, boolean reachedEOF,
-    DMGraphFactory graphFactory, DMGraphCollection database) {
+                        IntGraphFactory graphFactory, GraphCollection database) {
     super(splits, reachedEOF);
     this.graphFactory = graphFactory;
     this.database = database;
@@ -29,7 +29,7 @@ public class TLFGraphReader extends TLFSplitReader {
     int edgeCount = split.length - firstEdgeIndex;
     int vertexCount = split.length - edgeCount - 1;
 
-    DMGraph graph = graphFactory.create(vertexCount, edgeCount);
+    IntGraph graph = graphFactory.create(vertexCount, edgeCount);
     readVertices(split, firstEdgeIndex, graph);
     readEdges(split, firstEdgeIndex, graph);
 
@@ -49,7 +49,7 @@ public class TLFGraphReader extends TLFSplitReader {
     return firstEdgeIndex;
   }
 
-  private void readVertices(String[] split, int firstEdgeIndex, DMGraph graph) {
+  private void readVertices(String[] split, int firstEdgeIndex, IntGraph graph) {
     LabelDictionary dictionary = database.getVertexDictionary();
     int vertexId = 0;
 
@@ -88,7 +88,7 @@ public class TLFGraphReader extends TLFSplitReader {
     }
   }
 
-  private void readEdges(String[] split, int firstEdgeIndex, DMGraph graph) {
+  private void readEdges(String[] split, int firstEdgeIndex, IntGraph graph) {
     LabelDictionary dictionary = database.getEdgeDictionary();
     int edgeId = 0;
 

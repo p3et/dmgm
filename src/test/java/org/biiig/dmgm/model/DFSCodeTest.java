@@ -1,6 +1,6 @@
 package org.biiig.dmgm.model;
 
-import org.biiig.dmgm.api.model.graph.DMGraphFactory;
+import org.biiig.dmgm.api.model.graph.IntGraphFactory;
 import org.biiig.dmgm.impl.model.graph.DFSCode;
 import org.biiig.dmgm.impl.model.graph.DFSCodeFactory;
 import org.junit.Test;
@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class DFSCodeTest extends SingleLabelDirectedGraphTest {
 
   @Override
-  DMGraphFactory getFactory() {
+  IntGraphFactory getFactory() {
     return new DFSCodeFactory();
   }
 

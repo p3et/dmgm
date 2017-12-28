@@ -1,6 +1,6 @@
 package org.biiig.dmgm.algorithms.tfsm;
 
-import org.biiig.dmgm.api.model.collection.DMGraphCollection;
+import org.biiig.dmgm.api.model.collection.GraphCollection;
 import org.biiig.dmgm.api.algorithms.tfsm.Algorithm;
 import org.biiig.dmgm.impl.algorithms.tfsm.TFSMConfig;
 import org.biiig.dmgm.impl.model.collection.InMemoryGraphCollection;
@@ -28,8 +28,8 @@ public abstract class TransactionalFSMTest extends DMGMTestBase {
   private void mine(float minSupportThreshold, int expectedResultSize) throws IOException {
     TFSMConfig config = new TFSMConfig(minSupportThreshold, 100);
     Algorithm fsm = getMiner(config);
-    DMGraphCollection input = getPredictableDatabase(minSupportThreshold);
-    DMGraphCollection output = new InMemoryGraphCollection();
+    GraphCollection input = getPredictableDatabase(minSupportThreshold);
+    GraphCollection output = new InMemoryGraphCollection();
 
     fsm.execute(input, output);
     assertEquals(expectedResultSize, output.size());

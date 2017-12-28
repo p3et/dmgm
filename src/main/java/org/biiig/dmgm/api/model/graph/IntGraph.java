@@ -1,9 +1,9 @@
 package org.biiig.dmgm.api.model.graph;
 
 /**
- * A directed graph.
+ * A directed graph with integer labels.
  */
-public interface DMGraph {
+public interface IntGraph {
   int[] getVertexData(int vertexId);
   void setVertex(int vertexId, int[] data);
 

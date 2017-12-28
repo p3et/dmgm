@@ -2,8 +2,8 @@ package org.biiig.dmgm.io;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import org.biiig.dmgm.api.model.collection.DMGraphCollection;
-import org.biiig.dmgm.api.model.graph.DMGraph;
+import org.biiig.dmgm.api.model.collection.GraphCollection;
+import org.biiig.dmgm.api.model.graph.IntGraph;
 import org.biiig.dmgm.api.model.source.DMGraphDataSource;
 import org.biiig.dmgm.api.model.to_string.DMGraphFormatter;
 import org.biiig.dmgm.impl.model.collection.InMemoryGraphCollection;
@@ -20,15 +20,15 @@ import java.util.Set;
  * Created by peet on 11.08.17.
  */
 public class DMGMTestBase {
-  protected DMGraphCollection getPredictableDatabase(float minSupportThreshold) throws IOException {
+  protected GraphCollection getPredictableDatabase(float minSupportThreshold) throws IOException {
     String inputPath = TLFDataSource.class.getResource("/samples/predictable.tlf").getFile();
-    DMGraphCollection database = new InMemoryGraphCollection();
-    DMGraphDataSource reader = new TLFDataSource(inputPath);
+    GraphCollection database = new InMemoryGraphCollection();
+    DMGraphDataSource reader = TLFDataSource.fromFile(inputPath);
     reader.loadWithMinLabelSupport(database, new SourceTargetMuxFactory(), minSupportThreshold);
     return database;
   }
 
-  protected boolean equal(DMGraphCollection expected, DMGraphCollection actual) {
+  protected boolean equal(GraphCollection expected, GraphCollection actual) {
     boolean equal = expected.size() == actual.size();
 
     if (!equal) {
@@ -74,7 +74,7 @@ public class DMGMTestBase {
     }
   }
 
-  private Map<String, String> getCanonicalPrintLabelMap(DMGraphCollection expected) {
+  private Map<String, String> getCanonicalPrintLabelMap(GraphCollection expected) {
     DMGraphFormatter keyFormatter =
       new CAMGraphFormatter(expected.getVertexDictionary(), expected.getEdgeDictionary());
 
@@ -82,20 +82,20 @@ public class DMGMTestBase {
       new ELGraphFormatter(expected.getVertexDictionary(), expected.getEdgeDictionary());
 
     Map<String, String> canonicalLabels = Maps.newHashMapWithExpectedSize(expected.size());
-    for (DMGraph graph : expected) {
+    for (IntGraph graph : expected) {
       canonicalLabels.put(keyFormatter.format(graph), valueFormatter.format(graph));
     }
 
     return canonicalLabels;
   }
 
-  protected void print(DMGraphCollection graphCollection) {
+  protected void print(GraphCollection graphCollection) {
     DMGraphFormatter formatter =
       new ELGraphFormatter(graphCollection.getVertexDictionary(), graphCollection.getEdgeDictionary());
 
     System.out.println(graphCollection.size());
 
-    for (DMGraph graph : graphCollection) {
+    for (IntGraph graph : graphCollection) {
       System.out.println(formatter.format(graph));
     }
   }

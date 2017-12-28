@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.to_string.edge_list;
 
 import org.biiig.dmgm.api.model.collection.LabelDictionary;
-import org.biiig.dmgm.api.model.graph.DMGraph;
+import org.biiig.dmgm.api.model.graph.IntGraph;
 
 public class ELEdgeFormatter {
 
@@ -11,7 +11,7 @@ public class ELEdgeFormatter {
     this.edgeDictionary = edgeDictionary;
   }
 
-  public String format(DMGraph graph, int edgeId) {
+  public String format(IntGraph graph, int edgeId) {
     return "-" + edgeDictionary.translate(graph.getEdgeLabel(edgeId)) + ">";
   }
 }

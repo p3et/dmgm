@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.algorithms.tfsm.logic;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.api.model.graph.DMGraph;
+import org.biiig.dmgm.api.model.graph.IntGraph;
 import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSCodeEmbeddingPair;
 import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSEmbedding;
 import org.biiig.dmgm.impl.model.graph.DFSCode;
@@ -10,7 +10,7 @@ public abstract class PatternGrowerBase implements PatternGrower {
 
   @Override
   public DFSCodeEmbeddingPair[] growChildDFSCodes(
-    DMGraph graph, DFSCode parentCode, DFSEmbedding[] parentEmbeddings) {
+    IntGraph graph, DFSCode parentCode, DFSEmbedding[] parentEmbeddings) {
 
     DFSCodeEmbeddingPair[] children = new DFSCodeEmbeddingPair[0];
 
@@ -70,9 +70,9 @@ public abstract class PatternGrowerBase implements PatternGrower {
     return children;
   }
 
-  protected abstract int[] getEdgeIds(DMGraph graph, int fromId);
+  protected abstract int[] getEdgeIds(IntGraph graph, int fromId);
 
-  protected abstract int getToId(DMGraph graph, int edgeId);
+  protected abstract int getToId(IntGraph graph, int edgeId);
 
   protected abstract boolean isOutgoing();
 }

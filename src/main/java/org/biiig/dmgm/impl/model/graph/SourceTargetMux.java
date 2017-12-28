@@ -10,7 +10,7 @@ import java.util.List;
  * Graph representation without indexes.
  * Source and target of an edge are multiplexed in a integer array, i.e., [s0,t0,s1,t1,..].
  */
-public class SourceTargetMux extends DirectedGraphBase {
+public class SourceTargetMux extends IntGraphBase {
   private int[] sourceTargetMux;
 
   SourceTargetMux(int vertexCount, int edgeCount) {

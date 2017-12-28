@@ -1,8 +1,8 @@
 package org.biiig.dmgm;
 
-import org.biiig.dmgm.api.model.collection.DMGraphCollection;
-import org.biiig.dmgm.api.model.graph.DMGraph;
-import org.biiig.dmgm.api.model.graph.DMGraphFactory;
+import org.biiig.dmgm.api.model.collection.GraphCollection;
+import org.biiig.dmgm.api.model.graph.IntGraph;
+import org.biiig.dmgm.api.model.graph.IntGraphFactory;
 import org.biiig.dmgm.impl.algorithms.tfsm.TFSMConfig;
 import org.biiig.dmgm.impl.model.collection.InMemoryGraphCollection;
 import org.biiig.dmgm.impl.model.graph.SourceTargetMuxFactory;
@@ -53,11 +53,11 @@ public class FSMTest extends DMGMTestBase {
   }
 
   private void test(String inputGDL, String expectedGDL) {
-    DMGraphFactory graphFactory = new SourceTargetMuxFactory();
+    IntGraphFactory graphFactory = new SourceTargetMuxFactory();
 
-    DMGraphCollection input = new InMemoryGraphCollection();
-    DMGraphCollection expected = new InMemoryGraphCollection();
-    DMGraphCollection output = new InMemoryGraphCollection();
+    GraphCollection input = new InMemoryGraphCollection();
+    GraphCollection expected = new InMemoryGraphCollection();
+    GraphCollection output = new InMemoryGraphCollection();
 
     new GDLDataSource(inputGDL).load(input, graphFactory);
     new GDLDataSource(expectedGDL).load(expected, graphFactory);
@@ -68,10 +68,10 @@ public class FSMTest extends DMGMTestBase {
     assertTrue("equals", equal(expected, output));
   }
 
-  private boolean isConsistent(DMGraphCollection collection) {
+  private boolean isConsistent(GraphCollection collection) {
     boolean consistent = true;
 
-    for (DMGraph graph : collection) {
+    for (IntGraph graph : collection) {
       for (int vertexId = 0; vertexId < graph.getVertexCount(); vertexId++ ) {
         int vertexLabel = graph.getVertexLabel(vertexId);
         String translation = collection.getVertexDictionary().translate(vertexLabel);

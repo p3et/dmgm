@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.to_string.edge_list;
 
 import org.biiig.dmgm.api.model.collection.LabelDictionary;
-import org.biiig.dmgm.api.model.graph.DMGraph;
+import org.biiig.dmgm.api.model.graph.IntGraph;
 
 public class ELVertexFormatter {
 
@@ -11,7 +11,7 @@ public class ELVertexFormatter {
     this.vertexDictionary = vertexDictionary;
   }
 
-  public String format(DMGraph graph, int vertexId) {
+  public String format(IntGraph graph, int vertexId) {
     return "(" + vertexId + ":" + vertexDictionary.translate(graph.getVertexLabel(vertexId)) + ")";
   }
 }

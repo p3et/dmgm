@@ -1,7 +1,7 @@
 package org.biiig.dmgm.model;
 
-import org.biiig.dmgm.api.model.graph.DMGraph;
-import org.biiig.dmgm.api.model.graph.DMGraphFactory;
+import org.biiig.dmgm.api.model.graph.IntGraph;
+import org.biiig.dmgm.api.model.graph.IntGraphFactory;
 import org.junit.Test;
 
 import java.util.Objects;
@@ -16,9 +16,9 @@ import static org.junit.Assert.assertTrue;
 public abstract class SingleLabelDirectedGraphTest {
   @Test
   public void testGetterAndSetter() throws Exception {
-    DMGraphFactory factory = getFactory();
+    IntGraphFactory factory = getFactory();
 
-    DMGraph graph = factory.create(2, 2);
+    IntGraph graph = factory.create(2, 2);
 
     int lab0 = 0;
     int lab1 = 1;
@@ -52,5 +52,5 @@ public abstract class SingleLabelDirectedGraphTest {
     assertArrayEquals("incoming edges 1", new int[] {1}, graph.getIncomingEdgeIds(1));
   }
 
-  abstract DMGraphFactory getFactory();
+  abstract IntGraphFactory getFactory();
 }

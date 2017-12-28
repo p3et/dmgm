@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.algorithms.tfsm.logic;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.api.model.graph.DMGraph;
+import org.biiig.dmgm.api.model.graph.IntGraph;
 import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSCodeEmbeddingPair;
 import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSCodeEmbeddingsPair;
 import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSEmbedding;
@@ -29,7 +29,7 @@ public class DFSCodeOperations {
    * @param graph graph
    * @return pairs of DFS codes and their embeddings in lexicographical order (min first)
    */
-  public DFSCodeEmbeddingsPair[] initSingleEdgeDFSCodes(DMGraph graph) {
+  public DFSCodeEmbeddingsPair[] initSingleEdgeDFSCodes(IntGraph graph) {
     DFSCodeEmbeddingPair[] dfsCodeEmbeddingParis = new DFSCodeEmbeddingPair[graph.getEdgeCount()];
 
     for (int edgeId = 0; edgeId < graph.getEdgeCount(); edgeId++) {
@@ -90,7 +90,7 @@ public class DFSCodeOperations {
    * @return pairs of DFS codes and their embeddings
    */
   public DFSCodeEmbeddingsPair[] growChildDFSCodes(
-    DMGraph graph, DFSCode dfsCode, DFSEmbedding[] embeddings) {
+    IntGraph graph, DFSCode dfsCode, DFSEmbedding[] embeddings) {
 
     // grow all children by traversing outgoing edges
     DFSCodeEmbeddingPair[] outgoingChildren =

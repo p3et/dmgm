@@ -1,17 +1,18 @@
 package org.biiig.dmgm.impl.model.collection;
 
-import org.biiig.dmgm.api.model.collection.DMGraphCollection;
+import org.biiig.dmgm.api.algorithms.tfsm.Algorithm;
+import org.biiig.dmgm.api.model.collection.GraphCollection;
 import org.biiig.dmgm.api.model.collection.LabelDictionary;
-import org.biiig.dmgm.api.model.graph.DMGraph;
+import org.biiig.dmgm.api.model.graph.IntGraph;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class InMemoryGraphCollection implements DMGraphCollection {
+public class InMemoryGraphCollection implements GraphCollection {
   private final AtomicInteger newGraphId = new AtomicInteger();
-  private final Map<Integer, DMGraph> graphs = new ConcurrentHashMap<>();
+  private final Map<Integer, IntGraph> graphs = new ConcurrentHashMap<>();
 
   private LabelDictionary vertexDictionary;
   private LabelDictionary edgeDictionary;
@@ -42,18 +43,23 @@ public class InMemoryGraphCollection implements DMGraphCollection {
   }
 
   @Override
-  public void store(DMGraph graph) {
+  public void store(IntGraph graph) {
     int graphId = newGraphId.getAndIncrement();
     graphs.put(graphId, graph);
   }
 
   @Override
-  public DMGraph getGraph(int graphId) {
+  public IntGraph getGraph(int graphId) {
     return graphs.get(graphId);
   }
 
   @Override
-  public Iterator<DMGraph> iterator() {
+  public GraphCollection apply(Algorithm algorithm) {
+    return null;
+  }
+
+  @Override
+  public Iterator<IntGraph> iterator() {
     return new InMemoryGraphCollectionIterator(graphs);
   }
 }

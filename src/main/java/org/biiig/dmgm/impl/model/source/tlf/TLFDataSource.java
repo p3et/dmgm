@@ -1,31 +1,59 @@
 package org.biiig.dmgm.impl.model.source.tlf;
 
 import com.google.common.collect.Lists;
-import org.biiig.dmgm.api.model.collection.DMGraphCollection;
+import org.biiig.dmgm.api.model.collection.GraphCollection;
 import org.biiig.dmgm.api.model.collection.LabelDictionary;
 import org.biiig.dmgm.api.model.source.DMGraphDataSource;
 import org.biiig.dmgm.api.model.source.tlf.TLFSplitReaderFactory;
-import org.biiig.dmgm.api.model.graph.DMGraphFactory;
-import org.biiig.dmgm.impl.model.collection.InMemoryGraphCollection;
+import org.biiig.dmgm.api.model.graph.IntGraphFactory;
+import org.biiig.dmgm.cli.*;
 import org.biiig.dmgm.impl.model.collection.InMemoryLabelDictionary;
 import org.biiig.dmgm.impl.model.countable.Countable;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class TLFDataSource implements DMGraphDataSource {
-  private final String inputPath;
+  private final String filePath;
+  private GraphCollectionFactory collectionFactory;
 
-  public TLFDataSource(String inputPath) {
-    this.inputPath = inputPath;
+  private TLFDataSource(String filePath) {
+    this.filePath = filePath;
+    this.collectionFactory = new InMemoryGraphCollectionFactory();
   }
 
   @Override
-  public void loadWithMinLabelSupport(DMGraphCollection database, DMGraphFactory graphFactory, float minSupportThreshold) throws IOException {
+  public StringGraphCollection getGraphCollection() {
+
+    Collection<StringGraph> graphs = null;
+    try {
+      graphs = StreamSupport
+        .stream(new TLFSpliterator(filePath), false)
+        .collect(Collectors.toList());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    return StringGraphCollection
+      .fromCollection(graphs);
+  }
+
+  @Override
+  public DMGraphDataSource withCollectionFactory(GraphCollectionFactory collectionFactory) {
+    setCollectionFactory(collectionFactory);
+    return this;
+  }
+
+  @Override
+  public void loadWithMinLabelSupport(GraphCollection database, IntGraphFactory graphFactory, float minSupportThreshold) throws IOException {
 
     TLFLabelReaderFactory labelReaderFactory = new TLFLabelReaderFactory();
     readSplits(labelReaderFactory);
@@ -49,9 +77,11 @@ public class TLFDataSource implements DMGraphDataSource {
   }
 
   @Override
-  public void load(DMGraphCollection database, DMGraphFactory graphFactory) throws IOException {
+  public void load(GraphCollection database, IntGraphFactory graphFactory) throws IOException {
     loadWithMinLabelSupport(database, graphFactory, 1.0f);
   }
+
+
 
   private LabelDictionary createDictionary(
     List<Countable<String>> labelFrequencies, int minSupport) throws IOException {
@@ -80,9 +110,17 @@ public class TLFDataSource implements DMGraphDataSource {
       new Thread(readerFactory.create(splits, reachedEOF)).start();
     }
 
-    new TLFFileSplitter(Files.lines(Paths.get(inputPath)), splits).invoke();
+    new TLFFileSplitter(Files.lines(Paths.get(filePath)), splits).invoke();
     reachedEOF = true;
 
     readerFactory.create(splits, reachedEOF).run();
+  }
+
+  public static TLFDataSource fromFile(String filePath) {
+    return new TLFDataSource(filePath);
+  }
+
+  public void setCollectionFactory(GraphCollectionFactory collectionFactory) {
+    this.collectionFactory = collectionFactory;
   }
 }

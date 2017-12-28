@@ -1,17 +1,17 @@
 package org.biiig.dmgm.impl.model.collection;
 
-import org.biiig.dmgm.api.model.graph.DMGraph;
+import org.biiig.dmgm.api.model.graph.IntGraph;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class InMemoryGraphCollectionIterator implements Iterator<DMGraph> {
+public class InMemoryGraphCollectionIterator implements Iterator<IntGraph> {
   private final AtomicInteger id = new AtomicInteger(0);
-  private final Map<Integer, DMGraph> graphs;
+  private final Map<Integer, IntGraph> graphs;
   private final int maxId;
 
-  public InMemoryGraphCollectionIterator(Map<Integer, DMGraph> graphs) {
+  public InMemoryGraphCollectionIterator(Map<Integer, IntGraph> graphs) {
     this.graphs = graphs;
     this.maxId = graphs.size() - 1;
   }
@@ -22,7 +22,7 @@ public class InMemoryGraphCollectionIterator implements Iterator<DMGraph> {
   }
 
   @Override
-  public DMGraph next() {
+  public IntGraph next() {
     return graphs.get(id.getAndIncrement());
   }
 }
