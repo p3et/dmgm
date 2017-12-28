@@ -2,7 +2,7 @@ package org.biiig.dmgm.impl.algorithms.tfsm.concurrency;
 
 import com.google.common.collect.Lists;
 import org.biiig.dmgm.api.concurrency.TaskWithOutput;
-import org.biiig.dmgm.api.model.collection.IntGraphCollection;
+import org.biiig.dmgm.api.model.collection.GraphCollection;
 import org.biiig.dmgm.api.model.graph.IntGraph;
 import org.biiig.dmgm.impl.algorithms.tfsm.logic.DFSCodeOperations;
 import org.biiig.dmgm.impl.algorithms.tfsm.logic.DFSTreeNodeAggregator;
@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class DFSTreeTraverser
   extends DequeUpdateTask<DFSTreeNode> implements TaskWithOutput<List<IntGraph>> {
 
-  private final IntGraphCollection input;
+  private final GraphCollection input;
   private List<IntGraph> output = Lists.newLinkedList();
   private final DFSCodeOperations gSpan = new DFSCodeOperations();
   private final DFSTreeNodeAggregator aggregator = new DFSTreeNodeAggregator();
@@ -28,7 +28,7 @@ public class DFSTreeTraverser
 
 
   public DFSTreeTraverser(Deque<DFSTreeNode> deque, AtomicInteger activeCount,
-                          IntGraphCollection input, int minSupport) {
+                          GraphCollection input, int minSupport) {
     super(deque, activeCount);
     this.input = input;
     this.minSupport = minSupport;

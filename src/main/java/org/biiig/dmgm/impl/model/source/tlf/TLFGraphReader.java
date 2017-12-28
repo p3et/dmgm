@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.model.source.tlf;
 
 import com.google.common.collect.Maps;
-import org.biiig.dmgm.api.model.collection.IntGraphCollection;
+import org.biiig.dmgm.api.model.collection.GraphCollection;
 import org.biiig.dmgm.api.model.collection.LabelDictionary;
 import org.biiig.dmgm.api.model.graph.IntGraph;
 import org.biiig.dmgm.api.model.graph.IntGraphFactory;
@@ -10,12 +10,12 @@ import java.util.Map;
 import java.util.Queue;
 
 public class TLFGraphReader extends TLFSplitReader {
-  private final IntGraphCollection database;
+  private final GraphCollection database;
   private final IntGraphFactory graphFactory;
   private final Map<String, Integer> vertexIdMap = Maps.newHashMap();
 
   public TLFGraphReader(Queue<String[]> splits, boolean reachedEOF,
-                        IntGraphFactory graphFactory, IntGraphCollection database) {
+                        IntGraphFactory graphFactory, GraphCollection database) {
     super(splits, reachedEOF);
     this.graphFactory = graphFactory;
     this.database = database;

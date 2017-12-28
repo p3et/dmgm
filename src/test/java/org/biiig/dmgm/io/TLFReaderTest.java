@@ -1,6 +1,6 @@
 package org.biiig.dmgm.io;
 
-import org.biiig.dmgm.api.model.collection.IntGraphCollection;
+import org.biiig.dmgm.api.model.collection.GraphCollection;
 import org.biiig.dmgm.api.model.graph.IntGraph;
 import org.junit.Test;
 
@@ -17,7 +17,7 @@ public class TLFReaderTest extends DMGMTestBase {
   public void testRead() throws IOException {
     float minSupportThreshold = 0.8f;
 
-    IntGraphCollection database = getPredictableDatabase(minSupportThreshold);
+    GraphCollection database = getPredictableDatabase(minSupportThreshold);
 
     for (int graphId = 0; graphId < database.size(); graphId++) {
       IntGraph graph = database.getGraph(graphId);

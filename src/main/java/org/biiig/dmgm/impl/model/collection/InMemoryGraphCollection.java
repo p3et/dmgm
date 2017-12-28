@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.model.collection;
 
 import org.biiig.dmgm.api.algorithms.tfsm.Operator;
-import org.biiig.dmgm.api.model.collection.IntGraphCollection;
+import org.biiig.dmgm.api.model.collection.GraphCollection;
 import org.biiig.dmgm.api.model.collection.LabelDictionary;
 import org.biiig.dmgm.api.model.graph.IntGraph;
 
@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
-public class InMemoryGraphCollection implements IntGraphCollection {
+public class InMemoryGraphCollection implements GraphCollection {
 
   private final AtomicInteger newGraphId = new AtomicInteger();
   private final Map<Integer, IntGraph> graphs = new ConcurrentHashMap<>();
@@ -20,13 +20,13 @@ public class InMemoryGraphCollection implements IntGraphCollection {
   private LabelDictionary edgeDictionary;
 
   @Override
-  public IntGraphCollection withVertexDictionary(LabelDictionary dictionary) {
+  public GraphCollection withVertexDictionary(LabelDictionary dictionary) {
     this.vertexDictionary = dictionary;
     return this;
   }
 
   @Override
-  public IntGraphCollection withEdgeDictionary(LabelDictionary dictionary) {
+  public GraphCollection withEdgeDictionary(LabelDictionary dictionary) {
     this.edgeDictionary = dictionary;
     return this;
   }
@@ -58,13 +58,13 @@ public class InMemoryGraphCollection implements IntGraphCollection {
   }
 
   @Override
-  public IntGraphCollection apply(Operator operator) {
-    return null;
+  public Stream<IntGraph> stream() {
+    return graphs.values().stream();
   }
 
   @Override
-  public Stream<IntGraph> stream() {
-    return graphs.values().stream();
+  public Stream<IntGraph> parallelStream() {
+    return graphs.values().parallelStream();
   }
 
   @Override

@@ -1,16 +1,14 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
 import org.biiig.dmgm.api.algorithms.tfsm.Operator;
-import org.biiig.dmgm.api.model.collection.IntGraphCollection;
-import org.biiig.dmgm.api.model.collection.LabelDictionary;
+import org.biiig.dmgm.api.model.collection.GraphCollection;
 import org.biiig.dmgm.api.model.graph.IntGraph;
-import org.biiig.dmgm.cli.GraphCollection;
 import org.biiig.dmgm.impl.algorithms.tfsm.concurrency.DFSTreeTraverserFactory;
 import org.biiig.dmgm.impl.algorithms.tfsm.concurrency.DFSTreeInitializerFactory;
 import org.biiig.dmgm.impl.algorithms.tfsm.logic.DFSTreeNodeAggregator;
 import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSTreeNode;
 import org.biiig.dmgm.impl.concurrency.ConcurrencyUtil;
-import org.biiig.dmgm.impl.model.collection.InMemoryLabelDictionary;
+import org.biiig.dmgm.impl.model.collection.InMemoryGraphCollection;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -23,50 +21,74 @@ import java.util.stream.Stream;
  */
 public class FrequentSubgraphs implements Operator {
 
-  private float minSupport;
+  private float minSupportRel;
   private int maxEdgeCount;
 
   public FrequentSubgraphs() {
-    this.minSupport = 1.0f;
+    this.minSupportRel = 1.0f;
     this.maxEdgeCount = 5;
   }
 
   @Override
-  public GraphCollection apply(GraphCollection graphCollection) {
+  public GraphCollection apply(GraphCollection inputCollection) {
+    int minSupportAbs = Math.round((float) inputCollection.size() * this.minSupportRel);
 
-    Collection<String> frequentVertexLabels = getFrequentLabels(
-      graphCollection
+    Set<Integer> frequentVertexLabels = getFrequentLabels(
+      inputCollection
         .parallelStream()
-        .flatMap(new DistinctVertexLabels())
-    );
+        .flatMap(new DistinctVertexLabels()),
+      minSupportAbs);
 
-    LabelDictionary vertexLabelDictionary = new InMemoryLabelDictionary(frequentVertexLabels);
+    GraphCollection vertexPrunedCollection = new InMemoryGraphCollection();
 
-    Collection<String> frequentEdgeLabels = getFrequentLabels(
-      graphCollection
+    inputCollection
+      .parallelStream()
+      .map(new PruneVertices(frequentVertexLabels))
+      .forEach(g -> vertexPrunedCollection.store(g));
+
+    Set<Integer> frequentEdgeLabels = getFrequentLabels(
+      inputCollection
         .parallelStream()
-        .flatMap(new DistinctEdgeLabels())
-    );
+        .flatMap(new DistinctEdgeLabels()),
+      minSupportAbs);
 
-    return null;
+    GraphCollection prunedCollection = new InMemoryGraphCollection()
+      .withVertexDictionary(inputCollection.getVertexDictionary())
+      .withEdgeDictionary(inputCollection.getEdgeDictionary());
+
+    vertexPrunedCollection
+      .parallelStream()
+      .map(new PruneVertices(frequentEdgeLabels))
+      .forEach(g -> prunedCollection.store(g));
+
+//    LabelDictionary vertexLabelDictionary = new InMemoryLabelDictionary(frequentVertexLabels);
+//
+//    Collection<String> frequentEdgeLabels = getFrequentLabels(
+//      graphCollection
+//        .parallelStream()
+//        .flatMap(new DistinctEdgeLabels())
+//    );
+
+    System.out.println(prunedCollection);
+
+    return prunedCollection;
   }
 
-  private Collection<String> getFrequentLabels(Stream<String> vertexLabels) {
+  private Set<Integer> getFrequentLabels(Stream<Integer> vertexLabels, int minSupportAbs) {
     return vertexLabels
       .collect(Collectors.groupingByConcurrent(Function.identity(), Collectors.counting()))
       .entrySet()
       .stream()
-      .filter(e -> e.getValue() >= minSupport)
-      .sorted((a, b) -> (int) (b.getValue() - a.getValue()))
-      .map(e -> e.getKey())
-      .collect(Collectors.toList());
+      .filter(e -> e.getValue() >= minSupportAbs)
+      .map(Map.Entry::getKey)
+      .collect(Collectors.toSet());
   }
 
   @Override
-  public void execute(IntGraphCollection input, IntGraphCollection output) {
+  public void execute(GraphCollection input, GraphCollection output) {
 
     // calculate min support
-    int minSupport = Math.round((float) input.size() * this.minSupport);
+    int minSupportAbs = Math.round((float) input.size() * this.minSupportRel);
 
     Deque<DFSTreeNode> dfsTree = new ConcurrentLinkedDeque<>();
 
@@ -88,14 +110,14 @@ public class FrequentSubgraphs implements Operator {
     children = new DFSTreeNodeAggregator().aggregate(children);
 
     // remove infrequent patterns
-    children.removeIf(c -> c.getSupport() < minSupport);
+    children.removeIf(c -> c.getSupport() < minSupportAbs);
 
     // init DFS code tree
     dfsTree.addAll(children);
 
     // grow children until all frequent children in the tree were traversed
     Collection<List<IntGraph>> resultPartitions = ConcurrencyUtil
-      .runParallel(new DFSTreeTraverserFactory(input, dfsTree, minSupport));
+      .runParallel(new DFSTreeTraverserFactory(input, dfsTree, minSupportAbs));
 
     // add partition results to output
     for (IntGraph graph : combine(resultPartitions)) {
@@ -120,7 +142,7 @@ public class FrequentSubgraphs implements Operator {
   }
 
   public FrequentSubgraphs withMinSupport(float minSupport) {
-    setMinSupport(minSupport);
+    setMinSupportRel(minSupport);
     return this;
   }
 
@@ -129,8 +151,8 @@ public class FrequentSubgraphs implements Operator {
     return this;
   }
 
-  public void setMinSupport(float minSupport) {
-    this.minSupport = minSupport;
+  public void setMinSupportRel(float minSupportRel) {
+    this.minSupportRel = minSupportRel;
   }
 
   public void setMaxEdgeCount(int maxEdgeCount) {

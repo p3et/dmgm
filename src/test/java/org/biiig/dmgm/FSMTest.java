@@ -1,6 +1,6 @@
 package org.biiig.dmgm;
 
-import org.biiig.dmgm.api.model.collection.IntGraphCollection;
+import org.biiig.dmgm.api.model.collection.GraphCollection;
 import org.biiig.dmgm.api.model.graph.IntGraph;
 import org.biiig.dmgm.api.model.graph.IntGraphFactory;
 import org.biiig.dmgm.impl.algorithms.tfsm.TFSMConfig;
@@ -55,9 +55,9 @@ public class FSMTest extends DMGMTestBase {
   private void test(String inputGDL, String expectedGDL) {
     IntGraphFactory graphFactory = new IntGraphBaseFactory();
 
-    IntGraphCollection input = new InMemoryGraphCollection();
-    IntGraphCollection expected = new InMemoryGraphCollection();
-    IntGraphCollection output = new InMemoryGraphCollection();
+    GraphCollection input = new InMemoryGraphCollection();
+    GraphCollection expected = new InMemoryGraphCollection();
+    GraphCollection output = new InMemoryGraphCollection();
 
     new GDLDataSource(inputGDL).load(input, graphFactory);
     new GDLDataSource(expectedGDL).load(expected, graphFactory);
@@ -68,7 +68,7 @@ public class FSMTest extends DMGMTestBase {
     assertTrue("equals", equal(expected, output));
   }
 
-  private boolean isConsistent(IntGraphCollection collection) {
+  private boolean isConsistent(GraphCollection collection) {
     boolean consistent = true;
 
     for (IntGraph graph : collection) {

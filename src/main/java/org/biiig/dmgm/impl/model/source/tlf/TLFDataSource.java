@@ -1,7 +1,8 @@
 package org.biiig.dmgm.impl.model.source.tlf;
 
 import com.google.common.collect.Lists;
-import org.biiig.dmgm.api.model.collection.IntGraphCollection;
+import org.biiig.dmgm.api.model.collection.GraphCollection;
+import org.biiig.dmgm.api.model.collection.IntGraphCollectionFactory;
 import org.biiig.dmgm.api.model.collection.LabelDictionary;
 import org.biiig.dmgm.api.model.source.DMGraphDataSource;
 import org.biiig.dmgm.api.model.source.tlf.TLFSplitReaderFactory;
@@ -30,9 +31,9 @@ public class TLFDataSource implements DMGraphDataSource {
   }
 
   @Override
-  public IntGraphCollection getGraphCollection() {
+  public GraphCollection getGraphCollection() {
 
-    IntGraphCollection collection = collectionFactory.create();
+    GraphCollection collection = collectionFactory.create();
 
     try {
       StreamSupport
@@ -58,7 +59,7 @@ public class TLFDataSource implements DMGraphDataSource {
   }
 
   @Override
-  public void loadWithMinLabelSupport(IntGraphCollection database, IntGraphFactory graphFactory, float minSupportThreshold) throws IOException {
+  public void loadWithMinLabelSupport(GraphCollection database, IntGraphFactory graphFactory, float minSupportThreshold) throws IOException {
 
     TLFLabelReaderFactory labelReaderFactory = new TLFLabelReaderFactory();
     readSplits(labelReaderFactory);
@@ -82,7 +83,7 @@ public class TLFDataSource implements DMGraphDataSource {
   }
 
   @Override
-  public void load(IntGraphCollection database, IntGraphFactory graphFactory) throws IOException {
+  public void load(GraphCollection database, IntGraphFactory graphFactory) throws IOException {
     loadWithMinLabelSupport(database, graphFactory, 1.0f);
   }
 

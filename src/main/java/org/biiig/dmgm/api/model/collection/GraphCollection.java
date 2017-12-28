@@ -6,10 +6,10 @@ import org.biiig.dmgm.api.model.graph.IntGraph;
 import java.util.stream.Stream;
 
 
-public interface IntGraphCollection extends Iterable<IntGraph> {
-  IntGraphCollection withVertexDictionary(LabelDictionary dictionary);
+public interface GraphCollection extends Iterable<IntGraph> {
+  GraphCollection withVertexDictionary(LabelDictionary dictionary);
 
-  IntGraphCollection withEdgeDictionary(LabelDictionary dictionary);
+  GraphCollection withEdgeDictionary(LabelDictionary dictionary);
 
   LabelDictionary getVertexDictionary();
 
@@ -21,7 +21,11 @@ public interface IntGraphCollection extends Iterable<IntGraph> {
 
   IntGraph getGraph(int graphId);
 
-  IntGraphCollection apply(Operator operator);
-
   Stream<IntGraph> stream();
+
+  Stream<IntGraph> parallelStream();
+
+  default GraphCollection apply(Operator operator) {
+    return operator.apply(this);
+  }
 }

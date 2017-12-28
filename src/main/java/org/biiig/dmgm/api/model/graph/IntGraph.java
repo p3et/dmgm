@@ -18,4 +18,5 @@ public interface IntGraph {
 
   int[] getOutgoingEdgeIds(int vertexId);
   int[] getIncomingEdgeIds(int vertexId);
+
 }
