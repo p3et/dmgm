@@ -1,14 +1,18 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
+import de.jesemann.queue_stream.QueueStreamSource;
+import javafx.util.Pair;
 import org.biiig.dmgm.api.algorithms.tfsm.Operator;
 import org.biiig.dmgm.api.model.collection.GraphCollection;
 import org.biiig.dmgm.api.model.graph.IntGraph;
 import org.biiig.dmgm.impl.algorithms.tfsm.concurrency.DFSTreeTraverserFactory;
 import org.biiig.dmgm.impl.algorithms.tfsm.concurrency.DFSTreeInitializerFactory;
 import org.biiig.dmgm.impl.algorithms.tfsm.logic.DFSTreeNodeAggregator;
+import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSEmbedding;
 import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSTreeNode;
 import org.biiig.dmgm.impl.concurrency.ConcurrencyUtil;
 import org.biiig.dmgm.impl.model.collection.InMemoryGraphCollection;
+import org.biiig.dmgm.impl.model.graph.DFSCode;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -33,6 +37,41 @@ public class FrequentSubgraphs implements Operator {
   public GraphCollection apply(GraphCollection inputCollection) {
     int minSupportAbs = Math.round((float) inputCollection.size() * this.minSupportRel);
 
+    GraphCollection prunedCollection = pruneByLabels(inputCollection, minSupportAbs);
+
+    List<Pair<DFSCode, List<DFSEmbedding>>> singleEdgeNodes = prunedCollection
+      .stream()
+      .flatMap(new SingleEdgePatterns())
+      .collect(Collectors.groupingByConcurrent(Pair::getKey, Collectors.toList()))
+      .entrySet()
+      .parallelStream()
+      // cheap pre-filter since frequency >= support
+      .filter(e -> e.getValue().size() >= minSupportAbs)
+      .map(e -> new Pair<>(
+        e.getKey(),
+        e.getValue()
+          .stream()
+          .map(Pair::getValue)
+          .collect(Collectors.toList()))
+      )
+      .filter(new Frequent(minSupportAbs))
+      .collect(Collectors.toList());
+
+    GraphCollection result = new InMemoryGraphCollection()
+      .withVertexDictionary(inputCollection.getVertexDictionary())
+      .withEdgeDictionary(inputCollection.getEdgeDictionary());
+
+    singleEdgeNodes
+      .stream()
+      .map(Pair::getKey)
+      .forEach(result::store);
+
+//    QueueStreamSource<Pair<DFSCode, List<DFSEmbedding>>> queueStreamSource = QueueStreamSource.of(singleEdgeNodes);
+
+    return result;
+  }
+
+  private GraphCollection pruneByLabels(GraphCollection inputCollection, int minSupportAbs) {
     Set<Integer> frequentVertexLabels = getFrequentLabels(
       inputCollection
         .parallelStream()
@@ -60,16 +99,6 @@ public class FrequentSubgraphs implements Operator {
       .parallelStream()
       .map(new PruneVertices(frequentEdgeLabels))
       .forEach(g -> prunedCollection.store(g));
-
-//    LabelDictionary vertexLabelDictionary = new InMemoryLabelDictionary(frequentVertexLabels);
-//
-//    Collection<String> frequentEdgeLabels = getFrequentLabels(
-//      graphCollection
-//        .parallelStream()
-//        .flatMap(new DistinctEdgeLabels())
-//    );
-
-    System.out.println(prunedCollection);
 
     return prunedCollection;
   }

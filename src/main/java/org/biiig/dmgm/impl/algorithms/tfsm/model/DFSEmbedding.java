@@ -10,15 +10,18 @@ import java.util.Arrays;
 public class DFSEmbedding {
   private final int[] vertexIds;
   private final int[] edgeIds;
+  private final int graphId;
 
-  public DFSEmbedding(int fromId, int edgeId, int toId) {
+  public DFSEmbedding(int graphId, int fromId, int edgeId, int toId) {
+    this.graphId = graphId;
     this.vertexIds = fromId == toId ? new int[] {fromId} : new int[] {fromId, toId};
     this.edgeIds = new int[] {edgeId};
   }
 
-  public DFSEmbedding(int[] vertexIds, int[] edgeIds) {
+  public DFSEmbedding(int graphId, int[] vertexIds, int[] edgeIds) {
     this.vertexIds = vertexIds;
     this.edgeIds = edgeIds;
+    this.graphId = graphId;
   }
 
   @Override
@@ -39,7 +42,7 @@ public class DFSEmbedding {
   }
 
   public DFSEmbedding expandByEdgeId(int edgeId) {
-    return new DFSEmbedding(vertexIds.clone(), ArrayUtils.add(edgeIds, edgeId));
+    return new DFSEmbedding(graphId, vertexIds.clone(), ArrayUtils.add(edgeIds, edgeId));
   }
 
   public int getVertexCount() {
@@ -47,7 +50,7 @@ public class DFSEmbedding {
   }
 
   public DFSEmbedding expandByEdgeIdAndVertexId(int edgeId, int vertexId) {
-    return new DFSEmbedding(ArrayUtils.add(vertexIds, vertexId), ArrayUtils.add(edgeIds, edgeId));
+    return new DFSEmbedding(graphId, ArrayUtils.add(vertexIds, vertexId), ArrayUtils.add(edgeIds, edgeId));
   }
 
   @Override
@@ -127,5 +130,9 @@ public class DFSEmbedding {
 
   public int[] getVertexIds() {
     return vertexIds;
+  }
+
+  public int getGraphId() {
+    return graphId;
   }
 }

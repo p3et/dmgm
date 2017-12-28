@@ -38,6 +38,8 @@
             <groupId>de.jesemann</groupId>
             <artifactId>queue-stream</artifactId>
             <version>0.1</version>
+            <scope>system</scope>
+            <systemPath>/home/peet/git/QueueStream/target/queue-stream-0.1.jar</systemPath>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->

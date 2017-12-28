@@ -75,7 +75,7 @@ public class DFSCodeOperations {
       if (!loop) dfsCode.addVertex(toLabel);
       dfsCode.addEdge(fromTime, toTime, edgeLabel, outgoing);
 
-      DFSEmbedding embedding = new DFSEmbedding(fromId, edgeId, toId);
+      DFSEmbedding embedding = new DFSEmbedding(graph.getId(), fromId, edgeId, toId);
 
       dfsCodeEmbeddingParis[edgeId] = new DFSCodeEmbeddingPair(dfsCode, embedding);
     }

@@ -49,6 +49,7 @@ public class InMemoryGraphCollection implements GraphCollection {
   @Override
   public void store(IntGraph graph) {
     int graphId = newGraphId.getAndIncrement();
+    graph.setId(graphId);
     graphs.put(graphId, graph);
   }
 

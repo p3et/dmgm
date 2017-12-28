@@ -192,7 +192,7 @@ public class GenSpan extends GSpanBase {
 
           DFSCode dfsCode = new DFSCode();
 
-          DFSEmbedding embedding = new DFSEmbedding(fromId, edgeId, toId);
+          DFSEmbedding embedding = new DFSEmbedding(graph.getId(), fromId, edgeId, toId);
 
           GraphIdEmbeddingPair embeddings = new GraphIdEmbeddingPair(graph.getId(), null);
 

@@ -6,6 +6,7 @@ import org.biiig.dmgm.api.model.graph.IntGraph;
 import java.util.Arrays;
 
 public class IntGraphBase implements IntGraph {
+  private int id = -1;
   protected int[] vertexLabels = new int[0];
   protected int[] edgeLabels = new int[0];
   protected int[] sourceIds = new int[0];
@@ -82,6 +83,16 @@ public class IntGraphBase implements IntGraph {
         edgeIds = ArrayUtils.add(edgeIds, edgeId);
 
     return edgeIds;
+  }
+
+  @Override
+  public int getId() {
+    return id;
+  }
+
+  @Override
+  public void setId(int id) {
+    this.id = id;
   }
 
 }
