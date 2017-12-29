@@ -9,6 +9,14 @@ public class AdjacencyList extends IntGraphBase {
   private int[][] incomingEdgeIds = new int[0][];
 
   @Override
+  public void addVertex(int label) {
+    super.addVertex(label);
+
+    outgoingEdgeIds = ArrayUtils.add(outgoingEdgeIds, new int[0]);
+    incomingEdgeIds = ArrayUtils.add(incomingEdgeIds, new int[0]);
+  }
+
+  @Override
   public void addEdge(int sourceId, int targetId, int label) {
     super.addEdge(sourceId, targetId, label);
 

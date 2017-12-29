@@ -1,12 +1,11 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
-import de.jesemann.queue_stream.QueueStreamSource;
 import javafx.util.Pair;
 import org.biiig.dmgm.api.algorithms.tfsm.Operator;
 import org.biiig.dmgm.api.model.collection.GraphCollection;
 import org.biiig.dmgm.api.model.graph.IntGraph;
-import org.biiig.dmgm.impl.algorithms.tfsm.concurrency.DFSTreeTraverserFactory;
 import org.biiig.dmgm.impl.algorithms.tfsm.concurrency.DFSTreeInitializerFactory;
+import org.biiig.dmgm.impl.algorithms.tfsm.concurrency.DFSTreeTraverserFactory;
 import org.biiig.dmgm.impl.algorithms.tfsm.logic.DFSTreeNodeAggregator;
 import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSEmbedding;
 import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSTreeNode;
@@ -80,6 +79,8 @@ public class FrequentSubgraphs implements Operator {
 
     GraphCollection vertexPrunedCollection = new InMemoryGraphCollection();
 
+    System.out.println(frequentVertexLabels);
+
     inputCollection
       .parallelStream()
       .map(new PruneVertices(frequentVertexLabels))
@@ -91,16 +92,18 @@ public class FrequentSubgraphs implements Operator {
         .flatMap(new DistinctEdgeLabels()),
       minSupportAbs);
 
+    System.out.println(frequentEdgeLabels);
+
     GraphCollection prunedCollection = new InMemoryGraphCollection()
       .withVertexDictionary(inputCollection.getVertexDictionary())
       .withEdgeDictionary(inputCollection.getEdgeDictionary());
 
     vertexPrunedCollection
       .parallelStream()
-      .map(new PruneVertices(frequentEdgeLabels))
+      .map(new PruneEdges(frequentEdgeLabels))
       .forEach(g -> prunedCollection.store(g));
 
-    return prunedCollection;
+    return vertexPrunedCollection;
   }
 
   private Set<Integer> getFrequentLabels(Stream<Integer> vertexLabels, int minSupportAbs) {

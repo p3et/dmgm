@@ -19,13 +19,12 @@ public class FrequentSubgraphMiner {
 
     Operator fsm = new FrequentSubgraphs()
       .withMinSupport(1.0f);
-//
-//    GraphCollection output = input
-//      .apply(fsm);
 
-   input
-     .apply(fsm)
-     .stream()
-     .forEach(g -> System.out.println(g));
+    GraphCollection output = input
+      .apply(fsm);
+
+    System.out.println(GraphCollection.toString(output));
+
+
   }
 }

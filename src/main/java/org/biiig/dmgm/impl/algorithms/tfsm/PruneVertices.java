@@ -1,5 +1,6 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.model.graph.IntGraph;
 import org.biiig.dmgm.impl.model.graph.IntGraphBase;
 
@@ -15,8 +16,9 @@ public class PruneVertices implements Function<IntGraph, IntGraph> {
 
   @Override
   public IntGraph apply(IntGraph inGraph) {
-
     int[] vertexMap = new int[inGraph.getVertexCount()];
+    for (int vertexId = 0; vertexId < inGraph.getVertexCount(); vertexId++)
+      vertexMap[vertexId] = -1;
 
     IntGraph outGraph = new IntGraphBase();
 
@@ -28,7 +30,7 @@ public class PruneVertices implements Function<IntGraph, IntGraph> {
       }
     }
 
-    for (int edgeId = 0; edgeId < inGraph.getVertexCount(); edgeId++) {
+    for (int edgeId = 0; edgeId < inGraph.getEdgeCount(); edgeId++) {
 
       int sourceMapping = vertexMap[inGraph.getSourceId(edgeId)];
       if (sourceMapping > -1) {

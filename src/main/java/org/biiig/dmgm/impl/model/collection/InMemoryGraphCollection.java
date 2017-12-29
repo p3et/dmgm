@@ -72,4 +72,6 @@ public class InMemoryGraphCollection implements GraphCollection {
   public Iterator<IntGraph> iterator() {
     return new InMemoryGraphCollectionIterator(graphs);
   }
+
+
 }
