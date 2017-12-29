@@ -36,13 +36,17 @@ public class FrequentSubgraphs implements Operator {
 
   @Override
   public GraphCollection apply(GraphCollection inputCollection) {
+    GraphCollection result = new InMemoryGraphCollection()
+      .withVertexDictionary(inputCollection.getVertexDictionary())
+      .withEdgeDictionary(inputCollection.getEdgeDictionary());
+
     int minSupportAbs = Math.round((float) inputCollection.size() * this.minSupportRel);
 
     GraphCollection prunedCollection = pruneByLabels(inputCollection, minSupportAbs);
 
-    List<Pair<DFSCode, List<DFSEmbedding>>> singleEdgeNodes = prunedCollection
+    List<Pair<DFSCode, List<DFSEmbedding>>> parents = prunedCollection
       .parallelStream()
-      .flatMap(new SingleEdgePatterns())
+      .flatMap(new InitializeParents())
       .collect(new GroupByKeyListValues<>())
       .entrySet()
       .parallelStream()
@@ -50,17 +54,11 @@ public class FrequentSubgraphs implements Operator {
       .filter(new FilterFrequent(minSupportAbs))
       .collect(Collectors.toList());
 
-    QueueStreamSource<Pair<DFSCode, List<DFSEmbedding>>> queueStreamSource =
-      QueueStreamSource.of(singleEdgeNodes);
-
-    GraphCollection result = new InMemoryGraphCollection()
-      .withVertexDictionary(inputCollection.getVertexDictionary())
-      .withEdgeDictionary(inputCollection.getEdgeDictionary());
+    QueueStreamSource<Pair<DFSCode, List<DFSEmbedding>>> queueStreamSource = QueueStreamSource.of(parents);
 
     queueStreamSource
       .stream()
-      .flatMap(new GrowChildren(prunedCollection, queueStreamSource))
-      .forEach(result::store);
+      .forEach(new OutputAndGrowChildren(prunedCollection, result, queueStreamSource, minSupportAbs));
 
     return result;
   }

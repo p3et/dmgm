@@ -7,7 +7,7 @@ import org.biiig.dmgm.impl.model.graph.DFSCode;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class FilterFrequent implements Predicate<Pair<DFSCode, List<DFSEmbedding>>> {
+public class FilterFrequent implements Predicate<Pair<DFSCode,List<DFSEmbedding>>> {
   private final int minSupportAbs;
 
   public FilterFrequent(int minSupportAbs) {
@@ -15,9 +15,10 @@ public class FilterFrequent implements Predicate<Pair<DFSCode, List<DFSEmbedding
   }
 
   @Override
-  public boolean test(Pair<DFSCode, List<DFSEmbedding>> parentPair) {
-    List<DFSEmbedding> embeddings = parentPair.getValue();
+  public boolean test(Pair<DFSCode,List<DFSEmbedding>> pairs) {
+    List<DFSEmbedding> embeddings = pairs.getValue();
     int frequency = embeddings.size();
+
     boolean frequent = frequency >= minSupportAbs;
 
     if (frequent) {
@@ -30,12 +31,6 @@ public class FilterFrequent implements Predicate<Pair<DFSCode, List<DFSEmbedding
       );
 
       frequent = support >= minSupportAbs;
-
-      if (frequent) {
-        DFSCode dfsCode = parentPair.getKey();
-        dfsCode.setSupport(support);
-        dfsCode.setFrequency(frequency);
-      }
     }
 
     return frequent;

@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class SingleEdgePatterns implements Function<IntGraph, Stream<Pair<DFSCode, DFSEmbedding>>> {
+public class InitializeParents implements Function<IntGraph, Stream<Pair<DFSCode, DFSEmbedding>>> {
 
   @Override
   public Stream<Pair<DFSCode, DFSEmbedding>> apply(IntGraph graph) {

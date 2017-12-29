@@ -10,8 +10,6 @@ public class DFSCode extends IntGraphBase implements Comparable<DFSCode> {
 
   private final DFSCodeComparator comparator = new DFSCodeComparator();
   private int[] rightmostPath;
-  private int frequency;
-  private int support;
 
   public void addEdge(int fromTime, int toTime, int label, boolean outgoing) {
 
@@ -186,11 +184,4 @@ public class DFSCode extends IntGraphBase implements Comparable<DFSCode> {
     }
   }
 
-  public void setFrequency(int frequency) {
-    this.frequency = frequency;
-  }
-
-  public void setSupport(int support) {
-    this.support = support;
-  }
 }
