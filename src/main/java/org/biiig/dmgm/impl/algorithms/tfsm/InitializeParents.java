@@ -1,22 +1,21 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
-import com.google.common.collect.Lists;
-import javafx.util.Pair;
+import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.model.graph.IntGraph;
+import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSCodeEmbeddingPair;
 import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSEmbedding;
 import org.biiig.dmgm.impl.model.graph.DFSCode;
 
-import java.util.Collection;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class InitializeParents implements Function<IntGraph, Stream<Pair<DFSCode, DFSEmbedding>>> {
+public class InitializeParents implements Function<IntGraph, Stream<DFSCodeEmbeddingPair>> {
 
   @Override
-  public Stream<Pair<DFSCode, DFSEmbedding>> apply(IntGraph graph) {
+  public Stream<DFSCodeEmbeddingPair> apply(IntGraph graph) {
 
     int edgeCount = graph.getEdgeCount();
-    Collection<Pair<DFSCode, DFSEmbedding>> pairs = Lists.newArrayListWithExpectedSize(edgeCount);
+    DFSCodeEmbeddingPair[] pairs = new DFSCodeEmbeddingPair[edgeCount];
 
     for (int edgeId = 0; edgeId < edgeCount; edgeId++) {
 
@@ -63,17 +62,13 @@ public class InitializeParents implements Function<IntGraph, Stream<Pair<DFSCode
 
       DFSEmbedding embedding = new DFSEmbedding(graph.getId(), fromId, edgeId, toId);
 
-      pairs.add(new Pair<>(dfsCode, embedding));
+      DFSCodeEmbeddingPair codeEmbeddingPair = new DFSCodeEmbeddingPair(dfsCode, embedding);
+
+      pairs[edgeId] = codeEmbeddingPair;
     }
 
-//    System.out.println("------");
-//    pairs
-//      .stream()
-//      .map(p -> p.getKey())
-//      .sorted()
-//      .forEach(d -> System.out.println(d));
 
-    return pairs.stream();
+    return Stream.of(pairs);
   }
 
 }

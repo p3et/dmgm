@@ -12,6 +12,11 @@ public class DFSCodeEmbeddingsPair implements Comparable<DFSCodeEmbeddingsPair> 
     this.embeddings = new DFSEmbedding[] {embedding};
   }
 
+  public DFSCodeEmbeddingsPair(DFSCode dfsCode, DFSEmbedding[] embeddings) {
+    this.dfsCode = dfsCode;
+    this.embeddings = embeddings;
+  }
+
   public DFSCode getDfsCode() {
     return dfsCode;
   }

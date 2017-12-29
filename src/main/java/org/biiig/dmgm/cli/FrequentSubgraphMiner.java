@@ -11,7 +11,9 @@ public class FrequentSubgraphMiner {
 
   public static void main(String[] args) throws IOException {
 
-    String path = "/home/peet/pred_10K.tlf";
+    String path =
+//      "/home/peet/pred_10K.tlf";
+      "/home/peet/git/dmgm/src/main/resources/samples/predictable.tlf";
 
     GraphCollection input = TLFDataSource
       .fromFile(path)

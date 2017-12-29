@@ -4,7 +4,7 @@ import org.biiig.dmgm.impl.model.graph.DFSCode;
 
 public class DFSCodeEmbeddingPair implements Comparable<DFSCodeEmbeddingPair> {
   private final DFSCode dfsCode;
-  private DFSEmbedding embedding;
+  private final DFSEmbedding embedding;
 
   public DFSCodeEmbeddingPair(DFSCode dfsCode, DFSEmbedding embedding) {
     this.dfsCode = dfsCode;

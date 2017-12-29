@@ -1,13 +1,12 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
-import javafx.util.Pair;
+import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSCodeEmbeddingsPair;
 import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSEmbedding;
-import org.biiig.dmgm.impl.model.graph.DFSCode;
 
-import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
-public class FilterFrequent implements Predicate<Pair<DFSCode,List<DFSEmbedding>>> {
+public class FilterFrequent implements Predicate<DFSCodeEmbeddingsPair> {
   private final int minSupportAbs;
 
   public FilterFrequent(int minSupportAbs) {
@@ -15,16 +14,16 @@ public class FilterFrequent implements Predicate<Pair<DFSCode,List<DFSEmbedding>
   }
 
   @Override
-  public boolean test(Pair<DFSCode,List<DFSEmbedding>> pairs) {
-    List<DFSEmbedding> embeddings = pairs.getValue();
-    int frequency = embeddings.size();
+  public boolean test(DFSCodeEmbeddingsPair pairs) {
+    DFSEmbedding[] embeddings = pairs.getEmbeddings();
+    int frequency = embeddings.length;
 
     boolean frequent = frequency >= minSupportAbs;
 
     if (frequent) {
       int support = Math.toIntExact(
-        embeddings
-          .stream()
+        Stream
+          .of(embeddings)
           .map(DFSEmbedding::getGraphId)
           .distinct()
           .count()

@@ -1,19 +1,18 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
 import de.jesemann.queue_stream.QueueStreamSource;
-import de.jesemann.queue_stream.util.GroupByKeyListValues;
-import javafx.util.Pair;
+import de.jesemann.queue_stream.util.GroupByKeyArrayValues;
 import org.biiig.dmgm.api.algorithms.tfsm.Operator;
 import org.biiig.dmgm.api.model.collection.GraphCollection;
 import org.biiig.dmgm.api.model.graph.IntGraph;
 import org.biiig.dmgm.impl.algorithms.tfsm.concurrency.DFSTreeInitializerFactory;
 import org.biiig.dmgm.impl.algorithms.tfsm.concurrency.DFSTreeTraverserFactory;
 import org.biiig.dmgm.impl.algorithms.tfsm.logic.DFSTreeNodeAggregator;
+import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSCodeEmbeddingsPair;
 import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSEmbedding;
 import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSTreeNode;
 import org.biiig.dmgm.impl.concurrency.ConcurrencyUtil;
 import org.biiig.dmgm.impl.model.collection.InMemoryGraphCollection;
-import org.biiig.dmgm.impl.model.graph.DFSCode;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -44,20 +43,20 @@ public class FrequentSubgraphs implements Operator {
 
     GraphCollection prunedCollection = pruneByLabels(inputCollection, minSupportAbs);
 
-    List<Pair<DFSCode, List<DFSEmbedding>>> parents = prunedCollection
+    List<DFSCodeEmbeddingsPair> parents = prunedCollection
       .parallelStream()
       .flatMap(new InitializeParents())
-      .collect(new GroupByKeyListValues<>())
+      .collect(new GroupByDFSCodeArrayEmbeddings())
       .entrySet()
       .parallelStream()
-      .map(e -> new Pair<>(e.getKey(), e.getValue()))
+      .map(e -> new DFSCodeEmbeddingsPair(e.getKey(), e.getValue()))
       .filter(new FilterFrequent(minSupportAbs))
       .collect(Collectors.toList());
 
-    QueueStreamSource<Pair<DFSCode, List<DFSEmbedding>>> queueStreamSource = QueueStreamSource.of(parents);
+    QueueStreamSource<DFSCodeEmbeddingsPair> queueStreamSource = QueueStreamSource.of(parents);
 
     queueStreamSource
-      .stream()
+      .parallelStream()
       .forEach(new OutputAndGrowChildren(prunedCollection, result, queueStreamSource, minSupportAbs));
 
     return result;
@@ -75,7 +74,7 @@ public class FrequentSubgraphs implements Operator {
     inputCollection
       .parallelStream()
       .map(new PruneVertices(frequentVertexLabels))
-      .forEach(g -> vertexPrunedCollection.store(g));
+      .forEach(vertexPrunedCollection::store);
 
     Set<Integer> frequentEdgeLabels = getFrequentLabels(
       inputCollection
@@ -90,7 +89,7 @@ public class FrequentSubgraphs implements Operator {
     vertexPrunedCollection
       .parallelStream()
       .map(new PruneEdges(frequentEdgeLabels))
-      .forEach(g -> prunedCollection.store(g));
+      .forEach(prunedCollection::store);
 
     return vertexPrunedCollection;
   }
