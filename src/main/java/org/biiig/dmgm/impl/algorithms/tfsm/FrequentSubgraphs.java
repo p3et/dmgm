@@ -1,5 +1,7 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
+import de.jesemann.queue_stream.QueueStreamSource;
+import de.jesemann.queue_stream.util.GroupByKeyListValues;
 import javafx.util.Pair;
 import org.biiig.dmgm.api.algorithms.tfsm.Operator;
 import org.biiig.dmgm.api.model.collection.GraphCollection;
@@ -39,33 +41,26 @@ public class FrequentSubgraphs implements Operator {
     GraphCollection prunedCollection = pruneByLabels(inputCollection, minSupportAbs);
 
     List<Pair<DFSCode, List<DFSEmbedding>>> singleEdgeNodes = prunedCollection
-      .stream()
+      .parallelStream()
       .flatMap(new SingleEdgePatterns())
-      .collect(Collectors.groupingByConcurrent(Pair::getKey, Collectors.toList()))
+      .collect(new GroupByKeyListValues<>())
       .entrySet()
       .parallelStream()
-      // cheap pre-filter since frequency >= support
-      .filter(e -> e.getValue().size() >= minSupportAbs)
-      .map(e -> new Pair<>(
-        e.getKey(),
-        e.getValue()
-          .stream()
-          .map(Pair::getValue)
-          .collect(Collectors.toList()))
-      )
-      .filter(new Frequent(minSupportAbs))
+      .map(e -> new Pair<>(e.getKey(), e.getValue()))
+      .filter(new FilterFrequent(minSupportAbs))
       .collect(Collectors.toList());
+
+    QueueStreamSource<Pair<DFSCode, List<DFSEmbedding>>> queueStreamSource =
+      QueueStreamSource.of(singleEdgeNodes);
 
     GraphCollection result = new InMemoryGraphCollection()
       .withVertexDictionary(inputCollection.getVertexDictionary())
       .withEdgeDictionary(inputCollection.getEdgeDictionary());
 
-    singleEdgeNodes
+    queueStreamSource
       .stream()
-      .map(Pair::getKey)
+      .flatMap(new GrowChildren(prunedCollection, queueStreamSource))
       .forEach(result::store);
-
-//    QueueStreamSource<Pair<DFSCode, List<DFSEmbedding>>> queueStreamSource = QueueStreamSource.of(singleEdgeNodes);
 
     return result;
   }
@@ -79,8 +74,6 @@ public class FrequentSubgraphs implements Operator {
 
     GraphCollection vertexPrunedCollection = new InMemoryGraphCollection();
 
-    System.out.println(frequentVertexLabels);
-
     inputCollection
       .parallelStream()
       .map(new PruneVertices(frequentVertexLabels))
@@ -91,8 +84,6 @@ public class FrequentSubgraphs implements Operator {
         .parallelStream()
         .flatMap(new DistinctEdgeLabels()),
       minSupportAbs);
-
-    System.out.println(frequentEdgeLabels);
 
     GraphCollection prunedCollection = new InMemoryGraphCollection()
       .withVertexDictionary(inputCollection.getVertexDictionary())
