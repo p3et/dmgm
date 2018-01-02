@@ -1,5 +1,5 @@
 package org.biiig.dmgm.api.model.collection;
 
-public interface IntGraphCollectionFactory {
+public interface GraphCollectionFactory {
   GraphCollection create();
 }

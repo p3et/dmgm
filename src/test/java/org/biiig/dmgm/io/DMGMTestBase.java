@@ -4,11 +4,8 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.biiig.dmgm.api.model.collection.GraphCollection;
 import org.biiig.dmgm.api.model.graph.IntGraph;
-import org.biiig.dmgm.api.model.source.DMGraphDataSource;
 import org.biiig.dmgm.api.model.to_string.DMGraphFormatter;
-import org.biiig.dmgm.impl.model.collection.InMemoryGraphCollection;
-import org.biiig.dmgm.impl.model.graph.IntGraphBaseFactory;
-import org.biiig.dmgm.impl.model.source.tlf.TLFDataSource;
+import org.biiig.dmgm.impl.model.source.tlf.TLFLoader;
 import org.biiig.dmgm.impl.to_string.cam.CAMGraphFormatter;
 import org.biiig.dmgm.impl.to_string.edge_list.ELGraphFormatter;
 
@@ -21,8 +18,8 @@ import java.util.Set;
  */
 public class DMGMTestBase {
   protected GraphCollection getPredictableDatabase(float minSupportThreshold) throws IOException {
-    String inputPath = TLFDataSource.class.getResource("/samples/predictable.tlf").getFile();
-    return TLFDataSource
+    String inputPath = TLFLoader.class.getResource("/samples/predictable.tlf").getFile();
+    return TLFLoader
       .fromFile(inputPath)
       .getGraphCollection();
   }

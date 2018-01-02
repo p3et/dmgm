@@ -2,11 +2,9 @@ package org.biiig.dmgm.impl.algorithms.tfsm;
 
 import de.jesemann.queue_stream.QueueStreamSource;
 import de.jesemann.queue_stream.util.GroupByFunctionListValues;
-import de.jesemann.queue_stream.util.GroupBySelectorArraySelector;
 import org.biiig.dmgm.api.model.collection.GraphCollection;
 import org.biiig.dmgm.api.model.graph.IntGraph;
 import org.biiig.dmgm.cli.pattern_growth.GrowAllChildren;
-import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSCodeEmbeddingPair;
 import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSCodeEmbeddingsPair;
 import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSEmbedding;
 import org.biiig.dmgm.impl.model.graph.DFSCode;
@@ -36,7 +34,7 @@ public class OutputAndGrowChildren implements Consumer<DFSCodeEmbeddingsPair> {
   }
 
   private void output(DFSCodeEmbeddingsPair pairs) {
-    output.store(pairs.getDfsCode());
+    output.add(pairs.getDfsCode());
   }
 
   private void growChildren(DFSCodeEmbeddingsPair parentEmbeddings) {

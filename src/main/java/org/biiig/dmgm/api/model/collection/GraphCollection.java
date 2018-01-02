@@ -1,7 +1,7 @@
 package org.biiig.dmgm.api.model.collection;
 
 import org.apache.commons.lang3.StringUtils;
-import org.biiig.dmgm.api.algorithms.tfsm.Operator;
+import org.biiig.dmgm.api.Operator;
 import org.biiig.dmgm.api.model.graph.IntGraph;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public interface GraphCollection extends Iterable<IntGraph> {
 
   int size();
 
-  void store(IntGraph graph);
+  void add(IntGraph graph);
 
   IntGraph getGraph(int graphId);
 

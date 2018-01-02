@@ -5,11 +5,9 @@ import com.google.common.collect.Maps;
 import org.biiig.dmgm.api.model.collection.GraphCollection;
 import org.biiig.dmgm.api.model.collection.LabelDictionary;
 import org.biiig.dmgm.api.model.graph.IntGraph;
-import org.biiig.dmgm.api.model.graph.IntGraphFactory;
-import org.biiig.dmgm.api.model.source.DMGraphDataSource;
-import org.biiig.dmgm.api.model.collection.IntGraphCollectionFactory;
 import org.biiig.dmgm.impl.model.collection.InMemoryLabelDictionary;
 import org.biiig.dmgm.impl.model.countable.Countable;
+import org.biiig.dmgm.impl.model.source.tlf.GraphCollectionLoaderBase;
 import org.s1ck.gdl.GDLHandler;
 import org.s1ck.gdl.model.Edge;
 import org.s1ck.gdl.model.Graph;
@@ -18,24 +16,19 @@ import org.s1ck.gdl.model.Vertex;
 import java.util.List;
 import java.util.Map;
 
-public class GDLDataSource implements DMGraphDataSource {
+public class GDLLoader extends GraphCollectionLoaderBase {
 
   private final String gdlString;
 
-  public GDLDataSource(String gdlString) {
+  private GDLLoader(String gdlString) {
     this.gdlString = gdlString;
   }
 
   @Override
-  public void loadWithMinLabelSupport(GraphCollection database, IntGraphFactory graphFactory,
-                                      float minSupportThreshold) {
-    load(database, graphFactory);
-  }
+  public GraphCollection getGraphCollection() {
+    GraphCollection graphCollection = collectionFactory.create();
 
-  @Override
-  public void load(GraphCollection database, IntGraphFactory graphFactory) {
     GDLHandler gdlHandler = new GDLHandler.Builder().buildFromString(gdlString);
-
 
     // read graphs
     Map<Long, List<Vertex>> graphVertices = Maps.newHashMap();
@@ -56,7 +49,7 @@ public class GDLDataSource implements DMGraphDataSource {
       }
     }
     LabelDictionary dictionary = new InMemoryLabelDictionary(labelFrequencies);
-    database.withVertexDictionary(dictionary);
+    graphCollection.withVertexDictionary(dictionary);
 
     // read edges
 
@@ -68,7 +61,7 @@ public class GDLDataSource implements DMGraphDataSource {
       }
     }
     dictionary = new InMemoryLabelDictionary(labelFrequencies);
-    database.withEdgeDictionary(dictionary);
+    graphCollection.withEdgeDictionary(dictionary);
 
     // write graphs
 
@@ -86,7 +79,7 @@ public class GDLDataSource implements DMGraphDataSource {
       for (Vertex vertex : vertices) {
         vertexIdMap.put(vertex.getId(), vertexId);
         dmGraph.addVertex(
-          database.getVertexDictionary().translate(vertex.getLabel())
+          graphCollection.getVertexDictionary().translate(vertex.getLabel())
         );
         vertexId++;
       }
@@ -97,20 +90,17 @@ public class GDLDataSource implements DMGraphDataSource {
         dmGraph.addEdge(
           vertexIdMap.get(edge.getSourceVertexId()),
           vertexIdMap.get(edge.getTargetVertexId()),
-          database.getEdgeDictionary().translate(edge.getLabel())
+          graphCollection.getEdgeDictionary().translate(edge.getLabel())
         );
       }
-      database.store(dmGraph);
+
+      graphCollection.add(dmGraph);
     }
+
+    return graphCollection;
   }
 
-  @Override
-  public GraphCollection getGraphCollection() {
-    return null;
-  }
-
-  @Override
-  public DMGraphDataSource withCollectionFactory(IntGraphCollectionFactory collectionFactory) {
-    return null;
+  public static GDLLoader fromString(String gdlString) {
+    return new GDLLoader(gdlString);
   }
 }

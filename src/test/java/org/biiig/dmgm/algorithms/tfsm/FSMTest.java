@@ -1,20 +1,15 @@
-package org.biiig.dmgm;
+package org.biiig.dmgm.algorithms.tfsm;
 
 import org.biiig.dmgm.api.model.collection.GraphCollection;
 import org.biiig.dmgm.api.model.graph.IntGraph;
-import org.biiig.dmgm.api.model.graph.IntGraphFactory;
-import org.biiig.dmgm.impl.algorithms.tfsm.TFSMConfig;
-import org.biiig.dmgm.impl.model.collection.InMemoryGraphCollection;
-import org.biiig.dmgm.impl.model.graph.IntGraphBaseFactory;
-import org.biiig.dmgm.impl.model.source.gdl.GDLDataSource;
+import org.biiig.dmgm.impl.algorithms.tfsm.FrequentSubgraphs;
+import org.biiig.dmgm.impl.model.source.gdl.GDLLoader;
 import org.biiig.dmgm.io.DMGMTestBase;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
 public class FSMTest extends DMGMTestBase {
-
-  private static final TFSMConfig TFSM_CONFIG = new TFSMConfig(0.6f, 10);
 
   @Test
   public void testSingleEdge() {
@@ -53,16 +48,16 @@ public class FSMTest extends DMGMTestBase {
   }
 
   private void test(String inputGDL, String expectedGDL) {
-    IntGraphFactory graphFactory = new IntGraphBaseFactory();
+    GraphCollection input = GDLLoader
+      .fromString(inputGDL)
+      .getGraphCollection();
 
-    GraphCollection input = new InMemoryGraphCollection();
-    GraphCollection expected = new InMemoryGraphCollection();
-    GraphCollection output = new InMemoryGraphCollection();
+    GraphCollection expected = GDLLoader
+      .fromString(expectedGDL)
+      .getGraphCollection();
 
-    new GDLDataSource(inputGDL).load(input, graphFactory);
-    new GDLDataSource(expectedGDL).load(expected, graphFactory);
-
-    DirectedMultigraphMiner.frequentSubgraphs(input, output, TFSM_CONFIG);
+    GraphCollection output = new FrequentSubgraphs(0.6f, 10)
+      .apply(input);
 
     assertTrue("constistent", isConsistent(output));
     assertTrue("equals", equal(expected, output));

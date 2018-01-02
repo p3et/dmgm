@@ -1,6 +1,5 @@
 package org.biiig.dmgm.impl.model.collection;
 
-import org.biiig.dmgm.api.algorithms.tfsm.Operator;
 import org.biiig.dmgm.api.model.collection.GraphCollection;
 import org.biiig.dmgm.api.model.collection.LabelDictionary;
 import org.biiig.dmgm.api.model.graph.IntGraph;
@@ -47,7 +46,7 @@ public class InMemoryGraphCollection implements GraphCollection {
   }
 
   @Override
-  public void store(IntGraph graph) {
+  public void add(IntGraph graph) {
     int graphId = newGraphId.getAndIncrement();
     graph.setId(graphId);
     graphs.put(graphId, graph);

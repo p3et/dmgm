@@ -1,9 +1,9 @@
 package org.biiig.dmgm.cli;
 
-import org.biiig.dmgm.api.algorithms.tfsm.Operator;
+import org.biiig.dmgm.api.Operator;
 import org.biiig.dmgm.api.model.collection.GraphCollection;
 import org.biiig.dmgm.impl.algorithms.tfsm.FrequentSubgraphs;
-import org.biiig.dmgm.impl.model.source.tlf.TLFDataSource;
+import org.biiig.dmgm.impl.model.source.tlf.TLFLoader;
 
 import java.io.IOException;
 
@@ -15,14 +15,12 @@ public class FrequentSubgraphMiner {
 //      "/home/peet/pred_10K.tlf";
       "/home/peet/git/dmgm/src/main/resources/samples/predictable.tlf";
 
-    GraphCollection input = TLFDataSource
+    GraphCollection input = TLFLoader
       .fromFile(path)
       .getGraphCollection();
 
-    Operator fsm = new FrequentSubgraphs()
-      .withMinSupport(1.0f);
+    Operator fsm = new FrequentSubgraphs(1.0f, 20);
 
-    GraphCollection output = input
-      .apply(fsm);
+    GraphCollection output = input.apply(fsm);
   }
 }

@@ -32,7 +32,7 @@ public class TLFGraphReader extends TLFSplitReader {
     readEdges(split, firstEdgeIndex, graph);
 
 
-    database.store(graph);
+    database.add(graph);
   }
 
   private int getFirstEdgeIndex(String[] split) {

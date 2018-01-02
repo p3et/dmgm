@@ -1,4 +1,4 @@
-package org.biiig.dmgm;
+package org.biiig.dmgm.algorithms.tfsm;
 
 public class FSMTestData {
 

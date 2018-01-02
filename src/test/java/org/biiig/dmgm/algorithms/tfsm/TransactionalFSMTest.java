@@ -1,9 +1,7 @@
 package org.biiig.dmgm.algorithms.tfsm;
 
+import org.biiig.dmgm.api.Operator;
 import org.biiig.dmgm.api.model.collection.GraphCollection;
-import org.biiig.dmgm.api.algorithms.tfsm.Operator;
-import org.biiig.dmgm.impl.algorithms.tfsm.TFSMConfig;
-import org.biiig.dmgm.impl.model.collection.InMemoryGraphCollection;
 import org.biiig.dmgm.io.DMGMTestBase;
 import org.junit.Test;
 
@@ -13,7 +11,7 @@ import static junit.framework.TestCase.assertEquals;
 
 public abstract class TransactionalFSMTest extends DMGMTestBase {
 
-  abstract Operator getMiner(TFSMConfig config);
+  abstract Operator getMiner(float minSupportRel, int maxEdgeCount);
 
   @Test
   public void mine10() throws Exception {
@@ -26,12 +24,10 @@ public abstract class TransactionalFSMTest extends DMGMTestBase {
   }
 
   private void mine(float minSupportThreshold, int expectedResultSize) throws IOException {
-    TFSMConfig config = new TFSMConfig(minSupportThreshold, 100);
-    Operator fsm = getMiner(config);
+    Operator fsm = getMiner(minSupportThreshold, 20);
     GraphCollection input = getPredictableDatabase(minSupportThreshold);
-    GraphCollection output = new InMemoryGraphCollection();
+    GraphCollection output = input.apply(fsm);
 
-    fsm.execute(input, output);
 
     System.out.println(output.size());
     assertEquals(expectedResultSize, output.size());
