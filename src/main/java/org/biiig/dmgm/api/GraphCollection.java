@@ -8,10 +8,6 @@ import java.util.stream.Stream;
 
 
 public interface GraphCollection extends Iterable<Graph> {
-  GraphCollection withVertexDictionary(LabelDictionary dictionary);
-
-  GraphCollection withEdgeDictionary(LabelDictionary dictionary);
-
   LabelDictionary getVertexDictionary();
 
   LabelDictionary getEdgeDictionary();
@@ -21,6 +17,8 @@ public interface GraphCollection extends Iterable<Graph> {
   void add(Graph graph);
 
   Graph getGraph(int graphId);
+
+  ElementDataStore getElementDataStore();
 
   Stream<Graph> stream();
 

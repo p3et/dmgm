@@ -5,6 +5,8 @@ import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 import javafx.util.Pair;
 import org.biiig.dmgm.api.Graph;
 import org.biiig.dmgm.api.GraphCollection;
+import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollection;
+import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionBuilderFactory;
 import org.biiig.dmgm.impl.graph_loader.tlf.GraphCollectionLoaderBase;
 import org.s1ck.gdl.GDLHandler;
 import org.s1ck.gdl.model.Edge;
@@ -23,7 +25,7 @@ public class GDLLoader extends GraphCollectionLoaderBase {
 
   @Override
   public GraphCollection getGraphCollection() {
-    GraphCollection graphCollection = collectionFactory.create();
+    GraphCollection graphCollection = new InMemoryGraphCollectionBuilderFactory().create().create();
 
     GDLHandler gdlHandler = new GDLHandler.Builder().buildFromString(gdlString);
 

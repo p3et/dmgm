@@ -1,6 +1,9 @@
 package org.biiig.dmgm.impl.graph_loader.tlf;
 
 import org.biiig.dmgm.api.GraphCollection;
+import org.biiig.dmgm.api.GraphCollectionBuilderFactory;
+import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollection;
+import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionBuilderFactory;
 
 import java.io.IOException;
 import java.util.stream.StreamSupport;
@@ -16,7 +19,7 @@ public class TLFLoader extends GraphCollectionLoaderBase {
   @Override
   public GraphCollection getGraphCollection() {
 
-    GraphCollection collection = collectionFactory.create();
+    GraphCollection collection = new InMemoryGraphCollectionBuilderFactory().create().create();
 
     try {
       StreamSupport

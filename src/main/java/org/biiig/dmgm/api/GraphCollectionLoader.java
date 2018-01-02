@@ -18,7 +18,7 @@ public interface GraphCollectionLoader {
    * @param collectionFactory collection factory
    * @return this
    */
-  GraphCollectionLoader withCollectionFactory(GraphCollectionFactory collectionFactory);
+  GraphCollectionLoader withCollectionFactory(GraphCollectionBuilderFactory collectionFactory);
 
   /**
    * Specify a graph collection factory instead of using the implementations's default.

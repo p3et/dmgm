@@ -1,22 +1,22 @@
 package org.biiig.dmgm.impl.graph_loader.tlf;
 
-import org.biiig.dmgm.api.GraphCollectionFactory;
+import org.biiig.dmgm.api.GraphCollectionBuilderFactory;
 import org.biiig.dmgm.api.GraphFactory;
 import org.biiig.dmgm.api.GraphCollectionLoader;
-import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionFactory;
+import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionBuilderFactory;
 import org.biiig.dmgm.impl.graph.GraphBaseFactory;
 
 public abstract class GraphCollectionLoaderBase implements GraphCollectionLoader {
-  protected GraphCollectionFactory collectionFactory = new InMemoryGraphCollectionFactory();
+  protected GraphCollectionBuilderFactory collectionFactory = new InMemoryGraphCollectionBuilderFactory();
   protected GraphFactory graphFactory = new GraphBaseFactory();
 
   @Override
-  public GraphCollectionLoader withCollectionFactory(GraphCollectionFactory collectionFactory) {
+  public GraphCollectionLoader withCollectionFactory(GraphCollectionBuilderFactory collectionFactory) {
     setCollectionFactory(collectionFactory);
     return this;
   }
 
-  private void setCollectionFactory(GraphCollectionFactory collectionFactory) {
+  private void setCollectionFactory(GraphCollectionBuilderFactory collectionFactory) {
     this.collectionFactory = collectionFactory;
   }
 

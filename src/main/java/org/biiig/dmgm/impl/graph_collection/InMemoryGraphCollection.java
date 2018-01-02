@@ -1,5 +1,6 @@
 package org.biiig.dmgm.impl.graph_collection;
 
+import org.biiig.dmgm.api.ElementDataStore;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.LabelDictionary;
 import org.biiig.dmgm.api.Graph;
@@ -15,19 +16,14 @@ public class InMemoryGraphCollection implements GraphCollection {
   private final AtomicInteger newGraphId = new AtomicInteger();
   private final Map<Integer, Graph> graphs = new ConcurrentHashMap<>();
 
-  private LabelDictionary vertexDictionary;
-  private LabelDictionary edgeDictionary;
+  private final LabelDictionary vertexDictionary;
+  private final LabelDictionary edgeDictionary;
+  private final ElementDataStore dataStore;
 
-  @Override
-  public GraphCollection withVertexDictionary(LabelDictionary dictionary) {
-    this.vertexDictionary = dictionary;
-    return this;
-  }
-
-  @Override
-  public GraphCollection withEdgeDictionary(LabelDictionary dictionary) {
-    this.edgeDictionary = dictionary;
-    return this;
+  InMemoryGraphCollection(LabelDictionary vertexDictionary, LabelDictionary edgeDictionary, ElementDataStore dataStore) {
+    this.vertexDictionary = vertexDictionary;
+    this.edgeDictionary = edgeDictionary;
+    this.dataStore = dataStore;
   }
 
   @Override
@@ -55,6 +51,11 @@ public class InMemoryGraphCollection implements GraphCollection {
   @Override
   public Graph getGraph(int graphId) {
     return graphs.get(graphId);
+  }
+
+  @Override
+  public ElementDataStore getElementDataStore() {
+    return dataStore;
   }
 
   @Override
@@ -92,6 +93,5 @@ public class InMemoryGraphCollection implements GraphCollection {
       return graphs.get(id.getAndIncrement());
     }
   }
-
 
 }
