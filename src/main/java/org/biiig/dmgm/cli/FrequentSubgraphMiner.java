@@ -24,9 +24,5 @@ public class FrequentSubgraphMiner {
 
     GraphCollection output = input
       .apply(fsm);
-
-    System.out.println(GraphCollection.toString(output));
-
-
   }
 }

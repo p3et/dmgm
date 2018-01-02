@@ -22,10 +22,9 @@ import java.util.Set;
 public class DMGMTestBase {
   protected GraphCollection getPredictableDatabase(float minSupportThreshold) throws IOException {
     String inputPath = TLFDataSource.class.getResource("/samples/predictable.tlf").getFile();
-    GraphCollection database = new InMemoryGraphCollection();
-    DMGraphDataSource reader = TLFDataSource.fromFile(inputPath);
-    reader.loadWithMinLabelSupport(database, new IntGraphBaseFactory(), minSupportThreshold);
-    return database;
+    return TLFDataSource
+      .fromFile(inputPath)
+      .getGraphCollection();
   }
 
   protected boolean equal(GraphCollection expected, GraphCollection actual) {

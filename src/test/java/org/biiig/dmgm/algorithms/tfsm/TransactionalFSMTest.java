@@ -32,6 +32,8 @@ public abstract class TransactionalFSMTest extends DMGMTestBase {
     GraphCollection output = new InMemoryGraphCollection();
 
     fsm.execute(input, output);
+
+    System.out.println(output.size());
     assertEquals(expectedResultSize, output.size());
   }
 

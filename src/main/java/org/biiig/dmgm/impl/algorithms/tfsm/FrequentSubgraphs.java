@@ -1,7 +1,6 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
 import de.jesemann.queue_stream.QueueStreamSource;
-import de.jesemann.queue_stream.util.GroupByKeyArrayValues;
 import org.biiig.dmgm.api.algorithms.tfsm.Operator;
 import org.biiig.dmgm.api.model.collection.GraphCollection;
 import org.biiig.dmgm.api.model.graph.IntGraph;
@@ -9,7 +8,6 @@ import org.biiig.dmgm.impl.algorithms.tfsm.concurrency.DFSTreeInitializerFactory
 import org.biiig.dmgm.impl.algorithms.tfsm.concurrency.DFSTreeTraverserFactory;
 import org.biiig.dmgm.impl.algorithms.tfsm.logic.DFSTreeNodeAggregator;
 import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSCodeEmbeddingsPair;
-import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSEmbedding;
 import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSTreeNode;
 import org.biiig.dmgm.impl.concurrency.ConcurrencyUtil;
 import org.biiig.dmgm.impl.model.collection.InMemoryGraphCollection;
