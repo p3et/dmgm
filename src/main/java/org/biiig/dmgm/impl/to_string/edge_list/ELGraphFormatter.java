@@ -1,9 +1,9 @@
 package org.biiig.dmgm.impl.to_string.edge_list;
 
 import org.apache.commons.lang3.StringUtils;
-import org.biiig.dmgm.api.model.collection.LabelDictionary;
-import org.biiig.dmgm.api.model.graph.IntGraph;
-import org.biiig.dmgm.api.model.to_string.DMGraphFormatter;
+import org.biiig.dmgm.api.LabelDictionary;
+import org.biiig.dmgm.api.Graph;
+import org.biiig.dmgm.api.DMGraphFormatter;
 
 public class ELGraphFormatter implements DMGraphFormatter {
   private static final char EDGE_SEPARATOR = ',';
@@ -15,7 +15,7 @@ public class ELGraphFormatter implements DMGraphFormatter {
   }
 
   @Override
-  public String format(IntGraph graph) {
+  public String format(Graph graph) {
     String[] edgeStrings = new String[graph.getEdgeCount()];
 
     for (int edgeId = 0; edgeId < graph.getEdgeCount(); edgeId++) {

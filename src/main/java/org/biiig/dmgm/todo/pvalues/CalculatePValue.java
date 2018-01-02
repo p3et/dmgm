@@ -1,13 +1,8 @@
 package org.biiig.dmgm.todo.pvalues;
 
-import org.biiig.dmgm.impl.model.countable.Countable;
-import org.biiig.dmgm.todo.pvalues.algorithm.MathUtility;
-import org.biiig.dmgm.todo.pvalues.algorithm.Occurrence;
+import org.biiig.dmgm.impl.graph.DFSCode;
+import org.biiig.dmgm.todo.pvalues.algorithm.*;
 import org.biiig.dmgm.todo.pvalues.model.MultiEdgeLabelDistributionKey;
-import org.biiig.dmgm.impl.model.graph.DFSCode;
-import org.biiig.dmgm.todo.pvalues.algorithm.EDDModel;
-import org.biiig.dmgm.todo.pvalues.algorithm.GraphUtility;
-import org.biiig.dmgm.todo.pvalues.algorithm.PolyaAeppli;
 import org.biiig.dmgm.todo.pvalues.model.VertexDegreeKey;
 
 import java.util.Map;
@@ -37,10 +32,10 @@ public class CalculatePValue {
     this.edgeDictionary = edgeDictionary;
   }
 
-  public double calculate(Countable<DFSCode> countable) {
+  public double calculate(DFSCode countable) {
 
-    long numberOfOccurrences = countable.getFrequency();
-    Occurrence occurrence = gu.toOccurrence(countable.getObject(), vertexDictionary, edgeDictionary);
+    long numberOfOccurrences = 0l; //countable.getFrequency();
+    Occurrence occurrence = null;// gu.toOccurrence(countable.getObject(), vertexDictionary, edgeDictionary);
     int vertexCount = occurrence.getNodeLabels().length;
 
     EDDModel edd = new EDDModel(

@@ -1,9 +1,6 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
-import org.biiig.dmgm.cli.pattern_growth.GrowAllChildren;
-import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSCodeEmbeddingsPair;
-import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSEmbedding;
-import org.biiig.dmgm.impl.model.graph.DFSCode;
+import org.biiig.dmgm.impl.graph.DFSCode;
 
 import java.util.Comparator;
 import java.util.Optional;

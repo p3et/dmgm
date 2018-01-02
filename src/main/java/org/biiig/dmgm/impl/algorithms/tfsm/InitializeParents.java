@@ -1,18 +1,15 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.api.model.graph.IntGraph;
-import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSCodeEmbeddingPair;
-import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSEmbedding;
-import org.biiig.dmgm.impl.model.graph.DFSCode;
+import org.biiig.dmgm.api.Graph;
+import org.biiig.dmgm.impl.graph.DFSCode;
 
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class InitializeParents implements Function<IntGraph, Stream<DFSCodeEmbeddingPair>> {
+public class InitializeParents implements Function<Graph, Stream<DFSCodeEmbeddingPair>> {
 
   @Override
-  public Stream<DFSCodeEmbeddingPair> apply(IntGraph graph) {
+  public Stream<DFSCodeEmbeddingPair> apply(Graph graph) {
 
     int edgeCount = graph.getEdgeCount();
     DFSCodeEmbeddingPair[] pairs = new DFSCodeEmbeddingPair[edgeCount];

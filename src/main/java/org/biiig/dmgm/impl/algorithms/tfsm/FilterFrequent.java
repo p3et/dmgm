@@ -1,8 +1,5 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
-import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSCodeEmbeddingsPair;
-import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSEmbedding;
-
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 

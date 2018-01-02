@@ -2,7 +2,7 @@ package org.biiig.dmgm.todo.model;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.todo.mining.IntArrayUtils;
-import org.biiig.dmgm.todo.vector_mining.CrossLevelVectorComparator;
+//import org.biiig.dmgm.todo.vector_mining.CrossLevelVectorComparator;
 
 import java.util.Arrays;
 
@@ -10,7 +10,7 @@ import java.util.Arrays;
  * Created by peet on 13.07.17.
  */
 public class Vector implements Comparable<Vector> {
-  static CrossLevelVectorComparator comparator = new CrossLevelVectorComparator();
+//  static CrossLevelVectorComparator comparator = new CrossLevelVectorComparator();
 
   private int[][] fields;
 
@@ -24,7 +24,8 @@ public class Vector implements Comparable<Vector> {
 
   @Override
   public int compareTo(Vector o) {
-    return comparator.compare(this.fields, o.fields);
+//    return comparator.compare(this.fields, o.fields);
+    return 0;
   }
 
   public Vector deepCopy() {

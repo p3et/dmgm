@@ -1,13 +1,12 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.api.model.graph.IntGraph;
-import org.biiig.dmgm.impl.model.graph.IntGraphBase;
+import org.biiig.dmgm.api.Graph;
+import org.biiig.dmgm.impl.graph.GraphBase;
 
 import java.util.Set;
 import java.util.function.Function;
 
-public class PruneVertices implements Function<IntGraph, IntGraph> {
+public class PruneVertices implements Function<Graph, Graph> {
   private final Set<Integer> frequentVertexLabels;
 
   public PruneVertices(Set<Integer> frequentVertexLabels) {
@@ -15,12 +14,12 @@ public class PruneVertices implements Function<IntGraph, IntGraph> {
   }
 
   @Override
-  public IntGraph apply(IntGraph inGraph) {
+  public Graph apply(Graph inGraph) {
     int[] vertexMap = new int[inGraph.getVertexCount()];
     for (int vertexId = 0; vertexId < inGraph.getVertexCount(); vertexId++)
       vertexMap[vertexId] = -1;
 
-    IntGraph outGraph = new IntGraphBase();
+    Graph outGraph = new GraphBase();
 
     for (int vertexId = 0; vertexId < inGraph.getVertexCount(); vertexId++) {
       int vertexLabel = inGraph.getVertexLabel(vertexId);

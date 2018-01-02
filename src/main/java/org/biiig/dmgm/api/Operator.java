@@ -1,7 +1,5 @@
 package org.biiig.dmgm.api;
 
-import org.biiig.dmgm.api.model.collection.GraphCollection;
-
 import java.util.function.Function;
 
 /**

@@ -1,9 +1,9 @@
 package org.biiig.dmgm.impl.to_string.cam;
 
 import org.apache.commons.lang3.StringUtils;
-import org.biiig.dmgm.api.model.collection.LabelDictionary;
-import org.biiig.dmgm.api.model.graph.IntGraph;
-import org.biiig.dmgm.api.model.to_string.DMGraphFormatter;
+import org.biiig.dmgm.api.LabelDictionary;
+import org.biiig.dmgm.api.Graph;
+import org.biiig.dmgm.api.DMGraphFormatter;
 
 import java.util.Arrays;
 
@@ -19,7 +19,7 @@ public class CAMGraphFormatter implements DMGraphFormatter {
 
 
   @Override
-  public String format(IntGraph graph) {
+  public String format(Graph graph) {
 
     String[] vertexStrings = new String[graph.getVertexCount()];
 

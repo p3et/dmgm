@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.to_string.edge_list;
 
-import org.biiig.dmgm.api.model.collection.LabelDictionary;
-import org.biiig.dmgm.api.model.graph.IntGraph;
+import org.biiig.dmgm.api.LabelDictionary;
+import org.biiig.dmgm.api.Graph;
 
 public class ELTripleFormatter {
 
@@ -14,7 +14,7 @@ public class ELTripleFormatter {
 
   }
 
-  public String format(IntGraph graph, int edgeId) {
+  public String format(Graph graph, int edgeId) {
     String sourceString = vertexFormatter.format(graph, graph.getSourceId(edgeId));
     String edgeString = edgeFormatter.format(graph, edgeId);
     String targetString = vertexFormatter.format(graph, graph.getTargetId(edgeId));

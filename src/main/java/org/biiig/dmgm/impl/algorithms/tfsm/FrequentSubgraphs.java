@@ -1,10 +1,9 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
-import de.jesemann.queue_stream.QueueStreamSource;
+import de.jesemann.paralleasy.queue_stream.QueueStreamSource;
 import org.biiig.dmgm.api.Operator;
-import org.biiig.dmgm.api.model.collection.GraphCollection;
-import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSCodeEmbeddingsPair;
-import org.biiig.dmgm.impl.model.collection.InMemoryGraphCollection;
+import org.biiig.dmgm.api.GraphCollection;
+import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollection;
 
 import java.util.*;
 import java.util.function.Function;

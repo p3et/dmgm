@@ -1,13 +1,12 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
-import org.biiig.dmgm.api.model.graph.IntGraph;
-import org.biiig.dmgm.impl.model.graph.AdjacencyList;
-import org.biiig.dmgm.impl.model.graph.IntGraphBase;
+import org.biiig.dmgm.api.Graph;
+import org.biiig.dmgm.impl.graph.AdjacencyList;
 
 import java.util.Set;
 import java.util.function.Function;
 
-public class PruneEdges implements Function<IntGraph, IntGraph> {
+public class PruneEdges implements Function<Graph, Graph> {
   private final Set<Integer> frequentEdgeLabels;
 
   public PruneEdges(Set<Integer> frequentEdgeLabels) {
@@ -15,9 +14,9 @@ public class PruneEdges implements Function<IntGraph, IntGraph> {
   }
 
   @Override
-  public IntGraph apply(IntGraph inGraph) {
+  public Graph apply(Graph inGraph) {
 
-    IntGraph outGraph = new AdjacencyList();
+    Graph outGraph = new AdjacencyList();
 
     for (int vertexId = 0; vertexId < inGraph.getVertexCount(); vertexId++)
       outGraph.addVertex(inGraph.getVertexLabel(vertexId));

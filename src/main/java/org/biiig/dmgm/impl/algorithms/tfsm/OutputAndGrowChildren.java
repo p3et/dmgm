@@ -1,13 +1,9 @@
 package org.biiig.dmgm.impl.algorithms.tfsm;
 
-import de.jesemann.queue_stream.QueueStreamSource;
-import de.jesemann.queue_stream.util.GroupByFunctionListValues;
-import org.biiig.dmgm.api.model.collection.GraphCollection;
-import org.biiig.dmgm.api.model.graph.IntGraph;
-import org.biiig.dmgm.cli.pattern_growth.GrowAllChildren;
-import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSCodeEmbeddingsPair;
-import org.biiig.dmgm.impl.algorithms.tfsm.model.DFSEmbedding;
-import org.biiig.dmgm.impl.model.graph.DFSCode;
+import de.jesemann.paralleasy.queue_stream.QueueStreamSource;
+import org.biiig.dmgm.api.Graph;
+import org.biiig.dmgm.api.GraphCollection;
+import org.biiig.dmgm.impl.graph.DFSCode;
 
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -49,15 +45,13 @@ public class OutputAndGrowChildren implements Consumer<DFSCodeEmbeddingsPair> {
       parentEmbeddings
       .getEmbeddings())
       // group by graphId
-      .collect(new GroupByFunctionListValues<>(DFSEmbedding::getGraphId))
+      .collect(new GroupByGraphIdArrayEmbeddings())
       .entrySet()
       .stream()
       .flatMap(
         entry -> {
-          IntGraph graph = input.getGraph(entry.getKey());
-          return entry
-            .getValue()
-            .stream()
+          Graph graph = input.getGraph(entry.getKey());
+          return Stream.of(entry.getValue())
             .flatMap(
               embedding ->
                 Stream.of(growAllChildren.apply(graph, parentCode, rightmostPath, embedding)));

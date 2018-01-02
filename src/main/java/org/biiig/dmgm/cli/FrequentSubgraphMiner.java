@@ -1,9 +1,9 @@
 package org.biiig.dmgm.cli;
 
 import org.biiig.dmgm.api.Operator;
-import org.biiig.dmgm.api.model.collection.GraphCollection;
+import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.impl.algorithms.tfsm.FrequentSubgraphs;
-import org.biiig.dmgm.impl.model.source.tlf.TLFLoader;
+import org.biiig.dmgm.impl.graph_loader.tlf.TLFLoader;
 
 import java.io.IOException;
 
