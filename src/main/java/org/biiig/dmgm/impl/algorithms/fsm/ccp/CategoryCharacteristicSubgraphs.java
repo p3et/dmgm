@@ -1,16 +1,22 @@
 package org.biiig.dmgm.impl.algorithms.fsm.ccp;
 
-import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
-import org.biiig.dmgm.api.ElementDataStore;
+import de.jesemann.paralleasy.queue_stream.QueueStreamSource;
 import org.biiig.dmgm.api.Graph;
 import org.biiig.dmgm.api.GraphCollection;
-import org.biiig.dmgm.api.Operator;
+import org.biiig.dmgm.api.GraphCollectionBuilder;
+import org.biiig.dmgm.impl.algorithms.fsm.common.SubgraphMiningBase;
+import org.biiig.dmgm.impl.algorithms.fsm.fsm.DFSCodeEmbeddingsPair;
+import org.biiig.dmgm.impl.algorithms.fsm.fsm.DFSEmbedding;
+import org.biiig.dmgm.impl.algorithms.fsm.fsm.FilterFrequent;
+import org.biiig.dmgm.impl.graph.DFSCode;
+import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionBuilderFactory;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
-public class CategoryCharacteristicSubgraphs implements Operator {
+public class CategoryCharacteristicSubgraphs extends SubgraphMiningBase {
 
   public static final String CATEGORY_KEY = "_category";
 
@@ -18,23 +24,49 @@ public class CategoryCharacteristicSubgraphs implements Operator {
   private final Interestingness interestingness;
 
   /**
-   * @param dataStore
    * @param categorization
-   * @param interestingness
-   * */
+   * @param interestingness */
 
   public CategoryCharacteristicSubgraphs(
-    ElementDataStore dataStore, Categorization categorization, Interestingness interestingness) {
+    float minSupportRel, int maxEdgeCount, Categorization categorization, Interestingness interestingness) {
+
+    super(minSupportRel, maxEdgeCount);
+
     this.categorization = categorization;
     this.interestingness = interestingness;
   }
 
   @Override
-  public GraphCollection apply(GraphCollection input) {
-    Map<String, List<Graph>> categorizedGraphs = input
+  public GraphCollection apply(GraphCollection rawInput) {
+    Map<Integer, String> categorizedGraphs = rawInput
       .parallelStream()
-      .collect(new GroupByKeyListValues<>(categorization::categorize, Function.identity()));
+      .collect(Collectors.toConcurrentMap(Graph::getId, categorization::categorize));
 
-    return null;
+    int minSupportAbs = Math.round((float) rawInput.size() * this.minSupportRel);
+
+    GraphCollectionBuilder collectionBuilder = new InMemoryGraphCollectionBuilderFactory()
+      .create()
+      .withVertexDictionary(rawInput.getVertexDictionary())
+      .withEdgeDictionary(rawInput.getEdgeDictionary());
+
+    GraphCollection input = pruneByLabels(rawInput, minSupportAbs, collectionBuilder);
+    GraphCollection output = collectionBuilder.create();
+
+    Map<DFSCode, DFSEmbedding[]> singleEdgeCandidates = initializeSingle(input);
+
+    Predicate<DFSCodeEmbeddingsPair> predicate = new FilterFrequent(minSupportAbs);
+    List<DFSCodeEmbeddingsPair> parents = aggregateSingle(singleEdgeCandidates, predicate, output);
+
+    QueueStreamSource<DFSCodeEmbeddingsPair> queueStreamSource = QueueStreamSource.of(parents);
+
+    queueStreamSource
+      .parallelStream()
+      .forEach(p -> {
+        Map<DFSCode, DFSEmbedding[]> candidates = growChildren(p, input);
+        aggregateChildren(candidates, predicate, queueStreamSource, output);
+      });
+
+    return output;
   }
+
 }

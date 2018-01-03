@@ -1,4 +1,4 @@
-package org.biiig.dmgm.impl.algorithms.fsm.fsm;
+package org.biiig.dmgm.impl.algorithms.fsm.common;
 
 import org.biiig.dmgm.api.Operator;
 import org.biiig.dmgm.api.GraphCollection;
@@ -9,9 +9,9 @@ import java.io.IOException;
 
 import static junit.framework.TestCase.assertEquals;
 
-public abstract class TransactionalFSMTest extends DMGMTestBase {
+public abstract class SubgraphMiningThresholdTest extends DMGMTestBase {
 
-  abstract Operator getMiner(float minSupportRel, int maxEdgeCount);
+  protected abstract Operator getOperator(float minSupportRel, int maxEdgeCount);
 
   @Test
   public void mine10() throws Exception {
@@ -24,7 +24,7 @@ public abstract class TransactionalFSMTest extends DMGMTestBase {
   }
 
   private void mine(float minSupportThreshold, int expectedResultSize) throws IOException {
-    Operator fsm = getMiner(minSupportThreshold, 20);
+    Operator fsm = getOperator(minSupportThreshold, 20);
     GraphCollection input = getPredictableDatabase();
     GraphCollection output = input.apply(fsm);
 

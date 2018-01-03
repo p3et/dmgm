@@ -5,6 +5,8 @@ import com.google.common.collect.Sets;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.Graph;
 import org.biiig.dmgm.api.DMGraphFormatter;
+import org.biiig.dmgm.api.Operator;
+import org.biiig.dmgm.impl.graph_loader.gdl.GDLLoader;
 import org.biiig.dmgm.impl.graph_loader.tlf.TLFLoader;
 import org.biiig.dmgm.impl.to_string.cam.CAMGraphFormatter;
 import org.biiig.dmgm.impl.to_string.edge_list.ELGraphFormatter;
@@ -12,6 +14,8 @@ import org.biiig.dmgm.impl.to_string.edge_list.ELGraphFormatter;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by peet on 11.08.17.
@@ -94,5 +98,50 @@ public class DMGMTestBase {
     for (Graph graph : graphCollection) {
       System.out.println(formatter.format(graph));
     }
+  }
+
+  protected void runAndTestExpectation(Operator operator, String inputGDL, String expectedGDL) {
+    GraphCollection input = GDLLoader
+      .fromString(inputGDL)
+      .getGraphCollection();
+
+    GraphCollection expected = GDLLoader
+      .fromString(expectedGDL)
+      .getGraphCollection();
+
+    GraphCollection output = operator.apply(input);
+
+    assertTrue("constistent", isConsistent(output));
+    assertTrue("equals", equal(expected, output));
+  }
+
+  private boolean isConsistent(GraphCollection collection) {
+    boolean consistent = true;
+
+    for (Graph graph : collection) {
+      for (int vertexId = 0; vertexId < graph.getVertexCount(); vertexId++ ) {
+        int vertexLabel = graph.getVertexLabel(vertexId);
+        String translation = collection.getVertexDictionary().translate(vertexLabel);
+
+        consistent = consistent && translation != null;
+
+        if (translation == null) {
+          System.out.println("no translation found for integer vertex label " + vertexLabel);
+        }
+      }
+
+      for (int edgeId = 0; edgeId < graph.getEdgeCount(); edgeId++ ) {
+        int edgeLabel = graph.getEdgeLabel(edgeId);
+        String translation = collection.getEdgeDictionary().translate(edgeLabel);
+
+        consistent = consistent && translation != null;
+
+        if (translation == null) {
+          System.out.println("no translation found for integer edge label " + edgeLabel);
+        }
+      }
+    }
+
+    return consistent;
   }
 }

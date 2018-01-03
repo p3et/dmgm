@@ -1,6 +1,6 @@
-package org.biiig.dmgm.impl.algorithms.fsm.fsm;
+package org.biiig.dmgm.impl.algorithms.fsm.common;
 
-public class FSMTestData {
+public class SubgraphMiningTestData {
 
   public static final String SINGLE_EDGE_INPUT =
     "[(v1:A)-[e1:a]->(v2:A)]" +
