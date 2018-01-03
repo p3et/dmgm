@@ -2,7 +2,7 @@ package org.biiig.dmgm.cli;
 
 import org.biiig.dmgm.api.Operator;
 import org.biiig.dmgm.api.GraphCollection;
-import org.biiig.dmgm.impl.algorithms.fsm.fsm.FrequentSubgraphs;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.fsm.FrequentSubgraphs;
 import org.biiig.dmgm.impl.graph_loader.tlf.TLFLoader;
 
 import java.io.IOException;

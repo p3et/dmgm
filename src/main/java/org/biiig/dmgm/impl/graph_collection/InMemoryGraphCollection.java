@@ -35,10 +35,11 @@ public class InMemoryGraphCollection implements GraphCollection {
   }
 
   @Override
-  public void add(Graph graph) {
+  public int add(Graph graph) {
     int graphId = newGraphId.getAndIncrement();
     graph.setId(graphId);
     graphs.put(graphId, graph);
+    return graphId;
   }
 
   @Override

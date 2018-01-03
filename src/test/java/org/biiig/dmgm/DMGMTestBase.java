@@ -105,11 +105,15 @@ public class DMGMTestBase {
       .fromString(inputGDL)
       .getGraphCollection();
 
+    GraphCollection output = operator.apply(input);
+
+    testExpectation(output, expectedGDL);
+  }
+
+  protected void testExpectation(GraphCollection output, String expectedGDL) {
     GraphCollection expected = GDLLoader
       .fromString(expectedGDL)
       .getGraphCollection();
-
-    GraphCollection output = operator.apply(input);
 
     assertTrue("constistent", isConsistent(output));
     assertTrue("equals", equal(expected, output));

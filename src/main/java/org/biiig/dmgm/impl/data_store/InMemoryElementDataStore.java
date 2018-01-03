@@ -63,6 +63,51 @@ public class InMemoryElementDataStore implements ElementDataStore {
   }
 
   @Override
+  public Optional<String[]> getGraphStrings(int graphId, String key) {
+    return graphStore.getStrings(graphId, key);
+  }
+
+  @Override
+  public Optional<String[]> getVertexStrings(int graphId, int vertexId, String key) {
+    return vertexStore.getStrings(getGlobalId(graphId, vertexId), key);
+  }
+
+  @Override
+  public Optional<String[]> getEdgeStrings(int graphId, int edgeId, String key) {
+    return edgeStore.getStrings(getGlobalId(graphId, edgeId), key);
+  }
+
+  @Override
+  public void setGraph(int graphId, String key, String[] values) {
+    graphStore.set(graphId, key, values);
+  }
+
+  @Override
+  public void setVertex(int graphId, int vertexId, String key, String[] values) {
+    vertexStore.set(getGlobalId(graphId, vertexId), key, values);
+  }
+
+  @Override
+  public void setEdge(int graphId, int edgeId, String key, String[] values) {
+    edgeStore.set(getGlobalId(graphId, edgeId), key, values);
+  }
+
+  @Override
+  public void addGraph(int graphId, String key, String value) {
+    graphStore.add(graphId, key, value);
+  }
+
+  @Override
+  public void addVertex(int graphId, int vertexId, String key, String value) {
+    vertexStore.add(getGlobalId(graphId, vertexId), key, value);
+  }
+
+  @Override
+  public void addEdge(int graphId, int edgeId, String key, String value) {
+    edgeStore.add(getGlobalId(graphId, edgeId), key, value);
+  }
+
+  @Override
   public void setGraph(int graphId, String key, String value) {
     graphStore.set(graphId, key, value);
   }
@@ -93,6 +138,21 @@ public class InMemoryElementDataStore implements ElementDataStore {
   }
 
   @Override
+  public Optional<int[]> getGraphIntegers(int graphId, String key) {
+    return graphStore.getIntegers(graphId, key);
+  }
+
+  @Override
+  public Optional<int[]> getVertexIntegers(int graphId, int vertexId, String key) {
+    return vertexStore.getIntegers(getGlobalId(graphId, vertexId), key);
+  }
+
+  @Override
+  public Optional<int[]> getEdgeIntegers(int graphId, int edgeId, String key) {
+    return edgeStore.getIntegers(getGlobalId(graphId, edgeId), key);
+  }
+
+  @Override
   public void setGraph(int graphId, String key, int value) {
     graphStore.set(graphId, key, value);
   }
@@ -105,6 +165,36 @@ public class InMemoryElementDataStore implements ElementDataStore {
   @Override
   public void setEdge(int graphId, int edgeId, String key, int value) {
     edgeStore.set(getGlobalId(graphId, edgeId), key, value);
+  }
+
+  @Override
+  public void setGraph(int graphId, String key, int[] values) {
+    graphStore.set(graphId, key, values);
+  }
+
+  @Override
+  public void setVertex(int graphId, int vertexId, String key, int[] values) {
+    vertexStore.set(getGlobalId(graphId, vertexId), key, values);
+  }
+
+  @Override
+  public void setEdge(int graphId, int edgeId, String key, int[] values) {
+    edgeStore.set(getGlobalId(graphId, edgeId), key, values);
+  }
+
+  @Override
+  public void addGraph(int graphId, String key, int value) {
+    graphStore.add(graphId, key, value);
+  }
+
+  @Override
+  public void addVertex(int graphId, int vertexId, String key, int value) {
+    vertexStore.add(getGlobalId(graphId, vertexId), key, value);
+  }
+
+  @Override
+  public void addEdge(int graphId, int edgeId, String key, int value) {
+    edgeStore.add(getGlobalId(graphId, edgeId), key, value);
   }
 
   @Override

@@ -12,7 +12,7 @@ public interface GraphCollection extends Iterable<Graph> {
 
   int size();
 
-  void add(Graph graph);
+  int add(Graph graph);
 
   Graph getGraph(int graphId);
 
