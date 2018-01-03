@@ -33,7 +33,7 @@ public class FrequentSubgraphs extends SubgraphMiningBase {
 
     Map<DFSCode, DFSEmbedding[]> singleEdgeCandidates = initializeSingle(input);
 
-    Predicate<DFSCodeEmbeddingsPair> predicate = new FilterFrequent(minSupportAbs);
+    Predicate<DFSCodeEmbeddingsPair> predicate = new Frequent(minSupportAbs);
     List<DFSCodeEmbeddingsPair> parents = aggregateSingle(singleEdgeCandidates, predicate, output);
 
     QueueStreamSource<DFSCodeEmbeddingsPair> queueStreamSource = QueueStreamSource.of(parents);

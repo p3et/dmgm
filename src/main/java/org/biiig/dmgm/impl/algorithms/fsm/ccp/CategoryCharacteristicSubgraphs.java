@@ -7,7 +7,7 @@ import org.biiig.dmgm.api.GraphCollectionBuilder;
 import org.biiig.dmgm.impl.algorithms.fsm.common.SubgraphMiningBase;
 import org.biiig.dmgm.impl.algorithms.fsm.fsm.DFSCodeEmbeddingsPair;
 import org.biiig.dmgm.impl.algorithms.fsm.fsm.DFSEmbedding;
-import org.biiig.dmgm.impl.algorithms.fsm.fsm.FilterFrequent;
+import org.biiig.dmgm.impl.algorithms.fsm.fsm.Frequent;
 import org.biiig.dmgm.impl.graph.DFSCode;
 import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionBuilderFactory;
 
@@ -53,7 +53,7 @@ public class CategoryCharacteristicSubgraphs extends SubgraphMiningBase {
 
     Map<DFSCode, DFSEmbedding[]> singleEdgeCandidates = initializeSingle(input);
 
-    Predicate<DFSCodeEmbeddingsPair> predicate = new FilterFrequent(minSupportAbs);
+    Predicate<DFSCodeEmbeddingsPair> predicate = new CategoryCharacteristic(minSupportAbs, categorizedGraphs, interestingness);
     List<DFSCodeEmbeddingsPair> parents = aggregateSingle(singleEdgeCandidates, predicate, output);
 
     QueueStreamSource<DFSCodeEmbeddingsPair> queueStreamSource = QueueStreamSource.of(parents);

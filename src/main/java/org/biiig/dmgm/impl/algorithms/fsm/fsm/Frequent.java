@@ -3,10 +3,10 @@ package org.biiig.dmgm.impl.algorithms.fsm.fsm;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public class FilterFrequent implements Predicate<DFSCodeEmbeddingsPair> {
+public class Frequent implements Predicate<DFSCodeEmbeddingsPair> {
   private final int minSupportAbs;
 
-  public FilterFrequent(int minSupportAbs) {
+  public Frequent(int minSupportAbs) {
     this.minSupportAbs = minSupportAbs;
   }
 
@@ -19,8 +19,7 @@ public class FilterFrequent implements Predicate<DFSCodeEmbeddingsPair> {
 
     if (frequent) {
       int support = Math.toIntExact(
-        Stream
-          .of(embeddings)
+        Stream.of(embeddings)
           .map(DFSEmbedding::getGraphId)
           .distinct()
           .count()
