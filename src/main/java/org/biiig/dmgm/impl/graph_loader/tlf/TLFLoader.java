@@ -1,8 +1,6 @@
 package org.biiig.dmgm.impl.graph_loader.tlf;
 
 import org.biiig.dmgm.api.GraphCollection;
-import org.biiig.dmgm.api.GraphCollectionBuilderFactory;
-import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollection;
 import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionBuilderFactory;
 
 import java.io.IOException;
@@ -26,8 +24,7 @@ public class TLFLoader extends GraphCollectionLoaderBase {
         .stream(new TLFSpliterator(
           filePath,
           graphFactory,
-          collection.getVertexDictionary(),
-          collection.getEdgeDictionary()),
+          collection.getLabelDictionary()),
           false
         )
         .forEach(collection::add);

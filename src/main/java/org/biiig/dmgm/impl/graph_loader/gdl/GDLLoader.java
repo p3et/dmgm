@@ -5,7 +5,6 @@ import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 import javafx.util.Pair;
 import org.biiig.dmgm.api.Graph;
 import org.biiig.dmgm.api.GraphCollection;
-import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollection;
 import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionBuilderFactory;
 import org.biiig.dmgm.impl.graph_loader.tlf.GraphCollectionLoaderBase;
 import org.s1ck.gdl.GDLHandler;
@@ -50,11 +49,14 @@ public class GDLLoader extends GraphCollectionLoaderBase {
 
     for (org.s1ck.gdl.model.Graph graph : gdlHandler.getGraphs()) {
       long graphId = graph.getId();
+      int graphLabel = graphCollection.getLabelDictionary().translate(graph.getLabel());
+
       List<Vertex> vertices = graphVertices.get(graphId);
       Map<Long, Integer> vertexIdMap = Maps.newHashMapWithExpectedSize(vertices.size());
       List<Edge> edges = graphEdges.get(graphId);
 
       Graph dmGraph = graphFactory.create();
+      dmGraph.setLabel(graphLabel);
 
       // write vertices
 
@@ -62,7 +64,7 @@ public class GDLLoader extends GraphCollectionLoaderBase {
       for (Vertex vertex : vertices) {
         vertexIdMap.put(vertex.getId(), vertexId);
         dmGraph.addVertex(
-          graphCollection.getVertexDictionary().translate(vertex.getLabel())
+          graphCollection.getLabelDictionary().translate(vertex.getLabel())
         );
         vertexId++;
       }
@@ -73,7 +75,7 @@ public class GDLLoader extends GraphCollectionLoaderBase {
         dmGraph.addEdge(
           vertexIdMap.get(edge.getSourceVertexId()),
           vertexIdMap.get(edge.getTargetVertexId()),
-          graphCollection.getEdgeDictionary().translate(edge.getLabel())
+          graphCollection.getLabelDictionary().translate(edge.getLabel())
         );
       }
 

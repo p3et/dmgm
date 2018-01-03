@@ -26,8 +26,7 @@ public class FrequentSubgraphs extends SubgraphMiningBase {
 
     GraphCollectionBuilder collectionBuilder = new InMemoryGraphCollectionBuilderFactory()
       .create()
-      .withVertexDictionary(rawInput.getVertexDictionary())
-      .withEdgeDictionary(rawInput.getEdgeDictionary());
+      .withLabelDictionary(rawInput.getLabelDictionary());
 
     GraphCollection input = pruneByLabels(rawInput, minSupportAbs, collectionBuilder);
     GraphCollection output = collectionBuilder.create();

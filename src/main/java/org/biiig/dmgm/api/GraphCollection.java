@@ -8,9 +8,7 @@ import java.util.stream.Stream;
 
 
 public interface GraphCollection extends Iterable<Graph> {
-  LabelDictionary getVertexDictionary();
-
-  LabelDictionary getEdgeDictionary();
+  LabelDictionary getLabelDictionary();
 
   int size();
 
@@ -31,16 +29,16 @@ public interface GraphCollection extends Iterable<Graph> {
   static String toString(GraphCollection collection) {
     List<String> graphStrings = collection
       .stream()
-      .map(g -> toString(g, collection.getVertexDictionary(), collection.getEdgeDictionary()))
+      .map(g -> toString(g, collection.getLabelDictionary()))
       .collect(Collectors.toList());
 
     return StringUtils.join(graphStrings, "\n");
   }
 
-  static String toString(Graph graph, LabelDictionary vertexDictionary, LabelDictionary edgeDictionary) {
+  static String toString(Graph graph, LabelDictionary dictionary) {
     return formatGraph(graph) +
-      "\n\tV={" + formatVertices(graph, vertexDictionary) + "}" +
-      "\n\tE={" + formatEdges(graph, edgeDictionary) + "}";
+      "\n\tV={" + formatVertices(graph, dictionary) + "}" +
+      "\n\tE={" + formatEdges(graph, dictionary) + "}";
   }
 
   static String formatEdges(Graph graph, LabelDictionary edgeDictionary) {

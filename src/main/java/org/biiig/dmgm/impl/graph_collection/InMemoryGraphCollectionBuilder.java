@@ -9,19 +9,12 @@ import org.biiig.dmgm.impl.label_dictionary.InMemoryLabelDictionary;
 
 public class InMemoryGraphCollectionBuilder implements GraphCollectionBuilder {
 
-  private LabelDictionary vertexDictionary;
-  private LabelDictionary edgeDictionary;
+  private LabelDictionary dictionary;
   private ElementDataStore dataStore;
 
   @Override
-  public GraphCollectionBuilder withVertexDictionary(LabelDictionary dictionary) {
-    this.vertexDictionary = dictionary;
-    return this;
-  }
-
-  @Override
-  public GraphCollectionBuilder withEdgeDictionary(LabelDictionary dictionary) {
-    this.edgeDictionary = dictionary;
+  public GraphCollectionBuilder withLabelDictionary(LabelDictionary dictionary) {
+    this.dictionary = dictionary;
     return this;
   }
 
@@ -34,8 +27,7 @@ public class InMemoryGraphCollectionBuilder implements GraphCollectionBuilder {
   @Override
   public GraphCollection create() {
     return new InMemoryGraphCollection(
-      vertexDictionary == null ? new InMemoryLabelDictionary() : vertexDictionary,
-      edgeDictionary == null ? new InMemoryLabelDictionary() : edgeDictionary,
+      dictionary == null ? new InMemoryLabelDictionary() : dictionary,
       dataStore == null ? new InMemoryElementDataStore() : dataStore);
   }
 

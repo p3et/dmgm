@@ -6,6 +6,7 @@ import org.biiig.dmgm.api.Graph;
 import java.util.Arrays;
 
 public class GraphBase implements Graph {
+  private int label = -1;
   private int id = -1;
   protected int[] vertexLabels = new int[0];
   protected int[] edgeLabels = new int[0];
@@ -19,6 +20,16 @@ public class GraphBase implements Graph {
       "\nE=" + Arrays.toString(edgeLabels) +
       "\nS=" + Arrays.toString(sourceIds) +
       "\nT=" + Arrays.toString(targetIds);
+  }
+
+  @Override
+  public int getLabel() {
+    return label;
+  }
+
+  @Override
+  public void setLabel(int label) {
+    this.label = label;
   }
 
   @Override

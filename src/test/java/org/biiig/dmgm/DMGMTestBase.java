@@ -76,10 +76,10 @@ public class DMGMTestBase {
 
   private Map<String, String> getCanonicalPrintLabelMap(GraphCollection expected) {
     DMGraphFormatter keyFormatter =
-      new CAMGraphFormatter(expected.getVertexDictionary(), expected.getEdgeDictionary());
+      new CAMGraphFormatter(expected.getLabelDictionary(), expected.getLabelDictionary());
 
     DMGraphFormatter valueFormatter =
-      new ELGraphFormatter(expected.getVertexDictionary(), expected.getEdgeDictionary());
+      new ELGraphFormatter(expected.getLabelDictionary(), expected.getLabelDictionary());
 
     Map<String, String> canonicalLabels = Maps.newHashMapWithExpectedSize(expected.size());
     for (Graph graph : expected) {
@@ -91,7 +91,7 @@ public class DMGMTestBase {
 
   protected void print(GraphCollection graphCollection) {
     DMGraphFormatter formatter =
-      new ELGraphFormatter(graphCollection.getVertexDictionary(), graphCollection.getEdgeDictionary());
+      new ELGraphFormatter(graphCollection.getLabelDictionary(), graphCollection.getLabelDictionary());
 
     System.out.println(graphCollection.size());
 
@@ -121,7 +121,7 @@ public class DMGMTestBase {
     for (Graph graph : collection) {
       for (int vertexId = 0; vertexId < graph.getVertexCount(); vertexId++ ) {
         int vertexLabel = graph.getVertexLabel(vertexId);
-        String translation = collection.getVertexDictionary().translate(vertexLabel);
+        String translation = collection.getLabelDictionary().translate(vertexLabel);
 
         consistent = consistent && translation != null;
 
@@ -132,7 +132,7 @@ public class DMGMTestBase {
 
       for (int edgeId = 0; edgeId < graph.getEdgeCount(); edgeId++ ) {
         int edgeLabel = graph.getEdgeLabel(edgeId);
-        String translation = collection.getEdgeDictionary().translate(edgeLabel);
+        String translation = collection.getLabelDictionary().translate(edgeLabel);
 
         consistent = consistent && translation != null;
 

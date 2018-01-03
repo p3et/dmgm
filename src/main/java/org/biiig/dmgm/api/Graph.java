@@ -4,6 +4,8 @@ package org.biiig.dmgm.api;
  * A directed graph with integer labels.
  */
 public interface Graph {
+  int getLabel();
+  void setLabel(int label);
 
   int getVertexCount();
   int getEdgeCount();
@@ -20,6 +22,5 @@ public interface Graph {
   int[] getIncomingEdgeIds(int vertexId);
 
   int getId();
-
   void setId(int graphId);
 }

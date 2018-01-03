@@ -47,7 +47,7 @@ public class TLFGraphReader extends TLFSplitReader {
   }
 
   private void readVertices(String[] split, int firstEdgeIndex, Graph graph) {
-    LabelDictionary dictionary = database.getVertexDictionary();
+    LabelDictionary dictionary = database.getLabelDictionary();
     int vertexId = 0;
 
     for (int l = 1; l < firstEdgeIndex; l++) {
@@ -86,7 +86,7 @@ public class TLFGraphReader extends TLFSplitReader {
   }
 
   private void readEdges(String[] split, int firstEdgeIndex, Graph graph) {
-    LabelDictionary dictionary = database.getEdgeDictionary();
+    LabelDictionary dictionary = database.getLabelDictionary();
     int edgeId = 0;
 
     for (int l = firstEdgeIndex; l < split.length; l++) {

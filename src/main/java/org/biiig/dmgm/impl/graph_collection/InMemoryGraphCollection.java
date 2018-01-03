@@ -16,24 +16,17 @@ public class InMemoryGraphCollection implements GraphCollection {
   private final AtomicInteger newGraphId = new AtomicInteger();
   private final Map<Integer, Graph> graphs = new ConcurrentHashMap<>();
 
-  private final LabelDictionary vertexDictionary;
-  private final LabelDictionary edgeDictionary;
+  private final LabelDictionary dictionary;
   private final ElementDataStore dataStore;
 
-  InMemoryGraphCollection(LabelDictionary vertexDictionary, LabelDictionary edgeDictionary, ElementDataStore dataStore) {
-    this.vertexDictionary = vertexDictionary;
-    this.edgeDictionary = edgeDictionary;
+  InMemoryGraphCollection(LabelDictionary dictionary, ElementDataStore dataStore) {
+    this.dictionary = dictionary;
     this.dataStore = dataStore;
   }
 
   @Override
-  public LabelDictionary getVertexDictionary() {
-    return vertexDictionary;
-  }
-
-  @Override
-  public LabelDictionary getEdgeDictionary() {
-    return edgeDictionary;
+  public LabelDictionary getLabelDictionary() {
+    return dictionary;
   }
 
   @Override

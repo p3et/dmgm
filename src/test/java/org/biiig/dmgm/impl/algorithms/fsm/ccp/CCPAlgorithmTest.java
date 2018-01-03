@@ -9,8 +9,8 @@ public class CCPAlgorithmTest extends DMGMTestBase {
   @Test
   public void testAlgorithm() {
 
-
-    Operator operator = new CategoryCharacteristicSubgraphs(0.5f, 10, g -> "", (f, t) -> true);
+    Operator operator =
+      new CategoryCharacteristicSubgraphs(0.5f, 10, g -> String.valueOf(g.getLabel()), (c, t) -> c > t/2);
 
     String input =
       ":X[(:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(:D)]" +

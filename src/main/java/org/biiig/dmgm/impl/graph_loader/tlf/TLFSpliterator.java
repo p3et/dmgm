@@ -14,19 +14,15 @@ import java.util.function.Consumer;
 public class TLFSpliterator implements Spliterator<Graph> {
 
   private final Iterator<String> iterator;
-  private final LabelDictionary vertexDictionary;
-  private final LabelDictionary edgeDictionary;
+  private final LabelDictionary dictionary;
   private String line;
   private final GraphFactory graphFactory;
 
 
-  public TLFSpliterator(
-    String filePath,
-    GraphFactory graphFactory, LabelDictionary vertexDictionary, LabelDictionary edgeDictionary) throws IOException {
+  public TLFSpliterator(String filePath, GraphFactory graphFactory, LabelDictionary dictionary) throws IOException {
     this.iterator = Files.lines(Paths.get(filePath)).iterator();
     this.graphFactory = graphFactory;
-    this.vertexDictionary = vertexDictionary;
-    this.edgeDictionary = edgeDictionary;
+    this.dictionary = dictionary;
     if (iterator.hasNext())
       this.line = iterator.next();
   }
@@ -83,13 +79,15 @@ public class TLFSpliterator implements Spliterator<Graph> {
       split[TLFConstants.GRAPH_LABEL_INDEX] :
       TLFConstants.GRAPH_SYMBOL;
 
-    return graphFactory.create();
+    Graph graph = graphFactory.create();
+    graph.setLabel(dictionary.translate(label));
+    return graph;
   }
 
   private void readVertex(Graph graph) {
     String[] split = line.split(TLFConstants.FIELD_SEPARATOR);
     String label = split[TLFConstants.VERTEX_LABEL_INDEX];
-    graph.addVertex(vertexDictionary.translate(label));
+    graph.addVertex(dictionary.translate(label));
   }
 
   private void readEdge(Graph graph) {
@@ -97,7 +95,7 @@ public class TLFSpliterator implements Spliterator<Graph> {
     int source = Integer.valueOf(split[TLFConstants.EDGE_SOURCE_INDEX]);
     int target = Integer.valueOf(split[TLFConstants.EDGE_TARGET_INDEX]);
     String label = split[TLFConstants.EDGE_LABEL_INDEX];
-    graph.addEdge(source, target, edgeDictionary.translate(label));
+    graph.addEdge(source, target, dictionary.translate(label));
   }
 
   @Override

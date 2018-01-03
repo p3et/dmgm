@@ -7,6 +7,10 @@ public class AdjacencyList extends GraphBase {
   private int[][] outgoingEdgeIds = new int[0][];
   private int[][] incomingEdgeIds = new int[0][];
 
+  public AdjacencyList() {
+    super();
+  }
+
   @Override
   public void addVertex(int label) {
     super.addVertex(label);

@@ -11,6 +11,10 @@ public class DFSCode extends GraphBase implements Comparable<DFSCode> {
   private final DFSCodeComparator comparator = new DFSCodeComparator();
   private int[] rightmostPath;
 
+  public DFSCode() {
+    super();
+  }
+
   public void addEdge(int fromTime, int toTime, int label, boolean outgoing) {
 
     edgeLabels = ArrayUtils.add(edgeLabels, label);
