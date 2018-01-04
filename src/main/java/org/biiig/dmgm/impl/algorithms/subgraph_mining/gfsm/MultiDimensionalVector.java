@@ -1,11 +1,13 @@
 package org.biiig.dmgm.impl.algorithms.subgraph_mining.gfsm;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.util.Arrays;
 
 public class MultiDimensionalVector {
 
   /**
-   * Cached paths of dimension values from special to general.
+   * Cached paths of dimension values from general to special.
    * Will not be copied at specializations.
    */
   private final int[][] dimensionPaths;
@@ -27,6 +29,7 @@ public class MultiDimensionalVector {
     this.levels = levels;
   }
 
+
   /**
    * Return a specialization of the current state, if possible.
    *
@@ -38,7 +41,7 @@ public class MultiDimensionalVector {
     MultiDimensionalVector specialization = null;
 
     // dimension c
-    if (levels[dimension] > 0) {
+    if (levels[dimension] >= 0) {
       specialization = new MultiDimensionalVector(dimensionPaths, Arrays.copyOf(levels, levels.length));
       specialization.levels[dimension]--;
     }
@@ -51,23 +54,22 @@ public class MultiDimensionalVector {
     boolean equal = this == o;
 
     if (!equal) {
-      equal = o == null || getClass() != o.getClass();
+      equal = o != null && getClass() == o.getClass();
 
       if (equal) {
         MultiDimensionalVector that = (MultiDimensionalVector) o;
-        assert that != null;
 
         // first, check size and specialization state
         equal = Arrays.equals(this.levels, that.levels);
 
         // if equal, check values of current state
         if (equal) {
-          int dim = 0;
-          for (int level : levels) {
-            equal = this.dimensionPaths[dim][level] == that.dimensionPaths[dim][level];
-
-            if (equal) dim++;
-            else break;
+          for (int dim = 0; dim < levels.length; dim++) {
+            int level = levels[dim];
+            if (level >= 0) {
+              equal = this.dimensionPaths[dim][level] == that.dimensionPaths[dim][level];
+              if (!equal) break;
+            }
           }
         }
       }
@@ -79,9 +81,11 @@ public class MultiDimensionalVector {
   @Override
   public int hashCode() {
     int result = 1;
-    int dim = 0;
-    for (int level : levels)
-      result = 31 * result + this.dimensionPaths[dim++][level];
+    for (int dim = 0; dim < levels.length; dim++) {
+      int level = levels[dim];
+      if (level >= 0)
+        result = 31 * result + this.dimensionPaths[dim++][level];
+    }
 
     return result;
   }
@@ -89,7 +93,7 @@ public class MultiDimensionalVector {
   /**
    * Factory method to create a vector at its most general state.
    *
-   * @param dimensionPaths paths of dimension values from special to general
+   * @param dimensionPaths paths of dimension values from general to special
    */
   public static MultiDimensionalVector create(int[][] dimensionPaths) {
     int size = dimensionPaths.length;
@@ -99,5 +103,10 @@ public class MultiDimensionalVector {
       levels[i] = dimensionPaths[i].length - 1;
 
     return new MultiDimensionalVector(dimensionPaths, levels);
+  }
+
+  @Override
+  public String toString() {
+    return ArrayUtils.toString(dimensionPaths) + "@" + ArrayUtils.toString(levels);
   }
 }

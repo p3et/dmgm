@@ -1,8 +1,20 @@
 package org.biiig.dmgm.impl.algorithms.subgraph_mining.gfsm;
 
-public class Taxonomy extends TaxonomyBase<String> {
+import com.sun.javaws.exceptions.InvalidArgumentException;
 
-  public String[] getPathTo(String value) {
-    return new String[0];
-  }
+import java.util.Optional;
+
+public interface Taxonomy<T, P> {
+  void add(T parent, T child) throws InvalidArgumentException;
+
+  /**
+   * Identifies a path from a given value to the root of a taxonomy from general to special (excluding root).
+   * Not path will be returned if value is not part of the taxonomy.
+   *
+   * @param child value
+   * @return path to root without root
+   */
+  Optional<P> getRootPathTo(T child);
+
+  T getParent(T child);
 }

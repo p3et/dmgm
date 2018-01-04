@@ -6,8 +6,6 @@ import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.FilterAndOutputFact
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.SubgraphMiningBase;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.SubgraphMiningPropertyKeys;
 
-import java.util.Optional;
-
 public class GeneralizedFrequentSubgraphs extends SubgraphMiningBase {
 
   private static final String ARBITRARY = "*";
@@ -35,7 +33,7 @@ public class GeneralizedFrequentSubgraphs extends SubgraphMiningBase {
                   .getVertexInteger(graph.getId(), vertexId, SubgraphMiningPropertyKeys.BOTTOM_LEVEL)
                   .ifPresent(value ->
                       taxonomy
-                        .getPathTo(value)
+                        .getRootPathTo(value)
                         .ifPresent(path ->
                           dataStore
                             .setVertex(graph.getId(), vertexId, SubgraphMiningPropertyKeys.TAXONOMY_PATH, path)

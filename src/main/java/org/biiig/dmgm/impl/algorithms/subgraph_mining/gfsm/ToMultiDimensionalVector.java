@@ -3,7 +3,6 @@ package org.biiig.dmgm.impl.algorithms.subgraph_mining.gfsm;
 import org.biiig.dmgm.api.ElementDataStore;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.DFSEmbedding;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.SubgraphMiningPropertyKeys;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import java.util.Optional;
 import java.util.function.Function;

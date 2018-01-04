@@ -4,23 +4,24 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Optional;
 
-class IntTaxonomy extends TaxonomyBase<Integer, int[]> {
+public class StringTaxonomy extends TaxonomyBase<String, String[]> {
 
-  IntTaxonomy(int root) {
-    super(root);
+  public static final String ROOT = "_";
+
+  public StringTaxonomy() {
+    super(ROOT);
   }
 
-
   @Override
-  public Optional<int[]> getRootPathTo(Integer child) {
+  public Optional<String[]> getRootPathTo(String child) {
 
-    Integer parent = childParent.get(child);
+    String parent = childParent.get(child);
 
-    Optional<int[]> optional;
+    Optional<String[]> optional;
     if (parent != null) {
 
       // create path from special to general
-      int[] path = new int[] {child};
+      String[] path = new String[] {child};
 
       // a path to root is guaranteed at taxonomy creation
       while (!parent.equals(root)) {
