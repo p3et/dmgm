@@ -1,4 +1,4 @@
-package org.biiig.dmgm.impl.algorithms.subgraph_mining.ccp;
+package org.biiig.dmgm.impl.algorithms.subgraph_mining.csm;
 
 import org.biiig.dmgm.DMGMTestBase;
 import org.biiig.dmgm.api.GraphCollection;
@@ -12,12 +12,12 @@ import java.util.Optional;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
-public class CCPAlgorithmTest extends DMGMTestBase {
+public class CSMAlgorithmTest extends DMGMTestBase {
 
   @Test
   public void testAlgorithm() {
 
-    Operator operator = new CategoryCharacteristicSubgraphs(
+    Operator operator = new CharacteristicSubgraphs(
       0.5f, 10, g -> String.valueOf(g.getLabel()), (c, t) -> c > t/2);
 
     String inputGDL =

@@ -14,7 +14,7 @@ public class FrequentSubgraphs extends SubgraphMiningBase {
   }
 
   @Override
-  public FilterAndOutputFactory getFilterAndOutputFactory(GraphCollection rawInput) {
+  public FilterAndOutputFactory getFilterAndOutputFactory(GraphCollection input) {
     return new FrequentFactory();
   }
 }

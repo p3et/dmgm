@@ -4,6 +4,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.Graph;
 
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 public class GraphBase implements Graph {
   private int label = -1;
@@ -104,6 +105,11 @@ public class GraphBase implements Graph {
   @Override
   public void setId(int id) {
     this.id = id;
+  }
+
+  @Override
+  public IntStream vertexIdStream() {
+    return IntStream.range(0, getVertexCount());
   }
 
 }

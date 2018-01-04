@@ -1,5 +1,7 @@
 package org.biiig.dmgm.api;
 
+import java.util.stream.IntStream;
+
 /**
  * A directed graph with integer labels.
  */
@@ -23,4 +25,6 @@ public interface Graph {
 
   int getId();
   void setId(int graphId);
+
+  IntStream vertexIdStream();
 }

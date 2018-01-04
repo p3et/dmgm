@@ -1,6 +1,5 @@
 package org.biiig.dmgm.impl.algorithms.subgraph_mining.common;
 
-import com.google.common.collect.Maps;
 import de.jesemann.paralleasy.queue_stream.QueueStreamSource;
 import org.biiig.dmgm.api.Graph;
 import org.biiig.dmgm.api.GraphCollection;
@@ -13,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -21,7 +19,7 @@ public abstract class SubgraphMiningBase implements Operator {
   private final GrowAllChildren growAllChildren = new GrowAllChildren();
 
   private final float minSupportRel;
-  private final int maxEdgeCount;
+  protected final int maxEdgeCount;
 
   public SubgraphMiningBase(float minSupportRel, int maxEdgeCount) {
     this.maxEdgeCount = maxEdgeCount;
@@ -32,35 +30,35 @@ public abstract class SubgraphMiningBase implements Operator {
 
   @Override
   public GraphCollection apply(GraphCollection rawInput) {
-    FilterAndOutputFactory filterAndOutputFactory = getFilterAndOutputFactory(rawInput);
 
     int minSupportAbs = Math.round((float) rawInput.size() * this.minSupportRel);
 
     GraphCollectionBuilder collectionBuilder = new InMemoryGraphCollectionBuilderFactory()
       .create()
-      .withLabelDictionary(rawInput.getLabelDictionary());
+      .withLabelDictionary(rawInput.getLabelDictionary())
+      .withElementDataStore(rawInput.getElementDataStore());
 
     GraphCollection input = pruneByLabels(rawInput, minSupportAbs, collectionBuilder);
     GraphCollection output = collectionBuilder.create();
 
     Map<DFSCode, DFSEmbedding[]> singleEdgeParents = initializeSingle(input);
 
+    FilterAndOutputFactory filterAndOutputFactory = getFilterAndOutputFactory(input);
     FilterAndOutput filterAndOutput = filterAndOutputFactory.create(minSupportAbs, output);
     List<DFSCodeEmbeddingsPair> parents = aggregateSingle(singleEdgeParents, filterAndOutput);
 
     QueueStreamSource<DFSCodeEmbeddingsPair> queue = QueueStreamSource.of(parents);
-
     queue
       .parallelStream()
       .forEach(parent -> {
-        Map<DFSCode, DFSEmbedding[]> children = growChildren(parent, input);
+        Stream<DFSCodeEmbeddingPair> children = growChildren(parent, input);
         aggregateChildren(children, filterAndOutput, queue);
       });
 
     return output;
   }
 
-  public abstract FilterAndOutputFactory getFilterAndOutputFactory(GraphCollection rawInput);
+  public abstract FilterAndOutputFactory getFilterAndOutputFactory(GraphCollection input);
 
   // MINING
 
@@ -72,56 +70,50 @@ public abstract class SubgraphMiningBase implements Operator {
   }
 
   private List<DFSCodeEmbeddingsPair> aggregateSingle(
-    Map<DFSCode, DFSEmbedding[]> reports, FilterAndOutput predicate) {
+    Map<DFSCode, DFSEmbedding[]> reports, FilterAndOutput filterAndOutput) {
 
     return reports
         .entrySet()
         .parallelStream()
         .map(e -> new DFSCodeEmbeddingsPair(e.getKey(), e.getValue()))
-        .filter(predicate)
+        .filter(filterAndOutput)
         .collect(Collectors.toList());
   }
 
-  private Map<DFSCode, DFSEmbedding[]> growChildren(DFSCodeEmbeddingsPair parents, GraphCollection input) {
+  private Stream<DFSCodeEmbeddingPair>  growChildren(DFSCodeEmbeddingsPair parents, GraphCollection input) {
 
     DFSCode parentCode = parents.getDfsCode();
-    Map<DFSCode, DFSEmbedding[]> children;
 
-    if (parentCode.getEdgeCount() < maxEdgeCount) {
-      int[] rightmostPath = parentCode.getRightmostPath();
+    int[] rightmostPath = parentCode.getRightmostPath();
 
-      children = Stream.of(parents.getEmbeddings())
-        .collect(new GroupByGraphIdArrayEmbeddings())
-        .entrySet()
-        .stream()
-        .flatMap(
-          entry -> {
-            Graph graph = input.getGraph(entry.getKey());
-            return Stream.of(entry.getValue())
-              .flatMap(
-                embedding ->
-                  Stream.of(growAllChildren.apply(graph, parentCode, rightmostPath, embedding)));
-          }
-        )
-        .collect(new GroupByDFSCodeArrayEmbeddings());
-    } else {
-      children = Maps.newHashMap();
-    }
-
-    return children;
+    return Stream.of(parents.getEmbeddings())
+      .collect(new GroupByGraphIdArrayEmbeddings())
+      .entrySet()
+      .stream()
+      .flatMap(
+        entry -> {
+          Graph graph = input.getGraph(entry.getKey());
+          return Stream.of(entry.getValue())
+            .flatMap(
+              embedding ->
+                Stream.of(growAllChildren.apply(graph, parentCode, rightmostPath, embedding)));
+        }
+      );
   }
 
   private void aggregateChildren(
-    Map<DFSCode, DFSEmbedding[]> children,
-    Predicate<DFSCodeEmbeddingsPair> predicate,
+    Stream<DFSCodeEmbeddingPair> children,
+    FilterAndOutput filterAndOutput,
     QueueStreamSource<DFSCodeEmbeddingsPair> queue) {
 
     children
+      .collect(new GroupByDFSCodeArrayEmbeddings())
       .entrySet()
       .stream()
       .map(e -> new DFSCodeEmbeddingsPair(e.getKey(), e.getValue()))
       .filter(new IsMinimal())
-      .filter(predicate)
+      .filter(filterAndOutput)
+      .filter(p -> p.getDfsCode().getEdgeCount() < maxEdgeCount)
       .forEach(queue::add);
   }
 

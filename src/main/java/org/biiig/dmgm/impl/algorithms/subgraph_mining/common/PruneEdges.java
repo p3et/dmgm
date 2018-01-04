@@ -17,6 +17,7 @@ public class PruneEdges implements Function<Graph, Graph> {
   public Graph apply(Graph inGraph) {
 
     Graph outGraph = new AdjacencyList();
+    outGraph.setLabel(inGraph.getLabel());
 
     for (int vertexId = 0; vertexId < inGraph.getVertexCount(); vertexId++)
       outGraph.addVertex(inGraph.getVertexLabel(vertexId));

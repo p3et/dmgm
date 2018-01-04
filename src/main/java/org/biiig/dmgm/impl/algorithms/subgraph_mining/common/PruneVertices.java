@@ -20,6 +20,7 @@ public class PruneVertices implements Function<Graph, Graph> {
       vertexMap[vertexId] = -1;
 
     Graph outGraph = new GraphBase();
+    outGraph.setLabel(inGraph.getLabel());
 
     for (int vertexId = 0; vertexId < inGraph.getVertexCount(); vertexId++) {
       int vertexLabel = inGraph.getVertexLabel(vertexId);

@@ -1,4 +1,4 @@
-package org.biiig.dmgm.impl.algorithms.subgraph_mining.ccp;
+package org.biiig.dmgm.impl.algorithms.subgraph_mining.csm;
 
 import java.util.function.BiFunction;
 
