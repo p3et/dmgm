@@ -27,9 +27,6 @@ public abstract class SubgraphMiningThresholdTest extends DMGMTestBase {
     Operator fsm = getOperator(minSupportThreshold, 20);
     GraphCollection input = getPredictableDatabase();
     GraphCollection output = input.apply(fsm);
-
-
-    System.out.println(output.size());
     assertEquals(expectedResultSize, output.size());
   }
 

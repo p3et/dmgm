@@ -44,7 +44,7 @@ public abstract class SubgraphMiningBase implements Operator {
 
     QueueStreamSource<DFSCodeEmbeddingsPair> queue = QueueStreamSource.of(parents);
     queue
-      .stream()
+      .parallelStream()
       .forEach(parent -> {
         Stream<DFSCodeEmbeddingPair> children = growChildren(parent, input);
         aggregateChildren(children, filterAndOutput, queue);
@@ -104,7 +104,7 @@ public abstract class SubgraphMiningBase implements Operator {
     children
       .collect(new GroupByDFSCodeArrayEmbeddings())
       .entrySet()
-      .stream()
+      .parallelStream()
       .map(e -> new DFSCodeEmbeddingsPair(e.getKey(), e.getValue()))
       .filter(new IsMinimal())
       .filter(filterAndOutput)

@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
-public abstract class FilterAndOutputBase implements FilterAndOutput {
+public abstract class FilterAndOutputBase {
   protected final GraphCollection output;
 
   public FilterAndOutputBase(GraphCollection output) {

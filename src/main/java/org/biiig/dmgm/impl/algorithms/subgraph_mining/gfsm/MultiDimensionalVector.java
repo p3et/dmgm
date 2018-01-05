@@ -1,11 +1,12 @@
 package org.biiig.dmgm.impl.algorithms.subgraph_mining.gfsm;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.GraphInformation;
 
 import java.util.Arrays;
 import java.util.Optional;
 
-public class MultiDimensionalVector {
+public class MultiDimensionalVector implements GraphInformation {
 
   public static final int ARBITRARY = -1;
 

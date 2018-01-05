@@ -3,13 +3,14 @@ package org.biiig.dmgm.impl.algorithms.subgraph_mining.fsm;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.DFSCodeEmbeddingsPair;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.DFSEmbedding;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.FilterAndOutput;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.FilterAndOutputBase;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.SubgraphMiningPropertyKeys;
 import org.biiig.dmgm.impl.graph.DFSCode;
 
-public class Frequent extends FilterAndOutputBase {
+public class Frequent extends FilterAndOutputBase implements FilterAndOutput {
 
-  private final int minSupportAbsolute;
+  protected final int minSupportAbsolute;
 
   protected Frequent(GraphCollection output, int minSupportAbsolute) {
     super(output);

@@ -26,8 +26,6 @@ public class AllSpecializationsTest {
         .flatMap(function)
         .collect(Collectors.toList());
 
-      System.out.println(output);
-
       assertEquals("output size", count, output.size());
     }
   }

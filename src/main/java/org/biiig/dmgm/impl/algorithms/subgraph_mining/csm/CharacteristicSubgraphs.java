@@ -71,6 +71,7 @@ public class CharacteristicSubgraphs extends SubgraphMiningBase {
 
   @Override
   protected GraphCollection pruneByLabels(GraphCollection inputCollection, GraphCollectionBuilder collectionBuilder) {
-    return super.pruneByLabels(inputCollection, collectionBuilder);
+    // TODO preprocessing based on category frequencies
+    return inputCollection;
   }
 }

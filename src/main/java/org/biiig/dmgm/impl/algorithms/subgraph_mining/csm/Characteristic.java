@@ -4,6 +4,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.DFSCodeEmbeddingsPair;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.DFSEmbedding;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.FilterAndOutput;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.FilterAndOutputBase;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.SubgraphMiningPropertyKeys;
 import org.biiig.dmgm.impl.graph.DFSCode;
@@ -13,7 +14,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Characteristic extends FilterAndOutputBase {
+public class Characteristic extends FilterAndOutputBase implements FilterAndOutput {
   private final Map<Integer, Integer> categorySizes;
   private final Map<Integer, Integer> categoryMinSupports;
 
