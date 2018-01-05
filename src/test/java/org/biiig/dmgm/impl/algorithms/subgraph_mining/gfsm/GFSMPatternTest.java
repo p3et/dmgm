@@ -2,7 +2,6 @@ package org.biiig.dmgm.impl.algorithms.subgraph_mining.gfsm;
 
 import org.biiig.dmgm.api.Operator;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.SubgraphMiningPatternTest;
-import org.biiig.dmgm.impl.algorithms.subgraph_mining.csm.CharacteristicSubgraphs;
 
 public class GFSMPatternTest extends SubgraphMiningPatternTest {
 

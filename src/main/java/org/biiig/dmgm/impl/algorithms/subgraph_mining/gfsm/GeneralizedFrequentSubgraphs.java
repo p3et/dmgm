@@ -30,7 +30,7 @@ public class GeneralizedFrequentSubgraphs extends SubgraphMiningBase {
               .get(graph.getVertexLabel(vertexId))
               .ifPresent(taxonomy ->
                 dataStore
-                  .getVertexInteger(graph.getId(), vertexId, SubgraphMiningPropertyKeys.BOTTOM_LEVEL)
+                  .getVertexInteger(graph.getId(), vertexId, SubgraphMiningPropertyKeys.TAXONOMY_VALUE)
                   .ifPresent(value ->
                       taxonomy
                         .getRootPathTo(value)
