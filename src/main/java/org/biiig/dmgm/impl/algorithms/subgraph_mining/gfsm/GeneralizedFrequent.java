@@ -1,73 +1,94 @@
 package org.biiig.dmgm.impl.algorithms.subgraph_mining.gfsm;
 
-import de.jesemann.paralleasy.queue_stream.QueueStreamSource;
-import org.biiig.dmgm.api.ElementDataStore;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.DFSCodeEmbeddingsPair;
-import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.DFSEmbedding;
-import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.FilterAndOutputBase;
-import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.SubgraphMiningPropertyKeys;
-import org.biiig.dmgm.impl.graph.DFSCode;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.fsm.Frequent;
 
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+public class GeneralizedFrequent extends Frequent {
 
-public class GeneralizedFrequent extends FilterAndOutputBase {
-  private final ElementDataStore dataStore;
-
-  GeneralizedFrequent(
-    int minSupportAbs, GraphCollection output, ElementDataStore dataStore) {
-    super(output, minSupportAbs);
-    this.dataStore = dataStore;
+  GeneralizedFrequent(GraphCollection output, int minSupportAbsolute) {
+    super(output, minSupportAbsolute);
   }
 
   @Override
-  protected boolean outputIfInteresting(DFSCodeEmbeddingsPair topLevelPairs, int topLevelFrequency) {
-    boolean topLevelFrequent;
-    int topLevelSupport = Math.toIntExact(
-      Stream.of(topLevelPairs.getEmbeddings())
-        .map(DFSEmbedding::getGraphId)
-        .distinct()
-        .count()
-    );
-
-    topLevelFrequent = topLevelSupport >= minSupportAbs;
-
-    if (topLevelFrequent) {
-      outputFrequentSpecializations(topLevelPairs);
-      output(topLevelPairs.getDfsCode(), topLevelSupport, topLevelFrequency);
-    }
-    return topLevelFrequent;
+  public boolean test(DFSCodeEmbeddingsPair pairs) {
+    System.out.println("GVM");
+    return super.test(pairs);
   }
 
-  private void outputFrequentSpecializations(DFSCodeEmbeddingsPair topLevelPairs) {
-    DFSCode topLevel = topLevelPairs.getDfsCode();
+  //  @Override
+//  public boolean test(DFSCodeEmbeddingsPair pairs) {
+//    DFSEmbedding[] embeddings = pairs.getEmbeddings();
+//
+//    int frequency = embeddings.length;
+//    int support = frequency >= minSupport ? getSupport(embeddings) : 0;
+//
+//    boolean frequent = support >= minSupport;
+//
+//    if (frequent) {
+//      store(pairs.getDfsCode(), frequency, support);
+//
+//      List<MultiDimensionalVector> vectors = Stream.of(embeddings)
+//        .map(new ToMultiDimensionalVector(output.getElementDataStore()))
+//        .collect(Collectors.toList());
+//
+//      for (frequentSpecializatio.apply(vectors))
+//    }
+//
+//    return frequent;
+//  }
+//
+//  private void store(DFSCode dfsCode, int frequency, int support) {
+//    int graphId = output.add(dfsCode);
+//    output.getElementDataStore().setGraph(graphId, SubgraphMiningPropertyKeys.SUPPORT, support);
+//    output.getElementDataStore().setGraph(graphId, SubgraphMiningPropertyKeys.FREQUENCY, frequency);
+//  }
+//
+//  private void store(DFSCode dfsCode, MultiDimensionalVector vector, int frequency, int support) {
+//    Graph graph = new GraphBase();
+//
+//    dfsCode
+//      .vertexIdStream()
+//      .forEach(dim -> graph
+//        .addVertex(
+//          vector.getSpecializedValue(dim)
+//            .orElse(dfsCode.getVertexLabel(dim))
+//        ));
+//
+//    dfsCode
+//      .edgeIdStream()
+//      .forEach(e ->
+//        graph.addEdge(
+//          dfsCode.getSourceId(e),
+//          dfsCode.getTargetId(e),
+//          dfsCode.getFromTime(e)
+//        ));
+//
+//    int graphId = output.add(graph);
+//    output.getElementDataStore().setGraph(graphId, SubgraphMiningPropertyKeys.SUPPORT, support);
+//    output.getElementDataStore().setGraph(graphId, SubgraphMiningPropertyKeys.FREQUENCY, frequency);
+//  }
+//
 
-    List<MultiDimensionalVector> topLevelParents = Stream.of(topLevelPairs.getEmbeddings())
-      .map(new ToMultiDimensionalVector(dataStore))
-      .collect(Collectors.toList());
-
-    QueueStreamSource<MultiDimensionalVector> queue = QueueStreamSource.of(topLevelParents);
-
-    queue
-      .stream()
-      .flatMap(new AllSpecializations())
-      .collect(Collectors.groupingBy(Function.identity(), Collectors.toList()))
-      .entrySet()
-      .stream()
-      .filter(e -> e.getValue().size() > minSupportAbs)
-      // add only one representative to output
-      .peek(new OutputSpecialization(topLevel))
-      .flatMap(e -> e.getValue().stream())
-      .forEach(queue::add);
-  }
-
-  private void output(DFSCode dfsCode, int support, int frequency) {
-    int graphId = output.add(dfsCode);
-    output.getElementDataStore().setGraph(graphId, SubgraphMiningPropertyKeys.SUPPORT, support);
-    output.getElementDataStore().setGraph(graphId, SubgraphMiningPropertyKeys.FREQUENCY, frequency);
-  }
-
+//  @SuppressWarnings("unchecked")
+//  private void outputFrequentSpecializations(DFSCodeEmbeddingsPair topLevelPairs) {
+//    DFSCode topLevel = topLevelPairs.getDfsCode();
+//
+//
+//
+//    QueueStreamSource<MultiDimensionalVector> queue = QueueStreamSource.of(vectors);
+//
+//    queue
+//      .stream()
+//      .flatMap(new AllSpecializations(topLevel.getVertexCount()))
+//      .collect(Collectors.groupingBy(Function.identity(), Collectors.toList()))
+//      .entrySet()
+//      .stream()
+//      .filter(e -> e.getValue().size() > minSupport)
+//      // add one new graph per frequent specialization vector
+//      .peek(e -> outputSpecialization(topLevel, e))
+//      // but add all instances to queue
+//      .flatMap(e -> e.getValue().stream())
+//      .forEach(queue::add);
+//  }
 }

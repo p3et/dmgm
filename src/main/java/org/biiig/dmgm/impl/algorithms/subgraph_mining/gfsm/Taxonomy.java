@@ -2,6 +2,7 @@ package org.biiig.dmgm.impl.algorithms.subgraph_mining.gfsm;
 
 import com.sun.javaws.exceptions.InvalidArgumentException;
 
+import java.util.Collection;
 import java.util.Optional;
 
 public interface Taxonomy<T, P> {
@@ -17,4 +18,6 @@ public interface Taxonomy<T, P> {
   Optional<P> getRootPathTo(T child);
 
   T getParent(T child);
+
+  Collection<T> getChildren(T a);
 }

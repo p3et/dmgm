@@ -8,7 +8,7 @@ public class CSMPatternTest extends SubgraphMiningPatternTest {
 
   @Override
   protected Operator getOperator() {
-    return new CharacteristicSubgraphs(0.6f, 10, g -> "", (f, t) -> true);
+    return new CharacteristicSubgraphs(0.6f, 10, (f, t) -> true);
   }
 
 }

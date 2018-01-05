@@ -112,4 +112,9 @@ public class GraphBase implements Graph {
     return IntStream.range(0, getVertexCount());
   }
 
+  @Override
+  public IntStream edgeIdStream() {
+    return IntStream.range(0, getEdgeCount());
+  }
+
 }

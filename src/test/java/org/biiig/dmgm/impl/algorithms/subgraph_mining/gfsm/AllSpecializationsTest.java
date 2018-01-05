@@ -1,5 +1,6 @@
 package org.biiig.dmgm.impl.algorithms.subgraph_mining.gfsm;
 
+import com.google.common.collect.Lists;
 import org.junit.Test;
 
 import java.util.List;
@@ -13,15 +14,22 @@ public class AllSpecializationsTest {
 
   @Test
   public void apply() {
-    Function<MultiDimensionalVector, Stream<MultiDimensionalVector>> function = new AllSpecializations();
+    Function<MultiDimensionalVector, Stream<MultiDimensionalVector>> function = new AllSpecializations(3);
 
-    List<MultiDimensionalVector> output = function
-      .apply(getInputVector())
-      .collect(Collectors.toList());
+    List<MultiDimensionalVector> output = Lists.newArrayList(getInputVector());
 
-    assertEquals("output size", 1, output.size());
-    assertTrue(getOutputA() + "missing", output.contains(getOutputA()));
+    int[] expectedResultCounts = new int[] {2, 2, 1, 0};
 
+    for (int count : expectedResultCounts) {
+      output = output
+        .stream()
+        .flatMap(function)
+        .collect(Collectors.toList());
+
+      System.out.println(output);
+
+      assertEquals("output size", count, output.size());
+    }
   }
 
   private MultiDimensionalVector getInputVector() {
@@ -30,42 +38,6 @@ public class AllSpecializationsTest {
     dimensionPaths[1] = new int[] {1};
     dimensionPaths[2] = new int[] {1, 2};
 
-    return MultiDimensionalVector.create(dimensionPaths);
-  }
-
-  private MultiDimensionalVector getOutputA() {
-    int[][] dimensionPaths = new int[3][];
-    dimensionPaths[0] = new int[0];
-    dimensionPaths[1] = new int[0];
-    dimensionPaths[2] = new int[] {1, 2};
-
-    return MultiDimensionalVector.create(dimensionPaths);
-  }
-
-  private MultiDimensionalVector getOutputAA() {
-    int[][] dimensionPaths = new int[3][];
-    dimensionPaths[0] = new int[0];
-    dimensionPaths[1] = new int[0];
-    dimensionPaths[2] = new int[] {1};
-
-    return MultiDimensionalVector.create(dimensionPaths);
-  }
-
-  private MultiDimensionalVector getOutputBA() {
-    int[][] dimensionPaths = new int[3][];
-    dimensionPaths[0] = new int[0];
-    dimensionPaths[1] = new int[0];
-    dimensionPaths[2] = new int[] {1};
-
-    return MultiDimensionalVector.create(dimensionPaths);
-  }
-
-  private MultiDimensionalVector getOutputBB() {
-    int[][] dimensionPaths = new int[3][];
-    dimensionPaths[0] = new int[0];
-    dimensionPaths[1] = new int[] {1};
-    dimensionPaths[2] = new int[0];
-
-    return MultiDimensionalVector.create(dimensionPaths);
+    return MultiDimensionalVector.create(0, dimensionPaths);
   }
 }

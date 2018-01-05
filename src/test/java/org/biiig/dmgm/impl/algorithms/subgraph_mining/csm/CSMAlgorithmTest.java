@@ -18,19 +18,22 @@ public class CSMAlgorithmTest extends DMGMTestBase {
   public void testAlgorithm() {
 
     Operator operator = new CharacteristicSubgraphs(
-      0.5f, 10, g -> String.valueOf(g.getLabel()), (c, t) -> c > t/2);
+      1.0f, 10, (c, t) -> c >= 2 * t);
 
     String inputGDL =
-      ":X[(:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(:D)]" +
-      ":X[(:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(:D)]" +
-      ":Y[(:A)-[:a]->(:B)-[:b]->(:C)-[:b]->(:D)]" +
-      ":Y[(:A)-[:a]->(:B)-[:b]->(:C)-[:b]->(:E)]";
+      "{_category:\"X\"}[(:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(:D)]" +
+      "{_category:\"X\"}[(:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(:D)]" +
+      "{_category:\"Y\"}[(:A)-[:a]->(:B)-[:b]->(:C)-[:b]->(:D)]" +
+      "{_category:\"Y\"}[(:A)-[:a]->(:B)-[:b]->(:C)-[:b]->(:E)]";
 
     String expectation =
-      "[(:B)-[:a]->(:C)-[:a]->(:D)]" +
+      "[(:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(:D)]" +
+        "[(:A)-[:a]->(:B)-[:a]->(:C)]" +
+        "[(:B)-[:a]->(:C)-[:a]->(:D)]" +
         "[(:B)-[:a]->(:C)]" +
         "[(:C)-[:a]->(:D)]" +
-        "[(:B)-[:b]->(:C)]";
+        "[(:A)-[:a]->(:B)-[:b]->(:C)]" +
+        "[(:B)-[:b]->(:C)]" ;
 
     GraphCollection input = GDLLoader
       .fromString(inputGDL)
@@ -49,7 +52,7 @@ public class CSMAlgorithmTest extends DMGMTestBase {
 
     Optional<Integer> frequency = output
       .getElementDataStore()
-      .getGraphInteger(0, SubgraphMiningPropertyKeys.FREQUENCY);
+      .getGraphInteger(0, SubgraphMiningPropertyKeys.EMBEDDING_COUNT);
 
     assertTrue("frequency property", frequency.isPresent());
     assertEquals("frequency value", Integer.valueOf(2), frequency.get());

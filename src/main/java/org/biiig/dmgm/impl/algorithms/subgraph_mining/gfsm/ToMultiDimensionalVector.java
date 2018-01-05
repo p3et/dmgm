@@ -31,6 +31,6 @@ public class ToMultiDimensionalVector implements Function<DFSEmbedding, MultiDim
       dimensionPaths[vertexTime] = optionalTaxonomyPath.orElse(EMPTY_TAXONOMY_PATH);
     }
 
-    return MultiDimensionalVector.create(dimensionPaths);
+    return MultiDimensionalVector.create(embedding.getGraphId(), dimensionPaths);
   }
 }

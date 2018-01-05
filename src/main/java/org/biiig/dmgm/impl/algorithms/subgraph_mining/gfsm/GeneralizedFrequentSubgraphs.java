@@ -39,7 +39,7 @@ public class GeneralizedFrequentSubgraphs extends SubgraphMiningBase {
                             .setVertex(graph.getId(), vertexId, SubgraphMiningPropertyKeys.TAXONOMY_PATH, path)
                         )))));
 
-    return new FrequentGeneralizationFactory(dataStore);
+    return new FrequentGeneralizationFactory(Math.round(minSupport * input.size()));
   }
 
 }

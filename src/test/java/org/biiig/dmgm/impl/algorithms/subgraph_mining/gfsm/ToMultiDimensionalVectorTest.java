@@ -34,7 +34,7 @@ public class ToMultiDimensionalVectorTest extends DMGMTestBase {
     dimensionPaths[0] = new int[0];
     dimensionPaths[1] = new int[] {1, 2};
 
-    return MultiDimensionalVector.create(dimensionPaths);
+    return MultiDimensionalVector.create(0, dimensionPaths);
   }
 
   private MultiDimensionalVector getVectorB() {
@@ -42,6 +42,6 @@ public class ToMultiDimensionalVectorTest extends DMGMTestBase {
     dimensionPaths[0] = new int[0];
     dimensionPaths[1] = new int[0];
 
-    return MultiDimensionalVector.create(dimensionPaths);
+    return MultiDimensionalVector.create(0, dimensionPaths);
   }
 }

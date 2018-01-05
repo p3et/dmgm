@@ -11,6 +11,8 @@ import org.s1ck.gdl.GDLHandler;
 import org.s1ck.gdl.model.Edge;
 import org.s1ck.gdl.model.Vertex;
 
+import javax.activation.UnsupportedDataTypeException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -48,12 +50,12 @@ public class GDLLoader extends GraphCollectionLoaderBase {
       .collect(new GroupByKeyListValues<>(Pair::getKey, Pair::getValue));
 
     for (org.s1ck.gdl.model.Graph graph : gdlHandler.getGraphs()) {
-      long graphId = graph.getId();
+      long gdlGraphId = graph.getId();
       int graphLabel = graphCollection.getLabelDictionary().translate(graph.getLabel());
 
-      List<Vertex> vertices = graphVertices.get(graphId);
+      List<Vertex> vertices = graphVertices.get(gdlGraphId);
       Map<Long, Integer> vertexIdMap = Maps.newHashMapWithExpectedSize(vertices.size());
-      List<Edge> edges = graphEdges.get(graphId);
+      List<Edge> edges = graphEdges.get(gdlGraphId);
 
       Graph dmGraph = graphFactory.create();
       dmGraph.setLabel(graphLabel);
@@ -79,7 +81,21 @@ public class GDLLoader extends GraphCollectionLoaderBase {
         );
       }
 
-      graphCollection.add(dmGraph);
+      int graphId = graphCollection.add(dmGraph);
+
+      graph
+        .getProperties()
+        .forEach((k, v) -> {
+          if (v instanceof String) {
+            graphCollection.getElementDataStore().setGraph(graphId, k, (String) v);
+          }
+          else if (v instanceof Integer)
+            graphCollection.getElementDataStore().setGraph(graphId, k, (Integer) v);
+          else if (v instanceof Long)
+            graphCollection.getElementDataStore().setGraph(graphId, k, Math.toIntExact((Long) v));
+          else if (v instanceof BigDecimal)
+            graphCollection.getElementDataStore().setGraph(graphId, k, (BigDecimal) v);
+        });
     }
 
     return graphCollection;

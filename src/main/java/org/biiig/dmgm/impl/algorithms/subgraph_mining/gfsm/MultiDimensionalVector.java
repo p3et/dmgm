@@ -3,8 +3,14 @@ package org.biiig.dmgm.impl.algorithms.subgraph_mining.gfsm;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 public class MultiDimensionalVector {
+
+  public static final int ARBITRARY = -1;
+
+  private final int graphId;
+  private final int lastSpecialization;
 
   /**
    * Cached paths of dimension values from general to special.
@@ -21,12 +27,16 @@ public class MultiDimensionalVector {
   /**
    * Specialization constructor.
    *
+   * @param graphId
    * @param dimensionPaths copy of parents' dimension paths
    * @param levels specialized state
+   * @param lastSpecialization
    */
-  private MultiDimensionalVector(int[][] dimensionPaths, int[] levels) {
+  private MultiDimensionalVector(int graphId, int[][] dimensionPaths, int[] levels, int lastSpecialization) {
+    this.graphId = graphId;
     this.dimensionPaths = dimensionPaths;
     this.levels = levels;
+    this.lastSpecialization = lastSpecialization;
   }
 
 
@@ -41,9 +51,9 @@ public class MultiDimensionalVector {
     MultiDimensionalVector specialization = null;
 
     // dimension c
-    if (levels[dimension] >= 0) {
-      specialization = new MultiDimensionalVector(dimensionPaths, Arrays.copyOf(levels, levels.length));
-      specialization.levels[dimension]--;
+    if (levels[dimension] + 1 < dimensionPaths[dimension].length) {
+      specialization = new MultiDimensionalVector(graphId, dimensionPaths, Arrays.copyOf(levels, levels.length), dimension);
+      specialization.levels[dimension]++;
     }
 
     return specialization;
@@ -93,20 +103,40 @@ public class MultiDimensionalVector {
   /**
    * Factory method to create a vector at its most general state.
    *
+   * @param graphId
    * @param dimensionPaths paths of dimension values from general to special
    */
-  public static MultiDimensionalVector create(int[][] dimensionPaths) {
+  public static MultiDimensionalVector create(int graphId, int[][] dimensionPaths) {
     int size = dimensionPaths.length;
     int[] levels = new int[size];
 
     for (int i = 0; i < size; i++)
-      levels[i] = dimensionPaths[i].length - 1;
+      levels[i] = ARBITRARY;
 
-    return new MultiDimensionalVector(dimensionPaths, levels);
+    return new MultiDimensionalVector(graphId, dimensionPaths, levels, 0);
+  }
+
+  public int getGraphId() {
+    return graphId;
+  }
+
+  public int getLastSpecialization() {
+    return lastSpecialization;
   }
 
   @Override
   public String toString() {
-    return ArrayUtils.toString(dimensionPaths) + "@" + ArrayUtils.toString(levels);
+    String[] current = new String[dimensionPaths.length];
+
+    for (int dim = 0; dim < dimensionPaths.length; dim++)
+      current[dim] = levels[dim] >= 0 ? String.valueOf(dimensionPaths[dim][levels[dim]]) : "*";
+
+    return ArrayUtils.toString(dimensionPaths) + "@" + ArrayUtils.toString(levels) + "=>" + ArrayUtils.toString(current);
   }
+
+  public Optional<Integer> getSpecializedValue(int dim) {
+    return levels[dim] >= 0 ? Optional.of(dimensionPaths[dim][levels[dim]]) : Optional.empty();
+  }
+
+
 }

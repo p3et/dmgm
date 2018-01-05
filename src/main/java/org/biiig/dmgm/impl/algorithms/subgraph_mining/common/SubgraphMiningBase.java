@@ -16,40 +16,35 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class SubgraphMiningBase implements Operator {
-  private final GrowAllChildren growAllChildren = new GrowAllChildren();
+  protected final float minSupport;
+  private final int maxEdgeCount;
 
-  private final float minSupportRel;
-  protected final int maxEdgeCount;
-
-  public SubgraphMiningBase(float minSupportRel, int maxEdgeCount) {
+  public SubgraphMiningBase(float minSupport, int maxEdgeCount) {
+    this.minSupport = minSupport;
     this.maxEdgeCount = maxEdgeCount;
-    this.minSupportRel = minSupportRel;
   }
 
   // ORCHESTRATION
 
   @Override
   public GraphCollection apply(GraphCollection rawInput) {
-
-    int minSupportAbs = Math.round((float) rawInput.size() * this.minSupportRel);
-
     GraphCollectionBuilder collectionBuilder = new InMemoryGraphCollectionBuilderFactory()
       .create()
       .withLabelDictionary(rawInput.getLabelDictionary())
       .withElementDataStore(rawInput.getElementDataStore());
 
-    GraphCollection input = pruneByLabels(rawInput, minSupportAbs, collectionBuilder);
+    GraphCollection input = pruneByLabels(rawInput, collectionBuilder);
     GraphCollection output = collectionBuilder.create();
 
     Map<DFSCode, DFSEmbedding[]> singleEdgeParents = initializeSingle(input);
 
     FilterAndOutputFactory filterAndOutputFactory = getFilterAndOutputFactory(input);
-    FilterAndOutput filterAndOutput = filterAndOutputFactory.create(minSupportAbs, output);
+    FilterAndOutput filterAndOutput = filterAndOutputFactory.create(output);
     List<DFSCodeEmbeddingsPair> parents = aggregateSingle(singleEdgeParents, filterAndOutput);
 
     QueueStreamSource<DFSCodeEmbeddingsPair> queue = QueueStreamSource.of(parents);
     queue
-      .parallelStream()
+      .stream()
       .forEach(parent -> {
         Stream<DFSCodeEmbeddingPair> children = growChildren(parent, input);
         aggregateChildren(children, filterAndOutput, queue);
@@ -96,7 +91,7 @@ public abstract class SubgraphMiningBase implements Operator {
           return Stream.of(entry.getValue())
             .flatMap(
               embedding ->
-                Stream.of(growAllChildren.apply(graph, parentCode, rightmostPath, embedding)));
+                Stream.of(new GrowAllChildren().apply(graph, parentCode, rightmostPath, embedding)));
         }
       );
   }
@@ -119,14 +114,16 @@ public abstract class SubgraphMiningBase implements Operator {
 
   // PREPROCESSING
 
-  private GraphCollection pruneByLabels(
-    GraphCollection inputCollection, int minSupportAbs, GraphCollectionBuilder collectionBuilder) {
+  protected GraphCollection pruneByLabels(
+    GraphCollection inputCollection, GraphCollectionBuilder collectionBuilder) {
+
+    Integer minSupportAbsolute = Math.round(inputCollection.size() * minSupport);
 
     Set<Integer> frequentVertexLabels = getFrequentLabels(
       inputCollection
         .parallelStream()
         .flatMap(new DistinctVertexLabels()),
-      minSupportAbs);
+      minSupportAbsolute);
 
     GraphCollection vertexPrunedCollection = collectionBuilder.create();
 
@@ -138,7 +135,8 @@ public abstract class SubgraphMiningBase implements Operator {
     Set<Integer> frequentEdgeLabels = getFrequentLabels(
       inputCollection
         .parallelStream()
-        .flatMap(new DistinctEdgeLabels()), minSupportAbs);
+        .flatMap(new DistinctEdgeLabels()),
+      minSupportAbsolute);
 
     GraphCollection prunedCollection = collectionBuilder.create();
 
@@ -150,12 +148,12 @@ public abstract class SubgraphMiningBase implements Operator {
     return vertexPrunedCollection;
   }
 
-  private Set<Integer> getFrequentLabels(Stream<Integer> vertexLabels, int minSupportAbs) {
-    return vertexLabels
+  private Set<Integer> getFrequentLabels(Stream<Integer> labels, Integer minSupportAbsolute) {
+    return labels
       .collect(Collectors.groupingByConcurrent(Function.identity(), Collectors.counting()))
       .entrySet()
       .stream()
-      .filter(e -> e.getValue() >= minSupportAbs)
+      .filter(e -> e.getValue() >= minSupportAbsolute)
       .map(Map.Entry::getKey)
       .collect(Collectors.toSet());
   }

@@ -45,7 +45,7 @@
 //
 //      for (LabeledEdge edge : graph.getEdges()) {
 //        //System.out.println(edge.getTopLevelLabel()+" --> "+edgeDictionary.get(edge.getTopLevelLabel()));
-//        edgeLabels.add(new EdgeData(
+//        edgeLabels.addParentChild(new EdgeData(
 //          graph.getId(),
 //          edge.getSource(),
 //          edge.getTarget(),

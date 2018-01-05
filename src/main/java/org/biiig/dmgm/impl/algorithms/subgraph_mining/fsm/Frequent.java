@@ -7,33 +7,32 @@ import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.FilterAndOutputBase
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.SubgraphMiningPropertyKeys;
 import org.biiig.dmgm.impl.graph.DFSCode;
 
-import java.util.stream.Stream;
-
 public class Frequent extends FilterAndOutputBase {
 
-  Frequent(int minSupportAbs, GraphCollection output) {
-    super(output, minSupportAbs);
+  private final int minSupportAbsolute;
+
+  protected Frequent(GraphCollection output, int minSupportAbsolute) {
+    super(output);
+    this.minSupportAbsolute = minSupportAbsolute;
   }
 
   @Override
-  protected boolean outputIfInteresting(DFSCodeEmbeddingsPair pairs, int frequency) {
-    boolean frequent;
-    int support = Math.toIntExact(
-      Stream.of(pairs.getEmbeddings())
-        .map(DFSEmbedding::getGraphId)
-        .distinct()
-        .count()
-    );
+  public boolean test(DFSCodeEmbeddingsPair pairs) {
+    DFSEmbedding[] embeddings = pairs.getEmbeddings();
 
-    frequent = support >= minSupportAbs;
+    int frequency = embeddings.length;
+    int support = frequency >= minSupportAbsolute ? getSupport(embeddings) : 0;
 
-    if (frequent) {
-      DFSCode dfsCode = pairs.getDfsCode();
-      int graphId = output.add(dfsCode);
-      output.getElementDataStore().setGraph(graphId, SubgraphMiningPropertyKeys.SUPPORT, support);
-      output.getElementDataStore().setGraph(graphId, SubgraphMiningPropertyKeys.FREQUENCY, frequency);
-    }
+    boolean frequent = support >= minSupportAbsolute;
+    if (frequent)
+      store(pairs.getDfsCode(), frequency, support);
+
     return frequent;
   }
 
+  private void store(DFSCode dfsCode, int frequency, int support) {
+    int graphId = output.add(dfsCode);
+    output.getElementDataStore().setGraph(graphId, SubgraphMiningPropertyKeys.SUPPORT, support);
+    output.getElementDataStore().setGraph(graphId, SubgraphMiningPropertyKeys.EMBEDDING_COUNT, frequency);
+  }
 }

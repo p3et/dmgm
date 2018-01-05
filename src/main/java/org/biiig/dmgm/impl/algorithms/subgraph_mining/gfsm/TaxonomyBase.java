@@ -3,20 +3,15 @@ package org.biiig.dmgm.impl.algorithms.subgraph_mining.gfsm;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sun.javaws.exceptions.InvalidArgumentException;
-import javafx.util.Pair;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Queue;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 
-abstract class TaxonomyBase<T, P> implements Taxonomy<T, P> {
+abstract class TaxonomyBase<T, P> implements Taxonomy<T,P> {
 
   private static final String SEPARATOR = ".";
 
@@ -55,14 +50,6 @@ abstract class TaxonomyBase<T, P> implements Taxonomy<T, P> {
     if (childParent.containsKey(child))
       throwInvalidArgumentException(child, MSG_DUPLICATE);
 
-    // Does a path to root exist?
-    while (parent != null && !parent.equals(root) && !parent.equals(child))
-      parent = childParent.get(parent);
-
-    if (parent == null || parent.equals(child))
-      throwInvalidArgumentException(child, MSG_NO_ROOT_PATH);
-
-
     childParent.put(child, parent);
     parentChildren.get(parent).add(child);
     parentChildren.put(child, Lists.newArrayList());
@@ -92,5 +79,10 @@ abstract class TaxonomyBase<T, P> implements Taxonomy<T, P> {
   @Override
   public T getParent(T child) {
     return childParent.get(child);
+  }
+
+  @Override
+  public Collection<T> getChildren(T parent) {
+    return parentChildren.get(parent);
   }
 }

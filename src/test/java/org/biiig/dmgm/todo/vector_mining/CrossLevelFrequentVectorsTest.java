@@ -65,9 +65,9 @@
 //
 //    List<Countable<Vector>>database = Lists.newArrayList();
 //
-//    database.add(new Countable<Vector>(new Vector(vector1)));
-//    database.add(new Countable<Vector>(new Vector(vector2)));
-//    database.add(new Countable<Vector>(new Vector(vector3)));
+//    database.addParentChild(new Countable<Vector>(new Vector(vector1)));
+//    database.addParentChild(new Countable<Vector>(new Vector(vector2)));
+//    database.addParentChild(new Countable<Vector>(new Vector(vector3)));
 //
 //    return database;
 //  }
@@ -99,12 +99,12 @@
 //
 //    List<Countable<Vector>>database = Lists.newArrayList();
 //
-//    database.add(new Countable<Vector>(new Vector(root)));
-//    database.add(new Countable<Vector>(new Vector(pattern1)));
-//    database.add(new Countable<Vector>(new Vector(pattern2)));
-//    database.add(new Countable<Vector>(new Vector(pattern3)));
-//    database.add(new Countable<Vector>(new Vector(pattern4)));
-//    database.add(new Countable<Vector>(new Vector(pattern5)));
+//    database.addParentChild(new Countable<Vector>(new Vector(root)));
+//    database.addParentChild(new Countable<Vector>(new Vector(pattern1)));
+//    database.addParentChild(new Countable<Vector>(new Vector(pattern2)));
+//    database.addParentChild(new Countable<Vector>(new Vector(pattern3)));
+//    database.addParentChild(new Countable<Vector>(new Vector(pattern4)));
+//    database.addParentChild(new Countable<Vector>(new Vector(pattern5)));
 //
 //    return database;
 //  }

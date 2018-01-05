@@ -27,4 +27,6 @@ public interface Graph {
   void setId(int graphId);
 
   IntStream vertexIdStream();
+
+  IntStream edgeIdStream();
 }
