@@ -113,12 +113,12 @@ public class InMemoryElementDataStore implements ElementDataStore {
   }
 
   @Override
-  public void setVertexString(int graphId, int vertexId, String key, String value) {
+  public void setVertex(int graphId, int vertexId, String key, String value) {
     vertexStore.set(getGlobalId(graphId, vertexId), key, value);
   }
 
   @Override
-  public void setEdgeString(int graphId, int edgeId, String key, String value) {
+  public void setEdge(int graphId, int edgeId, String key, String value) {
     edgeStore.set(getGlobalId(graphId, edgeId), key, value);
   }
 

@@ -50,8 +50,8 @@ public interface ElementDataStore {
   void addEdge(int graphId, int edgeId, String key, String value);
 
   void setGraph(int graphId, String key, String value);
-  void setVertexString(int graphId, int vertexId, String key, String value);
-  void setEdgeString(int graphId, int edgeId, String key, String value);
+  void setVertex(int graphId, int vertexId, String key, String value);
+  void setEdge(int graphId, int edgeId, String key, String value);
 
   Optional<BigDecimal> getGraphBigDecimal(int graphId, String key);
   Optional<BigDecimal> getVertexBigDecimal(int graphId, int vertexId, String key);

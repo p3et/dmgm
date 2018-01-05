@@ -2,12 +2,15 @@ package org.biiig.dmgm.impl.algorithms.subgraph_mining.gfsm;
 
 import com.google.common.collect.Maps;
 import com.sun.javaws.exceptions.InvalidArgumentException;
+import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.DMGMTestBase;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.Operator;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.SubgraphMiningPropertyKeys;
 import org.biiig.dmgm.impl.graph_loader.gdl.GDLLoader;
 import org.junit.Test;
 
+import java.lang.reflect.Array;
 import java.util.Map;
 
 public class GFSMAlgorithmTest extends DMGMTestBase {
@@ -30,17 +33,21 @@ public class GFSMAlgorithmTest extends DMGMTestBase {
     taxonomies.put("A", aTaxonomy);
     taxonomies.put("B", bTaxonomy);
 
-    Operator operator = new GeneralizedFrequentSubgraphs(1.0f, 10);
+    Operator operator = new GeneralizedFrequentSubgraphs(1.0f, 10, taxonomies);
 
     String inputGDL =
-      ":X[(:A{_taxonomyValue:\"aa\"})-[:a]->(:B{_taxonomyValue:\"ba\"})-[:a]->(:C)]" +
-      ":X[(:A{_taxonomyValue:\"aaa\"})-[:a]->(:B{_taxonomyValue:\"bb\"})-[:a]->(:C)]";
+      ":X[(:A{_taxonomyValue:\"aa\"})-[:a]->(:B{_taxonomyValue:\"bb\"})-[:a]->(:C)]" +
+      ":X[(:A{_taxonomyValue:\"ab\"})-[:a]->(:B{_taxonomyValue:\"bbb\"})-[:a]->(:C)]";
 
     GraphCollection input = GDLLoader
       .fromString(inputGDL)
       .getGraphCollection();
 
-    GraphCollection output = input.apply(operator);
+    GraphCollection output = input
+      .apply(operator);
+
+    System.out.println(output.getElementDataStore().getVertexString(1, 1, SubgraphMiningPropertyKeys.TAXONOMY_VALUE));
+    System.out.println(ArrayUtils.toString(output.getElementDataStore().getVertexIntegers(1, 1, SubgraphMiningPropertyKeys.TAXONOMY_VALUE).get()));
 
     System.out.println(GraphCollection.toString(output));
   }

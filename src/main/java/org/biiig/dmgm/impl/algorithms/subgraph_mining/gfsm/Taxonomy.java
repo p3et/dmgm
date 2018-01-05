@@ -5,7 +5,7 @@ import com.sun.javaws.exceptions.InvalidArgumentException;
 import java.util.Collection;
 import java.util.Optional;
 
-public interface Taxonomy<T, P> {
+public interface Taxonomy<T> {
   void add(T parent, T child) throws InvalidArgumentException;
 
   /**
@@ -15,7 +15,7 @@ public interface Taxonomy<T, P> {
    * @param child value
    * @return path to root without root
    */
-  Optional<P> getRootPathTo(T child);
+  Optional<T[]> getRootPathTo(T child);
 
   T getParent(T child);
 

@@ -49,46 +49,15 @@ public class GDLLoader extends GraphCollectionLoaderBase {
       )
       .collect(new GroupByKeyListValues<>(Pair::getKey, Pair::getValue));
 
-    for (org.s1ck.gdl.model.Graph graph : gdlHandler.getGraphs()) {
-      long gdlGraphId = graph.getId();
-      int graphLabel = graphCollection.getLabelDictionary().translate(graph.getLabel());
+    for (org.s1ck.gdl.model.Graph gdlGraph : gdlHandler.getGraphs()) {
+      Graph graph = graphFactory.create();
+      int graphId = graphCollection.add(graph);
 
-      List<Vertex> vertices = graphVertices.get(gdlGraphId);
-      Map<Long, Integer> vertexIdMap = Maps.newHashMapWithExpectedSize(vertices.size());
-      List<Edge> edges = graphEdges.get(gdlGraphId);
-
-      Graph dmGraph = graphFactory.create();
-      dmGraph.setLabel(graphLabel);
-
-      // write vertices
-
-      int vertexId = 0;
-      for (Vertex vertex : vertices) {
-        vertexIdMap.put(vertex.getId(), vertexId);
-        dmGraph.addVertex(
-          graphCollection.getLabelDictionary().translate(vertex.getLabel())
-        );
-        vertexId++;
-      }
-
-      // write edges
-
-      for (Edge edge : edges) {
-        dmGraph.addEdge(
-          vertexIdMap.get(edge.getSourceVertexId()),
-          vertexIdMap.get(edge.getTargetVertexId()),
-          graphCollection.getLabelDictionary().translate(edge.getLabel())
-        );
-      }
-
-      int graphId = graphCollection.add(dmGraph);
-
-      graph
+      gdlGraph
         .getProperties()
         .forEach((k, v) -> {
-          if (v instanceof String) {
+          if (v instanceof String)
             graphCollection.getElementDataStore().setGraph(graphId, k, (String) v);
-          }
           else if (v instanceof Integer)
             graphCollection.getElementDataStore().setGraph(graphId, k, (Integer) v);
           else if (v instanceof Long)
@@ -96,6 +65,50 @@ public class GDLLoader extends GraphCollectionLoaderBase {
           else if (v instanceof BigDecimal)
             graphCollection.getElementDataStore().setGraph(graphId, k, (BigDecimal) v);
         });
+
+      long gdlGraphId = gdlGraph.getId();
+      int graphLabel = graphCollection.getLabelDictionary().translate(gdlGraph.getLabel());
+
+      List<Vertex> vertices = graphVertices.get(gdlGraphId);
+      Map<Long, Integer> vertexIdMap = Maps.newHashMapWithExpectedSize(vertices.size());
+      List<Edge> edges = graphEdges.get(gdlGraphId);
+
+      graph.setLabel(graphLabel);
+
+      // write vertices
+
+      int vertexId = 0;
+      for (Vertex vertex : vertices) {
+        vertexIdMap.put(vertex.getId(), vertexId);
+        graph.addVertex(
+          graphCollection.getLabelDictionary().translate(vertex.getLabel())
+        );
+
+        int finalVertexId = vertexId;
+        vertex
+          .getProperties()
+          .forEach((k, v) -> {
+            if (v instanceof String)
+              graphCollection.getElementDataStore().setVertex(graphId, finalVertexId, k, (String) v);
+            else if (v instanceof Integer)
+              graphCollection.getElementDataStore().setVertex(graphId, finalVertexId, k, (Integer) v);
+            else if (v instanceof Long)
+              graphCollection.getElementDataStore().setVertex(graphId, finalVertexId, k, Math.toIntExact((Long) v));
+            else if (v instanceof BigDecimal)
+              graphCollection.getElementDataStore().setVertex(graphId, finalVertexId, k, (BigDecimal) v);
+          });
+        vertexId++;
+      }
+
+      // write edges
+
+      for (Edge edge : edges) {
+        graph.addEdge(
+          vertexIdMap.get(edge.getSourceVertexId()),
+          vertexIdMap.get(edge.getTargetVertexId()),
+          graphCollection.getLabelDictionary().translate(edge.getLabel())
+        );
+      }
     }
 
     return graphCollection;
