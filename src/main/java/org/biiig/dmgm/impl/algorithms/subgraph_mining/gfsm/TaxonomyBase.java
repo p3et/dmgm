@@ -98,7 +98,9 @@ abstract class TaxonomyBase<T> implements Taxonomy<T> {
     if (parent != null) {
 
       // create path from special to general
-      T[] path = (T[]) Array.newInstance(clazz, 0);
+      T[] path = (T[]) Array.newInstance(clazz, 1);
+
+      path[0] = child;
 
       // a path to root is guaranteed at taxonomy creation
       while (!parent.equals(root)) {

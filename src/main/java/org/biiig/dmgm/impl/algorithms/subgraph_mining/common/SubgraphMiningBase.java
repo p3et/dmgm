@@ -109,6 +109,7 @@ public abstract class SubgraphMiningBase implements Operator {
       .filter(new IsMinimal())
       .filter(filterAndOutput)
       .filter(p -> p.getDfsCode().getEdgeCount() < maxEdgeCount)
+      .peek(c -> System.out.println(c.getDfsCode()))
       .forEach(queue::add);
   }
 

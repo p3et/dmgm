@@ -12,9 +12,7 @@ public class FrequentSubgraphMiner {
   public static void main(String[] args) throws IOException {
 
     String path =
-//      "/home/peet/pred_10K.tlf";
-      "/home/peet/git/dmgm/src/main/resources/samples/predictable.tlf";
-
+      "/home/peet/pred_10K.tlf";
     GraphCollection input = TLFLoader
       .fromFile(path)
       .getGraphCollection();
@@ -22,5 +20,7 @@ public class FrequentSubgraphMiner {
     Operator fsm = new FrequentSubgraphs(1.0f, 20);
 
     GraphCollection output = input.apply(fsm);
+
+    System.out.println(GraphCollection.toString(output));
   }
 }

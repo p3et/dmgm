@@ -25,9 +25,7 @@ public class ToMultiDimensionalVector implements Function<DFSEmbedding, MultiDim
     for (int vertexTime = 0; vertexTime < vertexCount; vertexTime++) {
       int vertexId = embedding.getVertexId(vertexTime);
 
-      Optional<int[]> optionalTaxonomyPath = dataStore
-        .getVertexIntegers(graphId, vertexId, SubgraphMiningPropertyKeys.TAXONOMY_PATH);
-
+      Optional<int[]> optionalTaxonomyPath = dataStore.getVertexIntegers(graphId, vertexId, SubgraphMiningPropertyKeys.TAXONOMY_PATH);
       dimensionPaths[vertexTime] = optionalTaxonomyPath.orElse(EMPTY_TAXONOMY_PATH);
     }
 

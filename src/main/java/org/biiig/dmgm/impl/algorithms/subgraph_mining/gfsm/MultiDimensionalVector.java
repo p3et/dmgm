@@ -132,7 +132,10 @@ public class MultiDimensionalVector implements GraphInformation {
     for (int dim = 0; dim < dimensionPaths.length; dim++)
       current[dim] = levels[dim] >= 0 ? String.valueOf(dimensionPaths[dim][levels[dim]]) : "*";
 
-    return ArrayUtils.toString(dimensionPaths) + "@" + ArrayUtils.toString(levels) + "=>" + ArrayUtils.toString(current);
+    return
+//      ArrayUtils.toString(dimensionPaths) + "@" + ArrayUtils.toString(levels) + "=>" +
+        ArrayUtils.toString(current);
+
   }
 
   public Optional<Integer> getSpecializedValue(int dim) {

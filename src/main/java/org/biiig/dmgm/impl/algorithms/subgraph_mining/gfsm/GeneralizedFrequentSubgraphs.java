@@ -1,5 +1,6 @@
 package org.biiig.dmgm.impl.algorithms.subgraph_mining.gfsm;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.ElementDataStore;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.LabelDictionary;
@@ -25,13 +26,12 @@ public class GeneralizedFrequentSubgraphs extends SubgraphMiningBase {
     LabelDictionary dictionary = input.getLabelDictionary();
 
     // cache taxonomy path for every linkable vertex
-    String key = SubgraphMiningPropertyKeys.TAXONOMY_VALUE;
     input
       .parallelStream()
       .forEach(graph -> graph
         .vertexIdStream()
         .forEach(vertexId -> dataStore
-          .getVertexString(graph.getId(), vertexId, key)
+          .getVertexString(graph.getId(), vertexId, SubgraphMiningPropertyKeys.TAXONOMY_VALUE)
           .ifPresent(value -> Optional
             .of(taxonomies.get(dictionary.translate(graph.getVertexLabel(vertexId))))
             .ifPresent(taxonomy -> taxonomy.getRootPathTo(value)
@@ -39,7 +39,7 @@ public class GeneralizedFrequentSubgraphs extends SubgraphMiningBase {
                 int[] intPath = new int[stringPath.length];
                 for (int i = 0; i < stringPath.length; i++)
                   intPath[i] = dictionary.translate(stringPath[i]);
-                dataStore.setVertex(graph.getId(), vertexId, key, intPath);
+                dataStore.setVertex(graph.getId(), vertexId, SubgraphMiningPropertyKeys.TAXONOMY_PATH, intPath);
               })))));
 
     return new FrequentGeneralizationFactory(Math.round(minSupport * input.size()));

@@ -54,7 +54,7 @@ public class FrequentSpecialization extends FilterAndOutputBase
         graph.addEdge(
           dfsCode.getSourceId(e),
           dfsCode.getTargetId(e),
-          dfsCode.getFromTime(e)
+          dfsCode.getEdgeLabel(e)
         ));
 
     int graphId = output.add(graph);

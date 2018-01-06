@@ -1,6 +1,5 @@
 package org.biiig.dmgm.impl.algorithms.subgraph_mining.gfsm;
 
-import de.jesemann.paralleasy.queue_stream.QueueStreamSource;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.DFSCodeEmbeddingsPair;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.fsm.Frequent;
@@ -32,18 +31,17 @@ public class GeneralizedFrequent extends Frequent {
         .map(new ToMultiDimensionalVector(output.getElementDataStore()))
         .collect(Collectors.toList());
 
-    QueueStreamSource<MultiDimensionalVector> queue = QueueStreamSource.of(vectors);
-
-    queue
-      .stream()
-      .flatMap(new AllSpecializations(topLevel.getVertexCount()))
-      .collect(Collectors.groupingBy(Function.identity(), Collectors.toList()))
-      .entrySet()
-      .stream()
-      .filter(new FrequentSpecialization(output, minSupportAbsolute, topLevel))
-      // but add all instances to queue
-      .flatMap(e -> e.getValue().stream())
-      .forEach(queue::add);
+    while (!vectors.isEmpty())
+      vectors = vectors
+        .stream()
+        .flatMap(new AllSpecializations(topLevel.getVertexCount()))
+        .collect(Collectors.groupingBy(Function.identity(), Collectors.toList()))
+        .entrySet()
+        .stream()
+        .filter(new FrequentSpecialization(output, minSupportAbsolute, topLevel))
+        // but add all instances to queue
+        .flatMap(e -> e.getValue().stream())
+        .collect(Collectors.toList());
   }
 
 
