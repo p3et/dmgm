@@ -1,6 +1,9 @@
 package org.biiig.dmgm.impl.algorithms.subgraph_mining.gfsm;
 
+import com.google.common.collect.Maps;
+import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.ElementDataStore;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.LabelDictionary;
@@ -13,34 +16,66 @@ import java.util.Optional;
 
 public class GeneralizedFrequentSubgraphs extends SubgraphMiningBase {
 
-  private final Map<String, StringTaxonomy> taxonomies;
+  public static final String LEVEL_SEPARATOR = "x";
 
-  public GeneralizedFrequentSubgraphs(float minSupportRel, int maxEdgeCount, Map<String, StringTaxonomy> taxonomies) {
+  public GeneralizedFrequentSubgraphs(float minSupportRel, int maxEdgeCount) {
     super(minSupportRel, maxEdgeCount);
-    this.taxonomies = taxonomies;
   }
 
   @Override
   public FilterAndOutputFactory getFilterAndOutputFactory(GraphCollection input) {
-    ElementDataStore dataStore = input.getElementDataStore();
     LabelDictionary dictionary = input.getLabelDictionary();
+    Map<Integer, Pair<Integer, int[]>> pathCache = Maps.newConcurrentMap();
 
     // cache taxonomy path for every linkable vertex
     input
       .parallelStream()
       .forEach(graph -> graph
         .vertexIdStream()
-        .forEach(vertexId -> dataStore
-          .getVertexString(graph.getId(), vertexId, SubgraphMiningPropertyKeys.TAXONOMY_VALUE)
-          .ifPresent(value -> Optional
-            .of(taxonomies.get(dictionary.translate(graph.getVertexLabel(vertexId))))
-            .ifPresent(taxonomy -> taxonomy.getRootPathTo(value)
-              .ifPresent(stringPath -> {
-                int[] intPath = new int[stringPath.length];
-                for (int i = 0; i < stringPath.length; i++)
-                  intPath[i] = dictionary.translate(stringPath[i]);
-                dataStore.setVertex(graph.getId(), vertexId, SubgraphMiningPropertyKeys.TAXONOMY_PATH, intPath);
-              })))));
+        .forEach(vertexId -> {
+          int bottomLevel = graph.getVertexLabel(vertexId);
+
+          Pair<Integer, int[]> pathPair = pathCache.get(bottomLevel);
+
+          // if label has no assigned taxonomy path
+          if (pathPair == null) {
+            String label = dictionary.translate(bottomLevel);
+
+            // if at least two separators (because taxonomy.topLevel.spec1,..)
+            if (StringUtils.countMatches(label, LEVEL_SEPARATOR) > 1) {
+              int[] specPath = new int[] {bottomLevel};
+
+              // generalize while at least two separators (taxonomy.topLevel.spec1)
+              while (StringUtils.countMatches(label, LEVEL_SEPARATOR) > 2) {
+                label = StringUtils.substringBeforeLast(label, LEVEL_SEPARATOR);
+                specPath = ArrayUtils.add(specPath, dictionary.translate(label));
+              }
+
+              ArrayUtils.reverse(specPath);
+
+              // generalize top level taxonomy.topLevel
+              int topLevel = dictionary
+                .translate(StringUtils.substringBeforeLast(label, LEVEL_SEPARATOR));
+              pathPair = new Pair<>(topLevel, specPath);
+              pathCache.put(bottomLevel, pathPair);
+            }
+          }
+
+          if (pathPair != null) {
+            // replace label with top level
+            graph.setVertexLabel(vertexId, pathPair.getKey());
+
+            // store path of specializations
+            input
+              .getElementDataStore()
+              .setVertex(
+                graph.getId(),
+                vertexId,
+                SubgraphMiningPropertyKeys.TAXONOMY_PATH,
+                pathPair.getValue()
+              );
+          }
+        }));
 
     return new FrequentGeneralizationFactory(Math.round(minSupport * input.size()));
   }

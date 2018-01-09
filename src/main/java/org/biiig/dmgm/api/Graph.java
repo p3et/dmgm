@@ -29,4 +29,6 @@ public interface Graph {
   IntStream vertexIdStream();
 
   IntStream edgeIdStream();
+
+  void setVertexLabel(int id, int label);
 }

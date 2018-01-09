@@ -32,19 +32,23 @@ public class GFSMAlgorithmTest extends DMGMTestBase {
     taxonomies.put("A", aTaxonomy);
     taxonomies.put("B", bTaxonomy);
 
-    Operator operator = new GeneralizedFrequentSubgraphs(0.0f, 10, taxonomies);
+    Operator operator = new GeneralizedFrequentSubgraphs(1.0f, 10);
 
-    String inputGDL =
-      ":X[(:A{_taxonomyValue:\"aa\"})-[:a]->(:B{_taxonomyValue:\"bb\"})-[:a]->(:C)]" +
-      ":X[(:A{_taxonomyValue:\"ab\"})-[:a]->(:B{_taxonomyValue:\"bbb\"})-[:a]->(:C)]";
+    String inputGDL = (
+      ":X[(:A.a.a)-[:a]->(:B.b.b)-[:a]->(:C)]" +
+      ":X[(:A.a.b)-[:a]->(:B.b.b.b)-[:a]->(:C)]" )
+      .replace(".", GeneralizedFrequentSubgraphs.LEVEL_SEPARATOR);
 
-    GraphCollection input = GDLLoader
-      .fromString(inputGDL)
-      .getGraphCollection();
+    String expectedGDL = (
+      ":X[(:A.a)-[:a]->(:B.b)-[:a]->(:C)]" +
+      ":X[(:A.a)-[:a]->(:B.b.b)-[:a]->(:C)]" +
+      ":X[(:A.a)-[:a]->(:B.b)]" +
+      ":X[(:A.a)-[:a]->(:B.b.b)]" +
+      ":X[(:B.b)-[:a]->(:C)]" +
+      ":X[(:B.b.b)-[:a]->(:C)]"
+    )
+      .replace(".", GeneralizedFrequentSubgraphs.LEVEL_SEPARATOR);
 
-    GraphCollection output = input
-      .apply(operator);
-
-    assertEquals(34, output.size());
+    runAndTestExpectation(operator, inputGDL, expectedGDL);
   }
 }

@@ -9,7 +9,7 @@ public class GFSMPatternTest extends SubgraphMiningPatternTest {
 
   @Override
   protected Operator getOperator() {
-    return new GeneralizedFrequentSubgraphs(0.6f, 10, Maps.newHashMap());
+    return new GeneralizedFrequentSubgraphs(0.6f, 10);
   }
 
 }

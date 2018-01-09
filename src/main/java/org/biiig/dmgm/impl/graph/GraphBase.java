@@ -119,4 +119,9 @@ public class GraphBase implements Graph {
     return IntStream.range(0, getEdgeCount());
   }
 
+  @Override
+  public void setVertexLabel(int id, int label) {
+    vertexLabels[id] = label;
+  }
+
 }

@@ -33,13 +33,15 @@ public abstract class SubgraphMiningBase implements Operator {
       .withLabelDictionary(rawInput.getLabelDictionary())
       .withElementDataStore(rawInput.getElementDataStore());
 
+    FilterAndOutputFactory filterAndOutputFactory = getFilterAndOutputFactory(rawInput);
+
     GraphCollection input = pruneByLabels(rawInput, collectionBuilder);
     GraphCollection output = collectionBuilder.create();
 
     Map<DFSCode, DFSEmbedding[]> singleEdgeParents = initializeSingle(input);
-
-    FilterAndOutputFactory filterAndOutputFactory = getFilterAndOutputFactory(input);
     FilterAndOutput filterAndOutput = filterAndOutputFactory.create(output);
+
+
     List<DFSCodeEmbeddingsPair> parents = aggregateSingle(singleEdgeParents, filterAndOutput);
 
     QueueStreamSource<DFSCodeEmbeddingsPair> queue = QueueStreamSource.of(parents);
