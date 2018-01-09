@@ -44,15 +44,17 @@ public class GraphBase implements Graph {
   }
 
   @Override
-  public void addVertex(int label) {
+  public int addVertex(int label) {
     vertexLabels = ArrayUtils.add(vertexLabels, label);
+    return vertexLabels.length - 1;
   }
 
   @Override
-  public void addEdge(int sourceId, int targetId, int label) {
+  public int addEdge(int sourceId, int targetId, int label) {
     edgeLabels = ArrayUtils.add(edgeLabels, label);
     sourceIds = ArrayUtils.add(sourceIds, sourceId);
     targetIds = ArrayUtils.add(targetIds, targetId);
+    return edgeLabels.length - 1;
   }
 
   @Override

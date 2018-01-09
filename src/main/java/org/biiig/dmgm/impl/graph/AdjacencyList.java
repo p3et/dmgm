@@ -12,20 +12,22 @@ public class AdjacencyList extends GraphBase {
   }
 
   @Override
-  public void addVertex(int label) {
+  public int addVertex(int label) {
     super.addVertex(label);
 
     outgoingEdgeIds = ArrayUtils.add(outgoingEdgeIds, new int[0]);
     incomingEdgeIds = ArrayUtils.add(incomingEdgeIds, new int[0]);
+    return label;
   }
 
   @Override
-  public void addEdge(int sourceId, int targetId, int label) {
+  public int addEdge(int sourceId, int targetId, int label) {
     super.addEdge(sourceId, targetId, label);
 
     int edgeId = getEdgeCount() - 1;
     outgoingEdgeIds[sourceId] = ArrayUtils.add(outgoingEdgeIds[sourceId], edgeId);
     incomingEdgeIds[targetId] = ArrayUtils.add(incomingEdgeIds[targetId], edgeId);
+    return edgeId;
   }
 
   @Override

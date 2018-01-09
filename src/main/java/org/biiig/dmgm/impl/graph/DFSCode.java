@@ -30,8 +30,9 @@ public class DFSCode extends GraphBase implements Comparable<DFSCode> {
   }
 
   @Override
-  public void addEdge(int sourceId, int targetId, int label) {
+  public int addEdge(int sourceId, int targetId, int label) {
     addEdge(sourceId, targetId, label, true);
+    return sourceId;
   }
 
   public int getFromTime(int edgeTime) {
