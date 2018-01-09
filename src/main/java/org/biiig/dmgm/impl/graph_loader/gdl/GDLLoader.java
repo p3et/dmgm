@@ -70,7 +70,9 @@ public class GDLLoader extends GraphCollectionLoaderBase {
       int graphLabel = graphCollection.getLabelDictionary().translate(gdlGraph.getLabel());
 
       List<Vertex> vertices = graphVertices.get(gdlGraphId);
-      Map<Long, Integer> vertexIdMap = Maps.newHashMapWithExpectedSize(vertices.size());
+      Map<Long, Integer> vertexIdMap = vertices != null ?
+        Maps.newHashMapWithExpectedSize(vertices.size()) :
+        Maps.newHashMap();
       List<Edge> edges = graphEdges.get(gdlGraphId);
 
       graph.setLabel(graphLabel);
@@ -78,37 +80,40 @@ public class GDLLoader extends GraphCollectionLoaderBase {
       // write vertices
 
       int vertexId = 0;
-      for (Vertex vertex : vertices) {
-        vertexIdMap.put(vertex.getId(), vertexId);
-        graph.addVertex(
-          graphCollection.getLabelDictionary().translate(vertex.getLabel())
-        );
 
-        int finalVertexId = vertexId;
-        vertex
-          .getProperties()
-          .forEach((k, v) -> {
-            if (v instanceof String)
-              graphCollection.getElementDataStore().setVertex(graphId, finalVertexId, k, (String) v);
-            else if (v instanceof Integer)
-              graphCollection.getElementDataStore().setVertex(graphId, finalVertexId, k, (Integer) v);
-            else if (v instanceof Long)
-              graphCollection.getElementDataStore().setVertex(graphId, finalVertexId, k, Math.toIntExact((Long) v));
-            else if (v instanceof BigDecimal)
-              graphCollection.getElementDataStore().setVertex(graphId, finalVertexId, k, (BigDecimal) v);
-          });
-        vertexId++;
-      }
+      if (vertices != null)
+        for (Vertex vertex : vertices) {
+          vertexIdMap.put(vertex.getId(), vertexId);
+          graph.addVertex(
+            graphCollection.getLabelDictionary().translate(vertex.getLabel())
+          );
+
+          int finalVertexId = vertexId;
+          vertex
+            .getProperties()
+            .forEach((k, v) -> {
+              if (v instanceof String)
+                graphCollection.getElementDataStore().setVertex(graphId, finalVertexId, k, (String) v);
+              else if (v instanceof Integer)
+                graphCollection.getElementDataStore().setVertex(graphId, finalVertexId, k, (Integer) v);
+              else if (v instanceof Long)
+                graphCollection.getElementDataStore().setVertex(graphId, finalVertexId, k, Math.toIntExact((Long) v));
+              else if (v instanceof BigDecimal)
+                graphCollection.getElementDataStore().setVertex(graphId, finalVertexId, k, (BigDecimal) v);
+            });
+          vertexId++;
+        }
 
       // write edges
 
-      for (Edge edge : edges) {
-        graph.addEdge(
-          vertexIdMap.get(edge.getSourceVertexId()),
-          vertexIdMap.get(edge.getTargetVertexId()),
-          graphCollection.getLabelDictionary().translate(edge.getLabel())
-        );
-      }
+      if (edges != null)
+        for (Edge edge : edges) {
+          graph.addEdge(
+            vertexIdMap.get(edge.getSourceVertexId()),
+            vertexIdMap.get(edge.getTargetVertexId()),
+            graphCollection.getLabelDictionary().translate(edge.getLabel())
+          );
+        }
     }
 
     return graphCollection;
