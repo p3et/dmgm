@@ -4,7 +4,6 @@ import de.jesemann.paralleasy.queue_stream.QueueStreamSource;
 import org.biiig.dmgm.api.Graph;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.GraphCollectionBuilder;
-import org.biiig.dmgm.api.Operator;
 import org.biiig.dmgm.impl.graph.DFSCode;
 import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionBuilderFactory;
 
@@ -15,7 +14,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class SubgraphMiningBase implements Operator {
+public abstract class SubgraphMiningBase extends org.biiig.dmgm.impl.algorithms.OperatorBase {
   protected final float minSupport;
   private final int maxEdgeCount;
 
@@ -160,4 +159,5 @@ public abstract class SubgraphMiningBase implements Operator {
       .map(Map.Entry::getKey)
       .collect(Collectors.toSet());
   }
+
 }

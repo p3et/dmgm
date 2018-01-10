@@ -5,13 +5,15 @@ import org.biiig.dmgm.api.ElementDataStore;
 import org.biiig.dmgm.api.Graph;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.Operator;
+import org.biiig.dmgm.impl.algorithms.OperatorBase;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
-public class Aggregation implements Operator {
+public class Aggregation extends OperatorBase {
 
   private final BiConsumer<Graph, ElementDataStore> aggregateFunction;
 
@@ -50,11 +52,16 @@ public class Aggregation implements Operator {
 
   @Override
   public GraphCollection apply(GraphCollection graphs) {
-    graphs
-      .stream()
+    Stream<Graph> stream = graphs
+      .stream();
+
+    stream = setParallelism(stream);
+
+    stream
       .parallel()
       .forEach(g -> aggregateFunction.accept(g, graphs.getElementDataStore()));
     
     return graphs;
   }
+
 }
