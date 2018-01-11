@@ -36,6 +36,6 @@ public class AllSpecializationsTest {
     dimensionPaths[1] = new int[] {1};
     dimensionPaths[2] = new int[] {1, 2};
 
-    return MultiDimensionalVector.create(0, dimensionPaths);
+    return MultiDimensionalVector.create(null, dimensionPaths);
   }
 }

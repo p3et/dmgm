@@ -1,6 +1,7 @@
 package org.biiig.dmgm.impl.algorithms.subgraph_mining.gfsm;
 
 import org.biiig.dmgm.DMGMTestBase;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.DFSEmbedding;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -43,7 +44,7 @@ public class MultiDimensionalVectorTest extends DMGMTestBase{
     dimensionPaths[1] = new int[] {1};
     dimensionPaths[2] = new int[] {1, 2};
 
-    return MultiDimensionalVector.create(0, dimensionPaths);
+    return MultiDimensionalVector.create(null, dimensionPaths);
   }
 
   private MultiDimensionalVector getVectorB() {
@@ -52,6 +53,6 @@ public class MultiDimensionalVectorTest extends DMGMTestBase{
     dimensionPaths[1] = new int[] {2};
     dimensionPaths[2] = new int[] {1, 2};
 
-    return MultiDimensionalVector.create(0, dimensionPaths);
+    return MultiDimensionalVector.create(null, dimensionPaths);
   }
 }

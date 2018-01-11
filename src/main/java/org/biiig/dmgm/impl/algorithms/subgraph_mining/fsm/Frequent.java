@@ -1,39 +1,45 @@
 package org.biiig.dmgm.impl.algorithms.subgraph_mining.fsm;
 
+import javafx.util.Pair;
 import org.biiig.dmgm.api.GraphCollection;
-import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.DFSCodeEmbeddingsPair;
-import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.DFSEmbedding;
-import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.FilterAndOutput;
-import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.FilterAndOutputBase;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.FilterOrOutput;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.SubgraphMiningPropertyKeys;
-import org.biiig.dmgm.impl.graph.DFSCode;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.Supportable;
 
-public class Frequent extends FilterAndOutputBase implements FilterAndOutput {
+import java.util.Optional;
+import java.util.function.Consumer;
 
-  protected final int minSupportAbsolute;
+public class Frequent<T extends Supportable> implements FilterOrOutput<T> {
 
-  protected Frequent(GraphCollection output, int minSupportAbsolute) {
-    super(output);
+  private final int minSupportAbsolute;
+
+  public Frequent(int minSupportAbsolute) {
     this.minSupportAbsolute = minSupportAbsolute;
   }
 
   @Override
-  public boolean test(DFSCodeEmbeddingsPair pairs) {
-    DFSEmbedding[] embeddings = pairs.getEmbeddings();
-
-    int frequency = embeddings.length;
-    int support = frequency >= minSupportAbsolute ? getSupport(embeddings) : 0;
+  public Pair<Optional<T>, Optional<Consumer<GraphCollection>>> apply(T supportable) {    int embeddingCount = supportable.getEmbeddingCount();
+    int support = supportable.getSupport();
 
     boolean frequent = support >= minSupportAbsolute;
-    if (frequent)
-      store(pairs.getDfsCode(), frequency, support);
 
-    return frequent;
-  }
+    Optional<T> child;
+    Optional<Consumer<GraphCollection>> store;
 
-  private void store(DFSCode dfsCode, int frequency, int support) {
-    int graphId = output.add(dfsCode);
-    output.getElementDataStore().setGraph(graphId, SubgraphMiningPropertyKeys.SUPPORT, support);
-    output.getElementDataStore().setGraph(graphId, SubgraphMiningPropertyKeys.EMBEDDING_COUNT, frequency);
+    if (frequent) {
+      child = Optional.of(supportable);
+      store = Optional.of(s -> {
+        int graphId = s.add(supportable.getPattern());
+        s.getElementDataStore().setGraph(graphId, SubgraphMiningPropertyKeys.SUPPORT, support);
+        s.getElementDataStore().setGraph(graphId, SubgraphMiningPropertyKeys.EMBEDDING_COUNT, embeddingCount);
+      });
+
+    } else {
+      child = Optional.empty();
+      store = Optional.empty();
+    }
+
+
+    return new Pair<>(child, store);
   }
 }

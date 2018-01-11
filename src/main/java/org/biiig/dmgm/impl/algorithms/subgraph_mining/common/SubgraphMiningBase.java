@@ -1,15 +1,13 @@
 package org.biiig.dmgm.impl.algorithms.subgraph_mining.common;
 
 import de.jesemann.paralleasy.recursion.RecursiveTask;
-import org.biiig.dmgm.api.Graph;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.GraphCollectionBuilder;
-import org.biiig.dmgm.impl.graph.DFSCode;
 import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionBuilderFactory;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -32,48 +30,35 @@ public abstract class SubgraphMiningBase extends org.biiig.dmgm.impl.algorithms.
       .withLabelDictionary(rawInput.getLabelDictionary())
       .withElementDataStore(rawInput.getElementDataStore());
 
-    FilterAndOutputFactory filterAndOutputFactory = getFilterAndOutputFactory(rawInput);
+    FilterOrOutput<DFSCodeEmbeddingsPair> filterOrOutput = getFilterAndOutput(rawInput);
+
 
     GraphCollection input = pruneByLabels(rawInput, collectionBuilder);
+
+    PatternInitialization patternInitialization = new PatternInitialization(input, filterOrOutput);
+
+    RecursiveTask<DFSCodeEmbeddingsPair, Consumer<GraphCollection>> patternGrowth = RecursiveTask
+      .createFor(new ProcessDFSNode(input, filterOrOutput, maxEdgeCount))
+      .on(patternInitialization.getSingleEdgeDFSNodes());
+
+    patternInitialization.run();
+    patternGrowth.run();
+
     GraphCollection output = collectionBuilder.create();
 
-    Map<DFSCode, DFSEmbedding[]> singleEdgeParents = initializeSingle(input);
-    FilterAndOutput filterAndOutput = filterAndOutputFactory.create(output);
+    patternInitialization
+      .getOutput()
+      .forEach(c -> c.accept(output));
 
-
-    List<DFSCodeEmbeddingsPair> parents = aggregateSingle(singleEdgeParents, filterAndOutput);
-
-    RecursiveTask<DFSCodeEmbeddingsPair, Graph> queue = RecursiveTask
-      .createFor(new ProcessDFSNode(input, filterAndOutput, maxEdgeCount))
-      .on(parents);
-
-    queue.run();
-
+    patternGrowth
+      .getOutput()
+      .forEach(c -> c.accept(output));
 
     return output;
   }
 
-  public abstract FilterAndOutputFactory getFilterAndOutputFactory(GraphCollection input);
+  protected abstract FilterOrOutput<DFSCodeEmbeddingsPair> getFilterAndOutput(GraphCollection rawInput);
 
-  // MINING
-
-  private Map<DFSCode, DFSEmbedding[]> initializeSingle(GraphCollection input) {
-    return input
-      .stream()
-      .flatMap(new InitializeParents())
-      .collect(new GroupByDFSCodeArrayEmbeddings());
-  }
-
-  private List<DFSCodeEmbeddingsPair> aggregateSingle(
-    Map<DFSCode, DFSEmbedding[]> reports, FilterAndOutput filterAndOutput) {
-
-    return reports
-        .entrySet()
-        .stream()
-        .map(e -> new DFSCodeEmbeddingsPair(e.getKey(), e.getValue()))
-        .filter(filterAndOutput)
-        .collect(Collectors.toList());
-  }
 
   // PREPROCESSING
 

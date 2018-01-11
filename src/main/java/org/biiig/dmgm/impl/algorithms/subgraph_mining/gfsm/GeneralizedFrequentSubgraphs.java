@@ -7,12 +7,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.ElementDataStore;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.LabelDictionary;
-import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.FilterAndOutputFactory;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.DFSCodeEmbeddingsPair;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.FilterOrOutput;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.SubgraphMiningBase;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.SubgraphMiningPropertyKeys;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.fsm.Frequent;
+import org.biiig.dmgm.impl.data_store.InMemoryElementDataStore;
 
 import java.util.Map;
-import java.util.Optional;
 
 public class GeneralizedFrequentSubgraphs extends SubgraphMiningBase {
 
@@ -23,12 +25,17 @@ public class GeneralizedFrequentSubgraphs extends SubgraphMiningBase {
   }
 
   @Override
-  public FilterAndOutputFactory getFilterAndOutputFactory(GraphCollection input) {
-    LabelDictionary dictionary = input.getLabelDictionary();
+  protected FilterOrOutput<DFSCodeEmbeddingsPair> getFilterAndOutput(GraphCollection rawInput) {
+    int minSupportAbsolute = Math.round(minSupport * rawInput.size());
+    ElementDataStore dataStore = new InMemoryElementDataStore();
+    FilterOrOutput<PatternVectorsPair> filter = new Frequent<>(minSupportAbsolute);
+    Specializer spezializer = new Specializer(dataStore, filter);
+
+    LabelDictionary dictionary = rawInput.getLabelDictionary();
     Map<Integer, Pair<Integer, int[]>> pathCache = Maps.newConcurrentMap();
 
     // cache taxonomy path for every linkable vertex
-    input
+    rawInput
       .parallelStream()
       .forEach(graph -> graph
         .vertexIdStream()
@@ -66,8 +73,8 @@ public class GeneralizedFrequentSubgraphs extends SubgraphMiningBase {
             graph.setVertexLabel(vertexId, pathPair.getKey());
 
             // store path of specializations
-            input
-              .getElementDataStore()
+
+            dataStore
               .setVertex(
                 graph.getId(),
                 vertexId,
@@ -77,7 +84,7 @@ public class GeneralizedFrequentSubgraphs extends SubgraphMiningBase {
           }
         }));
 
-    return new FrequentGeneralizationFactory(Math.round(minSupport * input.size()));
+    return new Generalized(minSupportAbsolute, spezializer);
   }
 
 }

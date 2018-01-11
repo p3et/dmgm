@@ -1,16 +1,16 @@
 package org.biiig.dmgm.impl.algorithms.subgraph_mining.gfsm;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.GraphInformation;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.DFSEmbedding;
 
 import java.util.Arrays;
 import java.util.Optional;
 
-public class MultiDimensionalVector implements GraphInformation {
+public class MultiDimensionalVector {
 
   public static final int ARBITRARY = -1;
 
-  private final int graphId;
+  private final DFSEmbedding embedding;
   private final int lastSpecialization;
 
   /**
@@ -27,14 +27,13 @@ public class MultiDimensionalVector implements GraphInformation {
 
   /**
    * Specialization constructor.
-   *
-   * @param graphId
+   *  @param embedding
    * @param dimensionPaths copy of parents' dimension paths
    * @param levels specialized state
    * @param lastSpecialization
    */
-  private MultiDimensionalVector(int graphId, int[][] dimensionPaths, int[] levels, int lastSpecialization) {
-    this.graphId = graphId;
+  private MultiDimensionalVector(DFSEmbedding embedding, int[][] dimensionPaths, int[] levels, int lastSpecialization) {
+    this.embedding = embedding;
     this.dimensionPaths = dimensionPaths;
     this.levels = levels;
     this.lastSpecialization = lastSpecialization;
@@ -53,7 +52,7 @@ public class MultiDimensionalVector implements GraphInformation {
 
     // dimension c
     if (levels[dimension] + 1 < dimensionPaths[dimension].length) {
-      specialization = new MultiDimensionalVector(graphId, dimensionPaths, Arrays.copyOf(levels, levels.length), dimension);
+      specialization = new MultiDimensionalVector(embedding, dimensionPaths, Arrays.copyOf(levels, levels.length), dimension);
       specialization.levels[dimension]++;
     }
 
@@ -104,21 +103,21 @@ public class MultiDimensionalVector implements GraphInformation {
   /**
    * Factory method to create a vector at its most general state.
    *
-   * @param graphId
+   * @param embedding
    * @param dimensionPaths paths of dimension values from general to special
    */
-  public static MultiDimensionalVector create(int graphId, int[][] dimensionPaths) {
+  public static MultiDimensionalVector create(DFSEmbedding embedding, int[][] dimensionPaths) {
     int size = dimensionPaths.length;
     int[] levels = new int[size];
 
     for (int i = 0; i < size; i++)
       levels[i] = ARBITRARY;
 
-    return new MultiDimensionalVector(graphId, dimensionPaths, levels, 0);
+    return new MultiDimensionalVector(embedding, dimensionPaths, levels, 0);
   }
 
-  public int getGraphId() {
-    return graphId;
+  public DFSEmbedding getEmbedding() {
+    return embedding;
   }
 
   public int getLastSpecialization() {

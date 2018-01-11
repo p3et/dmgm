@@ -7,6 +7,6 @@ public class CSMThresholdTest extends SubgraphMiningThresholdTest {
 
   @Override
   protected Operator getOperator(float minSupportRel, int maxEdgeCount) {
-    return new CharacteristicSubgraphs(minSupportRel, maxEdgeCount, (f, t) -> true);
+    return new CharacteristicSubgraphs(minSupportRel, maxEdgeCount, (f, t) -> new int[] {0});
   }
 }

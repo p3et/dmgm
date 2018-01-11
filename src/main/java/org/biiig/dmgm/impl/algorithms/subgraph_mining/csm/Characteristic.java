@@ -1,97 +1,86 @@
 package org.biiig.dmgm.impl.algorithms.subgraph_mining.csm;
 
-import org.apache.commons.lang3.ArrayUtils;
+import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
+import javafx.util.Pair;
 import org.biiig.dmgm.api.GraphCollection;
-import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.DFSCodeEmbeddingsPair;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.DFSEmbedding;
-import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.FilterAndOutput;
-import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.FilterAndOutputBase;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.FilterOrOutput;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.SubgraphMiningPropertyKeys;
-import org.biiig.dmgm.impl.graph.DFSCode;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.Supportable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-public class Characteristic extends FilterAndOutputBase implements FilterAndOutput {
-  private final Map<Integer, Integer> categorySizes;
-  private final Map<Integer, Integer> categoryMinSupports;
+public class Characteristic<T extends Supportable> implements FilterOrOutput<T> {
+  private final Map<Integer, Integer> graphLabel;
+  private final Map<Integer, Integer> graphLabelCounts;
 
   private final Interestingness interestingness;
-  private final int defaultCategory;
   private final int graphCount;
 
   Characteristic(
-    GraphCollection output,
-    Interestingness interestingness, Map<Integer, Integer> categorySizes,
-    Map<Integer, Integer> categoryMinSupports, int inputSize,
-    int defaultCategory
+    Interestingness interestingness,
+    Map<Integer, Integer> graphLabel,
+    Map<Integer, Integer> graphLabelCounts,
+    int graphCount
   ) {
-    super(output);
-    this.categorySizes = categorySizes;
+    this.graphLabel = graphLabel;
+    this.graphLabelCounts = graphLabelCounts;
     this.interestingness = interestingness;
-    this.categoryMinSupports = categoryMinSupports;
-    graphCount = inputSize;
-    this.defaultCategory = defaultCategory;
+    this.graphCount = graphCount;
   }
 
   @Override
-  public boolean test(DFSCodeEmbeddingsPair pair) {
-    DFSEmbedding[] embeddings = pair.getEmbeddings();
+  public Pair<Optional<T>, Optional<Consumer<GraphCollection>>> apply(T supportable) {
 
-    int totalSupport = getSupport(embeddings);
+    Map<Integer, List<DFSEmbedding>> categoryEmbeddings = supportable
+      .getEmbeddings()
+      .stream()
+      .collect(new GroupByKeyListValues<>(
+        e -> graphLabel.get(e.getGraphId()),
+        Function.identity())
+      );
 
-    Map<Integer, List<DFSEmbedding>> categorizedEmbeddings = Stream.of(embeddings)
-      .collect(
-        Collectors.groupingBy(
-          e -> output
-            .getElementDataStore()
-            .getGraphInteger(e.getGraphId(), SubgraphMiningPropertyKeys.CATEGORY).orElse(defaultCategory),
-          Collectors.toList()));
+    Map<Integer, Float> categorySupports = categoryEmbeddings
+      .entrySet()
+      .stream()
+      .collect(Collectors.toMap(
+        Map.Entry::getKey,
+        e -> (float) e.getValue()
+          .stream()
+          .map(DFSEmbedding::getGraphId)
+          .distinct()
+          .count()
+          / graphLabelCounts.get(e.getKey())));
 
-    // all categories in which the pattern is characteristic will be added
-    int[] categories = new int[0];
+    float totalSupport = (float) supportable.getSupport() / graphCount;
 
-    // will be set to true, if the pattern is frequent in at least one category
-    boolean atLeastOnceFrequent = false;
+    Optional<T> child;
+    Optional<Consumer<GraphCollection>> store;
 
-    for (Map.Entry<Integer, List<DFSEmbedding>> entry : categorizedEmbeddings.entrySet()) {
-      Integer category = entry.getKey();
+    int[] labels = interestingness.getInterestingCategories(categorySupports, totalSupport);
 
-      int categorySupport = getSupport(entry.getValue());
-      if (categorySupport >= categoryMinSupports.get(category)) {
-        atLeastOnceFrequent = true;
+    if (labels.length > 0) {
+      child = Optional.of(supportable);
+      store = Optional.of(s -> {
+        int graphId = s.add(supportable.getPattern());
+        s.getElementDataStore()
+          .setGraph(graphId, SubgraphMiningPropertyKeys.SUPPORT, supportable.getSupport());
+        s.getElementDataStore()
+          .setGraph(graphId, SubgraphMiningPropertyKeys.EMBEDDING_COUNT, supportable.getEmbeddingCount());
+        s.getElementDataStore()
+          .setGraph(graphId, SubgraphMiningPropertyKeys.CHARACTERISTIC_FOR, labels);
+      });
 
-        if (isInteresting(category, categorySupport, totalSupport))
-          categories = ArrayUtils.add(categories, category);
-      }
+    } else {
+      child = Optional.empty();
+      store = Optional.empty();
     }
 
-    // output only of characteristic for at least one category
-    if (categories.length > 0)
-      store(pair.getDfsCode(), embeddings.length, totalSupport, categories);
-
-    // grow children as long as frequent in at least one category
-    return atLeastOnceFrequent;
-  }
-
-  public boolean isInteresting(Integer category, int categorySupportAbsolute, int totalSupportAbsolute) {
-    float categorySupport = (float) categorySupportAbsolute / categorySizes.get(category);
-    float totalSupport = (float) totalSupportAbsolute / graphCount;
-    return interestingness.isInteresting(categorySupport, totalSupport);
-  }
-
-  private void store(DFSCode dfsCode, int embeddingCount, int support, int[] categories) {
-    int graphId = output.add(dfsCode);
-    output.getElementDataStore().setGraph(graphId, SubgraphMiningPropertyKeys.SUPPORT, support);
-    output.getElementDataStore().setGraph(graphId, SubgraphMiningPropertyKeys.EMBEDDING_COUNT, embeddingCount);
-
-    String[] translatedCategories = new String[categories.length];
-
-    for (int i = 0; i < categories.length; i++)
-      translatedCategories[i] = output.getLabelDictionary().translate(categories[i]);
-
-    output.getElementDataStore().setGraph(graphId, SubgraphMiningPropertyKeys.CATEGORIES, translatedCategories);
+    return new Pair<>(child, store);
   }
 }

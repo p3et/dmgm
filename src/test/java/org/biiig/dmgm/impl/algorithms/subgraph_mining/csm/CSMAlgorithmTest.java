@@ -18,7 +18,7 @@ public class CSMAlgorithmTest extends DMGMTestBase {
   public void testAlgorithm() {
 
     Operator operator = new CharacteristicSubgraphs(
-      1.0f, 10, (c, t) -> c >= 2 * t);
+      1.0f, 10, (c, t) -> new int[0]);
 
     String inputGDL =
       "{_category:\"X\"}[(:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(:D)]" +
@@ -59,7 +59,7 @@ public class CSMAlgorithmTest extends DMGMTestBase {
 
     Optional<String[]> categories = output
       .getElementDataStore()
-      .getGraphStrings(0, SubgraphMiningPropertyKeys.CATEGORIES);
+      .getGraphStrings(0, SubgraphMiningPropertyKeys.CHARACTERISTIC_FOR);
 
     assertTrue("categories array", categories.isPresent());
     assertEquals("categories size", 1, categories.get().length);

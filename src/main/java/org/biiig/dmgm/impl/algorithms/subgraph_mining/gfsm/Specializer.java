@@ -1,0 +1,50 @@
+package org.biiig.dmgm.impl.algorithms.subgraph_mining.gfsm;
+
+import com.google.common.collect.Lists;
+import de.jesemann.paralleasy.recursion.RecursionStrategy;
+import de.jesemann.paralleasy.recursion.RecursiveTask;
+import org.biiig.dmgm.api.ElementDataStore;
+import org.biiig.dmgm.api.GraphCollection;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.DFSCodeEmbeddingsPair;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.FilterOrOutput;
+import org.biiig.dmgm.impl.graph.DFSCode;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class Specializer implements Function<DFSCodeEmbeddingsPair, Collection<Consumer<GraphCollection>>> {
+
+  private final ElementDataStore dataStore;
+  private final FilterOrOutput<PatternVectorsPair> filter;
+
+  public Specializer(ElementDataStore dataStore, FilterOrOutput<PatternVectorsPair> filter) {
+    this.dataStore = dataStore;
+    this.filter = filter;
+  }
+
+  @Override
+  public Collection<Consumer<GraphCollection>> apply(DFSCodeEmbeddingsPair pair) {
+
+    List<MultiDimensionalVector> vectors = pair
+      .getEmbeddings()
+      .stream()
+      .map(new ToMultiDimensionalVector(dataStore))
+      .collect(Collectors.toList());
+
+    DFSCode pattern = pair.getPattern();
+
+    Function<MultiDimensionalVector, Stream<MultiDimensionalVector>> allSpecializations =
+      new AllSpecializations(pattern.getVertexCount());
+
+    RecursiveTask<MultiDimensionalVector, Consumer<GraphCollection>> recursiveTask = RecursiveTask
+      .createFor(new Specialize(pattern, filter))
+      .on(vectors)
+      .withStrategy(RecursionStrategy.SEQUENTIAL);
+
+    return recursiveTask.getOutput();
+  }
+}

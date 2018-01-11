@@ -1,12 +1,7 @@
 package org.biiig.dmgm.impl.algorithms.subgraph_mining.csm;
 
-import java.util.function.BiFunction;
+import java.util.Map;
 
-public interface Interestingness extends BiFunction<Float, Float, Boolean> {
-  boolean isInteresting(Float categoryCount, Float totalCount);
-
-  @Override
-  default Boolean apply(Float categoryCount, Float totalCount) {
-    return isInteresting(categoryCount, totalCount);
-  }
+public interface Interestingness {
+  int[] getInterestingCategories(Map<Integer, Float> categorySupports, float totalSupport);
 }

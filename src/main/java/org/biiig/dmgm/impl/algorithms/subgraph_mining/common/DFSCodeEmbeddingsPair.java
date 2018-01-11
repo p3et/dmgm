@@ -1,23 +1,35 @@
 package org.biiig.dmgm.impl.algorithms.subgraph_mining.common;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.impl.graph.DFSCode;
 
-public class DFSCodeEmbeddingsPair implements Comparable<DFSCodeEmbeddingsPair> {
-  private final DFSCode dfsCode;
-  private DFSEmbedding[] embeddings;
+import java.util.Collection;
 
-  public DFSCodeEmbeddingsPair(DFSCode dfsCode, DFSEmbedding[] embeddings) {
+public class DFSCodeEmbeddingsPair implements Comparable<DFSCodeEmbeddingsPair>, Supportable {
+  private final DFSCode dfsCode;
+  private Collection<DFSEmbedding> embeddings;
+
+  public DFSCodeEmbeddingsPair(DFSCode dfsCode, Collection<DFSEmbedding> embeddings) {
     this.dfsCode = dfsCode;
     this.embeddings = embeddings;
   }
 
-  public DFSCode getDfsCode() {
+  public DFSCode getPattern() {
     return dfsCode;
   }
 
-  public DFSEmbedding[] getEmbeddings() {
+  @Override
+  public Collection<DFSEmbedding> getEmbeddings() {
     return embeddings;
+  }
+
+  @Override
+  public int getSupport() {
+    return (int) embeddings.stream().map(e -> e.getGraphId()).distinct().count();
+  }
+
+  @Override
+  public int getEmbeddingCount() {
+    return embeddings.size();
   }
 
   @Override
@@ -26,6 +38,6 @@ public class DFSCodeEmbeddingsPair implements Comparable<DFSCodeEmbeddingsPair> 
   }
 
   public void add(DFSEmbedding embedding) {
-    this.embeddings = ArrayUtils.add(this.embeddings, embedding);
+    this.embeddings.add(embedding);
   }
 }

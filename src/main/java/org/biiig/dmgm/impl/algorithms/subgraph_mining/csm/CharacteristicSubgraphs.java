@@ -1,17 +1,13 @@
 package org.biiig.dmgm.impl.algorithms.subgraph_mining.csm;
 
-import org.biiig.dmgm.api.ElementDataStore;
+import com.google.common.collect.Maps;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.GraphCollectionBuilder;
-import org.biiig.dmgm.api.LabelDictionary;
-import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.FilterAndOutputFactory;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.DFSCodeEmbeddingsPair;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.FilterOrOutput;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.SubgraphMiningBase;
-import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.SubgraphMiningPropertyKeys;
 
 import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * min frequency is with regard to f
@@ -33,40 +29,21 @@ public class CharacteristicSubgraphs extends SubgraphMiningBase {
   }
 
   @Override
-  public FilterAndOutputFactory getFilterAndOutputFactory(GraphCollection input) {
-    ElementDataStore dataStore = input.getElementDataStore();
-    LabelDictionary dictionary = input.getLabelDictionary();
-    int defaultCategory = dictionary.translate(DEFAULT_CATEGORY);
+  protected FilterOrOutput<DFSCodeEmbeddingsPair> getFilterAndOutput(GraphCollection rawInput) {
 
-    Map<Integer, Integer> categoryCounts = input
-      .parallelStream()
-      .map(g -> {
-        Optional<String> optional = dataStore.getGraphString(g.getId(), SubgraphMiningPropertyKeys.CATEGORY);
+    Map<Integer, Integer> labelCounts = Maps.newHashMap();
+    Map<Integer, Integer> graphLabel = Maps.newHashMap();
 
-        int category;
-        if (optional.isPresent()) {
-          category = dictionary.translate(optional.get());
-          dataStore.setGraph(g.getId(), SubgraphMiningPropertyKeys.CATEGORY, category);
-        } else {
-          category = defaultCategory;
-        }
-
-        return category;
-      })
-      .collect(Collectors.groupingByConcurrent(Function.identity(), Collectors.counting()))
-      .entrySet()
-      .stream()
-      .collect(Collectors.toMap(Map.Entry::getKey, e -> Math.toIntExact(e.getValue())));
+    rawInput
+      .forEach(g -> {
+        int label = g.getLabel();
+        graphLabel.put(g.getId(), label);
+        Integer count = labelCounts.get(label);
+        labelCounts.put(label, count == null ? 1 : count + 1);
+      });
 
 
-    Map<Integer, Integer> categoryMinSupports = categoryCounts
-      .entrySet()
-      .stream()
-      .collect(Collectors.toMap(Map.Entry::getKey, e -> Math.round(minSupport * e.getValue())));
-
-
-    return new CharacteristicFactory(
-      interestingness, categoryCounts, categoryMinSupports, input.size(), defaultCategory);
+    return new Characteristic<>(interestingness, graphLabel, labelCounts, rawInput.size());
   }
 
   @Override
