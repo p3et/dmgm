@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Specializer implements Function<DFSCodeEmbeddingsPair, Collection<Consumer<GraphCollection>>> {
 
@@ -28,22 +27,20 @@ public class Specializer implements Function<DFSCodeEmbeddingsPair, Collection<C
 
   @Override
   public Collection<Consumer<GraphCollection>> apply(DFSCodeEmbeddingsPair pair) {
-
     List<MultiDimensionalVector> vectors = pair
       .getEmbeddings()
       .stream()
       .map(new ToMultiDimensionalVector(dataStore))
       .collect(Collectors.toList());
 
-    DFSCode pattern = pair.getPattern();
+    DFSCode pattern = pair.getDFSCode();
 
-    Function<MultiDimensionalVector, Stream<MultiDimensionalVector>> allSpecializations =
-      new AllSpecializations(pattern.getVertexCount());
-
-    RecursiveTask<MultiDimensionalVector, Consumer<GraphCollection>> recursiveTask = RecursiveTask
+    RecursiveTask<PatternVectorsPair, Consumer<GraphCollection>> recursiveTask = RecursiveTask
       .createFor(new Specialize(pattern, filter))
-      .on(vectors)
+      .on(Lists.newArrayList(new PatternVectorsPair(pattern, vectors)))
       .withStrategy(RecursionStrategy.SEQUENTIAL);
+
+    recursiveTask.run();
 
     return recursiveTask.getOutput();
   }

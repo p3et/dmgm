@@ -29,7 +29,7 @@ public class Frequent<T extends Supportable> implements FilterOrOutput<T> {
     if (frequent) {
       child = Optional.of(supportable);
       store = Optional.of(s -> {
-        int graphId = s.add(supportable.getPattern());
+        int graphId = s.add(supportable.getDFSCode());
         s.getElementDataStore().setGraph(graphId, SubgraphMiningPropertyKeys.SUPPORT, support);
         s.getElementDataStore().setGraph(graphId, SubgraphMiningPropertyKeys.EMBEDDING_COUNT, embeddingCount);
       });

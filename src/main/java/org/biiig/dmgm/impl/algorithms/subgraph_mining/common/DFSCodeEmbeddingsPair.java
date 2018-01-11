@@ -1,5 +1,6 @@
 package org.biiig.dmgm.impl.algorithms.subgraph_mining.common;
 
+import org.biiig.dmgm.api.Graph;
 import org.biiig.dmgm.impl.graph.DFSCode;
 
 import java.util.Collection;
@@ -13,7 +14,8 @@ public class DFSCodeEmbeddingsPair implements Comparable<DFSCodeEmbeddingsPair>,
     this.embeddings = embeddings;
   }
 
-  public DFSCode getPattern() {
+  @Override
+  public DFSCode getDFSCode() {
     return dfsCode;
   }
 

@@ -29,7 +29,7 @@ public class ProcessDFSNode implements RecursionStep<DFSCodeEmbeddingsPair, Cons
 
   @Override
   public void process(DFSCodeEmbeddingsPair pair, Children<DFSCodeEmbeddingsPair> children, Output<Consumer<GraphCollection>> output) {
-    DFSCode parentCode = pair.getPattern();
+    DFSCode parentCode = pair.getDFSCode();
 
     int[] rightmostPath = parentCode.getRightmostPath();
 
@@ -62,8 +62,8 @@ public class ProcessDFSNode implements RecursionStep<DFSCodeEmbeddingsPair, Cons
       .map(Pair::getKey)
       .filter(Optional::isPresent)
       .map(Optional::get)
-      .filter(p -> p.getPattern().getEdgeCount() < maxEdgeCount)
-      .peek(c -> System.out.println(Thread.currentThread().getId() + ":" + c.getPattern()))
+      .filter(p -> p.getDFSCode().getEdgeCount() < maxEdgeCount)
+      .peek(c -> System.out.println(Thread.currentThread().getId() + ":" + c.getDFSCode()))
       .forEach(children::add);
 
     grown

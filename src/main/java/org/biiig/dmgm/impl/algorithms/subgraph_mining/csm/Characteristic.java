@@ -67,7 +67,7 @@ public class Characteristic<T extends Supportable> implements FilterOrOutput<T> 
     if (labels.length > 0) {
       child = Optional.of(supportable);
       store = Optional.of(s -> {
-        int graphId = s.add(supportable.getPattern());
+        int graphId = s.add(supportable.getDFSCode());
         s.getElementDataStore()
           .setGraph(graphId, SubgraphMiningPropertyKeys.SUPPORT, supportable.getSupport());
         s.getElementDataStore()

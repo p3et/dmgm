@@ -5,7 +5,7 @@ import org.biiig.dmgm.api.Graph;
 import java.util.Collection;
 
 public interface Supportable {
-  Graph getPattern();
+  Graph getDFSCode();
   Collection<DFSEmbedding> getEmbeddings();
   int getSupport();
   int getEmbeddingCount();

@@ -9,9 +9,7 @@ import org.biiig.dmgm.api.Graph;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.FilterOrOutput;
 import org.biiig.dmgm.impl.graph.DFSCode;
-import org.biiig.dmgm.impl.graph.GraphBase;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -19,7 +17,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Specialize
-  implements RecursionStep<MultiDimensionalVector, Consumer<GraphCollection>> {
+  implements RecursionStep<PatternVectorsPair, Consumer<GraphCollection>> {
 
 
   private final AllSpecializations allSpecializations;
@@ -34,13 +32,15 @@ public class Specialize
 
   @Override
   public void process(
-    MultiDimensionalVector parent,
-    Children<MultiDimensionalVector> children,
+    PatternVectorsPair parent,
+    Children<PatternVectorsPair> children,
     Output<Consumer<GraphCollection>> output
   ) {
 
-    List<Pair<Optional<PatternVectorsPair>, Optional<Consumer<GraphCollection>>>> childPairs = allSpecializations
-      .apply(parent)
+    List<Pair<Optional<PatternVectorsPair>, Optional<Consumer<GraphCollection>>>> childPairs = parent
+      .getVectors()
+      .stream()
+      .flatMap(allSpecializations)
       .collect(new GroupByKeyListValues<>(Function.identity(), Function.identity()))
       .entrySet()
       .stream()
@@ -53,8 +53,6 @@ public class Specialize
       .map(Pair::getKey)
       .filter(Optional::isPresent)
       .map(Optional::get)
-      .map(PatternVectorsPair::getVectors)
-      .flatMap(Collection::stream)
       .forEach(children::add);
 
     childPairs
@@ -65,26 +63,17 @@ public class Specialize
       .forEach(output::add);
   }
 
-  private Graph specialize(Graph dfsCode, MultiDimensionalVector vector) {
-    Graph graph = new GraphBase();
+  private DFSCode specialize(DFSCode dfsCode, MultiDimensionalVector vector) {
+    DFSCode copy = dfsCode.deepCopy();
 
     dfsCode
       .vertexIdStream()
-      .forEach(dim -> graph
-        .addVertex(
+      .forEach(dim -> copy
+        .setVertexLabel(dim,
           vector.getSpecializedValue(dim)
             .orElse(dfsCode.getVertexLabel(dim))
         ));
 
-    dfsCode
-      .edgeIdStream()
-      .forEach(e ->
-        graph.addEdge(
-          dfsCode.getSourceId(e),
-          dfsCode.getTargetId(e),
-          dfsCode.getEdgeLabel(e)
-        ));
-
-    return graph;
+    return copy;
   }
 }

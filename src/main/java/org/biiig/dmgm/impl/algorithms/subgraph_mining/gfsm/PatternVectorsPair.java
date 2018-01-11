@@ -3,22 +3,23 @@ package org.biiig.dmgm.impl.algorithms.subgraph_mining.gfsm;
 import org.biiig.dmgm.api.Graph;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.DFSEmbedding;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.Supportable;
+import org.biiig.dmgm.impl.graph.DFSCode;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-class PatternVectorsPair implements Supportable {
+public class PatternVectorsPair implements Supportable {
 
-  private final Graph dfsCode;
+  private final DFSCode dfsCode;
   private final Collection<MultiDimensionalVector> vectors;
 
-  public PatternVectorsPair(Graph dfsCode, Collection<MultiDimensionalVector> vectors) {
+  public PatternVectorsPair(DFSCode dfsCode, Collection<MultiDimensionalVector> vectors) {
     this.dfsCode = dfsCode;
     this.vectors = vectors;
   }
 
   @Override
-  public Graph getPattern() {
+  public DFSCode getDFSCode() {
     return dfsCode;
   }
 

@@ -47,7 +47,7 @@ public class PatternInitialization implements Runnable {
       .map(Pair::getKey)
       .filter(Optional::isPresent)
       .map(Optional::get)
-      .peek(c -> System.out.println(Thread.currentThread().getId() + ":" + c.getPattern()))
+      .peek(c -> System.out.println(Thread.currentThread().getId() + ":" + c.getDFSCode()))
       .collect(Collectors.toList());
 
     output = initalized

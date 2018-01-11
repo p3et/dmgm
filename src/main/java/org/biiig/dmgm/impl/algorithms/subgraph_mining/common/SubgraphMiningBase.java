@@ -36,12 +36,11 @@ public abstract class SubgraphMiningBase extends org.biiig.dmgm.impl.algorithms.
     GraphCollection input = pruneByLabels(rawInput, collectionBuilder);
 
     PatternInitialization patternInitialization = new PatternInitialization(input, filterOrOutput);
+    patternInitialization.run();
 
     RecursiveTask<DFSCodeEmbeddingsPair, Consumer<GraphCollection>> patternGrowth = RecursiveTask
       .createFor(new ProcessDFSNode(input, filterOrOutput, maxEdgeCount))
       .on(patternInitialization.getSingleEdgeDFSNodes());
-
-    patternInitialization.run();
     patternGrowth.run();
 
     GraphCollection output = collectionBuilder.create();
