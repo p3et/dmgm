@@ -8,7 +8,7 @@ import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.SubgraphMiningBase;
 /**
  * Directed Multigraph gSpan
  */
-public class FrequentSubgraphs extends SubgraphMiningBase {
+public class FrequentSubgraphs extends SubgraphMiningBase implements WithFrequent {
 
   public FrequentSubgraphs(float minSupportRel, int maxEdgeCount) {
     super(minSupportRel, maxEdgeCount);
@@ -16,7 +16,9 @@ public class FrequentSubgraphs extends SubgraphMiningBase {
 
   @Override
   protected FilterOrOutput<DFSCodeEmbeddingsPair> getFilterAndOutput(GraphCollection rawInput) {
-    return new Frequent<>(Math.round(minSupport * rawInput.size()));
+    return getFrequent(rawInput, minSupport);
   }
+
+
 
 }

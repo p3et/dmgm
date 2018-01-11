@@ -4,7 +4,6 @@ import javafx.util.Pair;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.DFSCodeEmbeddingsPair;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.FilterOrOutput;
-import org.biiig.dmgm.impl.algorithms.subgraph_mining.fsm.Frequent;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -16,9 +15,9 @@ public class Generalized implements FilterOrOutput<DFSCodeEmbeddingsPair> {
   private final Specializer specializer;
   private final FilterOrOutput<DFSCodeEmbeddingsPair> filter;
 
-  Generalized(int minSupportAbsolute, Specializer specializer) {
+  public Generalized(FilterOrOutput<DFSCodeEmbeddingsPair> filter, Specializer specializer) {
+    this.filter = filter;
     this.specializer = specializer;
-    filter = new Frequent<>(minSupportAbsolute);
   }
 
   @Override

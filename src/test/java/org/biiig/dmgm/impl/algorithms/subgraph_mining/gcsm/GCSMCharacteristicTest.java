@@ -1,4 +1,4 @@
-package org.biiig.dmgm.impl.algorithms.subgraph_mining.csm;
+package org.biiig.dmgm.impl.algorithms.subgraph_mining.gcsm;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.DMGMTestBase;
@@ -6,6 +6,8 @@ import org.biiig.dmgm.api.Graph;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.Operator;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.SubgraphMiningPropertyKeys;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.csm.CharacteristicSubgraphs;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.gcsm.GeneralizedCharacteristicSubgraphs;
 import org.biiig.dmgm.impl.graph_loader.gdl.GDLLoader;
 import org.junit.Test;
 
@@ -15,12 +17,12 @@ import java.util.Optional;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
-public class CSMAlgorithmTest extends DMGMTestBase {
+public class GCSMCharacteristicTest extends DMGMTestBase {
 
   @Test
   public void testAlgorithm() {
 
-    Operator operator = new CharacteristicSubgraphs(
+    Operator operator = new GeneralizedCharacteristicSubgraphs(
       1.0f,
       10,
       (c, t) -> c.size() == 1 ? ArrayUtils.toPrimitive(c.keySet().toArray(new Integer[1])) : null

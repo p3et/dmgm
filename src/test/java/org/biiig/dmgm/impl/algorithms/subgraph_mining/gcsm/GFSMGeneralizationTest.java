@@ -1,10 +1,13 @@
-package org.biiig.dmgm.impl.algorithms.subgraph_mining.gfsm;
+package org.biiig.dmgm.impl.algorithms.subgraph_mining.gcsm;
 
 import com.google.common.collect.Maps;
 import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.biiig.dmgm.DMGMTestBase;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.Operator;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.gcsm.GeneralizedCharacteristicSubgraphs;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.gfsm.GeneralizedFrequentSubgraphs;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.gfsm.StringTaxonomy;
 import org.biiig.dmgm.impl.graph_loader.gdl.GDLLoader;
 import org.junit.Test;
 
@@ -12,7 +15,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class GFSMAlgorithmTest extends DMGMTestBase {
+public class GFSMGeneralizationTest extends DMGMTestBase {
 
   @Test
   public void testAlgorithm() throws InvalidArgumentException {
@@ -32,7 +35,7 @@ public class GFSMAlgorithmTest extends DMGMTestBase {
     taxonomies.put("A", aTaxonomy);
     taxonomies.put("B", bTaxonomy);
 
-    Operator operator = new GeneralizedFrequentSubgraphs(1.0f, 10);
+    Operator operator = new GeneralizedCharacteristicSubgraphs(1.0f, 10, (f, t) -> new int[] {0});
 
     String inputGDL = (
       ":X[(:A.a.a)-[:a]->(:B.b.b)-[:a]->(:C)]" +
