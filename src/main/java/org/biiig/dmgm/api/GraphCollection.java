@@ -36,7 +36,7 @@ public interface GraphCollection extends Iterable<Graph> {
   }
 
   static String toString(Graph graph, LabelDictionary dictionary) {
-    return formatGraph(graph) +
+    return formatGraph(graph, dictionary) +
       "\n\tV={" + formatVertices(graph, dictionary) + "}" +
       "\n\tE={" + formatEdges(graph, dictionary) + "}";
   }
@@ -65,11 +65,11 @@ public interface GraphCollection extends Iterable<Graph> {
     return StringUtils.join(vertexStrings, ",");
   }
 
-  static String formatVertex(Graph graph, LabelDictionary vertexDictionary, int vertexId) {
-    return "(" + vertexId + ":" + vertexDictionary.translate(graph.getVertexLabel(vertexId)) + ")";
+  static String formatVertex(Graph graph, LabelDictionary dictionary, int vertexId) {
+    return "(" + vertexId + ":" + dictionary.translate(graph.getVertexLabel(vertexId)) + ")";
   }
 
-  static String formatGraph(Graph graph) {
-    return "G[id=" + graph.getId() + "]";
+  static String formatGraph(Graph graph, LabelDictionary dictionary) {
+    return dictionary.translate(graph.getLabel()) + "[id=" + graph.getId() + "]";
   }
 }

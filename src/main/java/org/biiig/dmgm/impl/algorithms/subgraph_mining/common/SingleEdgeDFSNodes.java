@@ -9,13 +9,13 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class PatternInitialization implements Runnable {
+public class SingleEdgeDFSNodes implements Runnable {
   private final GraphCollection input;
   private final FilterOrOutput<DFSCodeEmbeddingsPair> filterOrOutput;
   private Collection<Consumer<GraphCollection>> output;
   private Collection<DFSCodeEmbeddingsPair> singleEdgeDFSNodes;
 
-  public PatternInitialization(GraphCollection input, FilterOrOutput<DFSCodeEmbeddingsPair> filterOrOutput) {
+  public SingleEdgeDFSNodes(GraphCollection input, FilterOrOutput<DFSCodeEmbeddingsPair> filterOrOutput) {
     this.input = input;
     this.filterOrOutput = filterOrOutput;
   }
@@ -47,7 +47,7 @@ public class PatternInitialization implements Runnable {
       .map(Pair::getKey)
       .filter(Optional::isPresent)
       .map(Optional::get)
-      .peek(c -> System.out.println(Thread.currentThread().getId() + ":" + c.getDFSCode()))
+//      .peek(c -> System.out.println(Thread.currentThread().getId() + ":" + c.getDFSCode()))
       .collect(Collectors.toList());
 
     output = initalized

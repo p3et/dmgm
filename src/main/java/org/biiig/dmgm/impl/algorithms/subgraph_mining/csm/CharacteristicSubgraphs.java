@@ -43,7 +43,7 @@ public class CharacteristicSubgraphs extends SubgraphMiningBase {
       });
 
 
-    return new Characteristic<>(interestingness, graphLabel, labelCounts, rawInput.size());
+    return new Characteristic<>(interestingness, graphLabel, labelCounts, rawInput.size(), minSupport);
   }
 
   @Override
