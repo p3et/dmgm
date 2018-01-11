@@ -1,6 +1,6 @@
 package org.biiig.dmgm.impl.algorithms.subgraph_mining.common;
 
-import de.jesemann.paralleasy.queue_stream.QueueStreamSource;
+import de.jesemann.paralleasy.recursion.RecursiveTask;
 import org.biiig.dmgm.api.Graph;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.GraphCollectionBuilder;
@@ -43,13 +43,12 @@ public abstract class SubgraphMiningBase extends org.biiig.dmgm.impl.algorithms.
 
     List<DFSCodeEmbeddingsPair> parents = aggregateSingle(singleEdgeParents, filterAndOutput);
 
-    QueueStreamSource<DFSCodeEmbeddingsPair> queue = QueueStreamSource.of(parents);
-    queue
-      .parallelStream()
-      .forEach(parent -> {
-        Stream<DFSCodeEmbeddingPair> children = growChildren(parent, input);
-        aggregateChildren(children, filterAndOutput, queue);
-      });
+    RecursiveTask<DFSCodeEmbeddingsPair, Graph> queue = RecursiveTask
+      .createFor(new ProcessDFSNode(input, filterAndOutput, maxEdgeCount))
+      .on(parents);
+
+    queue.run();
+
 
     return output;
   }
@@ -60,7 +59,7 @@ public abstract class SubgraphMiningBase extends org.biiig.dmgm.impl.algorithms.
 
   private Map<DFSCode, DFSEmbedding[]> initializeSingle(GraphCollection input) {
     return input
-      .parallelStream()
+      .stream()
       .flatMap(new InitializeParents())
       .collect(new GroupByDFSCodeArrayEmbeddings());
   }
@@ -70,48 +69,10 @@ public abstract class SubgraphMiningBase extends org.biiig.dmgm.impl.algorithms.
 
     return reports
         .entrySet()
-        .parallelStream()
+        .stream()
         .map(e -> new DFSCodeEmbeddingsPair(e.getKey(), e.getValue()))
         .filter(filterAndOutput)
         .collect(Collectors.toList());
-  }
-
-  private Stream<DFSCodeEmbeddingPair>  growChildren(DFSCodeEmbeddingsPair parents, GraphCollection input) {
-
-    DFSCode parentCode = parents.getDfsCode();
-
-    int[] rightmostPath = parentCode.getRightmostPath();
-
-    return Stream.of(parents.getEmbeddings())
-      .collect(new GroupByGraphIdArrayEmbeddings())
-      .entrySet()
-      .stream()
-      .flatMap(
-        entry -> {
-          Graph graph = input.getGraph(entry.getKey());
-          return Stream.of(entry.getValue())
-            .flatMap(
-              embedding ->
-                Stream.of(new GrowAllChildren().apply(graph, parentCode, rightmostPath, embedding)));
-        }
-      );
-  }
-
-  private void aggregateChildren(
-    Stream<DFSCodeEmbeddingPair> children,
-    FilterAndOutput filterAndOutput,
-    QueueStreamSource<DFSCodeEmbeddingsPair> queue) {
-
-    children
-      .collect(new GroupByDFSCodeArrayEmbeddings())
-      .entrySet()
-      .parallelStream()
-      .map(e -> new DFSCodeEmbeddingsPair(e.getKey(), e.getValue()))
-      .filter(new IsMinimal())
-      .filter(filterAndOutput)
-      .filter(p -> p.getDfsCode().getEdgeCount() < maxEdgeCount)
-      .peek(c -> System.out.println(c.getDfsCode()))
-      .forEach(queue::add);
   }
 
   // PREPROCESSING
@@ -123,27 +84,27 @@ public abstract class SubgraphMiningBase extends org.biiig.dmgm.impl.algorithms.
 
     Set<Integer> frequentVertexLabels = getFrequentLabels(
       inputCollection
-        .parallelStream()
+        .stream()
         .flatMap(new DistinctVertexLabels()),
       minSupportAbsolute);
 
     GraphCollection vertexPrunedCollection = collectionBuilder.create();
 
     inputCollection
-      .parallelStream()
+      .stream()
       .map(new PruneVertices(frequentVertexLabels))
       .forEach(vertexPrunedCollection::add);
 
     Set<Integer> frequentEdgeLabels = getFrequentLabels(
       inputCollection
-        .parallelStream()
+        .stream()
         .flatMap(new DistinctEdgeLabels()),
       minSupportAbsolute);
 
     GraphCollection prunedCollection = collectionBuilder.create();
 
     vertexPrunedCollection
-      .parallelStream()
+      .stream()
       .map(new PruneEdges(frequentEdgeLabels))
       .forEach(prunedCollection::add);
 
@@ -152,7 +113,7 @@ public abstract class SubgraphMiningBase extends org.biiig.dmgm.impl.algorithms.
 
   private Set<Integer> getFrequentLabels(Stream<Integer> labels, Integer minSupportAbsolute) {
     return labels
-      .collect(Collectors.groupingByConcurrent(Function.identity(), Collectors.counting()))
+      .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
       .entrySet()
       .stream()
       .filter(e -> e.getValue() >= minSupportAbsolute)

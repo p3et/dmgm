@@ -3,11 +3,12 @@ package org.biiig.dmgm.impl.algorithms.order;
 import org.biiig.dmgm.api.Graph;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.Operator;
+import org.biiig.dmgm.impl.algorithms.OperatorBase;
 import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionBuilder;
 
 import java.util.Comparator;
 
-public class Order implements Operator {
+public class Order extends OperatorBase {
   private final Comparator<Graph> comparator;
 
   private Order(Comparator<Graph> comparator) {
