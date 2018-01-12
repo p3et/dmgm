@@ -5,13 +5,12 @@ import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.FilterOrOutput;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.Preprocessor;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.Supportable;
-import org.biiig.dmgm.impl.algorithms.subgraph_mining.frequent.FrequentLabels;
 
 import java.util.Map;
 
 public interface Characteristic {
-  default Preprocessor getCharacteristicLabels() {
-    return new CharacteristicLabels();
+  default Preprocessor getCharacteristicLabels(float minSupport) {
+    return new CharacteristicLabels(minSupport);
   }
 
   default <T extends Supportable> FilterOrOutput<T> getCharacteristicFilter(GraphCollection rawInput, float minSupport, Interestingness interestingness) {

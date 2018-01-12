@@ -1,4 +1,4 @@
-package org.biiig.dmgm.impl.algorithms.subgraph_mining.frequent;
+package org.biiig.dmgm.impl.algorithms.subgraph_mining.common;
 
 import com.google.common.collect.Sets;
 import org.biiig.dmgm.api.Graph;

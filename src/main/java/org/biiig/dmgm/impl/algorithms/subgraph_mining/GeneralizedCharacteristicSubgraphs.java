@@ -22,7 +22,7 @@ public class GeneralizedCharacteristicSubgraphs extends GeneralizedSubgraphsBase
 
   @Override
   protected Preprocessor getPreprocessor() {
-    return getCharacteristicLabels();
+    return getCharacteristicLabels(minSupport);
   }
 
   @Override

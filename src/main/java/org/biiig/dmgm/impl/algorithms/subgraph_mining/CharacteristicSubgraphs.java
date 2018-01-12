@@ -27,7 +27,7 @@ public class CharacteristicSubgraphs extends SubgraphMiningBase implements Chara
   }
 
   public Preprocessor getPreprocessor() {
-    return getCharacteristicLabels();
+    return getCharacteristicLabels(minSupport);
   }
 
   @Override
