@@ -1,0 +1,23 @@
+package org.biiig.dmgm.impl.operators.subgraph_mining.generalized;
+
+import com.sun.javaws.exceptions.InvalidArgumentException;
+
+import java.util.Collection;
+import java.util.Optional;
+
+public interface Taxonomy<T> {
+  void add(T parent, T child) throws InvalidArgumentException;
+
+  /**
+   * Identifies a path from a given value to the root of a taxonomy from general to special (excluding root).
+   * Not path will be returned if value is not part of the taxonomy.
+   *
+   * @param child value
+   * @return path to root without root
+   */
+  Optional<T[]> getRootPathTo(T child);
+
+  T getParent(T child);
+
+  Collection<T> getChildren(T a);
+}
