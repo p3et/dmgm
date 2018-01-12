@@ -15,7 +15,7 @@ import org.biiig.dmgm.impl.data_store.InMemoryElementDataStore;
 import java.util.Map;
 
 public abstract class GeneralizedSubgraphsBase extends SubgraphMiningBase {
-  public static final String LEVEL_SEPARATOR = "x";
+  public static final String LEVEL_SEPARATOR = "_";
 
   public GeneralizedSubgraphsBase(float minSupport, int maxEdgeCount) {
     super(minSupport, maxEdgeCount);
