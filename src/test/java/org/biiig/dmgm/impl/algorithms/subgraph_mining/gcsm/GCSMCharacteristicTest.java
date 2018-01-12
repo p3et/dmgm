@@ -36,12 +36,12 @@ public class GCSMCharacteristicTest extends DMGMTestBase {
 
     String expectation =
       "[(:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(:D)]" +
-        "[(:A)-[:a]->(:B)-[:a]->(:C)]" +
-        "[(:B)-[:a]->(:C)-[:a]->(:D)]" +
-        "[(:B)-[:a]->(:C)]" +
-        "[(:C)-[:a]->(:D)]" +
-        "[(:A)-[:a]->(:B)-[:b]->(:C)]" +
-        "[(:B)-[:b]->(:C)]" ;
+      "[(:A)-[:a]->(:B)-[:a]->(:C)]" +
+      "[(:B)-[:a]->(:C)-[:a]->(:D)]" +
+      "[(:B)-[:a]->(:C)]" +
+      "[(:C)-[:a]->(:D)]" +
+      "[(:A)-[:a]->(:B)-[:b]->(:C)]" +
+      "[(:B)-[:b]->(:C)]" ;
 
     GraphCollection input = GDLLoader
       .fromString(inputGDL)

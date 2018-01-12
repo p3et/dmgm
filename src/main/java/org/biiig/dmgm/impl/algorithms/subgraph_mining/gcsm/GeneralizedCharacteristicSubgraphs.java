@@ -1,6 +1,7 @@
 package org.biiig.dmgm.impl.algorithms.subgraph_mining.gcsm;
 
 import org.biiig.dmgm.api.GraphCollection;
+import org.biiig.dmgm.api.GraphCollectionBuilder;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.DFSCodeEmbeddingsPair;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.FilterOrOutput;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.csm.Interestingness;
@@ -27,6 +28,12 @@ public class GeneralizedCharacteristicSubgraphs extends GeneralizedSubgraphsBase
     Specializer spezializer = getSpecializer(rawInput, vectorFilter);
 
     return new Generalized(patternFilter, spezializer);
+  }
+
+  @Override
+  protected GraphCollection pruneByLabels(GraphCollection inputCollection, GraphCollectionBuilder collectionBuilder) {
+    // TODO preprocessing based on category frequencies
+    return inputCollection;
   }
 
 }

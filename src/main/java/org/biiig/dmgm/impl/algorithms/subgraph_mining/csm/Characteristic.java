@@ -44,7 +44,6 @@ public class Characteristic<T extends Supportable> implements FilterOrOutput<T> 
 
   @Override
   public Pair<Optional<T>, Optional<Consumer<GraphCollection>>> apply(T supportable) {
-
     Map<Integer, List<DFSEmbedding>> categoryEmbeddings = supportable
       .getEmbeddings()
       .stream()

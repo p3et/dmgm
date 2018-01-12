@@ -63,7 +63,6 @@ public class ProcessDFSNode implements RecursionStep<DFSCodeEmbeddingsPair, Cons
       .filter(Optional::isPresent)
       .map(Optional::get)
       .filter(p -> p.getDFSCode().getEdgeCount() < maxEdgeCount)
-//      .peek(c -> System.out.println(Thread.currentThread().getId() + ":" + c.getDFSCode()))
       .forEach(children::add);
 
     grown
