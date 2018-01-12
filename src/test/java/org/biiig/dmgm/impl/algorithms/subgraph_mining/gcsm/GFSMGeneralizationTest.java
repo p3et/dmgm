@@ -3,12 +3,10 @@ package org.biiig.dmgm.impl.algorithms.subgraph_mining.gcsm;
 import com.google.common.collect.Maps;
 import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.biiig.dmgm.DMGMTestBase;
-import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.Operator;
-import org.biiig.dmgm.impl.algorithms.subgraph_mining.gcsm.GeneralizedCharacteristicSubgraphs;
-import org.biiig.dmgm.impl.algorithms.subgraph_mining.gfsm.GeneralizedFrequentSubgraphs;
-import org.biiig.dmgm.impl.algorithms.subgraph_mining.gfsm.StringTaxonomy;
-import org.biiig.dmgm.impl.graph_loader.gdl.GDLLoader;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.GeneralizedCharacteristicSubgraphs;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.GeneralizedFrequentSubgraphs;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.generalized.StringTaxonomy;
 import org.junit.Test;
 
 import java.util.Map;

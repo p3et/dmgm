@@ -1,12 +1,12 @@
-package org.biiig.dmgm.impl.algorithms.subgraph_mining.gcsm;
+package org.biiig.dmgm.impl.algorithms.subgraph_mining.characteristic;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.DMGMTestBase;
 import org.biiig.dmgm.api.Graph;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.Operator;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.CharacteristicSubgraphs;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.SubgraphMiningPropertyKeys;
-import org.biiig.dmgm.impl.algorithms.subgraph_mining.GeneralizedCharacteristicSubgraphs;
 import org.biiig.dmgm.impl.graph_loader.gdl.GDLLoader;
 import org.junit.Test;
 
@@ -16,12 +16,12 @@ import java.util.Optional;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
-public class GCSMCharacteristicTest extends DMGMTestBase {
+public class CSMAlgorithmTest extends DMGMTestBase {
 
   @Test
   public void testAlgorithm() {
 
-    Operator operator = new GeneralizedCharacteristicSubgraphs(
+    Operator operator = new CharacteristicSubgraphs(
       1.0f,
       10,
       (c, t) -> c.size() == 1 ? ArrayUtils.toPrimitive(c.keySet().toArray(new Integer[1])) : null
@@ -35,12 +35,12 @@ public class GCSMCharacteristicTest extends DMGMTestBase {
 
     String expectation =
       "[(:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(:D)]" +
-      "[(:A)-[:a]->(:B)-[:a]->(:C)]" +
-      "[(:B)-[:a]->(:C)-[:a]->(:D)]" +
-      "[(:B)-[:a]->(:C)]" +
-      "[(:C)-[:a]->(:D)]" +
-      "[(:A)-[:a]->(:B)-[:b]->(:C)]" +
-      "[(:B)-[:b]->(:C)]" ;
+        "[(:A)-[:a]->(:B)-[:a]->(:C)]" +
+        "[(:B)-[:a]->(:C)-[:a]->(:D)]" +
+        "[(:B)-[:a]->(:C)]" +
+        "[(:C)-[:a]->(:D)]" +
+        "[(:A)-[:a]->(:B)-[:b]->(:C)]" +
+        "[(:B)-[:b]->(:C)]" ;
 
     GraphCollection input = GDLLoader
       .fromString(inputGDL)

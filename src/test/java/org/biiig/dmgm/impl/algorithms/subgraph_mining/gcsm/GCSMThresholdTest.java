@@ -2,8 +2,7 @@ package org.biiig.dmgm.impl.algorithms.subgraph_mining.gcsm;
 
 import org.biiig.dmgm.api.Operator;
 import org.biiig.dmgm.impl.algorithms.subgraph_mining.common.SubgraphMiningThresholdTest;
-import org.biiig.dmgm.impl.algorithms.subgraph_mining.csm.CharacteristicSubgraphs;
-import org.biiig.dmgm.impl.algorithms.subgraph_mining.gcsm.GeneralizedCharacteristicSubgraphs;
+import org.biiig.dmgm.impl.algorithms.subgraph_mining.GeneralizedCharacteristicSubgraphs;
 
 public class GCSMThresholdTest extends SubgraphMiningThresholdTest {
 

@@ -3,6 +3,7 @@ package org.biiig.dmgm.impl.algorithms.subgraph_mining.common;
 import de.jesemann.paralleasy.recursion.RecursiveTask;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.GraphCollectionBuilder;
+import org.biiig.dmgm.api.Operator;
 import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionBuilderFactory;
 
 import java.util.Map;
@@ -32,8 +33,7 @@ public abstract class SubgraphMiningBase extends org.biiig.dmgm.impl.algorithms.
 
     FilterOrOutput<DFSCodeEmbeddingsPair> filterOrOutput = getFilterAndOutput(rawInput);
 
-
-    GraphCollection input = pruneByLabels(rawInput, collectionBuilder);
+    GraphCollection input = getPreprocessor().apply(rawInput, collectionBuilder);
 
     SingleEdgeDFSNodes singleEdgeDFSNodes = new SingleEdgeDFSNodes(input, filterOrOutput);
     singleEdgeDFSNodes.run();
@@ -56,53 +56,8 @@ public abstract class SubgraphMiningBase extends org.biiig.dmgm.impl.algorithms.
     return output;
   }
 
+  protected abstract Preprocessor getPreprocessor();
+
   protected abstract FilterOrOutput<DFSCodeEmbeddingsPair> getFilterAndOutput(GraphCollection rawInput);
-
-
-  // PREPROCESSING
-
-  protected GraphCollection pruneByLabels(
-    GraphCollection inputCollection, GraphCollectionBuilder collectionBuilder) {
-
-    Integer minSupportAbsolute = Math.round(inputCollection.size() * minSupport);
-
-    Set<Integer> frequentVertexLabels = getFrequentLabels(
-      inputCollection
-        .stream()
-        .flatMap(new DistinctVertexLabels()),
-      minSupportAbsolute);
-
-    GraphCollection vertexPrunedCollection = collectionBuilder.create();
-
-    inputCollection
-      .stream()
-      .map(new PruneVertices(frequentVertexLabels))
-      .forEach(vertexPrunedCollection::add);
-
-    Set<Integer> frequentEdgeLabels = getFrequentLabels(
-      inputCollection
-        .stream()
-        .flatMap(new DistinctEdgeLabels()),
-      minSupportAbsolute);
-
-    GraphCollection prunedCollection = collectionBuilder.create();
-
-    vertexPrunedCollection
-      .stream()
-      .map(new PruneEdges(frequentEdgeLabels))
-      .forEach(prunedCollection::add);
-
-    return vertexPrunedCollection;
-  }
-
-  private Set<Integer> getFrequentLabels(Stream<Integer> labels, Integer minSupportAbsolute) {
-    return labels
-      .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-      .entrySet()
-      .stream()
-      .filter(e -> e.getValue() >= minSupportAbsolute)
-      .map(Map.Entry::getKey)
-      .collect(Collectors.toSet());
-  }
 
 }
