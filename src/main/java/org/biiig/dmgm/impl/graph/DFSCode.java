@@ -144,6 +144,25 @@ public class DFSCode extends GraphBase implements Comparable<DFSCode> {
     return copy;
   }
 
+  public DFSCode getParent() {
+    DFSCode parent = new DFSCode();
+
+    int lastEdgeTime = getEdgeCount() - 1;
+
+    parent.vertexLabels = getToTime(lastEdgeTime) > getFromTime(lastEdgeTime) ?
+      ArrayUtils.subarray(vertexLabels, 0,vertexLabels.length - 1) :
+      Arrays.copyOf(vertexLabels, vertexLabels.length);
+
+    int newEdgeArraysSize = lastEdgeTime;
+
+    parent.edgeLabels = ArrayUtils.subarray(edgeLabels, 0,newEdgeArraysSize);
+    parent.sourceIds = ArrayUtils.subarray(sourceIds, 0, newEdgeArraysSize);
+    parent.targetIds = ArrayUtils.subarray(targetIds, 0, newEdgeArraysSize);
+    parent.outgoings = ArrayUtils.subarray(outgoings, 0, newEdgeArraysSize);
+
+    return parent;
+  }
+
   public int[] getRightmostPath() {
     if (rightmostPath == null) {
       setRightmostPath();

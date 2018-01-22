@@ -1,5 +1,6 @@
 package org.biiig.dmgm.impl.graph;
 
+import org.biiig.dmgm.DMGMTestBase;
 import org.biiig.dmgm.api.Graph;
 import org.biiig.dmgm.api.GraphFactory;
 import org.junit.Test;
@@ -13,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by peet on 02.08.17.
  */
-public abstract class SingleLabelDirectedGraphTest {
+public abstract class SingleLabelDirectedGraphTest extends DMGMTestBase {
   @Test
   public void testGetterAndSetter() throws Exception {
     GraphFactory factory = getFactory();
