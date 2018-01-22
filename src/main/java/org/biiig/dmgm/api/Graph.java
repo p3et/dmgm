@@ -31,4 +31,6 @@ public interface Graph {
   IntStream edgeIdStream();
 
   void setVertexLabel(int id, int label);
+
+  String toString(LabelDictionary dictionary);
 }

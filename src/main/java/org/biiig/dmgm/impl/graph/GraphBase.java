@@ -2,8 +2,10 @@ package org.biiig.dmgm.impl.graph;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.Graph;
+import org.biiig.dmgm.api.LabelDictionary;
 
 import java.util.Arrays;
+import java.util.function.Function;
 import java.util.stream.IntStream;
 
 public class GraphBase implements Graph {
@@ -14,14 +16,7 @@ public class GraphBase implements Graph {
   protected int[] sourceIds = new int[0];
   protected int[] targetIds = new int[0];
 
-  @Override
-  public String toString() {
-    return "g=" +
-      "\nV=" + Arrays.toString(vertexLabels) +
-      "\nE=" + Arrays.toString(edgeLabels) +
-      "\nS=" + Arrays.toString(sourceIds) +
-      "\nT=" + Arrays.toString(targetIds);
-  }
+
 
   @Override
   public int getLabel() {
@@ -122,6 +117,32 @@ public class GraphBase implements Graph {
   @Override
   public void setVertexLabel(int id, int label) {
     vertexLabels[id] = label;
+  }
+
+  @Override
+  public String toString(LabelDictionary dictionary) {
+    return toString(dictionary::translate);
+  }
+
+  @Override
+  public String toString() {
+    return toString(Object::toString);
+  }
+
+  private String toString(Function<Integer, String> labelFormatter) {
+    String[] formattedVertexLabels = new String[vertexLabels.length];
+    for (int i = 0; i < vertexLabels.length; i++)
+      formattedVertexLabels[i] = labelFormatter.apply(vertexLabels[i]);
+
+    String[] formattedEdgeLabels = new String[edgeLabels.length];
+    for (int i = 0; i < edgeLabels.length; i++)
+      formattedEdgeLabels[i] = labelFormatter.apply(edgeLabels[i]);
+
+    return "g=" +
+      "\nV=" + Arrays.toString(formattedVertexLabels) +
+      "\nE=" + Arrays.toString(formattedEdgeLabels) +
+      "\nS=" + Arrays.toString(sourceIds) +
+      "\nT=" + Arrays.toString(targetIds);
   }
 
 }

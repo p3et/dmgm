@@ -1,8 +1,10 @@
 package org.biiig.dmgm.impl.graph;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.biiig.dmgm.api.LabelDictionary;
 
 import java.util.Arrays;
+import java.util.function.Function;
 
 public class DFSCode extends GraphBase implements Comparable<DFSCode> {
 
@@ -66,29 +68,7 @@ public class DFSCode extends GraphBase implements Comparable<DFSCode> {
       Arrays.equals(this.targetIds, that.targetIds);
   }
 
-  @Override
-  public String toString() {
-    StringBuilder builder = new StringBuilder();
 
-    for (int edgeTime = 0; edgeTime < getEdgeCount(); edgeTime++) {
-      boolean outgoing = isOutgoing(edgeTime);
-      int fromTime = getFromTime(edgeTime);
-      int toTime = getToTime(edgeTime);
-      builder
-        .append(fromTime)
-        .append(":")
-        .append(getVertexLabel(fromTime))
-        .append(outgoing ? "-" : "<-")
-        .append(getEdgeLabel(edgeTime))
-        .append(outgoing ? "->" : "-")
-        .append(toTime)
-        .append(":")
-        .append(getVertexLabel(toTime))
-        .append(" ");
-    }
-
-    return builder.toString();
-  }
 
   @Override
   public int hashCode() {
@@ -206,6 +186,45 @@ public class DFSCode extends GraphBase implements Comparable<DFSCode> {
         }
       }
     }
+  }
+
+
+  @Override
+  public String toString(LabelDictionary dictionary) {
+    return toString(dictionary::translate);
+  }
+
+  @Override
+  public String toString() {
+    return toString(Object::toString);
+  }
+
+  private String toString(Function<Integer, String> labelFormatter) {
+    StringBuilder builder = new StringBuilder();
+
+    for (int edgeTime = 0; edgeTime < getEdgeCount(); edgeTime++) {
+      boolean outgoing = isOutgoing(edgeTime);
+      int fromTime = getFromTime(edgeTime);
+      int toTime = getToTime(edgeTime);
+
+      String fromLabel = labelFormatter.apply(getVertexLabel(fromTime));
+      String edgeLabel = labelFormatter.apply(getEdgeLabel(edgeTime));
+      String toLabel = labelFormatter.apply(getVertexLabel(toTime));
+
+      builder
+        .append(fromTime)
+        .append(":")
+        .append(fromLabel)
+        .append(outgoing ? "-" : "<-")
+        .append(edgeLabel)
+        .append(outgoing ? "->" : "-")
+        .append(toTime)
+        .append(":")
+        .append(toLabel)
+        .append(" ");
+    }
+
+    return builder.toString();
   }
 
 }
