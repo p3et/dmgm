@@ -16,6 +16,11 @@ public abstract class SubgraphMiningPatternTest extends DMGMTestBase {
   }
 
   @Test
+  public void testY() {
+    runAndTestExpectation(getOperator(), SubgraphMiningTestData.Y_INPUT, SubgraphMiningTestData.Y_EXPECTED);
+  }
+
+  @Test
   public void testParallelEdges() {
     runAndTestExpectation(getOperator(), SubgraphMiningTestData.PARALLEL_EDGES_INPUT, SubgraphMiningTestData.PARALLEL_EDGES_EXPECTED);
   }

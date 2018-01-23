@@ -95,16 +95,18 @@ public class DFSCode extends GraphBase implements Comparable<DFSCode> {
           break;
         }
       }
-      for (int edgeTime = 0; edgeTime < this.getEdgeCount(); edgeTime++) {
-        parent = this.getFromTime(edgeTime) == child.getFromTime(edgeTime) &&
-          this.getToTime(edgeTime) == child.getToTime(edgeTime) &&
-          this.isOutgoing(edgeTime) == child.isOutgoing(edgeTime) &&
-          this.getEdgeLabel(edgeTime) == child.getEdgeLabel(edgeTime);
+      if (parent)
+        for (int edgeTime = 0; edgeTime < this.getEdgeCount(); edgeTime++) {
+          parent =
+            this.getFromTime(edgeTime) == child.getFromTime(edgeTime) &&
+            this.getToTime(edgeTime) == child.getToTime(edgeTime) &&
+            this.isOutgoing(edgeTime) == child.isOutgoing(edgeTime) &&
+            this.getEdgeLabel(edgeTime) == child.getEdgeLabel(edgeTime);
 
-        if (!parent) {
-          break;
+          if (!parent) {
+            break;
+          }
         }
-      }
     }
 
     return parent;

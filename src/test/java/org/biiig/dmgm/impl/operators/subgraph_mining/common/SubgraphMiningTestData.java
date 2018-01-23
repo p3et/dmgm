@@ -11,6 +11,16 @@ public class SubgraphMiningTestData {
   public static final String SINGLE_EDGE_EXPECTED =
     "[(:A)-[:a]->(:A)]";
 
+  public static final String Y_INPUT =
+    "[(a:A)-[:a]->(:B),(a)-[:a]->(:C)]" +
+    "[(b:A)-[:a]->(:B),(b)-[:a]->(:C)]" +
+    "[(c:A)-[:a]->(:C),(c)-[:a]->(:B)]";
+
+  public static final String Y_EXPECTED =
+    "[(a:A)-[:a]->(:B),(a)-[:a]->(:C)]" +
+    "[(b:A)-[:a]->(:B)]" +
+    "[(c:A)-[:a]->(:C)]";
+
   public static final String SIMPLE_GRAPH_INPUT =
     "[(:A)-[:a]->(v1:B)-[:b]->(:C),(v1)-[:c]->(:D)]" +
     "[(:A)-[:a]->(v2:B)-[:b]->(:C),(v2)-[:c]->(:E)]" +
