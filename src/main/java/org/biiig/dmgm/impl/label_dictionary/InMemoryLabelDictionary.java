@@ -4,12 +4,13 @@ import com.google.common.collect.Maps;
 import org.biiig.dmgm.api.LabelDictionary;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class InMemoryLabelDictionary implements LabelDictionary {
 
-  private Map<String, Integer> stringInteger = Maps.newHashMap();
-  private Map<Integer, String> integerString = Maps.newHashMap();
-  private int maxTranslation = -1;
+  private Map<String, Integer> stringInteger = Maps.newConcurrentMap();
+  private Map<Integer, String> integerString = Maps.newConcurrentMap();
+  private AtomicInteger translation = new AtomicInteger();
 
 
   public InMemoryLabelDictionary() {
@@ -22,26 +23,24 @@ public class InMemoryLabelDictionary implements LabelDictionary {
 
   @Override
   public int size() {
-    return stringInteger.size();
+    return translation.get();
   }
 
   @Override
-  public int translate(String label) {
-    Integer translation = stringInteger.get(label);
+  public int translate(String string) {
+    Integer integer = stringInteger.get(string);
 
-    if (translation == null) {
-      maxTranslation++;
-      stringInteger.put(label, maxTranslation);
-      integerString.put(maxTranslation, label);
-      translation = maxTranslation;
+    if (integer == null) {
+      integer = stringInteger.computeIfAbsent(string, k -> translation.getAndIncrement());
+      integerString.putIfAbsent(integer, string);
     }
 
-    return translation;
+    return integer;
   }
 
   @Override
-  public String translate(int value) {
-    return integerString.get(value);
+  public String translate(int integer) {
+    return integerString.get(integer);
   }
 
 }
