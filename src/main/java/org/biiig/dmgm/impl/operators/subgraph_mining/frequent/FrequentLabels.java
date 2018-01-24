@@ -2,6 +2,8 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.frequent;
 
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.GraphCollectionBuilder;
+import org.biiig.dmgm.impl.graph.GraphBaseFactory;
+import org.biiig.dmgm.impl.operators.subgraph.FilterVerticesAndEdgesByLabel;
 import org.biiig.dmgm.impl.operators.subgraph_mining.characteristic.PreprocessorBase;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DistinctEdgeLabels;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DistinctVertexLabels;
@@ -26,7 +28,7 @@ public class FrequentLabels extends PreprocessorBase {
     GraphCollection vertexPrunedCollection = builder.create();
     collection
         .stream()
-        .map(new PruneVertices(frequentVertexLabels))
+        .map(new FilterVerticesAndEdgesByLabel(new GraphBaseFactory(), frequentVertexLabels::contains, i -> true, true))
         .forEach(vertexPrunedCollection::add);
 
     Set<Integer> frequentEdgeLabels =
@@ -35,7 +37,7 @@ public class FrequentLabels extends PreprocessorBase {
     GraphCollection edgePrunedCollection = builder.create();
     vertexPrunedCollection
       .stream()
-      .map(new PruneEdges(frequentEdgeLabels))
+      .map(new FilterVerticesAndEdgesByLabel(new GraphBaseFactory(), i -> true, frequentEdgeLabels::contains, true))
       .forEach(edgePrunedCollection::add);
 
     return edgePrunedCollection;
