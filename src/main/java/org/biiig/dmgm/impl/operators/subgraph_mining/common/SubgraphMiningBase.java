@@ -39,8 +39,6 @@ public abstract class SubgraphMiningBase extends HyperVertexOperatorBase {
     int patternLabel = database.encode(FSG_LABEL);
     int patternsLabel = database.encode(FSG_LABEL);
 
-
-
     Map<DFSCode, BiConsumer<HyperVertexDB, Long>> output = Maps.newConcurrentMap();
     
     Consumer<DFSCodeEmbeddingsPair> store =
@@ -70,7 +68,6 @@ public abstract class SubgraphMiningBase extends HyperVertexOperatorBase {
     GrowAllChildren growChildren = new GrowAllChildren();
 
     while (!parents.isEmpty())
-
       parents = parents
         .stream()
         .flatMap(p -> {
@@ -96,9 +93,6 @@ public abstract class SubgraphMiningBase extends HyperVertexOperatorBase {
       .stream()
       .mapToLong(entry -> {
         DFSCode dfsCode = entry.getKey();
-
-        System.out.println(dfsCode.toString(database));
-
         long id = database.createHyperVertex(dfsCode);
         database.set(id, dfsCodeKey, dfsCode.toString(database));
         entry.getValue().accept(database, id);

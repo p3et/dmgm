@@ -55,8 +55,8 @@ public class InitializeParents implements Function<SmallGraph, Stream<DFSCodeEmb
       DFSCode dfsCode = new DFSCode(
         loop ? new int[] {fromLabel} : new int[] {fromLabel, toLabel},
         new int[] {edgeLabel},
-        new int[] {fromTime},
-        new int[] {toTime},
+        new int[] {outgoing ? fromTime : toTime},
+        new int[] {outgoing ? toTime : fromTime},
         new boolean[] {outgoing}
       );
 

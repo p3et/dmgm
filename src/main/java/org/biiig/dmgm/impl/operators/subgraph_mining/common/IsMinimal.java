@@ -38,8 +38,10 @@ public class IsMinimal implements java.util.function.Predicate<DFSCode> {
         .map(e -> new DFSCodeEmbeddingsPair(e.getKey(), e.getValue(), 0l))
         .min(Comparator.comparing(DFSCodeEmbeddingsPair::getDFSCode));
 
-      if (minPair.isPresent())
-        minimal = minPair.get().getDFSCode().parentOf(dfsCode);
+      if (minPair.isPresent()) {
+        DFSCode minCode = minPair.get().getDFSCode();
+        minimal = minCode.parentOf(dfsCode);
+      }
     }
 
     return minimal;
