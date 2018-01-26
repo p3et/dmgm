@@ -108,7 +108,7 @@ public class SmallGraphBase implements SmallGraph {
     for (int i = 0; i < edgeLabels.length; i++)
       formattedEdgeLabels[i] = labelFormatter.apply(edgeLabels[i]);
 
-    return "g=" +
+    return id + ":" + label +
       "\nV=" + Arrays.toString(formattedVertexLabels) +
       "\nE=" + Arrays.toString(formattedEdgeLabels) +
       "\nS=" + Arrays.toString(sourceIds) +

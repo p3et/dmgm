@@ -19,6 +19,8 @@ public class AdjacencyListTest extends SingleLabelDirectedSmallGraphTest {
       new int[] {0, 1}
     );
 
+    System.out.println(graph);
+
     test(graph, lab0, lab1);
   }
 }

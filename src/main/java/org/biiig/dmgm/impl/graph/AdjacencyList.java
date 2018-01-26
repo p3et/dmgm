@@ -1,5 +1,7 @@
 package org.biiig.dmgm.impl.graph;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 public class AdjacencyList extends SmallGraphBase {
 
   private final int[][] outgoingEdgeIds;
@@ -14,8 +16,8 @@ public class AdjacencyList extends SmallGraphBase {
 
     vertexIdStream()
       .forEach(vertexId -> {
-        outgoingEdgeIds[vertexId] = getOutgoingEdgeIds(vertexId);
-        incomingEdgeIds[vertexId] = getIncomingEdgeIds(vertexId);
+        outgoingEdgeIds[vertexId] = super.getOutgoingEdgeIds(vertexId);
+        incomingEdgeIds[vertexId] = super.getIncomingEdgeIds(vertexId);
       });
   }
 
@@ -27,5 +29,12 @@ public class AdjacencyList extends SmallGraphBase {
   @Override
   public int[] getIncomingEdgeIds(int vertexId) {
     return incomingEdgeIds[vertexId];
+  }
+
+  @Override
+  public String toString() {
+    return super.toString() +
+      "\nO=" + ArrayUtils.toString(outgoingEdgeIds) +
+      "\nI=" + ArrayUtils.toString(incomingEdgeIds) ;
   }
 }
