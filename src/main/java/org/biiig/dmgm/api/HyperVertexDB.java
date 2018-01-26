@@ -1,6 +1,10 @@
 package org.biiig.dmgm.api;
 
 import org.biiig.dmgm.impl.db.LongsPair;
+import org.biiig.dmgm.impl.graph.DFSCode;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Describes a database that supports:
@@ -60,4 +64,10 @@ public interface HyperVertexDB extends PropertyStore {
   LongsPair getElementsOf(long hyperVertexId);
 
   int getLabel(long id);
+
+  List<SmallGraph> getCollection(Long collectionId);
+
+  long createHyperVertex(SmallGraph graph);
+
+  long createCollectionByLabel(int graphLabel, int collectionLabel);
 }

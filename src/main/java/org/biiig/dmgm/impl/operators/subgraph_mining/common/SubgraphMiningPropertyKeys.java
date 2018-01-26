@@ -7,4 +7,5 @@ public class SubgraphMiningPropertyKeys {
   public static final String TAXONOMY_VALUE = "_taxonomyValue";
   public static final String TAXONOMY_PATH = "_taxonomyPath";
   public static final String CATEGORY = "_category";
+  public static final String DFS_CODE = "_dfsCode";
 }

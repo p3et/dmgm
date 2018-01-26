@@ -1,7 +1,9 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.generalized;
 
 import org.biiig.dmgm.DMGMTestBase;
+import org.biiig.dmgm.api.HyperVertexDB;
 import org.biiig.dmgm.api.PropertyStore;
+import org.biiig.dmgm.impl.db.HyperVertexDBBase;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SubgraphMiningPropertyKeys;
 import org.junit.Test;
@@ -14,15 +16,16 @@ public class ToMultiDimensionalVectorTest extends DMGMTestBase {
 
   @Test
   public void apply() {
-    PropertyStore dataStore = new InMemoryPropertyStore();
+    HyperVertexDB db = new HyperVertexDBBase();
+    int taxonomyPathKey = db.encode(SubgraphMiningPropertyKeys.TAXONOMY_PATH);
 
-    dataStore.setVertex(0, 2, SubgraphMiningPropertyKeys.TAXONOMY_PATH, new int[] {1, 2});
+    db.set(0l, taxonomyPathKey, new int[] {1, 2});
 
     DFSEmbedding embeddingA = new DFSEmbedding(0, new int[]{1, 2}, new int[0]);
     DFSEmbedding embeddingB = new DFSEmbedding(0, new int[]{1, 3}, new int[0]);
 
 
-    Function<DFSEmbedding, MultiDimensionalVector> function = new ToMultiDimensionalVector(dataStore);
+    Function<DFSEmbedding, MultiDimensionalVector> function = new ToMultiDimensionalVector(db, taxonomyPathKey);
 
     assertEquals("with data", getVectorA(), function.apply(embeddingA));
     assertEquals("without data", getVectorB(), function.apply(embeddingB));

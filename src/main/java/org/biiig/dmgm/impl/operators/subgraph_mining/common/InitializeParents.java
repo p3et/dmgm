@@ -52,15 +52,17 @@ public class InitializeParents implements Function<SmallGraph, Stream<DFSCodeEmb
         toLabel = sourceLabel;
       }
 
-      DFSCode dfsCode = new DFSCode();
-      dfsCode.addVertex(fromLabel);
-      if (!loop) dfsCode.addVertex(toLabel);
-      dfsCode.addEdge(fromTime, toTime, edgeLabel, outgoing, toLabel);
+      DFSCode dfsCode = new DFSCode(
+        loop ? new int[] {fromLabel} : new int[] {fromLabel, toLabel},
+        new int[] {edgeLabel},
+        new int[] {fromTime},
+        new int[] {toTime},
+        new boolean[] {outgoing}
+      );
+
 
       DFSEmbedding embedding = new DFSEmbedding(graph.getId(), fromId, edgeId, toId);
-
       DFSCodeEmbeddingPair codeEmbeddingPair = new DFSCodeEmbeddingPair(dfsCode, embedding);
-
       pairs[edgeId] = codeEmbeddingPair;
     }
 

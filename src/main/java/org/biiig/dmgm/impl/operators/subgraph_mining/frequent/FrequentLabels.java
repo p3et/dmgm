@@ -1,11 +1,15 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.frequent;
 
+import org.biiig.dmgm.api.HyperVertexDB;
+import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.impl.operators.subgraph.FilterVerticesAndEdgesByLabel;
 import org.biiig.dmgm.impl.operators.subgraph_mining.characteristic.PreprocessorBase;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DistinctEdgeLabels;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DistinctVertexLabels;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class FrequentLabels extends PreprocessorBase {
 
@@ -14,27 +18,23 @@ public class FrequentLabels extends PreprocessorBase {
   }
 
   @Override
-  public GraphCollection apply(GraphCollection collection, GraphCollectionBuilder builder) {
+  public List<SmallGraph> apply(List<SmallGraph> collection, HyperVertexDB builder) {
     Integer minSupportAbsolute = Math.round(collection.size() * minSupport);
 
     Set<Integer> frequentVertexLabels =
       getFrequentLabels(collection.stream(), new DistinctVertexLabels(), minSupportAbsolute);
 
-    GraphCollection vertexPrunedCollection = builder.create();
-    collection
+    List<SmallGraph> vertexPrunedCollection = collection
         .stream()
-        .map(new FilterVerticesAndEdgesByLabel(new GraphBaseFactory(), frequentVertexLabels::contains, i -> true, true))
-        .forEach(vertexPrunedCollection::add);
+        .map(new FilterVerticesAndEdgesByLabel(frequentVertexLabels::contains, i -> true, true))
+        .collect(Collectors.toList());
 
     Set<Integer> frequentEdgeLabels =
       getFrequentLabels(vertexPrunedCollection.stream(), new DistinctEdgeLabels(), minSupportAbsolute);
 
-    GraphCollection edgePrunedCollection = builder.create();
-    vertexPrunedCollection
+    return vertexPrunedCollection
       .stream()
-      .map(new FilterVerticesAndEdgesByLabel(new GraphBaseFactory(), i -> true, frequentEdgeLabels::contains, true))
-      .forEach(edgePrunedCollection::add);
-
-    return edgePrunedCollection;
+      .map(new FilterVerticesAndEdgesByLabel(i -> true, frequentEdgeLabels::contains, true))
+      .collect(Collectors.toList());
   }
 }

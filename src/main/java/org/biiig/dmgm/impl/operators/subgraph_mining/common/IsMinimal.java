@@ -7,21 +7,19 @@ import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public class IsMinimal implements java.util.function.Predicate<DFSCodeEmbeddingsPair> {
+public class IsMinimal implements java.util.function.Predicate<DFSCode> {
 
   private final InitializeParents initializeParents = new InitializeParents();
   private final GrowAllChildren growAllChildren = new GrowAllChildren();
 
   @Override
-  public boolean test(DFSCodeEmbeddingsPair dfsCodeEmbeddingsPair) {
-    DFSCode dfsCode = dfsCodeEmbeddingsPair.getDFSCode();
-
+  public boolean test(DFSCode dfsCode ) {
     Optional<DFSCodeEmbeddingsPair> minPair = initializeParents
       .apply(dfsCode)
       .collect(new GroupByDFSCodeListEmbeddings())
       .entrySet()
       .stream()
-      .map(e -> new DFSCodeEmbeddingsPair(e.getKey(), e.getValue()))
+      .map(e -> new DFSCodeEmbeddingsPair(e.getKey(), e.getValue(), 0l))
       .min(Comparator.comparing(DFSCodeEmbeddingsPair::getDFSCode));
 
     boolean minimal =  minPair.isPresent() && minPair.get().getDFSCode().parentOf(dfsCode);
@@ -37,7 +35,7 @@ public class IsMinimal implements java.util.function.Predicate<DFSCodeEmbeddings
         .collect(new GroupByDFSCodeListEmbeddings())
         .entrySet()
         .stream()
-        .map(e -> new DFSCodeEmbeddingsPair(e.getKey(), e.getValue()))
+        .map(e -> new DFSCodeEmbeddingsPair(e.getKey(), e.getValue(), 0l))
         .min(Comparator.comparing(DFSCodeEmbeddingsPair::getDFSCode));
 
       if (minPair.isPresent())

@@ -1,11 +1,10 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
 
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
+import org.biiig.dmgm.api.HyperVertexDB;
 import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DistinctEdgeLabels;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DistinctVertexLabels;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.PruneEdges;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.PruneVertices;
 
 import java.util.Collection;
 import java.util.List;
@@ -22,28 +21,24 @@ public class CharacteristicLabels extends PreprocessorBase {
   }
 
   @Override
-  public GraphCollection apply(GraphCollection collection, GraphCollectionBuilder builder) {
+  public List<SmallGraph> apply(List<SmallGraph> collection, HyperVertexDB db) {
     Set<Integer> frequentVertexLabels = getCategoryFrequentLabels(collection, new DistinctVertexLabels());
 
-    GraphCollection vertexPrunedCollection = builder.create();
-    collection
+    List<SmallGraph> vertexPrunedCollection = collection
       .stream()
-      .map(new PruneVertices(frequentVertexLabels))
-      .forEach(vertexPrunedCollection::add);
+//      .map(new PruneVertices(frequentVertexLabels))
+      .collect(Collectors.toList());
 
     Set<Integer> frequentEdgeLabels =
       getCategoryFrequentLabels(vertexPrunedCollection, new DistinctEdgeLabels());
 
-    GraphCollection edgePrunedCollection = builder.create();
-    vertexPrunedCollection
+    return vertexPrunedCollection
       .stream()
-      .map(new PruneEdges(frequentEdgeLabels))
-      .forEach(edgePrunedCollection::add);
-
-    return edgePrunedCollection;
+//      .map(new PruneEdges(frequentEdgeLabels))
+      .collect(Collectors.toList());
   }
 
-  private Set<Integer> getCategoryFrequentLabels(GraphCollection collection, Function<SmallGraph, Stream<Integer>> labelSelector) {
+  private Set<Integer> getCategoryFrequentLabels(List<SmallGraph> collection, Function<SmallGraph, Stream<Integer>> labelSelector) {
     Map<Integer, List<SmallGraph>> categorizedGraphs = collection
       .stream()
       .collect(new GroupByKeyListValues<>(SmallGraph::getLabel, Function.identity()));

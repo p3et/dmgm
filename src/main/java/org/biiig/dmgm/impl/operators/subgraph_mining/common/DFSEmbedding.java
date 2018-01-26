@@ -10,15 +10,15 @@ import java.util.Arrays;
 public class DFSEmbedding {
   private final int[] vertexIds;
   private final int[] edgeIds;
-  private final int graphId;
+  private final long graphId;
 
-  public DFSEmbedding(int graphId, int fromId, int edgeId, int toId) {
+  public DFSEmbedding(long graphId, int fromId, int edgeId, int toId) {
     this.graphId = graphId;
     this.vertexIds = fromId == toId ? new int[] {fromId} : new int[] {fromId, toId};
     this.edgeIds = new int[] {edgeId};
   }
 
-  public DFSEmbedding(int graphId, int[] vertexIds, int[] edgeIds) {
+  public DFSEmbedding(long graphId, int[] vertexIds, int[] edgeIds) {
     this.vertexIds = vertexIds;
     this.edgeIds = edgeIds;
     this.graphId = graphId;
@@ -128,7 +128,7 @@ public class DFSEmbedding {
     return result;
   }
 
-  public int getGraphId() {
+  public long getGraphId() {
     return graphId;
   }
 }

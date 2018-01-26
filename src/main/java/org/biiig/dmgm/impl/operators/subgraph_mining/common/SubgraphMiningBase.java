@@ -1,12 +1,29 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
-import de.jesemann.paralleasy.recursion.RecursiveTask;
-import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionBuilderFactory;
+import com.google.common.collect.Maps;
+import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
+import org.biiig.dmgm.api.HyperVertexDB;
+import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.impl.graph.DFSCode;
 import org.biiig.dmgm.impl.operators.HyperVertexOperatorBase;
 
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class SubgraphMiningBase extends HyperVertexOperatorBase {
+  public static final Function<SmallGraph, Stream<DFSCodeEmbeddingPair>> INITIALIZE_PARENTS = new InitializeParents();
+  public static final Predicate<DFSCode> IS_MINIMAL = new IsMinimal();
+  public static final Function<DFSCodeEmbeddingsPair, Stream<DFSCodeEmbeddingPair>> GROW_CHILDREN = new GrowAllChildren();
+  private static final Function<Map.Entry<DFSCode,List<DFSEmbedding>>, DFSCodeEmbeddingsPair> ADD_SUPPORT = new AddSupport();
+  private static final String FSG_LABEL = "Frequent Subgraph";
+  private static final String FSGS_LABEL = "Frequent Subgraphs";
+
   protected final float minSupport;
   private final int maxEdgeCount;
 
@@ -16,41 +33,74 @@ public abstract class SubgraphMiningBase extends HyperVertexOperatorBase {
   }
 
   // ORCHESTRATION
-
   @Override
-  public GraphCollection apply(GraphCollection rawInput) {
-    GraphCollectionBuilder collectionBuilder = new InMemoryGraphCollectionBuilderFactory()
-      .create()
-      .withLabelDictionary(rawInput.getLabelDictionary())
-      .withElementDataStore(rawInput.getElementDataStore());
+  public Long apply(HyperVertexDB database, Long collectionId) {
+    int supportKey = database.encode(SubgraphMiningPropertyKeys.SUPPORT);
+    int dfsCodeKey = database.encode(SubgraphMiningPropertyKeys.DFS_CODE);
+    int patternLabel = database.encode(FSG_LABEL);
+    int patternsLabel = database.encode(FSG_LABEL);
 
-    FilterOrOutput<DFSCodeEmbeddingsPair> filterOrOutput = getFilterAndOutput(rawInput);
 
-    GraphCollection input = getPreprocessor().apply(rawInput, collectionBuilder);
 
-    SingleEdgeDFSNodes singleEdgeDFSNodes = new SingleEdgeDFSNodes(input, filterOrOutput);
-    singleEdgeDFSNodes.run();
+    Map<DFSCode, BiConsumer<HyperVertexDB, Long>> output = Maps.newConcurrentMap();
+    
+    Consumer<DFSCodeEmbeddingsPair> store =
+      s -> output.put(s.getDFSCode(), (db, gid) -> db.set(gid, supportKey, s.getSupport()));
+    
+    Map<Long, SmallGraph> input = database
+      .getCollection(collectionId)
+      .stream()
+      .collect(Collectors.toMap(SmallGraph::getId, Function.identity()));
 
-    RecursiveTask<DFSCodeEmbeddingsPair, Consumer<GraphCollection>> patternGrowth = RecursiveTask
-      .createFor(new ProcessDFSNode(input, filterOrOutput, maxEdgeCount))
-      .on(singleEdgeDFSNodes.getSingleEdgeDFSNodes());
-    patternGrowth.run();
+    long minSupportAbsolute = (long) (input.size() * minSupport);
 
-    GraphCollection output = collectionBuilder.create();
+    Predicate<DFSCodeEmbeddingsPair> patternPredicate = s -> s.getSupport() >= minSupportAbsolute;
+    
+    List<DFSCodeEmbeddingsPair> parents = input
+      .values()
+      .stream()
+      .flatMap(INITIALIZE_PARENTS)
+      .collect(new GroupByKeyListValues<>(DFSCodeEmbeddingPair::getDfsCode, DFSCodeEmbeddingPair::getEmbedding))
+      .entrySet()
+      .stream()
+      .map(ADD_SUPPORT)
+      .filter(patternPredicate)
+      .peek(store)
+      .collect(Collectors.toList());
+    
+    while (!parents.isEmpty())
+      parents = parents
+        .stream()
+        .flatMap(GROW_CHILDREN)
+        .collect(new GroupByKeyListValues<>(DFSCodeEmbeddingPair::getDfsCode, DFSCodeEmbeddingPair::getEmbedding))
+        .entrySet()
+        .stream()
+        .filter(e -> IS_MINIMAL.test(e.getKey()))
+        .filter(e -> e.getKey().getEdgeCount() < maxEdgeCount)
+        .map(ADD_SUPPORT)
+        .filter(patternPredicate)
+        .peek(store)
+        .collect(Collectors.toList());
 
-    singleEdgeDFSNodes
-      .getOutput()
-      .forEach(c -> c.accept(output));
+    long[] outputVertices = output
+      .entrySet()
+      .stream()
+      .mapToLong(entry -> {
+        DFSCode dfsCode = entry.getKey();
+        long id = database.createHyperVertex(dfsCode);
+        database.set(id, dfsCodeKey, dfsCode.toString(database));
+        entry.getValue().accept(database, id);
+        return id;
+      })
+      .toArray();
 
-    patternGrowth
-      .getOutput()
-      .forEach(c -> c.accept(output));
 
-    return output;
+    return database.createHyperVertex(patternsLabel, outputVertices, new long[0]);
   }
 
   protected abstract Preprocessor getPreprocessor();
 
-  protected abstract FilterOrOutput<DFSCodeEmbeddingsPair> getFilterAndOutput(GraphCollection rawInput);
+  protected abstract FilterOrOutput<DFSCodeEmbeddingsPair> getFilterAndOutput(List<SmallGraph> rawInput, HyperVertexDB db);
+
 
 }

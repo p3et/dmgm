@@ -1,11 +1,7 @@
 package org.biiig.dmgm.impl.graph;
 
-import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionBuilderFactory;
-import org.biiig.dmgm.impl.loader.GDLLoader;
+import org.biiig.dmgm.api.SmallGraph;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class DFSCodeTest extends SingleLabelDirectedSmallGraphTest {
 
@@ -13,42 +9,52 @@ public class DFSCodeTest extends SingleLabelDirectedSmallGraphTest {
   private static final String CYCLE_CHILD = "[(v:V)-[:e]->(:V)-[:e]->(v)]";
   private static final String EXPECTED_PARENT = "[(:V)-[:e]->(:V)]";
 
-
-  @Override
-  GraphFactory getFactory() {
-    return new DFSCodeFactory();
-  }
-
   @Test
-  public void getParentOfPath() {
-    getParentOf(PATH_CHILD);
+  public void testGetterAndSetter() throws Exception {
+    int lab0 = 0;
+    int lab1 = 1;
+
+    SmallGraph graph = new DFSCode(
+      new int[] {lab0, lab1},
+      new int[] {lab0, lab1},
+      new int[] {0, 0},
+      new int[] {0, 1},
+      new boolean[] {true, true}
+    );
+
+    test(graph, lab0, lab1);
   }
 
-  @Test
-  public void getParentOfCycle() {
-    getParentOf(CYCLE_CHILD);
-  }
-
-  public void getParentOf(String child) {
-    GraphCollection input = GDLLoader
-      .fromString(child)
-      .withGraphFactory(getFactory())
-      .getGraphCollection();
-
-    GraphCollection output = new InMemoryGraphCollectionBuilderFactory()
-      .create()
-      .withLabelDictionary(input.getLabelDictionary())
-      .create();
-
-    input.forEach(g -> output.add(((DFSCode) g).getParent()));
-
-    GraphCollection expected = GDLLoader
-      .fromString(EXPECTED_PARENT)
-      .withGraphFactory(getFactory())
-      .getGraphCollection();
-
-    assertTrue(equal(expected, output));
-  }
+//  @Test
+//  public void getParentOfPath() {
+//    getParentOf(PATH_CHILD);
+//  }
+//
+//  @Test
+//  public void getParentOfCycle() {
+//    getParentOf(CYCLE_CHILD);
+//  }
+//
+//  public void getParentOf(String child) {
+//    GraphCollection input = GDLLoader
+//      .fromString(child)
+//      .withGraphFactory(getFactory())
+//      .getGraphCollection();
+//
+//    GraphCollection output = new InMemoryGraphCollectionBuilderFactory()
+//      .create()
+//      .withLabelDictionary(input.getLabelDictionary())
+//      .create();
+//
+//    input.forEach(g -> output.add(((DFSCode) g).getParent()));
+//
+//    GraphCollection expected = GDLLoader
+//      .fromString(EXPECTED_PARENT)
+//      .withGraphFactory(getFactory())
+//      .getGraphCollection();
+//
+//    assertTrue(equal(expected, output, db));
+//  }
 
 //  @Test
 //  public void testForwardsGrowth() {

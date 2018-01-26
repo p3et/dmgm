@@ -22,7 +22,7 @@ public abstract class GeneralizationTestBase extends DMGMTestBase {
       ":X[(:B_b_b)-[:a]->(:C)]"
     );
 
-    runAndTestExpectation(operator, inputGDL, expectedGDL);
+    runAndTestExpectation(operator, inputGDL);
   }
 
   public abstract HyperVertexOperator getOperator();

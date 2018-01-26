@@ -5,6 +5,7 @@ import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 import javafx.util.Pair;
 import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.HyperVertexDB;
+import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.impl.operators.subgraph_mining.GeneralizedFrequentSubgraphs;
 
 import java.util.Collection;
@@ -18,10 +19,15 @@ import java.util.stream.Stream;
 public class VertexLabelSupport implements Support<Integer> {
 
   @Override
-  public Map<Integer, Integer> getAbsolute(HyperVertexDB db, long hyperVertexId) {
-    Map<Integer, Long> intSupport = LongStream
-      .of(db.getElementsOf(hyperVertexId).getLeft())
-      .mapToObj(db::getLabel)
+  public Map<Integer, Integer> getAbsolute(HyperVertexDB db, long collectionId) {
+    Map<Integer, Long> intSupport = db
+      .getCollection(collectionId)
+      .stream()
+      .flatMap(g -> g
+        .vertexIdStream()
+        .map(g::getVertexLabel)
+        .boxed()
+      )
       .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
     Map<String, List<Long>> stringSupport = intSupport

@@ -189,4 +189,24 @@ public class DFSCode extends SmallGraphBase implements Comparable<DFSCode> {
     return builder.toString();
   }
 
+  public int[] getVertexLabels() {
+    return vertexLabels;
+  }
+
+  public int[] getEdgeLabels() {
+    return edgeLabels;
+  }
+
+  public int[] getSourceIds() {
+    return sourceIds;
+  }
+
+  public int[] getTargetIds() {
+    return targetIds;
+  }
+
+  public boolean[] getOutgoings() {
+    return outgoings;
+  }
+
 }

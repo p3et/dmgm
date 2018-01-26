@@ -1,6 +1,5 @@
 package org.biiig.dmgm.impl.graph;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.HyperVertexDB;
 import org.biiig.dmgm.api.SmallGraph;
 
@@ -115,5 +114,4 @@ public class SmallGraphBase implements SmallGraph {
       "\nS=" + Arrays.toString(sourceIds) +
       "\nT=" + Arrays.toString(targetIds);
   }
-
 }

@@ -28,7 +28,7 @@ public class PatternVectorsPair implements Supportable {
   }
 
   @Override
-  public int getSupport() {
+  public long getSupport() {
     return (int) getEmbeddings().stream().map(DFSEmbedding::getGraphId).distinct().count();
   }
 

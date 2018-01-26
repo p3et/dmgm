@@ -1,6 +1,7 @@
 package org.biiig.dmgm.impl.to_string.edge_list;
 
 import org.apache.commons.lang3.StringUtils;
+import org.biiig.dmgm.api.HyperVertexDB;
 import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.api.DMGraphFormatter;
 
@@ -9,8 +10,8 @@ public class ELGraphFormatter implements DMGraphFormatter {
 
   private final ELTripleFormatter edgeFormatter;
 
-  public ELGraphFormatter(LabelDictionary vertexDictionary, LabelDictionary edgeDictionary) {
-    this.edgeFormatter = new ELTripleFormatter(vertexDictionary, edgeDictionary);
+  public ELGraphFormatter(HyperVertexDB db) {
+    this.edgeFormatter = new ELTripleFormatter(db);
   }
 
   @Override

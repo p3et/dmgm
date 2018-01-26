@@ -9,12 +9,15 @@ import org.biiig.dmgm.impl.graph.SmallGraphBase;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.LongStream;
+import java.util.stream.Stream;
 
 /**
  * Pragmatic reference implementation of {@code GraphCollectionDatabase}.
@@ -29,7 +32,7 @@ public class HyperVertexDBBase implements HyperVertexDB {
 
   private final Map<Long, Integer> labels = createMap();
   private final Map<Long, LongPair> edges  = createMap();
-  private final Map<Long, LongsPair> graphs  = createMap();
+  private final Map<Long, LongsPair> elements = createMap();
 
   private final Map<Integer, Set<Long>> booleanProperties = createMap();
   private final Map<Integer, Map<Long, Integer>> intProperties = createMap();
@@ -81,9 +84,9 @@ public class HyperVertexDBBase implements HyperVertexDB {
   }
 
   @Override
-  public long createHyperVertex(int label, long[] vertices, long[] edges) {
+  public long createHyperVertex(int label, long[] vertexIds, long[] edgeIds) {
     long id = createElement(label);
-    graphs.put(id, new LongsPair(vertices, edges));
+    elements.put(id, new LongsPair(vertexIds, edgeIds));
     return id;
   }
 
@@ -99,7 +102,7 @@ public class HyperVertexDBBase implements HyperVertexDB {
    * @return
    */
   public long[] getGraphsOfElement(Predicate<Map.Entry<Long, LongsPair>> predicate) {
-    return graphs
+    return elements
       .entrySet()
       .stream()
       .filter(predicate)
@@ -116,7 +119,7 @@ public class HyperVertexDBBase implements HyperVertexDB {
   public SmallGraph getSmallGraph(long hyperVertexId) {
     int graphLabel = labels.get(hyperVertexId);
 
-    LongsPair globalVertexIdsEdgeIds = graphs.get(hyperVertexId);
+    LongsPair globalVertexIdsEdgeIds = elements.get(hyperVertexId);
 
     long[] globalVertexIds = globalVertexIdsEdgeIds.getLeft();
 
@@ -146,6 +149,57 @@ public class HyperVertexDBBase implements HyperVertexDB {
     }
 
     return new SmallGraphBase(hyperVertexId, graphLabel, vertexLabels, edgeLabels, sourceIds, targetIds);
+  }
+
+  @Override
+  public LongsPair getElementsOf(long hyperVertexId) {
+    return elements.get(hyperVertexId);
+  }
+
+  @Override
+  public int getLabel(long id) {
+    return labels.get(id);
+  }
+
+  @Override
+  public List<SmallGraph> getCollection(Long collectionId) {
+    return LongStream
+      .of(elements.get(collectionId).getLeft())
+      .mapToObj(this::getSmallGraph)
+      .collect(Collectors.toList());
+  }
+
+  @Override
+  public long createHyperVertex(SmallGraph graph) {
+    long[] vertexIds = graph
+      .vertexIdStream()
+      .map(graph::getVertexLabel)
+      .mapToLong(this::createVertex)
+      .toArray();
+
+    long[] edgeIds = graph
+      .edgeIdStream()
+      .mapToLong(edgeId -> {
+        int label = graph.getEdgeLabel(edgeId);
+        long sourceId = vertexIds[graph.getSourceId(edgeId)];
+        long targetId = vertexIds[graph.getTargetId(edgeId)];
+        return createEdge(label, sourceId, targetId);
+      })
+      .toArray();
+
+    return createHyperVertex(graph.getLabel(), vertexIds, edgeIds);
+  }
+
+  @Override
+  public long createCollectionByLabel(int graphLabel, int collectionLabel) {
+    long[] vertexIds = elements
+      .keySet()
+      .stream()
+      .filter(g -> labels.get(g) == graphLabel)
+      .mapToLong(g -> g)
+      .toArray();
+
+    return createHyperVertex(collectionLabel, vertexIds, new long[0]);
   }
 
 

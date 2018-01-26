@@ -3,6 +3,7 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
 import com.google.common.collect.Lists;
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 import javafx.util.Pair;
+import org.biiig.dmgm.api.HyperVertexDB;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SubgraphMiningPropertyKeys;
@@ -42,7 +43,7 @@ public class CharacteristicFilter<T extends Supportable> implements FilterOrOutp
   }
 
   @Override
-  public Pair<Optional<T>, Optional<Consumer<GraphCollection>>> apply(T supportable) {
+  public Pair<Optional<T>, Optional<Consumer<HyperVertexDB>>> apply(T supportable) {
     Map<Integer, List<DFSEmbedding>> categoryEmbeddings = supportable
       .getEmbeddings()
       .stream()
@@ -67,7 +68,7 @@ public class CharacteristicFilter<T extends Supportable> implements FilterOrOutp
 
 
     Optional<T> child;
-    Optional<Consumer<GraphCollection>> store;
+    Optional<Consumer<HyperVertexDB>> store;
 
     boolean atLeastOnceFrequent = false;
 
@@ -81,16 +82,16 @@ public class CharacteristicFilter<T extends Supportable> implements FilterOrOutp
       int[] labels = interestingness.getInterestingCategories(labelSupports, totalSupport);
 
       if (labels != null && labels.length > 0) {
-        Collection<Consumer<GraphCollection>> outputs = Lists.newArrayListWithCapacity(labels.length);
+        Collection<Consumer<HyperVertexDB>> outputs = Lists.newArrayListWithCapacity(labels.length);
 
         for (int label : labels) {
           outputs.add(output -> {
-            DFSCode dfsCode = supportable.getDFSCode().addEdge();
-            dfsCode.setLabel(label);
-            int graphId = output.add(dfsCode);
+//            DFSCode dfsCode = supportable.getDFSCode().addEdge();
+//            dfsCode.setLabel(label);
+//            int graphId = output.add(dfsCode);
             BigDecimal support = BigDecimal.valueOf(labelSupports.get(label));
-            output.getElementDataStore()
-              .setGraph(graphId, SubgraphMiningPropertyKeys.SUPPORT, support);
+//            output.getElementDataStore()
+//              .setGraph(graphId, SubgraphMiningPropertyKeys.SUPPORT, support);
           });
         }
 

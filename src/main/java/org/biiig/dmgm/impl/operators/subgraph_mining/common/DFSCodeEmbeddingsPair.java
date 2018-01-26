@@ -6,11 +6,13 @@ import java.util.Collection;
 
 public class DFSCodeEmbeddingsPair implements Comparable<DFSCodeEmbeddingsPair>, Supportable {
   private final DFSCode dfsCode;
+  private final long support;
   private Collection<DFSEmbedding> embeddings;
 
-  public DFSCodeEmbeddingsPair(DFSCode dfsCode, Collection<DFSEmbedding> embeddings) {
+  public DFSCodeEmbeddingsPair(DFSCode dfsCode, Collection<DFSEmbedding> embeddings, long support) {
     this.dfsCode = dfsCode;
     this.embeddings = embeddings;
+    this.support = support;
   }
 
   @Override
@@ -24,8 +26,8 @@ public class DFSCodeEmbeddingsPair implements Comparable<DFSCodeEmbeddingsPair>,
   }
 
   @Override
-  public int getSupport() {
-    return (int) embeddings.stream().map(e -> e.getGraphId()).distinct().count();
+  public long getSupport() {
+    return support;
   }
 
   @Override

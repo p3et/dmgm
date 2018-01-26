@@ -4,7 +4,12 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.impl.graph.DFSCode;
 
-public class GrowAllChildren {
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
+public class GrowAllChildren implements Function<DFSCodeEmbeddingsPair, Stream<DFSCodeEmbeddingPair>> {
 
   private final GrowChildrenByOutgoingEdges growChildrenByOutgoingEdges = new GrowChildrenByOutgoingEdges();
   private final GrowChildrenByIncomingEdges growChildrenByIncomingEdges = new GrowChildrenByIncomingEdges();
@@ -22,4 +27,8 @@ public class GrowAllChildren {
   }
 
 
+  @Override
+  public Stream<DFSCodeEmbeddingPair> apply(DFSCodeEmbeddingsPair dfsCodeEmbeddingsPair) {
+    return null;
+  }
 }

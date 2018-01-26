@@ -7,6 +7,6 @@ import java.util.Collection;
 public interface Supportable {
   DFSCode getDFSCode();
   Collection<DFSEmbedding> getEmbeddings();
-  int getSupport();
+  long getSupport();
   int getEmbeddingCount();
 }

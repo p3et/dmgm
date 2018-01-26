@@ -5,6 +5,7 @@ import org.biiig.dmgm.api.SmallGraph;
 import org.junit.Test;
 
 import java.util.Objects;
+import java.util.function.Supplier;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -14,21 +15,9 @@ import static org.junit.Assert.assertTrue;
  * Created by peet on 02.08.17.
  */
 public abstract class SingleLabelDirectedSmallGraphTest extends DMGMTestBase {
-  @Test
-  public void testGetterAndSetter() throws Exception {
-    GraphFactory factory = getFactory();
 
-    SmallGraph graph = factory.create();
 
-    int lab0 = 0;
-    int lab1 = 1;
-
-    graph.addVertex(lab0);
-    graph.addVertex(lab1);
-
-    graph.addEdge(0, 0, lab0);
-    graph.addEdge(0, 1, lab1);
-
+  protected void test(SmallGraph graph, int lab0, int lab1) {
     assertEquals("vertex count", 2, graph.getVertexCount());
     assertEquals("vertex format 0", lab0, graph.getVertexLabel(0));
     assertEquals("vertex format 1", lab1, graph.getVertexLabel(1));
@@ -51,6 +40,4 @@ public abstract class SingleLabelDirectedSmallGraphTest extends DMGMTestBase {
     assertArrayEquals("ougoing edges 1", new int[0], graph.getOutgoingEdgeIds(1));
     assertArrayEquals("incoming edges 1", new int[] {1}, graph.getIncomingEdgeIds(1));
   }
-
-  abstract GraphFactory getFactory();
 }

@@ -1,6 +1,7 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.frequent;
 
 import javafx.util.Pair;
+import org.biiig.dmgm.api.HyperVertexDB;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SubgraphMiningPropertyKeys;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.Supportable;
@@ -17,20 +18,20 @@ public class FrequentFilter<T extends Supportable> implements FilterOrOutput<T> 
   }
 
   @Override
-  public Pair<Optional<T>, Optional<Consumer<GraphCollection>>> apply(T supportable) {    int embeddingCount = supportable.getEmbeddingCount();
-    int support = supportable.getSupport();
+  public Pair<Optional<T>, Optional<Consumer<HyperVertexDB>>> apply(T supportable) {    int embeddingCount = supportable.getEmbeddingCount();
+    long support = supportable.getSupport();
 
     boolean frequent = support >= minSupportAbsolute;
 
     Optional<T> child;
-    Optional<Consumer<GraphCollection>> store;
+    Optional<Consumer<HyperVertexDB>> store;
 
     if (frequent) {
       child = Optional.of(supportable);
       store = Optional.of(s -> {
-        int graphId = s.add(supportable.getDFSCode());
-        s.getElementDataStore().setGraph(graphId, SubgraphMiningPropertyKeys.SUPPORT, support);
-        s.getElementDataStore().setGraph(graphId, SubgraphMiningPropertyKeys.EMBEDDING_COUNT, embeddingCount);
+//        int graphId = s.add(supportable.getDFSCode());
+//        s.getElementDataStore().setGraph(graphId, SubgraphMiningPropertyKeys.SUPPORT, support);
+//        s.getElementDataStore().setGraph(graphId, SubgraphMiningPropertyKeys.EMBEDDING_COUNT, embeddingCount);
       });
 
     } else {

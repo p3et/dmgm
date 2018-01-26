@@ -1,6 +1,7 @@
 package org.biiig.dmgm.impl.to_string.cam;
 
 import org.apache.commons.lang3.StringUtils;
+import org.biiig.dmgm.api.HyperVertexDB;
 import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.api.DMGraphFormatter;
 
@@ -12,8 +13,8 @@ public class CAMGraphFormatter implements DMGraphFormatter {
 
   private final CAMVertexFormatter vertexFormatter;
 
-  public CAMGraphFormatter(LabelDictionary vertexLabelDictionary, LabelDictionary edgeLabelDictionary) {
-    this.vertexFormatter = new CAMVertexFormatter(vertexLabelDictionary, edgeLabelDictionary);
+  public CAMGraphFormatter(HyperVertexDB db) {
+    this.vertexFormatter = new CAMVertexFormatter(db);
   }
 
 

@@ -2,40 +2,47 @@ package org.biiig.dmgm;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.api.DMGraphFormatter;
+import org.biiig.dmgm.api.HyperVertexDB;
 import org.biiig.dmgm.api.HyperVertexOperator;
+import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.impl.loader.GDLLoader;
 import org.biiig.dmgm.impl.loader.TLFLoader;
 import org.biiig.dmgm.impl.to_string.cam.CAMGraphFormatter;
 import org.biiig.dmgm.impl.to_string.edge_list.ELGraphFormatter;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
-
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by peet on 11.08.17.
  */
 public class DMGMTestBase {
-  protected GraphCollection getPredictableDatabase() throws IOException {
+  String INPUT_GRAPH_LABEL = "IN";
+  String EXPECTATION_GRAPH_LABEL = "EX";
+
+
+  protected HyperVertexDB getPredictableDatabase() throws IOException {
     String inputPath = TLFLoader.class.getResource("/samples/predictable.tlf").getFile();
     return TLFLoader
       .fromFile(inputPath)
-      .getGraphCollection();
+      .get();
   }
 
-  protected boolean equal(GraphCollection expected, GraphCollection actual) {
+  protected boolean equal(HyperVertexDB db, long expId, long resId) {
+    Collection<SmallGraph> expected = db.getCollection(expId);
+    Collection<SmallGraph> actual = db.getCollection(resId);
+
     boolean equal = expected.size() == actual.size();
 
     if (!equal) {
       System.out.println("Expected " + expected.size() + " graphs but found " + actual.size() );
     }
 
-    Map<String, String> expectedLabels = getCanonicalPrintLabelMap(expected);
-    Map<String, String> actualLabels = getCanonicalPrintLabelMap(actual);
+    Map<String, String> expectedLabels = getCanonicalPrintLabelMap(expected, db);
+    Map<String, String> actualLabels = getCanonicalPrintLabelMap(actual, db);
 
     Set<String> notExpected = keyMinus(expectedLabels, actualLabels);
     Set<String> notFound = keyMinus(actualLabels, expectedLabels);
@@ -73,12 +80,12 @@ public class DMGMTestBase {
     }
   }
 
-  private Map<String, String> getCanonicalPrintLabelMap(GraphCollection expected) {
+  private Map<String, String> getCanonicalPrintLabelMap(Collection<SmallGraph> expected, HyperVertexDB db) {
     DMGraphFormatter keyFormatter =
-      new CAMGraphFormatter(expected.getLabelDictionary(), expected.getLabelDictionary());
+      new CAMGraphFormatter(db);
 
     DMGraphFormatter valueFormatter =
-      new ELGraphFormatter(expected.getLabelDictionary(), expected.getLabelDictionary());
+      new ELGraphFormatter(db);
 
     Map<String, String> canonicalLabels = Maps.newHashMapWithExpectedSize(expected.size());
     for (SmallGraph graph : expected) {
@@ -88,63 +95,65 @@ public class DMGMTestBase {
     return canonicalLabels;
   }
 
-  protected void print(GraphCollection graphCollection) {
-    DMGraphFormatter formatter =
-      new ELGraphFormatter(graphCollection.getLabelDictionary(), graphCollection.getLabelDictionary());
+//  protected void print(GraphCollection graphCollection) {
+//    DMGraphFormatter formatter =
+//      new ELGraphFormatter(graphCollection.getLabelDictionary());
+//
+//    System.out.println(graphCollection.size());
+//
+//    for (SmallGraph graph : graphCollection) {
+//      System.out.println(formatter.format(graph));
+//    }
+//  }
 
-    System.out.println(graphCollection.size());
+  protected void runAndTestExpectation(HyperVertexOperator operator, String gdl) {
+    HyperVertexDB db = GDLLoader
+      .fromString(gdl)
+      .get();
 
-    for (SmallGraph graph : graphCollection) {
-      System.out.println(formatter.format(graph));
-    }
+    long inId = db.createCollectionByLabel(db.encode(INPUT_GRAPH_LABEL), 0);
+    long exId = db.createCollectionByLabel(db.encode(EXPECTATION_GRAPH_LABEL), 0);
+    long outId = operator.apply(db, inId);
+
+    equal(db, exId, outId);
   }
 
-  protected void runAndTestExpectation(HyperVertexOperator operator, String inputGDL, String expectedGDL) {
-    GraphCollection input = GDLLoader
-      .fromString(inputGDL)
-      .getGraphCollection();
-
-    GraphCollection output = operator.apply(input);
-
-    testExpectation(output, expectedGDL);
-  }
-
-  protected void testExpectation(GraphCollection output, String expectedGDL) {
-    GraphCollection expected = GDLLoader
-      .fromString(expectedGDL)
-      .getGraphCollection();
-
-    assertTrue("constistent", isConsistent(output));
-    assertTrue("equals", equal(expected, output));
-  }
-
-  private boolean isConsistent(GraphCollection collection) {
-    boolean consistent = true;
-
-    for (SmallGraph graph : collection) {
-      for (int vertexId = 0; vertexId < graph.getVertexCount(); vertexId++ ) {
-        int vertexLabel = graph.getVertexLabel(vertexId);
-        String translation = collection.getLabelDictionary().translate(vertexLabel);
-
-        consistent = consistent && translation != null;
-
-        if (translation == null) {
-          System.out.println("no translation found for integer vertex label " + vertexLabel);
-        }
-      }
-
-      for (int edgeId = 0; edgeId < graph.getEdgeCount(); edgeId++ ) {
-        int edgeLabel = graph.getEdgeLabel(edgeId);
-        String translation = collection.getLabelDictionary().translate(edgeLabel);
-
-        consistent = consistent && translation != null;
-
-        if (translation == null) {
-          System.out.println("no translation found for integer edge label " + edgeLabel);
-        }
-      }
-    }
-
-    return consistent;
-  }
+//  protected void testExpectation(GraphCollection output, String expectedGDL) {
+//    GraphCollection expected = GDLLoader
+//      .fromString(expectedGDL)
+//      .getGraphCollection();
+//
+//    assertTrue("constistent", isConsistent(output));
+//    assertTrue("equals", equal(expected, output, db));
+//  }
+//
+//  private boolean isConsistent(GraphCollection collection) {
+//    boolean consistent = true;
+//
+//    for (SmallGraph graph : collection) {
+//      for (int vertexId = 0; vertexId < graph.getVertexCount(); vertexId++ ) {
+//        int vertexLabel = graph.getVertexLabel(vertexId);
+//        String translation = collection.getLabelDictionary().translate(vertexLabel);
+//
+//        consistent = consistent && translation != null;
+//
+//        if (translation == null) {
+//          System.out.println("no translation found for integer vertex label " + vertexLabel);
+//        }
+//      }
+//
+//      for (int edgeId = 0; edgeId < graph.getEdgeCount(); edgeId++ ) {
+//        int edgeLabel = graph.getEdgeLabel(edgeId);
+//        String translation = collection.getLabelDictionary().translate(edgeLabel);
+//
+//        consistent = consistent && translation != null;
+//
+//        if (translation == null) {
+//          System.out.println("no translation found for integer edge label " + edgeLabel);
+//        }
+//      }
+//    }
+//
+//    return consistent;
+//  }
 }

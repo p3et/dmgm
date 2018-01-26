@@ -2,98 +2,82 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
 public class SubgraphMiningTestData {
 
-  public static final String SINGLE_EDGE_INPUT =
-    "[(v1:A)-[e1:a]->(v2:A)]" +
-    "[(v1)-[e1]->(v2)]" +
-    "[(:A)-[:a]->(:A),(:B)-[:b]->(:B),(:B)-[:b]->(:B)]" +
-    "[(:A)-[:b]->(:A),(:A)-[:b]->(:A),(:A)-[:b]->(:A)]";
+  public static final String SINGLE_EDGE =
+    ":IN[(v1:A)-[e1:a]->(v2:A)]" +
+    ":IN[(v1)-[e1]->(v2)]" +
+    ":IN[(:A)-[:a]->(:A),(:B)-[:b]->(:B),(:B)-[:b]->(:B)]" +
+    ":IN[(:A)-[:b]->(:A),(:A)-[:b]->(:A),(:A)-[:b]->(:A)]" +
+    ":EX[(:A)-[:a]->(:A)]";
 
-  public static final String SINGLE_EDGE_EXPECTED =
-    "[(:A)-[:a]->(:A)]";
-
-  public static final String Y_INPUT =
-    "[(a:A)-[:a]->(:B),(a)-[:a]->(:C)]" +
-    "[(b:A)-[:a]->(:B),(b)-[:a]->(:C)]" +
-    "[(c:A)-[:a]->(:C),(c)-[:a]->(:B)]";
-
-  public static final String Y_EXPECTED =
-    "[(a:A)-[:a]->(:B),(a)-[:a]->(:C)]" +
-    "[(b:A)-[:a]->(:B)]" +
-    "[(c:A)-[:a]->(:C)]";
+  public static final String Y =
+    ":IN[(a:A)-[:a]->(:B),(a)-[:a]->(:C)]" +
+    ":IN[(b:A)-[:a]->(:B),(b)-[:a]->(:C)]" +
+    ":IN[(c:A)-[:a]->(:C),(c)-[:a]->(:B)]" +
+    ":EX[(a:A)-[:a]->(:B),(a)-[:a]->(:C)]" +
+    ":EX[(b:A)-[:a]->(:B)]" +
+    ":EX[(c:A)-[:a]->(:C)]";
 
   public static final String SIMPLE_GRAPH_INPUT =
-    "[(:A)-[:a]->(v1:B)-[:b]->(:C),(v1)-[:c]->(:D)]" +
-    "[(:A)-[:a]->(v2:B)-[:b]->(:C),(v2)-[:c]->(:E)]" +
-    "[(:A)-[:a]->(v3:B)-[:d]->(:C),(v3)-[:c]->(:E)]";
-
-  public static final String SIMPLE_GRAPH_EXPECTED =
-    "[(:A)-[:a]->(:B)]" +
-    "[(:B)-[:b]->(:C)]" +
-    "[(:B)-[:c]->(:E)]" +
-    "[(:A)-[:a]->(:B)-[:b]->(:C)]" +
-    "[(:A)-[:a]->(:B)-[:c]->(:E)]";
+    ":IN[(:A)-[:a]->(v1:B)-[:b]->(:C),(v1)-[:c]->(:D)]" +
+    ":IN[(:A)-[:a]->(v2:B)-[:b]->(:C),(v2)-[:c]->(:E)]" +
+    ":IN[(:A)-[:a]->(v3:B)-[:d]->(:C),(v3)-[:c]->(:E)]" +
+    ":EX[(:A)-[:a]->(:B)]" +
+    ":EX[(:B)-[:b]->(:C)]" +
+    ":EX[(:B)-[:c]->(:E)]" +
+    ":EX[(:A)-[:a]->(:B)-[:b]->(:C)]" +
+    ":EX[(:A)-[:a]->(:B)-[:c]->(:E)]";
 
   public static final String PARALLEL_EDGES_INPUT =
-    "[(v1:A)-[:a]->(:A)-[:a]->(v1:A)]" +
-    "[(v2:A)-[:a]->(:A)-[:a]->(v2:A)]" +
-    "[(:A)-[:a]->(:A)-[:a]->(:A)]";
-
-  public static final String PARALLEL_EDGES_EXPECTED =
-    "[(:A)-[:a]->(:A)]" +
-    "[(v3:A)-[:a]->(:A)-[:a]->(v3:A)]";
+    ":IN[(v1:A)-[:a]->(:A)-[:a]->(v1:A)]" +
+    ":IN[(v2:A)-[:a]->(:A)-[:a]->(v2:A)]" +
+    ":IN[(:A)-[:a]->(:A)-[:a]->(:A)]" +
+    ":EX[(:A)-[:a]->(:A)]" +
+    ":EX[(v3:A)-[:a]->(:A)-[:a]->(v3:A)]";
 
   public static final String LOOP_INPUT =
-    "g1[(v1:A)-[:a]->(v1)-[:a]->(:A)]" +
-    "g2[(v2:A)-[:a]->(v2)-[:a]->(:A)]" +
-    "g3[(v3:A)-[:a]->(v3)-[:a]->(:A)]" +
-    "g4[(:A)-[:a]->(:A)-[:a]->(:A)]";
-
-  public static final String LOOP_EXPECTED =
-    "s1[(:A)-[:a]->(:A)]" +
-    "s2[(v3:A)-[:a]->(v3)]" +
-    "s3[(v4:A)-[:a]->(v4)-[:a]->(:A)]";
+    "g1:IN[(v1:A)-[:a]->(v1)-[:a]->(:A)]" +
+    "g2:IN[(v2:A)-[:a]->(v2)-[:a]->(:A)]" +
+    "g3:IN[(v3:A)-[:a]->(v3)-[:a]->(:A)]" +
+    "g4:IN[(:A)-[:a]->(:A)-[:a]->(:A)]" +
+    "s1:EX[(:A)-[:a]->(:A)]" +
+    "s2:EX[(v3:A)-[:a]->(v3)]" +
+    "s3:EX[(v4:A)-[:a]->(v4)-[:a]->(:A)]";
 
   public static final String DIAMOND_INPUT =
-    "g1[(v1:A)-[:a]->(v2:A)-[:a]->(v4:A),(v1:A)-[:a]->(v3:A)-[:a]->(v4:A)]" +
-    "g2[(v1:A)-[:a]->(v2:A)-[:a]->(v4:A),(v1:A)-[:a]->(v3:A)-[:a]->(v4:A)]" +
-    "g3[(v1:A)-[:a]->(v2:A)-[:a]->(v4:A),(v1:A)-[:a]->(v3:A)-[:a]->(v4:A)]";
-
-  public static final String DIAMOND_EXPECTED =
-    "s1[(v1:A)-[:a]->(v2:A)-[:a]->(v4:A),(v1:A)-[:a]->(v3:A)-[:a]->(v4:A)]" +
-    "s2[(v1:A)-[:a]->(v2:A)-[:a]->(v4:A),(v1:A)-[:a]->(v3:A)             ]" +
-    "s3[(v1:A)-[:a]->(v2:A)-[:a]->(v4:A),             (v3:A)-[:a]->(v4:A)]" +
-    "s4[(v1:A)-[:a]->(v2:A)-[:a]->(v4:A)                                 ]" +
-    "s5[(v1:A)-[:a]->(v2:A)             ,(v1:A)-[:a]->(v3:A)             ]" +
-    "s6[             (v2:A)-[:a]->(v4:A),             (v3:A)-[:a]->(v4:A)]" +
-    "s7[(v1:A)-[:a]->(v2:A)                                              ]";
+    "g1:IN[(v1:A)-[:a]->(v2:A)-[:a]->(v4:A),(v1:A)-[:a]->(v3:A)-[:a]->(v4:A)]" +
+    "g2:IN[(v1:A)-[:a]->(v2:A)-[:a]->(v4:A),(v1:A)-[:a]->(v3:A)-[:a]->(v4:A)]" +
+    "g3:IN[(v1:A)-[:a]->(v2:A)-[:a]->(v4:A),(v1:A)-[:a]->(v3:A)-[:a]->(v4:A)]" +
+    "s1:EX[(v1:A)-[:a]->(v2:A)-[:a]->(v4:A),(v1:A)-[:a]->(v3:A)-[:a]->(v4:A)]" +
+    "s2:EX[(v1:A)-[:a]->(v2:A)-[:a]->(v4:A),(v1:A)-[:a]->(v3:A)             ]" +
+    "s3:EX[(v1:A)-[:a]->(v2:A)-[:a]->(v4:A),             (v3:A)-[:a]->(v4:A)]" +
+    "s4:EX[(v1:A)-[:a]->(v2:A)-[:a]->(v4:A)                                 ]" +
+    "s5:EX[(v1:A)-[:a]->(v2:A)             ,(v1:A)-[:a]->(v3:A)             ]" +
+    "s6:EX[             (v2:A)-[:a]->(v4:A),             (v3:A)-[:a]->(v4:A)]" +
+    "s7:EX[(v1:A)-[:a]->(v2:A)                                              ]";
 
   public static final String CIRCLE_WITH_BRANCH_INPUT =
-    "g1[(v1:A)-[:a]->(:A)-[:a]->(:A)-[:a]->(v1)-[:b]->(:B)]" +
-    "g2[(v1:A)-[:a]->(:A)-[:a]->(:A)-[:a]->(v1)-[:b]->(:B)]" +
-    "g3[(v1:A)-[:a]->(:A)-[:a]->(:A)-[:a]->(v1)-[:b]->(:B)]";
-
-  public static final String CIRCLE_WITH_BRANCH_EXPECTED =
-    "s1[(v1:A)-[:a]->(:A)-[:a]->(:A)-[:a]->(v1)-[:b]->(:B)]" +
-    "s2[(v1:A)-[:a]->(:A)-[:a]->(:A)-[:a]->(v1)           ]" +
-    "s3[(v1:A)-[:a]->(:A)-[:a]->(:A)       (v1)-[:b]->(:B)]" +
-    "s4[(v1:A)-[:a]->(:A)       (:A)-[:a]->(v1)-[:b]->(:B)]" +
-    "s5[             (:A)-[:a]->(:A)-[:a]->(v1:A)-[:b]->(:B)]" +
-    "s6[(:A)-[:a]->(:A)-[:a]->(:A)]" +
-    "s7[(:A)-[:a]->(:A)-[:b]->(:B)]" +
-    "s8[(:A)<-[:a]-(:A)-[:b]->(:B)]" +
-    "s9[(:A)-[:a]->(:A)]" +
-    "s10[(:A)-[:b]->(:B)]";
+    "g1:IN[(v1:A)-[:a]->(:A)-[:a]->(:A)-[:a]->(v1)-[:b]->(:B)]" +
+    "g2:IN[(v1:A)-[:a]->(:A)-[:a]->(:A)-[:a]->(v1)-[:b]->(:B)]" +
+    "g3:IN[(v1:A)-[:a]->(:A)-[:a]->(:A)-[:a]->(v1)-[:b]->(:B)]" +
+    "s1:EX[(v1:A)-[:a]->(:A)-[:a]->(:A)-[:a]->(v1)-[:b]->(:B)]" +
+    "s2:EX[(v1:A)-[:a]->(:A)-[:a]->(:A)-[:a]->(v1)           ]" +
+    "s3:EX[(v1:A)-[:a]->(:A)-[:a]->(:A)       (v1)-[:b]->(:B)]" +
+    "s4:EX[(v1:A)-[:a]->(:A)       (:A)-[:a]->(v1)-[:b]->(:B)]" +
+    "s5:EX[             (:A)-[:a]->(:A)-[:a]->(v1:A)-[:b]->(:B)]" +
+    "s6:EX[(:A)-[:a]->(:A)-[:a]->(:A)]" +
+    "s7:EX[(:A)-[:a]->(:A)-[:b]->(:B)]" +
+    "s8:EX[(:A)<-[:a]-(:A)-[:b]->(:B)]" +
+    "s9:EX[(:A)-[:a]->(:A)]" +
+    "s10:EX[(:A)-[:b]->(:B)]";
 
   public static final String MULTI_LABELED_CIRCLE_INPUT =
-    "g1[(v:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(v)]" +
-    "g2[(v:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(v)]";
-
-  public static final String MULTI_LABELED_CIRCLE_EXPECTED =
-    "s1[(v:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(v)]" +
-    "s2[(:A)-[:a]->(:B)-[:a]->(:C)]" +
-    "s3[(:B)-[:a]->(:C)-[:a]->(:A)]" +
-    "s4[(:C)-[:a]->(:A)-[:a]->(:B)]" +
-    "s5[(:A)-[:a]->(:B)]" +
-    "s6[(:B)-[:a]->(:C)]" +
-    "s7[(:C)-[:a]->(:A)]";
+    "g1:IN[(v:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(v)]" +
+    "g2:IN[(v:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(v)]" +
+    "s1:EX[(v:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(v)]" +
+    "s2:EX[(:A)-[:a]->(:B)-[:a]->(:C)]" +
+    "s3:EX[(:B)-[:a]->(:C)-[:a]->(:A)]" +
+    "s4:EX[(:C)-[:a]->(:A)-[:a]->(:B)]" +
+    "s5:EX[(:A)-[:a]->(:B)]" +
+    "s6:EX[(:B)-[:a]->(:C)]" +
+    "s7:EX[(:C)-[:a]->(:A)]";
 }
