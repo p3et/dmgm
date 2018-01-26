@@ -1,13 +1,13 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.generalized;
 
 import org.biiig.dmgm.DMGMTestBase;
-import org.biiig.dmgm.api.Operator;
+import org.biiig.dmgm.api.HyperVertexOperator;
 import org.junit.Test;
 
 public abstract class GeneralizationTestBase extends DMGMTestBase {
   @Test
   public void testAlgorithm() {
-    Operator operator = getOperator();
+    HyperVertexOperator operator = getOperator();
 
     String inputGDL = (
       ":X[(:A_a_a)-[:a]->(:B_b_b)-[:a]->(:C)]" +
@@ -25,5 +25,5 @@ public abstract class GeneralizationTestBase extends DMGMTestBase {
     runAndTestExpectation(operator, inputGDL, expectedGDL);
   }
 
-  public abstract Operator getOperator();
+  public abstract HyperVertexOperator getOperator();
 }

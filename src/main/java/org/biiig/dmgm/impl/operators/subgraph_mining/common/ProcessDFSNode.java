@@ -4,7 +4,6 @@ import de.jesemann.paralleasy.recursion.Children;
 import de.jesemann.paralleasy.recursion.Output;
 import de.jesemann.paralleasy.recursion.RecursionStep;
 import javafx.util.Pair;
-import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.impl.graph.DFSCode;
 

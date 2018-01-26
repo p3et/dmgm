@@ -2,8 +2,7 @@ package org.biiig.dmgm.impl.operators.aggregation;
 
 import org.biiig.dmgm.DMGMTestBase;
 import org.biiig.dmgm.api.SmallGraph;
-import org.biiig.dmgm.api.GraphCollection;
-import org.biiig.dmgm.api.Operator;
+import org.biiig.dmgm.api.HyperVertexOperator;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -17,7 +16,7 @@ public class AggregationTest extends DMGMTestBase {
   public void apply() throws IOException {
     GraphCollection collection = getPredictableDatabase();
 
-    Operator aggregation = Aggregation.forInteger(KEY, SmallGraph::getVertexCount);
+    HyperVertexOperator aggregation = Aggregation.forInteger(KEY, SmallGraph::getVertexCount);
     collection.apply(aggregation);
 
     collection.stream().forEach(graph ->

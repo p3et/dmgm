@@ -1,7 +1,6 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
 import javafx.util.Pair;
-import org.biiig.dmgm.api.GraphCollection;
 
 import java.util.Optional;
 import java.util.function.Consumer;

@@ -1,6 +1,5 @@
 package org.biiig.dmgm.impl.to_string.cam;
 
-import org.biiig.dmgm.api.LabelDictionary;
 import org.biiig.dmgm.api.SmallGraph;
 
 public class CAMVertexFormatter {
@@ -12,7 +11,7 @@ public class CAMVertexFormatter {
   public CAMVertexFormatter(LabelDictionary vertexDictionary, LabelDictionary edgeDictionary) {
     this.vertexDictionary = vertexDictionary;
     this.outgoingEdgesFormatter = new CAMOutgoingEdgesFormatter(vertexDictionary, edgeDictionary);
-    this.incomingEdgesFormatter = new CAMIncomingEdgesFormatter(vertexDictionary, edgeDictionary);
+    this.incomingEdgesFormatter = new CAMIncomingEdgesFormatter(vertexDictionary);
   }
 
   public String format(SmallGraph graph, int vertexId) {

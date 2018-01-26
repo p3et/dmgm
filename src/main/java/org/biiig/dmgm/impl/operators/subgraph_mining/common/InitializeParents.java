@@ -55,7 +55,7 @@ public class InitializeParents implements Function<SmallGraph, Stream<DFSCodeEmb
       DFSCode dfsCode = new DFSCode();
       dfsCode.addVertex(fromLabel);
       if (!loop) dfsCode.addVertex(toLabel);
-      dfsCode.addEdge(fromTime, toTime, edgeLabel, outgoing);
+      dfsCode.addEdge(fromTime, toTime, edgeLabel, outgoing, toLabel);
 
       DFSEmbedding embedding = new DFSEmbedding(graph.getId(), fromId, edgeId, toId);
 

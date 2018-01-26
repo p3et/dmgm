@@ -1,12 +1,12 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
 import de.jesemann.paralleasy.recursion.RecursiveTask;
-import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionBuilderFactory;
+import org.biiig.dmgm.impl.operators.HyperVertexOperatorBase;
 
 import java.util.function.Consumer;
 
-public abstract class SubgraphMiningBase extends org.biiig.dmgm.impl.operators.OperatorBase {
+public abstract class SubgraphMiningBase extends HyperVertexOperatorBase {
   protected final float minSupport;
   private final int maxEdgeCount;
 

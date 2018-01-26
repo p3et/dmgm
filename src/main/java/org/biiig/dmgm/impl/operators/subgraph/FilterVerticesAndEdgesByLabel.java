@@ -2,6 +2,7 @@ package org.biiig.dmgm.impl.operators.subgraph;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.impl.graph.SmallGraphBase;
 
 import java.util.function.Function;
 import java.util.function.IntPredicate;
@@ -10,30 +11,28 @@ import java.util.stream.IntStream;
 public class FilterVerticesAndEdgesByLabel implements Function<SmallGraph, SmallGraph> {
   public static final IntPredicate NO_PREDICATE = i -> true;
 
-  private final GraphFactory graphFactory;
   private final IntPredicate vertexLabelPredicate;
   private final IntPredicate edgeLabelPredicate;
   private final Boolean dropIsolatedVertices;
 
-  public FilterVerticesAndEdgesByLabel(GraphFactory graphFactory, IntPredicate vertexLabelPredicate, IntPredicate edgeLabelPredicate, Boolean dropIsolatedVertices) {
-    this.graphFactory = graphFactory;
+  public FilterVerticesAndEdgesByLabel(IntPredicate vertexLabelPredicate, IntPredicate edgeLabelPredicate, Boolean dropIsolatedVertices) {
     this.vertexLabelPredicate = vertexLabelPredicate;
     this.edgeLabelPredicate = edgeLabelPredicate;
     this.dropIsolatedVertices = dropIsolatedVertices;
   }
 
   @Override
-  public SmallGraph apply(SmallGraph inGraph) {
-    int[] vertexCandidates = inGraph
+  public SmallGraph apply(SmallGraph graph) {
+    int[] vertexCandidates = graph
       .vertexIdStream()
-      .filter(v -> vertexLabelPredicate.test(inGraph.getVertexLabel(v)))
+      .filter(v -> vertexLabelPredicate.test(graph.getVertexLabel(v)))
       .toArray();
 
-    int[] keepEdges = inGraph
+    int[] keepEdges = graph
       .edgeIdStream()
-      .filter(v -> edgeLabelPredicate.test(inGraph.getEdgeLabel(v)))
-      .filter(e -> ArrayUtils.contains(vertexCandidates, inGraph.getSourceId(e)))
-      .filter(e -> ArrayUtils.contains(vertexCandidates, inGraph.getTargetId(e)))
+      .filter(v -> edgeLabelPredicate.test(graph.getEdgeLabel(v)))
+      .filter(e -> ArrayUtils.contains(vertexCandidates, graph.getSourceId(e)))
+      .filter(e -> ArrayUtils.contains(vertexCandidates, graph.getTargetId(e)))
       .toArray();
 
     int[] keepVertices;
@@ -41,11 +40,11 @@ public class FilterVerticesAndEdgesByLabel implements Function<SmallGraph, Small
     if (dropIsolatedVertices) {
       IntStream sourceIds = IntStream
         .of(keepEdges)
-        .map(inGraph::getSourceId);
+        .map(graph::getSourceId);
 
       IntStream targetIds = IntStream
         .of(keepEdges)
-        .map(inGraph::getTargetId);
+        .map(graph::getTargetId);
 
       keepVertices = IntStream
         .concat(sourceIds, targetIds)
@@ -56,28 +55,30 @@ public class FilterVerticesAndEdgesByLabel implements Function<SmallGraph, Small
       keepVertices = vertexCandidates;
     }
 
-    int[] vertexIdMap = new int[inGraph.getVertexCount()];
+    int[] vertexIdMap = new int[graph.getVertexCount()];
 
-    SmallGraph outGraph = graphFactory.create();
-
-    IntStream
+    int[] vertexLabels = IntStream
       .range(0, keepVertices.length)
-      .forEach(outVertexId -> {
+      .map(outVertexId -> {
         int inVertexId = keepVertices[outVertexId];
         vertexIdMap[inVertexId] = outVertexId;
-        int label = inGraph.getVertexLabel(inVertexId);
-        outGraph.addVertex(label);
-      });
+        return graph.getVertexLabel(inVertexId);
+      })
+      .toArray();
+
+    int edgeCount = keepEdges.length;
+    int[] edgeLabels = new int[edgeCount];
+    int[] sourceIds = new int[edgeCount];
+    int[] targetIds = new int[edgeCount];
 
     IntStream
       .of(keepEdges)
       .forEach(edgeId -> {
-        int sourceId = vertexIdMap[inGraph.getSourceId(edgeId)];
-        int targetId = vertexIdMap[inGraph.getTargetId(edgeId)];
-        int edgeLabel = inGraph.getEdgeLabel(edgeId);
-        outGraph.addEdge(sourceId, targetId, edgeLabel);
+        edgeLabels[edgeId] = graph.getEdgeLabel(edgeId);
+        sourceIds[edgeId] = vertexIdMap[graph.getSourceId(edgeId)];
+        targetIds[edgeId] = vertexIdMap[graph.getTargetId(edgeId)];
       });
 
-    return outGraph;
+    return new SmallGraphBase(graph.getId(), graph.getLabel(), vertexLabels, edgeLabels, sourceIds, targetIds);
   }
 }

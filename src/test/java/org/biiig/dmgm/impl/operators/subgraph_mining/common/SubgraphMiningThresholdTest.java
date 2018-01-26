@@ -1,7 +1,6 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
-import org.biiig.dmgm.api.Operator;
-import org.biiig.dmgm.api.GraphCollection;
+import org.biiig.dmgm.api.HyperVertexOperator;
 import org.biiig.dmgm.DMGMTestBase;
 import org.junit.Test;
 
@@ -11,7 +10,7 @@ import static junit.framework.TestCase.assertEquals;
 
 public abstract class SubgraphMiningThresholdTest extends DMGMTestBase {
 
-  protected abstract Operator getOperator(float minSupportRel, int maxEdgeCount);
+  protected abstract HyperVertexOperator getOperator(float minSupportRel, int maxEdgeCount);
 
   @Test
   public void mine10() throws Exception {
@@ -24,7 +23,7 @@ public abstract class SubgraphMiningThresholdTest extends DMGMTestBase {
   }
 
   private void mine(float minSupportThreshold, int expectedResultSize) throws IOException {
-    Operator fsm = getOperator(minSupportThreshold, 20);
+    HyperVertexOperator fsm = getOperator(minSupportThreshold, 20);
     GraphCollection input = getPredictableDatabase();
     GraphCollection output = input.apply(fsm);
     assertEquals(expectedResultSize, output.size());

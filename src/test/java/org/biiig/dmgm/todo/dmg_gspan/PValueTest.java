@@ -32,7 +32,7 @@
 //    gSpan.execute();
 //
 //    List<LabeledGraph> graphs = gSpan.getGraphs();
-//    Map<Integer, String> vertexDictionary = gSpan.getReverseVertexDictionary();
+//    Map<Integer, String> db = gSpan.getReverseVertexDictionary();
 //    Map<Integer, String> edgeDictionary = gSpan.getReverseEdgeDictionary();
 //    edgeDictionary.put(Integer.MAX_VALUE, "isA");
 //
@@ -49,9 +49,9 @@
 //          graph.getId(),
 //          edge.getSource(),
 //          edge.getTarget(),
-//          vertexDictionary.get(graph.getVertices()[edge.getSource()].getLabel()),
+//          db.get(graph.getVertices()[edge.getSource()].getLabel()),
 //          edgeDictionary.get(edge.getLabel()),
-//          vertexDictionary.get(graph.getVertices()[edge.getTarget()].getLabel())));
+//          db.get(graph.getVertices()[edge.getTarget()].getLabel())));
 //      }
 //    }
 //
@@ -150,7 +150,7 @@
 //      for (LabeledVertex vertex : graph.getVertices())
 //      {
 //        int vertexLab=vertex.getLabel();
-//        String vertexStringLab=vertexDictionary.get(vertexLab);
+//        String vertexStringLab=db.get(vertexLab);
 //        if(vertexLabelDistribution.containsKey(vertexStringLab))
 //          vertexLabelDistribution.put(vertexStringLab,vertexLabelDistribution.get(vertexStringLab)+1);
 //        else
@@ -209,7 +209,7 @@
 //      vertexLabelDistribution,
 //      globalVertexCount,
 //      maxMultiplicity,
-//      vertexDictionary,
+//      db,
 //      edgeDictionary
 //    );
 //

@@ -1,7 +1,6 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.generalized;
 
 import javafx.util.Pair;
-import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCodeEmbeddingsPair;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
 

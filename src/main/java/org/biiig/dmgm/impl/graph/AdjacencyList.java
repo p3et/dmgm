@@ -1,33 +1,22 @@
 package org.biiig.dmgm.impl.graph;
 
-import org.apache.commons.lang3.ArrayUtils;
-
 public class AdjacencyList extends SmallGraphBase {
 
-  private int[][] outgoingEdgeIds = new int[0][];
-  private int[][] incomingEdgeIds = new int[0][];
+  private final int[][] outgoingEdgeIds;
+  private final int[][] incomingEdgeIds;
 
-  public AdjacencyList() {
+  public AdjacencyList(long id, int label, int[] vertexLabels, int[] edgeLabels, int[] sourceIds, int[] targetIds) {
     super(id, label, vertexLabels, edgeLabels, sourceIds, targetIds);
-  }
 
-  @Override
-  public int addVertex(int label) {
-    super.addVertex(label);
+    int vertexCount = getVertexCount();
+    outgoingEdgeIds = new int[vertexCount][];
+    incomingEdgeIds = new int[vertexCount][];
 
-    outgoingEdgeIds = ArrayUtils.add(outgoingEdgeIds, new int[0]);
-    incomingEdgeIds = ArrayUtils.add(incomingEdgeIds, new int[0]);
-    return label;
-  }
-
-  @Override
-  public int addEdge(int sourceId, int targetId, int label) {
-    super.addEdge(sourceId, targetId, label);
-
-    int edgeId = getEdgeCount() - 1;
-    outgoingEdgeIds[sourceId] = ArrayUtils.add(outgoingEdgeIds[sourceId], edgeId);
-    incomingEdgeIds[targetId] = ArrayUtils.add(incomingEdgeIds[targetId], edgeId);
-    return edgeId;
+    vertexIdStream()
+      .forEach(vertexId -> {
+        outgoingEdgeIds[vertexId] = getOutgoingEdgeIds(vertexId);
+        incomingEdgeIds[vertexId] = getIncomingEdgeIds(vertexId);
+      });
   }
 
   @Override
@@ -39,5 +28,4 @@ public class AdjacencyList extends SmallGraphBase {
   public int[] getIncomingEdgeIds(int vertexId) {
     return incomingEdgeIds[vertexId];
   }
-
 }

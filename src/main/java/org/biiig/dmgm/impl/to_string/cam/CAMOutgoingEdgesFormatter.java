@@ -1,13 +1,12 @@
 package org.biiig.dmgm.impl.to_string.cam;
 
-import org.biiig.dmgm.api.LabelDictionary;
 import org.biiig.dmgm.api.SmallGraph;
 
 public class CAMOutgoingEdgesFormatter extends CAMAdjacentEdgesFormatter {
 
   public CAMOutgoingEdgesFormatter(
     LabelDictionary vertexDictionary, LabelDictionary edgeDictionary) {
-    super(vertexDictionary, edgeDictionary);
+    super(vertexDictionary);
   }
 
   @Override

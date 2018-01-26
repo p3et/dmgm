@@ -1,8 +1,8 @@
 package org.biiig.dmgm.impl.graph;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.biiig.dmgm.api.HyperVertexDB;
 import org.biiig.dmgm.api.SmallGraph;
-import org.biiig.dmgm.api.LabelDictionary;
 
 import java.util.Arrays;
 import java.util.function.Function;
@@ -32,11 +32,6 @@ public class SmallGraphBase implements SmallGraph {
   }
 
   @Override
-  public void setLabel(int label) {
-    this.label = label;
-  }
-
-  @Override
   public int getVertexCount() {
     return vertexLabels.length;
   }
@@ -44,20 +39,6 @@ public class SmallGraphBase implements SmallGraph {
   @Override
   public int getEdgeCount() {
     return edgeLabels.length;
-  }
-
-  @Override
-  public int addVertex(int label) {
-    vertexLabels = ArrayUtils.add(vertexLabels, label);
-    return vertexLabels.length - 1;
-  }
-
-  @Override
-  public int addEdge(int sourceId, int targetId, int label) {
-    edgeLabels = ArrayUtils.add(edgeLabels, label);
-    sourceIds = ArrayUtils.add(sourceIds, sourceId);
-    targetIds = ArrayUtils.add(targetIds, targetId);
-    return edgeLabels.length - 1;
   }
 
   @Override
@@ -82,34 +63,21 @@ public class SmallGraphBase implements SmallGraph {
 
   @Override
   public int[] getOutgoingEdgeIds(int vertexId) {
-    int[] edgeIds = new int[0];
-
-    for (int edgeId = 0; edgeId < getEdgeCount(); edgeId++)
-      if (sourceIds[edgeId] == vertexId)
-        edgeIds = ArrayUtils.add(edgeIds, edgeId);
-
-    return edgeIds;
+    return IntStream.range(0, getEdgeCount())
+      .filter(edgeId -> sourceIds[edgeId] == vertexId)
+      .toArray();
   }
 
   @Override
   public int[] getIncomingEdgeIds(int vertexId) {
-    int[] edgeIds = new int[0];
-
-    for (int edgeId = 0; edgeId < getEdgeCount(); edgeId++)
-      if (targetIds[edgeId] == vertexId)
-        edgeIds = ArrayUtils.add(edgeIds, edgeId);
-
-    return edgeIds;
+    return IntStream.range(0, getEdgeCount())
+      .filter(edgeId -> targetIds[edgeId] == vertexId)
+      .toArray();
   }
 
   @Override
-  public int getId() {
+  public long getId() {
     return id;
-  }
-
-  @Override
-  public void setId(int id) {
-    this.id = id;
   }
 
   @Override
@@ -123,13 +91,8 @@ public class SmallGraphBase implements SmallGraph {
   }
 
   @Override
-  public void setVertexLabel(int id, int label) {
-    vertexLabels[id] = label;
-  }
-
-  @Override
-  public String toString(LabelDictionary dictionary) {
-    return toString(dictionary::translate);
+  public String toString(HyperVertexDB db) {
+    return toString(db::decode);
   }
 
   @Override

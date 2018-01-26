@@ -3,7 +3,7 @@ package org.biiig.dmgm.impl.to_string.cam;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.biiig.dmgm.api.LabelDictionary;
+import org.biiig.dmgm.api.HyperVertexDB;
 import org.biiig.dmgm.api.SmallGraph;
 
 import java.util.Arrays;
@@ -14,13 +14,10 @@ public abstract class CAMAdjacentEdgesFormatter {
   protected static final char OUTGOING = '>';
   protected static final char INCOMING = '<';
   protected static final char EDGE_START_END = '-';
-  protected final LabelDictionary vertexDictionary;
-  protected final LabelDictionary edgeDictionary;
+  protected final HyperVertexDB db;
 
-  public CAMAdjacentEdgesFormatter(LabelDictionary vertexDictionary,
-    LabelDictionary edgeDictionary) {
-    this.vertexDictionary = vertexDictionary;
-    this.edgeDictionary = edgeDictionary;
+  public CAMAdjacentEdgesFormatter(HyperVertexDB db) {
+    this.db = db;
   }
 
   public String format(SmallGraph graph, int vertexId) {
@@ -29,7 +26,7 @@ public abstract class CAMAdjacentEdgesFormatter {
 
     for (int edgeId : getEdgeIds(graph, vertexId)) {
       int adjacentVertexId = getAdjacentVertexId(graph, edgeId);
-      String edgeLabel = edgeDictionary.translate(graph.getEdgeLabel(edgeId));
+      String edgeLabel = db.decode(graph.getEdgeLabel(edgeId));
 
       String[] parallelEdgeLabels = edgeLabels.get(adjacentVertexId);
 
@@ -54,7 +51,7 @@ public abstract class CAMAdjacentEdgesFormatter {
       String edgeLabelsString = StringUtils.join(parallelEdgeLabels, EDGE_LABEL_SEPARATOR);
 
       adjacencyStrings[vertexNumber] = formatEdge(edgeLabelsString) +
-        vertexDictionary.translate(graph.getVertexLabel(adjacentVertexId));
+        db.decode(graph.getVertexLabel(adjacentVertexId));
 
       vertexNumber++;
     }

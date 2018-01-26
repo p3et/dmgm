@@ -3,8 +3,7 @@ package org.biiig.dmgm.impl.operators.aggregation;
 
 import org.biiig.dmgm.api.PropertyStore;
 import org.biiig.dmgm.api.SmallGraph;
-import org.biiig.dmgm.api.GraphCollection;
-import org.biiig.dmgm.impl.operators.OperatorBase;
+import org.biiig.dmgm.impl.operators.HyperVertexOperatorBase;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -12,7 +11,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class Aggregation extends OperatorBase {
+public class Aggregation extends HyperVertexOperatorBase {
 
   private final BiConsumer<SmallGraph, PropertyStore> aggregateFunction;
 

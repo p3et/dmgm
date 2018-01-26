@@ -1,8 +1,7 @@
 package org.biiig.dmgm.impl.operators.order;
 
 import org.biiig.dmgm.api.SmallGraph;
-import org.biiig.dmgm.api.GraphCollection;
-import org.biiig.dmgm.impl.graph_loader.gdl.GDLLoader;
+import org.biiig.dmgm.impl.loader.GDLLoader;
 import org.junit.Test;
 
 import java.util.Comparator;

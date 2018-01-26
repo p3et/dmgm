@@ -1,9 +1,8 @@
 package org.biiig.dmgm.cli;
 
-import org.biiig.dmgm.api.Operator;
-import org.biiig.dmgm.api.GraphCollection;
+import org.biiig.dmgm.api.HyperVertexOperator;
 import org.biiig.dmgm.impl.operators.subgraph_mining.FrequentSubgraphs;
-import org.biiig.dmgm.impl.graph_loader.tlf.TLFLoader;
+import org.biiig.dmgm.impl.loader.TLFLoader;
 
 import java.io.IOException;
 
@@ -17,7 +16,7 @@ public class FrequentSubgraphMiner {
       .fromFile(path)
       .getGraphCollection();
 
-    Operator fsm = new FrequentSubgraphs(1.0f, 20);
+    HyperVertexOperator fsm = new FrequentSubgraphs(1.0f, 20);
 
     GraphCollection output = input.apply(fsm);
 

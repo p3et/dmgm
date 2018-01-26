@@ -1,7 +1,6 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
 
 import com.google.common.collect.Maps;
-import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.Preprocessor;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.Supportable;

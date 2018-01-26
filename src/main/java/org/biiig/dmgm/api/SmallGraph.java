@@ -6,16 +6,11 @@ import java.util.stream.IntStream;
  * A directed graph with integer labels.
  */
 public interface SmallGraph {
+  long getId();
   int getLabel();
-  void setLabel(int label);
-
-  int getVertexCount();
-  int getEdgeCount();
-
-  int addVertex(int label);
-  int addEdge(int sourceId, int targetId, int label);
 
   int getVertexLabel(int vertexId);
+
   int getEdgeLabel(int edgeId);
   int getSourceId(int edgeId);
   int getTargetId(int edgeId);
@@ -23,14 +18,11 @@ public interface SmallGraph {
   int[] getOutgoingEdgeIds(int vertexId);
   int[] getIncomingEdgeIds(int vertexId);
 
-  int getId();
-  void setId(int graphId);
+  int getVertexCount();
+  int getEdgeCount();
 
   IntStream vertexIdStream();
-
   IntStream edgeIdStream();
 
-  void setVertexLabel(int id, int label);
-
-  String toString(LabelDictionary dictionary);
+  String toString(HyperVertexDB db);
 }

@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 import javafx.util.Pair;
 import org.apache.commons.lang3.StringUtils;
-import org.biiig.dmgm.api.GraphCollection;
+import org.biiig.dmgm.api.HyperVertexDB;
 import org.biiig.dmgm.impl.operators.subgraph_mining.GeneralizedFrequentSubgraphs;
 
 import java.util.Collection;
@@ -12,25 +12,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 public class VertexLabelSupport implements Support<Integer> {
 
   @Override
-  public Map<Integer, Integer> getAbsolute(GraphCollection collection) {
-    Map<Integer, Long> intSupport = collection
-      .stream()
-      .flatMapToInt(g -> g
-        .vertexIdStream()
-        .map(g::getVertexLabel)
-        .distinct())
-      .boxed()
+  public Map<Integer, Integer> getAbsolute(HyperVertexDB db, long hyperVertexId) {
+    Map<Integer, Long> intSupport = LongStream
+      .of(db.getElementsOf(hyperVertexId).getLeft())
+      .mapToObj(db::getLabel)
       .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
     Map<String, List<Long>> stringSupport = intSupport
       .entrySet()
       .stream()
-      .map(e -> new Pair<>(collection.getLabelDictionary().translate(e.getKey()), e.getValue()))
+      .map(e -> new Pair<>(db.decode(e.getKey()), e.getValue()))
       .flatMap(p -> {
         Stream<Pair<String, Long>> stream;
 
@@ -60,7 +57,7 @@ public class VertexLabelSupport implements Support<Integer> {
       .entrySet()
       .stream()
       .collect(Collectors.toMap(
-        e -> collection.getLabelDictionary().translate(e.getKey()),
+        e -> db.encode(e.getKey()),
         e -> e.getValue().stream().mapToInt(Math::toIntExact).sum()
       ));
   }

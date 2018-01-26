@@ -3,26 +3,23 @@ package org.biiig.dmgm.impl.db;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.api.EPGMDatabase;
+import org.biiig.dmgm.api.HyperVertexDB;
 import org.biiig.dmgm.api.SmallGraph;
-import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.impl.graph.SmallGraphBase;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
 /**
  * Pragmatic reference implementation of {@code GraphCollectionDatabase}.
  */
-public class EPGMDatabaseBase implements EPGMDatabase {
+public class HyperVertexDBBase implements HyperVertexDB {
 
   private final AtomicLong nextId = new AtomicLong();
 
@@ -44,10 +41,10 @@ public class EPGMDatabaseBase implements EPGMDatabase {
   private final Map<Integer, Map<Long, String[]>> stringsProperties = createMap();
 
   @Override
-  public int encode(String string) {
-    return stringIntegerDictionary.computeIfAbsent(string, k -> {
+  public int encode(String value) {
+    return stringIntegerDictionary.computeIfAbsent(value, k -> {
       int integer = nextSymbol.getAndIncrement();
-      integerStringDictionary.put(integer, string);
+      integerStringDictionary.put(integer, value);
       return integer;
     });
   }
@@ -77,14 +74,14 @@ public class EPGMDatabaseBase implements EPGMDatabase {
 
 
   @Override
-  public long createEdge(long sourceId, long targetId, int label) {
+  public long createEdge(int label, long sourceId, long targetId) {
     long id = createElement(label);
     edges.put(id, new LongPair(sourceId, targetId));
     return id;
   }
 
   @Override
-  public long createGraph(int label, long[] vertices, long[] edges) {
+  public long createHyperVertex(int label, long[] vertices, long[] edges) {
     long id = createElement(label);
     graphs.put(id, new LongsPair(vertices, edges));
     return id;
@@ -116,10 +113,10 @@ public class EPGMDatabaseBase implements EPGMDatabase {
   }
 
   @Override
-  public SmallGraph getSmallGraph(long graphId) {
-    int graphLabel = labels.get(graphId);
+  public SmallGraph getSmallGraph(long hyperVertexId) {
+    int graphLabel = labels.get(hyperVertexId);
 
-    LongsPair globalVertexIdsEdgeIds = graphs.get(graphId);
+    LongsPair globalVertexIdsEdgeIds = graphs.get(hyperVertexId);
 
     long[] globalVertexIds = globalVertexIdsEdgeIds.getLeft();
 
@@ -148,16 +145,7 @@ public class EPGMDatabaseBase implements EPGMDatabase {
       targetIds[localEdgeId] = targetId;
     }
 
-    return new SmallGraphBase(graphId, graphLabel, vertexLabels, edgeLabels, sourceIds, targetIds);
-  }
-
-  @Override
-  public GraphCollection getCollection(long[] graphIds) {
-    Collection<SmallGraph> graphs = LongStream
-      .of(graphIds)
-      .mapToObj(this::getSmallGraph)
-      .collect(Collectors.toList());
-    return new InMemoryGraphCollection(this, graphs);
+    return new SmallGraphBase(hyperVertexId, graphLabel, vertexLabels, edgeLabels, sourceIds, targetIds);
   }
 
 

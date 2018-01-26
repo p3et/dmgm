@@ -1,7 +1,6 @@
 package org.biiig.dmgm.impl.to_string.edge_list;
 
 import org.apache.commons.lang3.StringUtils;
-import org.biiig.dmgm.api.LabelDictionary;
 import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.api.DMGraphFormatter;
 

@@ -2,12 +2,11 @@ package org.biiig.dmgm;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.api.DMGraphFormatter;
-import org.biiig.dmgm.api.Operator;
-import org.biiig.dmgm.impl.graph_loader.gdl.GDLLoader;
-import org.biiig.dmgm.impl.graph_loader.tlf.TLFLoader;
+import org.biiig.dmgm.api.HyperVertexOperator;
+import org.biiig.dmgm.impl.loader.GDLLoader;
+import org.biiig.dmgm.impl.loader.TLFLoader;
 import org.biiig.dmgm.impl.to_string.cam.CAMGraphFormatter;
 import org.biiig.dmgm.impl.to_string.edge_list.ELGraphFormatter;
 
@@ -100,7 +99,7 @@ public class DMGMTestBase {
     }
   }
 
-  protected void runAndTestExpectation(Operator operator, String inputGDL, String expectedGDL) {
+  protected void runAndTestExpectation(HyperVertexOperator operator, String inputGDL, String expectedGDL) {
     GraphCollection input = GDLLoader
       .fromString(inputGDL)
       .getGraphCollection();

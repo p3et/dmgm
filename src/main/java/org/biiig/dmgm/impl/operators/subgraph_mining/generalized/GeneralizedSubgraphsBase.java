@@ -5,8 +5,6 @@ import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.PropertyStore;
-import org.biiig.dmgm.api.GraphCollection;
-import org.biiig.dmgm.api.LabelDictionary;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SubgraphMiningBase;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SubgraphMiningPropertyKeys;

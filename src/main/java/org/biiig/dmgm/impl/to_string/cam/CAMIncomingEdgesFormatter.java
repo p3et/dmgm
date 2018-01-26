@@ -1,13 +1,12 @@
 package org.biiig.dmgm.impl.to_string.cam;
 
-import org.biiig.dmgm.api.LabelDictionary;
+import org.biiig.dmgm.api.HyperVertexDB;
 import org.biiig.dmgm.api.SmallGraph;
 
 public class CAMIncomingEdgesFormatter extends CAMAdjacentEdgesFormatter {
 
-  public CAMIncomingEdgesFormatter(
-    LabelDictionary vertexDictionary, LabelDictionary edgeDictionary) {
-    super(vertexDictionary, edgeDictionary);
+  public CAMIncomingEdgesFormatter(HyperVertexDB db) {
+    super(db);
   }
 
   @Override

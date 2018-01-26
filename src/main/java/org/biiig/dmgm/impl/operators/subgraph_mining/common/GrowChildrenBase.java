@@ -28,8 +28,8 @@ public abstract class GrowChildrenBase implements GrowChildren {
 
           // grow backwards
           if (rightmost && toTime >= 0) {
-            DFSCode childCode = parentCode.deepCopy();
-            childCode.addEdge(fromTime, toTime, graph.getEdgeLabel(edgeId), isOutgoing());
+            DFSCode childCode = parentCode.addEdge();
+            childCode.addEdge(fromTime, toTime, graph.getEdgeLabel(edgeId), isOutgoing(), toLabel);
 
             DFSEmbedding childEmbedding = parentEmbedding.expandByEdgeId(edgeId);
 
@@ -40,9 +40,9 @@ public abstract class GrowChildrenBase implements GrowChildren {
           } else if (toTime < 0) {
             toTime = parentCode.getVertexCount();
 
-            DFSCode childCode = parentCode.deepCopy();
+            DFSCode childCode = parentCode.addEdge();
             childCode.addVertex(graph.getVertexLabel(toId));
-            childCode.addEdge(fromTime, toTime, graph.getEdgeLabel(edgeId), isOutgoing());
+            childCode.addEdge(fromTime, toTime, graph.getEdgeLabel(edgeId), isOutgoing(), toLabel);
 
             DFSEmbedding childEmbedding = parentEmbedding.expandByEdgeIdAndVertexId(edgeId, toId);
 

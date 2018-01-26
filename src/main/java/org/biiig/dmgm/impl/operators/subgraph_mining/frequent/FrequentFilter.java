@@ -1,7 +1,6 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.frequent;
 
 import javafx.util.Pair;
-import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SubgraphMiningPropertyKeys;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.Supportable;

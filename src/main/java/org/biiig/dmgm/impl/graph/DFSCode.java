@@ -1,40 +1,21 @@
 package org.biiig.dmgm.impl.graph;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.api.LabelDictionary;
+import org.biiig.dmgm.api.HyperVertexDB;
 
 import java.util.Arrays;
 import java.util.function.Function;
 
 public class DFSCode extends SmallGraphBase implements Comparable<DFSCode> {
 
-  private boolean[] outgoings;
+  private final boolean[] outgoings;
 
   private final DFSCodeComparator comparator = new DFSCodeComparator();
   private int[] rightmostPath;
 
-  public DFSCode() {
-    super(id, label, vertexLabels, edgeLabels, sourceIds, targetIds);
-  }
-
-  public void addEdge(int fromTime, int toTime, int label, boolean outgoing) {
-
-    edgeLabels = ArrayUtils.add(edgeLabels, label);
-    outgoings = ArrayUtils.add(outgoings, outgoing);
-
-    if (outgoing) {
-      sourceIds = ArrayUtils.add(sourceIds, fromTime);
-      targetIds = ArrayUtils.add(targetIds, toTime);
-    } else {
-      sourceIds = ArrayUtils.add(sourceIds, toTime);
-      targetIds = ArrayUtils.add(targetIds, fromTime);
-    }
-  }
-
-  @Override
-  public int addEdge(int sourceId, int targetId, int label) {
-    addEdge(sourceId, targetId, label, true);
-    return sourceId;
+  public DFSCode(int[] vertexLabels, int[] edgeLabels, int[] sourceIds, int[] targetIds, boolean[] outgoings) {
+    super(-1l, -1, vertexLabels, edgeLabels, sourceIds, targetIds);
+    this.outgoings = outgoings;
   }
 
   public int getFromTime(int edgeTime) {
@@ -112,37 +93,16 @@ public class DFSCode extends SmallGraphBase implements Comparable<DFSCode> {
     return parent;
   }
 
-  public DFSCode deepCopy() {
-    DFSCode copy = new DFSCode();
-
-    copy.vertexLabels = Arrays.copyOf(vertexLabels, vertexLabels.length);
-
-    int edgeCount = edgeLabels.length;
-    copy.edgeLabels = Arrays.copyOf(edgeLabels, edgeCount);
-    copy.sourceIds = Arrays.copyOf(sourceIds, edgeCount);
-    copy.targetIds = Arrays.copyOf(targetIds, edgeCount);
-    copy.outgoings = Arrays.copyOf(outgoings, edgeCount);
-
-    return copy;
-  }
-
-  public DFSCode getParent() {
-    DFSCode parent = new DFSCode();
-
-    int lastEdgeTime = getEdgeCount() - 1;
-
-    parent.vertexLabels = getToTime(lastEdgeTime) > getFromTime(lastEdgeTime) ?
-      ArrayUtils.subarray(vertexLabels, 0,vertexLabels.length - 1) :
-      Arrays.copyOf(vertexLabels, vertexLabels.length);
-
-    int newEdgeArraysSize = lastEdgeTime;
-
-    parent.edgeLabels = ArrayUtils.subarray(edgeLabels, 0,newEdgeArraysSize);
-    parent.sourceIds = ArrayUtils.subarray(sourceIds, 0, newEdgeArraysSize);
-    parent.targetIds = ArrayUtils.subarray(targetIds, 0, newEdgeArraysSize);
-    parent.outgoings = ArrayUtils.subarray(outgoings, 0, newEdgeArraysSize);
-
-    return parent;
+  public DFSCode addEdge(int fromTime, int toTime, int label, boolean outgoing, int toLabel) {
+    return new DFSCode(
+      toTime > fromTime ?
+        ArrayUtils.add(vertexLabels, toLabel) :
+        Arrays.copyOf(vertexLabels, vertexLabels.length),
+      ArrayUtils.add(edgeLabels, label),
+      ArrayUtils.add(sourceIds, outgoing ? fromTime : toTime),
+      ArrayUtils.add(targetIds, outgoing ? toTime : fromTime),
+      ArrayUtils.add(outgoings, outgoing)
+    );
   }
 
   public int[] getRightmostPath() {
@@ -192,8 +152,8 @@ public class DFSCode extends SmallGraphBase implements Comparable<DFSCode> {
 
 
   @Override
-  public String toString(LabelDictionary dictionary) {
-    return toString(dictionary::translate);
+  public String toString(HyperVertexDB db) {
+    return toString(db::decode);
   }
 
   @Override

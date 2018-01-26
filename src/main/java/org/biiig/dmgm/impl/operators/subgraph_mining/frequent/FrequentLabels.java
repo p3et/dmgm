@@ -1,6 +1,5 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.frequent;
 
-import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.impl.operators.subgraph.FilterVerticesAndEdgesByLabel;
 import org.biiig.dmgm.impl.operators.subgraph_mining.characteristic.PreprocessorBase;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DistinctEdgeLabels;

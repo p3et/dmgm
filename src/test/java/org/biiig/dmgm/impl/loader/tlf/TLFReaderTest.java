@@ -1,7 +1,6 @@
-package org.biiig.dmgm.impl.graph_loader.tlf;
+package org.biiig.dmgm.impl.loader.tlf;
 
 import org.biiig.dmgm.DMGMTestBase;
-import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.SmallGraph;
 import org.junit.Test;
 

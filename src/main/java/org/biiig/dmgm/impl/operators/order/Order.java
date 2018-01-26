@@ -1,13 +1,12 @@
 package org.biiig.dmgm.impl.operators.order;
 
 import org.biiig.dmgm.api.SmallGraph;
-import org.biiig.dmgm.api.GraphCollection;
-import org.biiig.dmgm.impl.operators.OperatorBase;
+import org.biiig.dmgm.impl.operators.HyperVertexOperatorBase;
 import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionBuilder;
 
 import java.util.Comparator;
 
-public class Order extends OperatorBase {
+public class Order extends HyperVertexOperatorBase {
   private final Comparator<SmallGraph> comparator;
 
   private Order(Comparator<SmallGraph> comparator) {

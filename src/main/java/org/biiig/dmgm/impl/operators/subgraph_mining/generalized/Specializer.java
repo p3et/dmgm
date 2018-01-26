@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import de.jesemann.paralleasy.recursion.RecursionStrategy;
 import de.jesemann.paralleasy.recursion.RecursiveTask;
 import org.biiig.dmgm.api.PropertyStore;
-import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCodeEmbeddingsPair;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
 import org.biiig.dmgm.impl.graph.DFSCode;

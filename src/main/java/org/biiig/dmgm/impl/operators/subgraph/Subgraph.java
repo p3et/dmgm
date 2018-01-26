@@ -1,14 +1,13 @@
 package org.biiig.dmgm.impl.operators.subgraph;
 
 import org.biiig.dmgm.api.SmallGraph;
-import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionBuilderFactory;
-import org.biiig.dmgm.impl.operators.OperatorBase;
+import org.biiig.dmgm.impl.operators.HyperVertexOperatorBase;
 
 import java.util.function.Function;
 import java.util.function.IntPredicate;
 
-public class Subgraph extends OperatorBase {
+public class Subgraph extends HyperVertexOperatorBase {
 
   private final Function<SmallGraph, SmallGraph> subgraphMapper;
 

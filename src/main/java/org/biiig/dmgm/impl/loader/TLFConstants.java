@@ -1,4 +1,4 @@
-package org.biiig.dmgm.impl.graph_loader.tlf;
+package org.biiig.dmgm.impl.loader;
 
 /**
  * Created by peet on 04.08.17.

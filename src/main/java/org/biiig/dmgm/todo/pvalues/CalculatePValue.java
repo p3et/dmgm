@@ -35,7 +35,7 @@ public class CalculatePValue {
   public double calculate(DFSCode countable) {
 
     long numberOfOccurrences = 0l; //countable.getFrequency();
-    Occurrence occurrence = null;// gu.toOccurrence(countable.getObject(), vertexDictionary, edgeDictionary);
+    Occurrence occurrence = null;// gu.toOccurrence(countable.getObject(), db, edgeDictionary);
     int vertexCount = occurrence.getNodeLabels().length;
 
     EDDModel edd = new EDDModel(

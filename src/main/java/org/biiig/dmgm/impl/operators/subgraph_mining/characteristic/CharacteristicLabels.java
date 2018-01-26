@@ -2,7 +2,6 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
 
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 import org.biiig.dmgm.api.SmallGraph;
-import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DistinctEdgeLabels;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DistinctVertexLabels;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.PruneEdges;

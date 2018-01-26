@@ -3,7 +3,6 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
 import com.google.common.collect.Lists;
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 import javafx.util.Pair;
-import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SubgraphMiningPropertyKeys;
@@ -86,7 +85,7 @@ public class CharacteristicFilter<T extends Supportable> implements FilterOrOutp
 
         for (int label : labels) {
           outputs.add(output -> {
-            DFSCode dfsCode = supportable.getDFSCode().deepCopy();
+            DFSCode dfsCode = supportable.getDFSCode().addEdge();
             dfsCode.setLabel(label);
             int graphId = output.add(dfsCode);
             BigDecimal support = BigDecimal.valueOf(labelSupports.get(label));

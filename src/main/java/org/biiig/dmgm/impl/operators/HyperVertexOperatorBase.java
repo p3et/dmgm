@@ -1,20 +1,20 @@
 package org.biiig.dmgm.impl.operators;
 
-import org.biiig.dmgm.api.Operator;
+import org.biiig.dmgm.api.HyperVertexOperator;
 
 import java.util.stream.Stream;
 
-public abstract class OperatorBase implements Operator {
+public abstract class HyperVertexOperatorBase implements HyperVertexOperator {
   protected boolean parallel = false;
 
   @Override
-  public Operator parallel() {
+  public HyperVertexOperator parallel() {
     this.parallel = true;
     return this;
   }
 
   @Override
-  public Operator sequential() {
+  public HyperVertexOperator sequential() {
     this.parallel = false;
     return this;
   }

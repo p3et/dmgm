@@ -2,7 +2,6 @@ package org.biiig.dmgm.impl.statistics;
 
 import org.biiig.dmgm.DMGMTestBase;
 import org.biiig.dmgm.api.SmallGraph;
-import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.impl.graph.SmallGraphBase;
 import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionBuilderFactory;
 import org.junit.Test;

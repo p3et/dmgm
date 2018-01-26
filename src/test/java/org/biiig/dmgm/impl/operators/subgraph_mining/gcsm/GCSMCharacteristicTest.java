@@ -3,11 +3,10 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.gcsm;
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.DMGMTestBase;
 import org.biiig.dmgm.api.SmallGraph;
-import org.biiig.dmgm.api.GraphCollection;
-import org.biiig.dmgm.api.Operator;
+import org.biiig.dmgm.api.HyperVertexOperator;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SubgraphMiningPropertyKeys;
 import org.biiig.dmgm.impl.operators.subgraph_mining.GeneralizedCharacteristicSubgraphs;
-import org.biiig.dmgm.impl.graph_loader.gdl.GDLLoader;
+import org.biiig.dmgm.impl.loader.GDLLoader;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -21,7 +20,7 @@ public class GCSMCharacteristicTest extends DMGMTestBase {
   @Test
   public void testAlgorithm() {
 
-    Operator operator = new GeneralizedCharacteristicSubgraphs(
+    HyperVertexOperator operator = new GeneralizedCharacteristicSubgraphs(
       1.0f,
       10,
       (c, t) -> c.size() == 1 ? ArrayUtils.toPrimitive(c.keySet().toArray(new Integer[1])) : null
