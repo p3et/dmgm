@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class GrowAllChildren implements Function<DFSCodeEmbeddingsPair, Stream<DFSCodeEmbeddingPair>> {
+public class GrowAllChildren {
 
   private final GrowChildrenByOutgoingEdges growChildrenByOutgoingEdges = new GrowChildrenByOutgoingEdges();
   private final GrowChildrenByIncomingEdges growChildrenByIncomingEdges = new GrowChildrenByIncomingEdges();
@@ -24,11 +24,5 @@ public class GrowAllChildren implements Function<DFSCodeEmbeddingsPair, Stream<D
       .addAll(children, growChildrenByIncomingEdges.apply(graph, parent, rightmostPath, parentEmbedding));
 
     return children;
-  }
-
-
-  @Override
-  public Stream<DFSCodeEmbeddingPair> apply(DFSCodeEmbeddingsPair dfsCodeEmbeddingsPair) {
-    return null;
   }
 }

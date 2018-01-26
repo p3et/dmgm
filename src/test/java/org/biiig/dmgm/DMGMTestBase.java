@@ -49,10 +49,16 @@ public class DMGMTestBase {
     Set<String> notExpected = keyMinus(expectedLabels, actualLabels);
     Set<String> notFound = keyMinus(actualLabels, expectedLabels);
 
+//    expectedLabels.entrySet().stream().forEach(System.out::println);
+//    System.out.println("-----");
+//    actualLabels.entrySet().stream().forEach(System.out::println);
+
+
     if (notExpected.size() > 0) {
       System.out.println("Not expected :");
       print(notExpected);
     }
+
 
     if (notFound.size() > 0) {
       System.out.println("Not found :");

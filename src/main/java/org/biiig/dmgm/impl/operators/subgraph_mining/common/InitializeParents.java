@@ -63,6 +63,7 @@ public class InitializeParents implements Function<SmallGraph, Stream<DFSCodeEmb
 
       DFSEmbedding embedding = new DFSEmbedding(graph.getId(), fromId, edgeId, toId);
       DFSCodeEmbeddingPair codeEmbeddingPair = new DFSCodeEmbeddingPair(dfsCode, embedding);
+
       pairs[edgeId] = codeEmbeddingPair;
     }
 

@@ -143,9 +143,11 @@ public class HyperVertexDBBase implements HyperVertexDB {
       int sourceId = ArrayUtils.indexOf(globalVertexIds, globalSourceId);
       sourceIds[localEdgeId] = sourceId;
 
-      long globalTargetId = globalSourceTargetPair.getLeft();
+      long globalTargetId = globalSourceTargetPair.getRight();
       int targetId = ArrayUtils.indexOf(globalVertexIds, globalTargetId);
       targetIds[localEdgeId] = targetId;
+
+      edgeLabels[localEdgeId] = labels.get(globalEdgeId);
     }
 
     return new SmallGraphBase(hyperVertexId, graphLabel, vertexLabels, edgeLabels, sourceIds, targetIds);
@@ -399,21 +401,21 @@ public class HyperVertexDBBase implements HyperVertexDB {
   @Override
   public String toString() {
     return 
-      "nextId=" + nextId +
-      "\nnextSymbol=" + nextSymbol +
-      "\nstringIntegerDictionary=" + stringIntegerDictionary +
-      "\nintegerStringDictionary=" + integerStringDictionary +
-      "\nlabels=" + labels +
-      "\nedges=" + edges +
-      "\nelements=" + elements +
-      "\nbooleanProperties=" + booleanProperties +
-      "\nintProperties=" + intProperties +
-      "\ndoubleProperties=" + doubleProperties +
-      "\nstringProperties=" + stringProperties +
-      "\nbigDecimalProperties=" + bigDecimalProperties +
-      "\nlocalDateProperties=" + localDateProperties +
-      "\nintsProperties=" + intsProperties +
-      "\nstringsProperties=" + stringsProperties;
+      "nid=" + nextId +
+      "\nnsy=" + nextSymbol +
+      "\nsid=" + stringIntegerDictionary +
+      "\nisd=" + integerStringDictionary +
+      "\nlbs=" + labels +
+      "\negs=" + edges +
+      "\nels=" + elements +
+      "\nbol=" + booleanProperties +
+      "\nint=" + intProperties +
+      "\ndob=" + doubleProperties +
+      "\nstr=" + stringProperties +
+      "\nbdc=" + bigDecimalProperties +
+      "\nlod=" + localDateProperties +
+      "\nina=" + intsProperties +
+      "\nsta=" + stringsProperties;
   }
 
   /**

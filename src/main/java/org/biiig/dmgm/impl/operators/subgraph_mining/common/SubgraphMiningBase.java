@@ -19,7 +19,6 @@ import java.util.stream.Stream;
 public abstract class SubgraphMiningBase extends HyperVertexOperatorBase {
   public static final Function<SmallGraph, Stream<DFSCodeEmbeddingPair>> INITIALIZE_PARENTS = new InitializeParents();
   public static final Predicate<DFSCode> IS_MINIMAL = new IsMinimal();
-  public static final Function<DFSCodeEmbeddingsPair, Stream<DFSCodeEmbeddingPair>> GROW_CHILDREN = new GrowAllChildren();
   private static final Function<Map.Entry<DFSCode,List<DFSEmbedding>>, DFSCodeEmbeddingsPair> ADD_SUPPORT = new AddSupport();
   private static final String FSG_LABEL = "Frequent Subgraph";
   private static final String FSGS_LABEL = "Frequent Subgraphs";
@@ -52,7 +51,7 @@ public abstract class SubgraphMiningBase extends HyperVertexOperatorBase {
       .stream()
       .collect(Collectors.toMap(SmallGraph::getId, Function.identity()));
 
-    long minSupportAbsolute = (long) (input.size() * minSupport);
+    long minSupportAbsolute = Math.round(input.size() * minSupport);
 
     Predicate<DFSCodeEmbeddingsPair> patternPredicate = s -> s.getSupport() >= minSupportAbsolute;
     
@@ -67,11 +66,21 @@ public abstract class SubgraphMiningBase extends HyperVertexOperatorBase {
       .filter(patternPredicate)
       .peek(store)
       .collect(Collectors.toList());
-    
+
+    GrowAllChildren growChildren = new GrowAllChildren();
+
     while (!parents.isEmpty())
+
       parents = parents
         .stream()
-        .flatMap(GROW_CHILDREN)
+        .flatMap(p -> {
+          DFSCode dfsCode = p.getDFSCode();
+          int[] rightmostPath = dfsCode.getRightmostPath();
+
+          return p.getEmbeddings()
+            .stream()
+            .flatMap(e -> Stream.of(growChildren.apply(input.get(e.getGraphId()), dfsCode, rightmostPath, e)));
+        })
         .collect(new GroupByKeyListValues<>(DFSCodeEmbeddingPair::getDfsCode, DFSCodeEmbeddingPair::getEmbedding))
         .entrySet()
         .stream()
@@ -87,6 +96,9 @@ public abstract class SubgraphMiningBase extends HyperVertexOperatorBase {
       .stream()
       .mapToLong(entry -> {
         DFSCode dfsCode = entry.getKey();
+
+        System.out.println(dfsCode.toString(database));
+
         long id = database.createHyperVertex(dfsCode);
         database.set(id, dfsCodeKey, dfsCode.toString(database));
         entry.getValue().accept(database, id);
