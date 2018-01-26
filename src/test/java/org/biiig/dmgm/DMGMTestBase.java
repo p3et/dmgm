@@ -16,6 +16,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import static org.junit.Assert.assertTrue;
+
 /**
  * Created by peet on 11.08.17.
  */
@@ -115,7 +117,7 @@ public class DMGMTestBase {
     long exId = db.createCollectionByLabel(db.encode(EXPECTATION_GRAPH_LABEL), 0);
     long outId = operator.apply(db, inId);
 
-    equal(db, exId, outId);
+    assertTrue(equal(db, exId, outId));
   }
 
 //  protected void testExpectation(GraphCollection output, String expectedGDL) {

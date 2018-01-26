@@ -36,4 +36,9 @@ public class LongsPair {
 
     return equal;
   }
+
+  @Override
+  public String toString() {
+    return "(" + Arrays.toString(left) + "," + Arrays.toString(right) + ")";
+  }
 }

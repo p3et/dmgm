@@ -34,4 +34,9 @@ public class LongPair {
 
     return equal;
   }
+
+  @Override
+  public String toString() {
+    return "(" + left + "," + right + ")";
+  }
 }

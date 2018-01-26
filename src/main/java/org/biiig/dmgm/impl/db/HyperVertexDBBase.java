@@ -396,6 +396,26 @@ public class HyperVertexDBBase implements HyperVertexDB {
     return getStringsValues(key).get(id);
   }
 
+  @Override
+  public String toString() {
+    return 
+      "nextId=" + nextId +
+      "\nnextSymbol=" + nextSymbol +
+      "\nstringIntegerDictionary=" + stringIntegerDictionary +
+      "\nintegerStringDictionary=" + integerStringDictionary +
+      "\nlabels=" + labels +
+      "\nedges=" + edges +
+      "\nelements=" + elements +
+      "\nbooleanProperties=" + booleanProperties +
+      "\nintProperties=" + intProperties +
+      "\ndoubleProperties=" + doubleProperties +
+      "\nstringProperties=" + stringProperties +
+      "\nbigDecimalProperties=" + bigDecimalProperties +
+      "\nlocalDateProperties=" + localDateProperties +
+      "\nintsProperties=" + intsProperties +
+      "\nstringsProperties=" + stringsProperties;
+  }
+
   /**
    * Returns a new map.
    * 
@@ -406,5 +426,6 @@ public class HyperVertexDBBase implements HyperVertexDB {
   private static <K, V>  Map<K, V> createMap() {
     return Maps.newConcurrentMap();
   }
+  
 
 }
