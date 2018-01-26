@@ -3,7 +3,7 @@ package org.biiig.dmgm;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.biiig.dmgm.api.GraphCollection;
-import org.biiig.dmgm.api.Graph;
+import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.api.DMGraphFormatter;
 import org.biiig.dmgm.api.Operator;
 import org.biiig.dmgm.impl.graph_loader.gdl.GDLLoader;
@@ -82,7 +82,7 @@ public class DMGMTestBase {
       new ELGraphFormatter(expected.getLabelDictionary(), expected.getLabelDictionary());
 
     Map<String, String> canonicalLabels = Maps.newHashMapWithExpectedSize(expected.size());
-    for (Graph graph : expected) {
+    for (SmallGraph graph : expected) {
       canonicalLabels.put(keyFormatter.format(graph), valueFormatter.format(graph));
     }
 
@@ -95,7 +95,7 @@ public class DMGMTestBase {
 
     System.out.println(graphCollection.size());
 
-    for (Graph graph : graphCollection) {
+    for (SmallGraph graph : graphCollection) {
       System.out.println(formatter.format(graph));
     }
   }
@@ -122,7 +122,7 @@ public class DMGMTestBase {
   private boolean isConsistent(GraphCollection collection) {
     boolean consistent = true;
 
-    for (Graph graph : collection) {
+    for (SmallGraph graph : collection) {
       for (int vertexId = 0; vertexId < graph.getVertexCount(); vertexId++ ) {
         int vertexLabel = graph.getVertexLabel(vertexId);
         String translation = collection.getLabelDictionary().translate(vertexLabel);

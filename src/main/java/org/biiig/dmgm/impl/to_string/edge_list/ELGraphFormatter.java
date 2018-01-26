@@ -2,7 +2,7 @@ package org.biiig.dmgm.impl.to_string.edge_list;
 
 import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.LabelDictionary;
-import org.biiig.dmgm.api.Graph;
+import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.api.DMGraphFormatter;
 
 public class ELGraphFormatter implements DMGraphFormatter {
@@ -15,7 +15,7 @@ public class ELGraphFormatter implements DMGraphFormatter {
   }
 
   @Override
-  public String format(Graph graph) {
+  public String format(SmallGraph graph) {
     String[] edgeStrings = new String[graph.getEdgeCount()];
 
     for (int edgeId = 0; edgeId < graph.getEdgeCount(); edgeId++) {

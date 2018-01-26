@@ -1,14 +1,13 @@
 package org.biiig.dmgm.impl.operators.subgraph;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.api.Graph;
-import org.biiig.dmgm.api.GraphFactory;
+import org.biiig.dmgm.api.SmallGraph;
 
 import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.stream.IntStream;
 
-public class FilterVerticesAndEdgesByLabel implements Function<Graph, Graph> {
+public class FilterVerticesAndEdgesByLabel implements Function<SmallGraph, SmallGraph> {
   public static final IntPredicate NO_PREDICATE = i -> true;
 
   private final GraphFactory graphFactory;
@@ -24,7 +23,7 @@ public class FilterVerticesAndEdgesByLabel implements Function<Graph, Graph> {
   }
 
   @Override
-  public Graph apply(Graph inGraph) {
+  public SmallGraph apply(SmallGraph inGraph) {
     int[] vertexCandidates = inGraph
       .vertexIdStream()
       .filter(v -> vertexLabelPredicate.test(inGraph.getVertexLabel(v)))
@@ -59,7 +58,7 @@ public class FilterVerticesAndEdgesByLabel implements Function<Graph, Graph> {
 
     int[] vertexIdMap = new int[inGraph.getVertexCount()];
 
-    Graph outGraph = graphFactory.create();
+    SmallGraph outGraph = graphFactory.create();
 
     IntStream
       .range(0, keepVertices.length)

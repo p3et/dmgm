@@ -1,9 +1,8 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
 
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
-import org.biiig.dmgm.api.Graph;
+import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.api.GraphCollection;
-import org.biiig.dmgm.api.GraphCollectionBuilder;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DistinctEdgeLabels;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DistinctVertexLabels;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.PruneEdges;
@@ -45,10 +44,10 @@ public class CharacteristicLabels extends PreprocessorBase {
     return edgePrunedCollection;
   }
 
-  private Set<Integer> getCategoryFrequentLabels(GraphCollection collection, Function<Graph, Stream<Integer>> labelSelector) {
-    Map<Integer, List<Graph>> categorizedGraphs = collection
+  private Set<Integer> getCategoryFrequentLabels(GraphCollection collection, Function<SmallGraph, Stream<Integer>> labelSelector) {
+    Map<Integer, List<SmallGraph>> categorizedGraphs = collection
       .stream()
-      .collect(new GroupByKeyListValues<>(Graph::getLabel, Function.identity()));
+      .collect(new GroupByKeyListValues<>(SmallGraph::getLabel, Function.identity()));
 
     return categorizedGraphs
       .values()

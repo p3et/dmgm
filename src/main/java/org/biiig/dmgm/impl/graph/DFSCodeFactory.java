@@ -1,12 +1,11 @@
 package org.biiig.dmgm.impl.graph;
 
-import org.biiig.dmgm.api.Graph;
-import org.biiig.dmgm.api.GraphFactory;
+import org.biiig.dmgm.api.SmallGraph;
 
 public class DFSCodeFactory implements GraphFactory {
 
   @Override
-  public Graph create() {
+  public SmallGraph create() {
     return new DFSCode();
   }
 }

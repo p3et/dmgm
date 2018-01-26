@@ -2,7 +2,6 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
 import de.jesemann.paralleasy.recursion.RecursiveTask;
 import org.biiig.dmgm.api.GraphCollection;
-import org.biiig.dmgm.api.GraphCollectionBuilder;
 import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionBuilderFactory;
 
 import java.util.function.Consumer;

@@ -1,12 +1,12 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
-import org.biiig.dmgm.api.Graph;
-import org.biiig.dmgm.impl.graph.GraphBase;
+import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.impl.graph.SmallGraphBase;
 
 import java.util.Set;
 import java.util.function.Function;
 
-public class PruneVertices implements Function<Graph, Graph> {
+public class PruneVertices implements Function<SmallGraph, SmallGraph> {
   private final Set<Integer> frequentVertexLabels;
 
   public PruneVertices(Set<Integer> frequentVertexLabels) {
@@ -14,12 +14,12 @@ public class PruneVertices implements Function<Graph, Graph> {
   }
 
   @Override
-  public Graph apply(Graph inGraph) {
+  public SmallGraph apply(SmallGraph inGraph) {
     int[] vertexMap = new int[inGraph.getVertexCount()];
     for (int vertexId = 0; vertexId < inGraph.getVertexCount(); vertexId++)
       vertexMap[vertexId] = -1;
 
-    Graph outGraph = new GraphBase();
+    SmallGraph outGraph = new SmallGraphBase(id, label, vertexLabels, edgeLabels, sourceIds, targetIds);
     outGraph.setLabel(inGraph.getLabel());
 
     for (int vertexId = 0; vertexId < inGraph.getVertexCount(); vertexId++) {

@@ -1,7 +1,6 @@
 package org.biiig.dmgm.impl.graph_loader.tlf;
 
 import org.biiig.dmgm.api.GraphCollection;
-import org.biiig.dmgm.api.GraphFactory;
 
 import java.util.Queue;
 

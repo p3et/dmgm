@@ -1,8 +1,8 @@
 package org.biiig.dmgm.impl.operators.aggregation;
 
 
-import org.biiig.dmgm.api.ElementDataStore;
-import org.biiig.dmgm.api.Graph;
+import org.biiig.dmgm.api.PropertyStore;
+import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.impl.operators.OperatorBase;
 
@@ -14,44 +14,44 @@ import java.util.stream.Stream;
 
 public class Aggregation extends OperatorBase {
 
-  private final BiConsumer<Graph, ElementDataStore> aggregateFunction;
+  private final BiConsumer<SmallGraph, PropertyStore> aggregateFunction;
 
-  public Aggregation(BiConsumer<Graph, ElementDataStore> aggregateFunction) {
+  public Aggregation(BiConsumer<SmallGraph, PropertyStore> aggregateFunction) {
     this.aggregateFunction = aggregateFunction;
   }
 
-  public static Aggregation forBoolean(String propertyKey, Function<Graph, Boolean> function) {
+  public static Aggregation forBoolean(String propertyKey, Function<SmallGraph, Boolean> function) {
     return new Aggregation((g, s) -> s.setGraph(g.getId(), propertyKey, function.apply(g)));
   }
 
-  public static Aggregation forInteger(String propertyKey, Function<Graph, Integer> function) {
+  public static Aggregation forInteger(String propertyKey, Function<SmallGraph, Integer> function) {
     return new Aggregation((g, s) -> s.setGraph(g.getId(), propertyKey, function.apply(g)));
   }
 
-  public static Aggregation forIntegers(String propertyKey, Function<Graph, int[]> function) {
+  public static Aggregation forIntegers(String propertyKey, Function<SmallGraph, int[]> function) {
     return new Aggregation((g, s) -> s.setGraph(g.getId(), propertyKey, function.apply(g)));
   }
 
-  public static Aggregation forString(String propertyKey, Function<Graph, String> function) {
+  public static Aggregation forString(String propertyKey, Function<SmallGraph, String> function) {
     return new Aggregation((g, s) -> s.setGraph(g.getId(), propertyKey, function.apply(g)));
   }
 
-  public static Aggregation forStrings(String propertyKey, Function<Graph, String[]> function) {
+  public static Aggregation forStrings(String propertyKey, Function<SmallGraph, String[]> function) {
     return new Aggregation((g, s) -> s.setGraph(g.getId(), propertyKey, function.apply(g)));
   }
 
-  public static Aggregation forDecimal(String propertyKey, Function<Graph, BigDecimal> function) {
+  public static Aggregation forDecimal(String propertyKey, Function<SmallGraph, BigDecimal> function) {
     return new Aggregation((g, s) -> s.setGraph(g.getId(), propertyKey, function.apply(g)));
   }
 
-  public static Aggregation forDate(String propertyKey, Function<Graph, LocalDate> function) {
+  public static Aggregation forDate(String propertyKey, Function<SmallGraph, LocalDate> function) {
     return new Aggregation((g, s) -> s.setGraph(g.getId(), propertyKey, function.apply(g)));
   }
 
 
   @Override
   public GraphCollection apply(GraphCollection graphs) {
-    Stream<Graph> stream = graphs
+    Stream<SmallGraph> stream = graphs
       .stream();
 
     stream = setParallelism(stream);

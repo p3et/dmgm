@@ -1,10 +1,9 @@
 package org.biiig.dmgm.impl.statistics;
 
 import org.biiig.dmgm.DMGMTestBase;
-import org.biiig.dmgm.api.Graph;
+import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.api.GraphCollection;
-import org.biiig.dmgm.impl.graph.GraphBase;
-import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollection;
+import org.biiig.dmgm.impl.graph.SmallGraphBase;
 import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionBuilderFactory;
 import org.junit.Test;
 
@@ -37,7 +36,7 @@ public class VertexLabelSupportTest extends DMGMTestBase {
   public void generalization() throws IOException {
     GraphCollection collection = new InMemoryGraphCollectionBuilderFactory().create().create();
 
-    Graph graph = new GraphBase();
+    SmallGraph graph = new SmallGraphBase(id, label, vertexLabels, edgeLabels, sourceIds, targetIds);
 
     String label = "A_a_a_a";
     graph.addVertex(collection.getLabelDictionary().translate(label));

@@ -1,8 +1,6 @@
 package org.biiig.dmgm.impl.graph;
 
-import org.biiig.dmgm.api.GraphFactory;
-
-public class AdjacencyListTest extends SingleLabelDirectedGraphTest {
+public class AdjacencyListTest extends SingleLabelDirectedSmallGraphTest {
 
   @Override
   GraphFactory getFactory() {

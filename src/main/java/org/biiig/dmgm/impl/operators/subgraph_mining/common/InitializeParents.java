@@ -1,15 +1,15 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
-import org.biiig.dmgm.api.Graph;
+import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.impl.graph.DFSCode;
 
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class InitializeParents implements Function<Graph, Stream<DFSCodeEmbeddingPair>> {
+public class InitializeParents implements Function<SmallGraph, Stream<DFSCodeEmbeddingPair>> {
 
   @Override
-  public Stream<DFSCodeEmbeddingPair> apply(Graph graph) {
+  public Stream<DFSCodeEmbeddingPair> apply(SmallGraph graph) {
 
     int edgeCount = graph.getEdgeCount();
     DFSCodeEmbeddingPair[] pairs = new DFSCodeEmbeddingPair[edgeCount];

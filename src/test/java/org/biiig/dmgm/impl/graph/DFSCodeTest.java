@@ -1,7 +1,6 @@
 package org.biiig.dmgm.impl.graph;
 
 import org.biiig.dmgm.api.GraphCollection;
-import org.biiig.dmgm.api.GraphFactory;
 import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionBuilderFactory;
 import org.biiig.dmgm.impl.graph_loader.gdl.GDLLoader;
 import org.junit.Test;
@@ -9,7 +8,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class DFSCodeTest extends SingleLabelDirectedGraphTest {
+public class DFSCodeTest extends SingleLabelDirectedSmallGraphTest {
 
   private static final String PATH_CHILD = "[(:V)-[:e]->(:V)-[:e]->(:V)]";
   private static final String CYCLE_CHILD = "[(v:V)-[:e]->(:V)-[:e]->(v)]";

@@ -3,7 +3,7 @@ package org.biiig.dmgm.impl.graph_loader.gdl;
 import com.google.common.collect.Maps;
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 import javafx.util.Pair;
-import org.biiig.dmgm.api.Graph;
+import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionBuilderFactory;
 import org.biiig.dmgm.impl.graph_loader.tlf.GraphCollectionLoaderBase;
@@ -11,7 +11,6 @@ import org.s1ck.gdl.GDLHandler;
 import org.s1ck.gdl.model.Edge;
 import org.s1ck.gdl.model.Vertex;
 
-import javax.activation.UnsupportedDataTypeException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +49,7 @@ public class GDLLoader extends GraphCollectionLoaderBase {
       .collect(new GroupByKeyListValues<>(Pair::getKey, Pair::getValue));
 
     for (org.s1ck.gdl.model.Graph gdlGraph : gdlHandler.getGraphs()) {
-      Graph graph = graphFactory.create();
+      SmallGraph graph = graphFactory.create();
       int graphId = graphCollection.add(graph);
 
       gdlGraph

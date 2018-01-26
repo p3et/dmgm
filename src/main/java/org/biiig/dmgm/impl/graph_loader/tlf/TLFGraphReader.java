@@ -3,8 +3,7 @@ package org.biiig.dmgm.impl.graph_loader.tlf;
 import com.google.common.collect.Maps;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.LabelDictionary;
-import org.biiig.dmgm.api.Graph;
-import org.biiig.dmgm.api.GraphFactory;
+import org.biiig.dmgm.api.SmallGraph;
 
 import java.util.Map;
 import java.util.Queue;
@@ -27,7 +26,7 @@ public class TLFGraphReader extends TLFSplitReader {
 
     int firstEdgeIndex = getFirstEdgeIndex(split);
 
-    Graph graph = graphFactory.create();
+    SmallGraph graph = graphFactory.create();
     readVertices(split, firstEdgeIndex, graph);
     readEdges(split, firstEdgeIndex, graph);
 
@@ -46,7 +45,7 @@ public class TLFGraphReader extends TLFSplitReader {
     return firstEdgeIndex;
   }
 
-  private void readVertices(String[] split, int firstEdgeIndex, Graph graph) {
+  private void readVertices(String[] split, int firstEdgeIndex, SmallGraph graph) {
     LabelDictionary dictionary = database.getLabelDictionary();
     int vertexId = 0;
 
@@ -85,7 +84,7 @@ public class TLFGraphReader extends TLFSplitReader {
     }
   }
 
-  private void readEdges(String[] split, int firstEdgeIndex, Graph graph) {
+  private void readEdges(String[] split, int firstEdgeIndex, SmallGraph graph) {
     LabelDictionary dictionary = database.getLabelDictionary();
     int edgeId = 0;
 

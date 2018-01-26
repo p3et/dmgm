@@ -1,6 +1,6 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.generalized;
 
-import org.biiig.dmgm.api.ElementDataStore;
+import org.biiig.dmgm.api.PropertyStore;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SubgraphMiningPropertyKeys;
 
@@ -10,9 +10,9 @@ import java.util.function.Function;
 public class ToMultiDimensionalVector implements Function<DFSEmbedding, MultiDimensionalVector> {
 
   private static final int[] EMPTY_TAXONOMY_PATH = new int[0];
-  private final ElementDataStore dataStore;
+  private final PropertyStore dataStore;
 
-  ToMultiDimensionalVector(ElementDataStore dataStore) {
+  ToMultiDimensionalVector(PropertyStore dataStore) {
     this.dataStore = dataStore;
   }
 

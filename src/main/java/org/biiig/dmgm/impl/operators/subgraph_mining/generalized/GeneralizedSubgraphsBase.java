@@ -4,13 +4,12 @@ import com.google.common.collect.Maps;
 import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.biiig.dmgm.api.ElementDataStore;
+import org.biiig.dmgm.api.PropertyStore;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.LabelDictionary;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SubgraphMiningBase;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SubgraphMiningPropertyKeys;
-import org.biiig.dmgm.impl.data_store.InMemoryElementDataStore;
 
 import java.util.Map;
 
@@ -22,7 +21,7 @@ public abstract class GeneralizedSubgraphsBase extends SubgraphMiningBase {
   }
 
   protected Specializer getSpecializer(GraphCollection rawInput, FilterOrOutput<PatternVectorsPair> vectorFilter) {
-    ElementDataStore dataStore = new InMemoryElementDataStore();
+    PropertyStore dataStore = new InMemoryPropertyStore();
     Specializer spezializer = new Specializer(dataStore, vectorFilter);
     LabelDictionary dictionary = rawInput.getLabelDictionary();
     Map<Integer, Pair<Integer, int[]>> pathCache = Maps.newConcurrentMap();

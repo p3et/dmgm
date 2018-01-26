@@ -3,7 +3,7 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.generalized;
 import com.google.common.collect.Lists;
 import de.jesemann.paralleasy.recursion.RecursionStrategy;
 import de.jesemann.paralleasy.recursion.RecursiveTask;
-import org.biiig.dmgm.api.ElementDataStore;
+import org.biiig.dmgm.api.PropertyStore;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCodeEmbeddingsPair;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
 
 public class Specializer implements Function<DFSCodeEmbeddingsPair, Collection<Consumer<GraphCollection>>> {
 
-  private final ElementDataStore dataStore;
+  private final PropertyStore dataStore;
   private final FilterOrOutput<PatternVectorsPair> filter;
 
-  public Specializer(ElementDataStore dataStore, FilterOrOutput<PatternVectorsPair> filter) {
+  public Specializer(PropertyStore dataStore, FilterOrOutput<PatternVectorsPair> filter) {
     this.dataStore = dataStore;
     this.filter = filter;
   }

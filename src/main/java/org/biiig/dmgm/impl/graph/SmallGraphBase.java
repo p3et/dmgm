@@ -1,21 +1,29 @@
 package org.biiig.dmgm.impl.graph;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.api.Graph;
+import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.api.LabelDictionary;
 
 import java.util.Arrays;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
-public class GraphBase implements Graph {
-  private int label = -1;
-  private int id = -1;
-  protected int[] vertexLabels = new int[0];
-  protected int[] edgeLabels = new int[0];
-  protected int[] sourceIds = new int[0];
-  protected int[] targetIds = new int[0];
+public class SmallGraphBase implements SmallGraph {
+  private final long id;
+  private final int label;
+  protected  final int[] vertexLabels;
+  protected final int[] edgeLabels;
+  protected final int[] sourceIds;
+  protected final int[] targetIds;
 
+  public SmallGraphBase(long id, int label, int[] vertexLabels, int[] edgeLabels, int[] sourceIds, int[] targetIds) {
+    this.id = id;
+    this.label = label;
+    this.vertexLabels = vertexLabels;
+    this.edgeLabels = edgeLabels;
+    this.sourceIds = sourceIds;
+    this.targetIds = targetIds;
+  }
 
 
   @Override

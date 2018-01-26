@@ -1,16 +1,15 @@
 package org.biiig.dmgm.impl.graph_collection;
 
-import org.biiig.dmgm.api.ElementDataStore;
+import org.biiig.dmgm.api.PropertyStore;
 import org.biiig.dmgm.api.GraphCollection;
-import org.biiig.dmgm.api.GraphCollectionBuilder;
 import org.biiig.dmgm.api.LabelDictionary;
-import org.biiig.dmgm.impl.data_store.InMemoryElementDataStore;
+import org.biiig.dmgm.impl.db.InMemoryGraphCollection;
 import org.biiig.dmgm.impl.label_dictionary.InMemoryLabelDictionary;
 
-public class InMemoryGraphCollectionBuilder implements GraphCollectionBuilder {
+public class InMemoryGraphCollectionBuilder {
 
   private LabelDictionary dictionary;
-  private ElementDataStore dataStore;
+  private PropertyStore dataStore;
 
   @Override
   public GraphCollectionBuilder withLabelDictionary(LabelDictionary dictionary) {
@@ -19,7 +18,7 @@ public class InMemoryGraphCollectionBuilder implements GraphCollectionBuilder {
   }
 
   @Override
-  public GraphCollectionBuilder withElementDataStore(ElementDataStore dataStore) {
+  public GraphCollectionBuilder withElementDataStore(PropertyStore dataStore) {
     this.dataStore = dataStore;
     return this;
   }
@@ -28,7 +27,7 @@ public class InMemoryGraphCollectionBuilder implements GraphCollectionBuilder {
   public GraphCollection create() {
     return new InMemoryGraphCollection(
       dictionary == null ? new InMemoryLabelDictionary() : dictionary,
-      dataStore == null ? new InMemoryElementDataStore() : dataStore);
+      dataStore == null ? new InMemoryPropertyStore() : dataStore);
   }
 
 }

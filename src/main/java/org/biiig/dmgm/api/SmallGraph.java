@@ -5,7 +5,7 @@ import java.util.stream.IntStream;
 /**
  * A directed graph with integer labels.
  */
-public interface Graph {
+public interface SmallGraph {
   int getLabel();
   void setLabel(int label);
 

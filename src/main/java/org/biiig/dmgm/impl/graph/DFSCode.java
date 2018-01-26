@@ -6,7 +6,7 @@ import org.biiig.dmgm.api.LabelDictionary;
 import java.util.Arrays;
 import java.util.function.Function;
 
-public class DFSCode extends GraphBase implements Comparable<DFSCode> {
+public class DFSCode extends SmallGraphBase implements Comparable<DFSCode> {
 
   private boolean[] outgoings;
 
@@ -14,7 +14,7 @@ public class DFSCode extends GraphBase implements Comparable<DFSCode> {
   private int[] rightmostPath;
 
   public DFSCode() {
-    super();
+    super(id, label, vertexLabels, edgeLabels, sourceIds, targetIds);
   }
 
   public void addEdge(int fromTime, int toTime, int label, boolean outgoing) {

@@ -2,7 +2,7 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.DMGMTestBase;
-import org.biiig.dmgm.api.Graph;
+import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.Operator;
 import org.biiig.dmgm.impl.operators.subgraph_mining.CharacteristicSubgraphs;
@@ -50,7 +50,7 @@ public class CSMAlgorithmTest extends DMGMTestBase {
 
     testExpectation(output, expectation);
 
-    for (Graph graph : output) {
+    for (SmallGraph graph : output) {
       Optional<BigDecimal> support = output
         .getElementDataStore()
         .getGraphBigDecimal(graph.getId(), SubgraphMiningPropertyKeys.SUPPORT);

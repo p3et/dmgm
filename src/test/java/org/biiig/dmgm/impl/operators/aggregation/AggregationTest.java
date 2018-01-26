@@ -1,15 +1,13 @@
 package org.biiig.dmgm.impl.operators.aggregation;
 
 import org.biiig.dmgm.DMGMTestBase;
-import org.biiig.dmgm.api.Graph;
+import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.api.Operator;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Optional;
-
-import static org.junit.Assert.*;
 
 public class AggregationTest extends DMGMTestBase {
 
@@ -19,7 +17,7 @@ public class AggregationTest extends DMGMTestBase {
   public void apply() throws IOException {
     GraphCollection collection = getPredictableDatabase();
 
-    Operator aggregation = Aggregation.forInteger(KEY, Graph::getVertexCount);
+    Operator aggregation = Aggregation.forInteger(KEY, SmallGraph::getVertexCount);
     collection.apply(aggregation);
 
     collection.stream().forEach(graph ->

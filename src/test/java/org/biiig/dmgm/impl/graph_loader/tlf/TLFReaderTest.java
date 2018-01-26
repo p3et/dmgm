@@ -2,7 +2,7 @@ package org.biiig.dmgm.impl.graph_loader.tlf;
 
 import org.biiig.dmgm.DMGMTestBase;
 import org.biiig.dmgm.api.GraphCollection;
-import org.biiig.dmgm.api.Graph;
+import org.biiig.dmgm.api.SmallGraph;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -20,7 +20,7 @@ public class TLFReaderTest extends DMGMTestBase {
     GraphCollection database = getPredictableDatabase();
 
     for (int graphId = 0; graphId < database.size(); graphId++) {
-      Graph graph = database.getGraph(graphId);
+      SmallGraph graph = database.getGraph(graphId);
 
       for (int edgeId = 0; edgeId < graph.getEdgeCount(); edgeId++) {
         int sourceId = graph.getSourceId(edgeId);

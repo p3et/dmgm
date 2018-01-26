@@ -5,7 +5,7 @@ import de.jesemann.paralleasy.recursion.Output;
 import de.jesemann.paralleasy.recursion.RecursionStep;
 import javafx.util.Pair;
 import org.biiig.dmgm.api.GraphCollection;
-import org.biiig.dmgm.api.Graph;
+import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.impl.graph.DFSCode;
 
 import java.util.List;
@@ -41,7 +41,7 @@ public class ProcessDFSNode implements RecursionStep<DFSCodeEmbeddingsPair, Cons
       .stream()
       .flatMap(
         entry -> {
-          Graph graph = input.getGraph(entry.getKey());
+          SmallGraph graph = input.getGraph(entry.getKey());
           return entry
             .getValue()
             .stream()

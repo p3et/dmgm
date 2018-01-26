@@ -1,12 +1,12 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
-import org.biiig.dmgm.api.Graph;
+import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.impl.graph.AdjacencyList;
 
 import java.util.Set;
 import java.util.function.Function;
 
-public class PruneEdges implements Function<Graph, Graph> {
+public class PruneEdges implements Function<SmallGraph, SmallGraph> {
   private final Set<Integer> frequentEdgeLabels;
 
   public PruneEdges(Set<Integer> frequentEdgeLabels) {
@@ -14,9 +14,9 @@ public class PruneEdges implements Function<Graph, Graph> {
   }
 
   @Override
-  public Graph apply(Graph inGraph) {
+  public SmallGraph apply(SmallGraph inGraph) {
 
-    Graph outGraph = new AdjacencyList();
+    SmallGraph outGraph = new AdjacencyList();
     outGraph.setLabel(inGraph.getLabel());
 
     for (int vertexId = 0; vertexId < inGraph.getVertexCount(); vertexId++)

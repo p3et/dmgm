@@ -1,8 +1,7 @@
 package org.biiig.dmgm.impl.graph_loader.tlf;
 
 import org.biiig.dmgm.api.LabelDictionary;
-import org.biiig.dmgm.api.Graph;
-import org.biiig.dmgm.api.GraphFactory;
+import org.biiig.dmgm.api.SmallGraph;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,7 +10,7 @@ import java.util.Iterator;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 
-public class TLFSpliterator implements Spliterator<Graph> {
+public class TLFSpliterator implements Spliterator<SmallGraph> {
 
   private final Iterator<String> iterator;
   private final LabelDictionary dictionary;
@@ -28,17 +27,17 @@ public class TLFSpliterator implements Spliterator<Graph> {
   }
 
   @Override
-  public void forEachRemaining(Consumer<? super Graph> action) {
+  public void forEachRemaining(Consumer<? super SmallGraph> action) {
     while (iterator.hasNext())
       tryAdvance(action);
   }
 
   @Override
-  public boolean tryAdvance(Consumer<? super Graph> action) {
+  public boolean tryAdvance(Consumer<? super SmallGraph> action) {
     boolean reachedEdges = false;
     boolean reachedNextGraph = false;
 
-    Graph graph = readGraph();
+    SmallGraph graph = readGraph();
 
     while (iterator.hasNext() && !reachedNextGraph) {
       if (reachedEdges) {
@@ -72,25 +71,25 @@ public class TLFSpliterator implements Spliterator<Graph> {
     return true;
   }
 
-  private Graph readGraph() {
+  private SmallGraph readGraph() {
     String[] split = line.split(TLFConstants.FIELD_SEPARATOR);
 
     String label = split.length > TLFConstants.GRAPH_LABEL_INDEX ?
       split[TLFConstants.GRAPH_LABEL_INDEX] :
       TLFConstants.GRAPH_SYMBOL;
 
-    Graph graph = graphFactory.create();
+    SmallGraph graph = graphFactory.create();
     graph.setLabel(dictionary.translate(label));
     return graph;
   }
 
-  private void readVertex(Graph graph) {
+  private void readVertex(SmallGraph graph) {
     String[] split = line.split(TLFConstants.FIELD_SEPARATOR);
     String label = split[TLFConstants.VERTEX_LABEL_INDEX];
     graph.addVertex(dictionary.translate(label));
   }
 
-  private void readEdge(Graph graph) {
+  private void readEdge(SmallGraph graph) {
     String[] split = line.split(TLFConstants.FIELD_SEPARATOR);
     int source = Integer.valueOf(split[TLFConstants.EDGE_SOURCE_INDEX]);
     int target = Integer.valueOf(split[TLFConstants.EDGE_TARGET_INDEX]);
@@ -99,7 +98,7 @@ public class TLFSpliterator implements Spliterator<Graph> {
   }
 
   @Override
-  public Spliterator<Graph> trySplit() {
+  public Spliterator<SmallGraph> trySplit() {
     return null;
   }
 

@@ -1,6 +1,6 @@
 package org.biiig.dmgm.impl.operators.order;
 
-import org.biiig.dmgm.api.Graph;
+import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.api.GraphCollection;
 import org.biiig.dmgm.impl.operators.OperatorBase;
 import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionBuilder;
@@ -8,9 +8,9 @@ import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionBuilder;
 import java.util.Comparator;
 
 public class Order extends OperatorBase {
-  private final Comparator<Graph> comparator;
+  private final Comparator<SmallGraph> comparator;
 
-  private Order(Comparator<Graph> comparator) {
+  private Order(Comparator<SmallGraph> comparator) {
     this.comparator = comparator;
   }
 
@@ -30,7 +30,7 @@ public class Order extends OperatorBase {
     return output;
   }
 
-  public static Order by(Comparator<Graph> comparator) {
+  public static Order by(Comparator<SmallGraph> comparator) {
     return new Order(comparator);
   }
 }

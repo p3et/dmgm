@@ -1,8 +1,7 @@
 package org.biiig.dmgm.impl.operators.subgraph;
 
-import org.biiig.dmgm.api.Graph;
+import org.biiig.dmgm.api.SmallGraph;
 import org.biiig.dmgm.api.GraphCollection;
-import org.biiig.dmgm.impl.graph.GraphBaseFactory;
 import org.biiig.dmgm.impl.graph_collection.InMemoryGraphCollectionBuilderFactory;
 import org.biiig.dmgm.impl.operators.OperatorBase;
 
@@ -11,7 +10,7 @@ import java.util.function.IntPredicate;
 
 public class Subgraph extends OperatorBase {
 
-  private final Function<Graph, Graph> subgraphMapper;
+  private final Function<SmallGraph, SmallGraph> subgraphMapper;
 
   public Subgraph(IntPredicate vertexPredicate, IntPredicate edgePredicate, Boolean dropIsolatedVertices) {
     this.subgraphMapper = new FilterVerticesAndEdgesByLabel(new GraphBaseFactory(), vertexPredicate, edgePredicate, dropIsolatedVertices);

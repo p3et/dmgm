@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.to_string.cam;
 
 import org.biiig.dmgm.api.LabelDictionary;
-import org.biiig.dmgm.api.Graph;
+import org.biiig.dmgm.api.SmallGraph;
 
 public class CAMIncomingEdgesFormatter extends CAMAdjacentEdgesFormatter {
 
@@ -16,12 +16,12 @@ public class CAMIncomingEdgesFormatter extends CAMAdjacentEdgesFormatter {
   }
 
   @Override
-  protected int getAdjacentVertexId(Graph graph, int edgeId) {
+  protected int getAdjacentVertexId(SmallGraph graph, int edgeId) {
     return graph.getSourceId(edgeId);
   }
 
   @Override
-  protected int[] getEdgeIds(Graph graph, int vertexId) {
+  protected int[] getEdgeIds(SmallGraph graph, int vertexId) {
     return graph.getIncomingEdgeIds(vertexId);
   }
 }

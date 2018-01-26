@@ -1,14 +1,10 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.frequent;
 
 import org.biiig.dmgm.api.GraphCollection;
-import org.biiig.dmgm.api.GraphCollectionBuilder;
-import org.biiig.dmgm.impl.graph.GraphBaseFactory;
 import org.biiig.dmgm.impl.operators.subgraph.FilterVerticesAndEdgesByLabel;
 import org.biiig.dmgm.impl.operators.subgraph_mining.characteristic.PreprocessorBase;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DistinctEdgeLabels;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DistinctVertexLabels;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.PruneEdges;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.PruneVertices;
 
 import java.util.Set;
 
