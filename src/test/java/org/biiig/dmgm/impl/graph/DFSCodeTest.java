@@ -15,7 +15,7 @@ public class DFSCodeTest extends SingleLabelDirectedSmallGraphTest {
     int lab1 = 1;
 
     SmallGraph graph = new DFSCode(
-      new int[] {lab0, lab1},
+      0, new int[] {lab0, lab1},
       new int[] {lab0, lab1},
       new int[] {0, 0},
       new int[] {0, 1},

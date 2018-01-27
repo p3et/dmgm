@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
 
 public class SmallGraphBase implements SmallGraph {
   private final long id;
-  private final int label;
+  protected final int label;
   protected  final int[] vertexLabels;
   protected final int[] edgeLabels;
   protected final int[] sourceIds;

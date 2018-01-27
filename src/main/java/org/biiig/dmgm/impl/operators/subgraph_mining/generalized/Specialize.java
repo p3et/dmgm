@@ -71,6 +71,7 @@ public class Specialize
       .toArray();
 
     return new DFSCode(
+      parent.getLabel(),
       vertexLabels,
       parent.getVertexLabels(),
       parent.getSourceIds(),

@@ -8,5 +8,5 @@ public interface Supportable {
   DFSCode getDFSCode();
   Collection<DFSEmbedding> getEmbeddings();
   long getSupport();
-  int getEmbeddingCount();
+  int getFrequency();
 }

@@ -1,5 +1,6 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
+import com.google.common.collect.Maps;
 import org.biiig.dmgm.impl.graph.DFSCode;
 
 import java.util.Collection;
@@ -9,11 +10,13 @@ import java.util.stream.Stream;
 
 public class IsMinimal implements java.util.function.Predicate<DFSCode> {
 
-  private final InitializeParents initializeParents = new InitializeParents();
-  private final GrowAllChildren growAllChildren = new GrowAllChildren();
+  private final InitializeParents initializeParents = new InitializeParents(0);
 
   @Override
   public boolean test(DFSCode dfsCode ) {
+    GrowChildrenOf growChildrenOf = new GrowChildrenOf(dfsCode, Maps.newHashMap());
+
+
     Optional<DFSCodeEmbeddingsPair> minPair = initializeParents
       .apply(dfsCode)
       .collect(new GroupByDFSCodeListEmbeddings())
@@ -31,7 +34,7 @@ public class IsMinimal implements java.util.function.Predicate<DFSCode> {
 
       minPair = parentEmbeddings
         .stream()
-        .flatMap(e -> Stream.of(growAllChildren.apply(dfsCode, parentCode, rightmostPath, e)))
+        .flatMap(e -> Stream.of(growChildrenOf.apply(dfsCode, parentCode, rightmostPath, e)))
         .collect(new GroupByDFSCodeListEmbeddings())
         .entrySet()
         .stream()

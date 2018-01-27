@@ -35,7 +35,7 @@ public class SingleEdgeDFSNodes implements Runnable {
     List<Pair<Optional<DFSCodeEmbeddingsPair>, Optional<Consumer<HyperVertexDB>>>> initalized =
       input
         .stream()
-        .flatMap(new InitializeParents())
+        .flatMap(new InitializeParents(0))
         .collect(new GroupByDFSCodeListEmbeddings())
         .entrySet()
         .stream()

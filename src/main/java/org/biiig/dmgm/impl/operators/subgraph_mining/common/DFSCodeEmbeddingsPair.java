@@ -31,7 +31,7 @@ public class DFSCodeEmbeddingsPair implements Comparable<DFSCodeEmbeddingsPair>,
   }
 
   @Override
-  public int getEmbeddingCount() {
+  public int getFrequency() {
     return embeddings.size();
   }
 

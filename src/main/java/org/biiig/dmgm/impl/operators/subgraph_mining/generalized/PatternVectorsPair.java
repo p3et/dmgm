@@ -33,7 +33,7 @@ public class PatternVectorsPair implements Supportable {
   }
 
   @Override
-  public int getEmbeddingCount() {
+  public int getFrequency() {
     return vectors.size();
   }
 

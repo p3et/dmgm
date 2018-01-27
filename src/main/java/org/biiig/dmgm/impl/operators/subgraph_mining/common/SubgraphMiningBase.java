@@ -17,32 +17,40 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class SubgraphMiningBase extends HyperVertexOperatorBase {
-  public static final Function<SmallGraph, Stream<DFSCodeEmbeddingPair>> INITIALIZE_PARENTS = new InitializeParents();
-  public static final Predicate<DFSCode> IS_MINIMAL = new IsMinimal();
+  private static final GroupByKeyListValues<DFSCodeEmbeddingPair, DFSCode, DFSEmbedding> AGGREGATION = new GroupByKeyListValues<>(DFSCodeEmbeddingPair::getDfsCode, DFSCodeEmbeddingPair::getEmbedding);
+
+  private static final Predicate<DFSCode> IS_MINIMAL = new IsMinimal();
+  private static final Predicate<Map.Entry<DFSCode, List<DFSEmbedding>>> VERIFICATION = e -> IS_MINIMAL.test(e.getKey());
   private static final Function<Map.Entry<DFSCode,List<DFSEmbedding>>, DFSCodeEmbeddingsPair> ADD_SUPPORT = new AddSupport();
   private static final String FSG_LABEL = "Frequent Subgraph";
   private static final String FSGS_LABEL = "Frequent Subgraphs";
 
   protected final float minSupport;
-  private final int maxEdgeCount;
+  private final Predicate<Map.Entry<DFSCode, List<DFSEmbedding>>> edgeCountLimit;
 
   public SubgraphMiningBase(float minSupport, int maxEdgeCount) {
     this.minSupport = minSupport;
-    this.maxEdgeCount = maxEdgeCount;
+    edgeCountLimit = e -> e.getKey().getEdgeCount() < maxEdgeCount;
   }
 
   // ORCHESTRATION
   @Override
   public Long apply(HyperVertexDB database, Long collectionId) {
     int supportKey = database.encode(SubgraphMiningPropertyKeys.SUPPORT);
+    int frequencyKey = database.encode(SubgraphMiningPropertyKeys.FREQUENCY);
     int dfsCodeKey = database.encode(SubgraphMiningPropertyKeys.DFS_CODE);
     int patternLabel = database.encode(FSG_LABEL);
-    int patternsLabel = database.encode(FSG_LABEL);
+    int outputCollectionLabel = database.encode(FSG_LABEL);
 
     Map<DFSCode, BiConsumer<HyperVertexDB, Long>> output = Maps.newConcurrentMap();
+
+    Function<SmallGraph, Stream<DFSCodeEmbeddingPair>> initializeParents = new InitializeParents(patternLabel);
     
     Consumer<DFSCodeEmbeddingsPair> store =
-      s -> output.put(s.getDFSCode(), (db, gid) -> db.set(gid, supportKey, s.getSupport()));
+      s -> output.put(s.getDFSCode(), (db, gid) -> {
+        db.set(gid, supportKey, s.getSupport());
+        db.set(gid, frequencyKey, s.getFrequency());
+      });
     
     Map<Long, SmallGraph> input = database
       .getCollection(collectionId)
@@ -52,12 +60,14 @@ public abstract class SubgraphMiningBase extends HyperVertexOperatorBase {
     long minSupportAbsolute = Math.round(input.size() * minSupport);
 
     Predicate<DFSCodeEmbeddingsPair> patternPredicate = s -> s.getSupport() >= minSupportAbsolute;
-    
+    GrowAllChildren growAllChildren = new GrowAllChildren(input);
+
+
     List<DFSCodeEmbeddingsPair> parents = input
       .values()
       .stream()
-      .flatMap(INITIALIZE_PARENTS)
-      .collect(new GroupByKeyListValues<>(DFSCodeEmbeddingPair::getDfsCode, DFSCodeEmbeddingPair::getEmbedding))
+      .flatMap(initializeParents)
+      .collect(AGGREGATION)
       .entrySet()
       .stream()
       .map(ADD_SUPPORT)
@@ -65,28 +75,20 @@ public abstract class SubgraphMiningBase extends HyperVertexOperatorBase {
       .peek(store)
       .collect(Collectors.toList());
 
-    GrowAllChildren growChildren = new GrowAllChildren();
-
-    while (!parents.isEmpty())
+    while (!parents.isEmpty()) {
       parents = parents
         .stream()
-        .flatMap(p -> {
-          DFSCode dfsCode = p.getDFSCode();
-          int[] rightmostPath = dfsCode.getRightmostPath();
-
-          return p.getEmbeddings()
-            .stream()
-            .flatMap(e -> Stream.of(growChildren.apply(input.get(e.getGraphId()), dfsCode, rightmostPath, e)));
-        })
-        .collect(new GroupByKeyListValues<>(DFSCodeEmbeddingPair::getDfsCode, DFSCodeEmbeddingPair::getEmbedding))
+        .flatMap(growAllChildren)
+        .collect(AGGREGATION)
         .entrySet()
         .stream()
-        .filter(e -> IS_MINIMAL.test(e.getKey()))
-        .filter(e -> e.getKey().getEdgeCount() < maxEdgeCount)
+        .filter(VERIFICATION)
+        .filter(edgeCountLimit)
         .map(ADD_SUPPORT)
         .filter(patternPredicate)
         .peek(store)
         .collect(Collectors.toList());
+    }
 
     long[] outputVertices = output
       .entrySet()
@@ -101,7 +103,7 @@ public abstract class SubgraphMiningBase extends HyperVertexOperatorBase {
       .toArray();
 
 
-    return database.createHyperVertex(patternsLabel, outputVertices, new long[0]);
+    return database.createHyperVertex(outputCollectionLabel, outputVertices, new long[0]);
   }
 
   protected abstract Preprocessor getPreprocessor();

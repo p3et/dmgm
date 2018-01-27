@@ -13,8 +13,8 @@ public class DFSCode extends SmallGraphBase implements Comparable<DFSCode> {
   private final DFSCodeComparator comparator = new DFSCodeComparator();
   private int[] rightmostPath;
 
-  public DFSCode(int[] vertexLabels, int[] edgeLabels, int[] sourceIds, int[] targetIds, boolean[] outgoings) {
-    super(-1l, -1, vertexLabels, edgeLabels, sourceIds, targetIds);
+  public DFSCode(int label, int[] vertexLabels, int[] edgeLabels, int[] sourceIds, int[] targetIds, boolean[] outgoings) {
+    super(-1l, label, vertexLabels, edgeLabels, sourceIds, targetIds);
     this.outgoings = outgoings;
   }
 
@@ -93,12 +93,13 @@ public class DFSCode extends SmallGraphBase implements Comparable<DFSCode> {
     return parent;
   }
 
-  public DFSCode addEdge(int fromTime, int toTime, int label, boolean outgoing, int toLabel) {
+  public DFSCode addEdge(int fromTime, int toTime, int edgeLabel, boolean outgoing, int toLabel) {
     return new DFSCode(
+      this.label,
       toTime > fromTime ?
         ArrayUtils.add(vertexLabels, toLabel) :
         Arrays.copyOf(vertexLabels, vertexLabels.length),
-      ArrayUtils.add(edgeLabels, label),
+      ArrayUtils.add(edgeLabels, edgeLabel),
       ArrayUtils.add(sourceIds, outgoing ? fromTime : toTime),
       ArrayUtils.add(targetIds, outgoing ? toTime : fromTime),
       ArrayUtils.add(outgoings, outgoing)

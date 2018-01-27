@@ -8,6 +8,12 @@ import java.util.stream.Stream;
 
 public class InitializeParents implements Function<SmallGraph, Stream<DFSCodeEmbeddingPair>> {
 
+  private final int label;
+
+  public InitializeParents(int label) {
+    this.label = label;
+  }
+
   @Override
   public Stream<DFSCodeEmbeddingPair> apply(SmallGraph graph) {
 
@@ -53,7 +59,7 @@ public class InitializeParents implements Function<SmallGraph, Stream<DFSCodeEmb
       }
 
       DFSCode dfsCode = new DFSCode(
-        loop ? new int[] {fromLabel} : new int[] {fromLabel, toLabel},
+        label, loop ? new int[] {fromLabel} : new int[] {fromLabel, toLabel},
         new int[] {edgeLabel},
         new int[] {outgoing ? fromTime : toTime},
         new int[] {outgoing ? toTime : fromTime},
