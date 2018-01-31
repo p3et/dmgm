@@ -4,7 +4,7 @@ import org.biiig.dmgm.DMGMTestBase;
 import org.biiig.dmgm.api.GraphDB;
 import org.biiig.dmgm.impl.db.GraphDBBase;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.SubgraphMiningPropertyKeys;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.PropertyKeys;
 import org.junit.Test;
 
 import java.util.function.Function;
@@ -16,7 +16,7 @@ public class ToMultiDimensionalVectorTest extends DMGMTestBase {
   @Test
   public void apply() {
     GraphDB db = new GraphDBBase();
-    int taxonomyPathKey = db.encode(SubgraphMiningPropertyKeys.TAXONOMY_PATH);
+    int taxonomyPathKey = db.encode(PropertyKeys.TAXONOMY_PATH);
 
     db.set(0l, taxonomyPathKey, new int[] {1, 2});
 

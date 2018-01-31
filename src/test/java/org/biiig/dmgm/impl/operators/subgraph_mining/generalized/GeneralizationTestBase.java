@@ -22,7 +22,7 @@ public abstract class GeneralizationTestBase extends DMGMTestBase {
       ":X[(:B_b_b)-[:a]->(:C)]"
     );
 
-    runAndTestExpectation(operator, inputGDL);
+    runAndTestExpectation(operator, inputGDL, false);
   }
 
   public abstract CollectionOperator getOperator();

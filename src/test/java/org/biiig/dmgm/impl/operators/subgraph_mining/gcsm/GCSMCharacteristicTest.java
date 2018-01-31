@@ -25,10 +25,10 @@ public class GCSMCharacteristicTest extends DMGMTestBase {
       ":EX{_category:\"X\"}[(:A)-[:a]->(:B)-[:a]->(:C)]" +
       ":EX{_category:\"X\"}[(:B)-[:a]->(:C)-[:a]->(:D)]" +
       ":EX{_category:\"X\"}[(:B)-[:a]->(:C)]" +
-      ":EX{_category:\"X\"}[(:A)-[:a]->(:B)]" +
+      ":EX{_category:\"X\",_support:4,_frequency:4,_dfsCode:\"0:A-a->1:B\"}[(:A)-[:a]->(:B)]" +
       ":EX{_category:\"X\"}[(:A)-[:a]->(:B)-[:b]->(:C)]" +
       ":EX{_category:\"X\"}[(:B)-[:b]->(:C)]" ;
 
-    runAndTestExpectation(operator, gdl);
+    runAndTestExpectation(operator, gdl, true);
   }
 }

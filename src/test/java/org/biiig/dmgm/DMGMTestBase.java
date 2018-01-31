@@ -2,10 +2,12 @@ package org.biiig.dmgm;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.DMGraphFormatter;
 import org.biiig.dmgm.api.GraphDB;
 import org.biiig.dmgm.api.CollectionOperator;
 import org.biiig.dmgm.api.CachedGraph;
+import org.biiig.dmgm.api.Property;
 import org.biiig.dmgm.impl.loader.GDLLoader;
 import org.biiig.dmgm.impl.loader.TLFLoader;
 import org.biiig.dmgm.impl.to_string.cam.CAMGraphFormatter;
@@ -33,41 +35,36 @@ public class DMGMTestBase {
       .get();
   }
 
-  protected boolean equal(GraphDB db, long expId, long resId) {
+  protected boolean equal(GraphDB db, long expId, long resId, boolean includeProperties) {
     Collection<CachedGraph> expected = db.getCachedCollection(expId);
-    Collection<CachedGraph> actual = db.getCachedCollection(resId);
+    Collection<CachedGraph> result = db.getCachedCollection(resId);
 
-    boolean equal = expected.size() == actual.size();
+    boolean equalSize = expected.size() == result.size();
 
-    if (!equal) {
-      System.out.println("Expected " + expected.size() + " graphs but found " + actual.size() );
+    if (!equalSize) {
+      System.out.println("Expected " + expected.size() + " graphs but found " + result.size() );
     }
 
-    Map<String, String> expectedLabels = getCanonicalPrintLabelMap(expected, db);
-    Map<String, String> actualLabels = getCanonicalPrintLabelMap(actual, db);
+    boolean allFound = compare(db, "Not found :", expId, expected, resId, result, includeProperties);
+    boolean allExpected = compare(db, "Unexpected :", resId, result, expId, expected, includeProperties);
 
-    Set<String> notExpected = keyMinus(expectedLabels, actualLabels);
-    Set<String> notFound = keyMinus(actualLabels, expectedLabels);
+    return equalSize && allFound && allExpected;
+  }
 
-//    expectedLabels.entrySet().stream().forEach(System.out::println);
-//    System.out.println("-----");
-//    actualLabels.entrySet().stream().forEach(System.out::println);
+  private boolean compare(GraphDB db, String msg, long aId, Collection<CachedGraph> aCol, long bId, Collection<CachedGraph> bCol, boolean includeProperties) {
+    Map<String, String> aMap = getLabelMap(aCol, db, includeProperties);
+    Map<String, String> bMap = getLabelMap(bCol, db, includeProperties);
 
+    Set<String> notInB = aMap.keySet();
+    notInB.removeAll(bMap.keySet());
 
-    if (notExpected.size() > 0) {
-      System.out.println("Not expected :");
-      print(notExpected);
+    if (!notInB.isEmpty()) {
+      System.out.println(msg);
+      notInB
+        .forEach(x -> System.out.println(aMap.get(x)));
     }
 
-
-    if (notFound.size() > 0) {
-      System.out.println("Not found :");
-      print(notFound);
-    }
-
-    equal = equal && notExpected.isEmpty() && notFound.isEmpty();
-
-    return equal;
+    return notInB.isEmpty();
   }
 
   private Set<String> keyMinus(Map<String, String> first, Map<String, String> second) {
@@ -88,7 +85,7 @@ public class DMGMTestBase {
     }
   }
 
-  private Map<String, String> getCanonicalPrintLabelMap(Collection<CachedGraph> expected, GraphDB db) {
+  private Map<String, String> getLabelMap(Collection<CachedGraph> expected, GraphDB db, boolean includeProperties) {
     DMGraphFormatter keyFormatter =
       new CAMGraphFormatter(db);
 
@@ -97,7 +94,24 @@ public class DMGMTestBase {
 
     Map<String, String> canonicalLabels = Maps.newHashMapWithExpectedSize(expected.size());
     for (CachedGraph graph : expected) {
-      canonicalLabels.put(keyFormatter.format(graph), valueFormatter.format(graph));
+
+      String propertyLabel;
+      if (includeProperties) {
+        Property[] properties = db.getProperties(graph.getId());
+        String[] propertyStrings = new String[properties.length];
+
+        for (int i = 0; i < properties.length; i++)
+          propertyStrings[i] = db.decode(properties[i].getKey()) + "=" + properties[i].getValue();
+
+        propertyLabel = StringUtils.join(propertyStrings, ",");
+      } else {
+        propertyLabel = "";
+      }
+
+
+      String canonicalLabel = keyFormatter.format(graph) + "\t" + propertyLabel;
+      String printLabel = valueFormatter.format(graph) + "\t" + propertyLabel;
+      canonicalLabels.put(canonicalLabel, printLabel);
     }
 
     return canonicalLabels;
@@ -114,7 +128,7 @@ public class DMGMTestBase {
 //    }
 //  }
 
-  protected void runAndTestExpectation(CollectionOperator operator, String gdl) {
+  protected void runAndTestExpectation(CollectionOperator operator, String gdl, boolean includeProperties) {
     GraphDB db = GDLLoader
       .fromString(gdl)
       .get();
@@ -129,7 +143,7 @@ public class DMGMTestBase {
     long exId = db.createCollection(exLabel, exIds);
     long outId = operator.apply(db, inId);
 
-    assertTrue(equal(db, exId, outId));
+    assertTrue(equal(db, exId, outId, includeProperties));
   }
 
 //  protected void testExpectation(GraphCollection output, String expectedGDL) {

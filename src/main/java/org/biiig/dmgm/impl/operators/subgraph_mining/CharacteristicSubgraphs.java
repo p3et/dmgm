@@ -33,8 +33,4 @@ public class CharacteristicSubgraphs extends SubgraphMiningBase implements Chara
     return getCharacteristicLabels(minSupport);
   }
 
-  @Override
-  protected FilterOrOutput<DFSCodeEmbeddingsPair> getFilterAndOutput(List<CachedGraph> rawInput, GraphDB db) {
-    return getCharacteristicFilter(rawInput, minSupport, interestingness);
-  }
 }

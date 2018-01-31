@@ -36,26 +36,28 @@ public abstract class SubgraphMiningBase extends CollectionOperatorBase {
   // ORCHESTRATION
   @Override
   public Long apply(GraphDB database, Long collectionId) {
-    int supportKey = database.encode(SubgraphMiningPropertyKeys.SUPPORT);
-    int frequencyKey = database.encode(SubgraphMiningPropertyKeys.FREQUENCY);
-    int dfsCodeKey = database.encode(SubgraphMiningPropertyKeys.DFS_CODE);
+    int supportKey = database.encode(PropertyKeys.SUPPORT);
+    int frequencyKey = database.encode(PropertyKeys.FREQUENCY);
+    int dfsCodeKey = database.encode(PropertyKeys.DFS_CODE);
     int patternLabel = database.encode(FSG_LABEL);
     int outputCollectionLabel = database.encode(FSG_LABEL);
 
     Map<DFSCode, BiConsumer<GraphDB, Long>> output = Maps.newConcurrentMap();
 
     Function<CachedGraph, Stream<DFSCodeEmbeddingPair>> initializeParents = new InitializeParents(patternLabel);
-    
+
     Consumer<DFSCodeEmbeddingsPair> store =
       s -> output.put(s.getDFSCode(), (db, gid) -> {
-        db.set(gid, supportKey, s.getSupport());
+        db.set(gid, supportKey, Math.toIntExact(s.getSupport()));
         db.set(gid, frequencyKey, s.getFrequency());
       });
-    
+
     Map<Long, CachedGraph> input = database
       .getCachedCollection(collectionId)
       .stream()
       .collect(Collectors.toMap(CachedGraph::getId, Function.identity()));
+
+    input = preprocess(input);
 
     long minSupportAbsolute = Math.round(input.size() * minSupport);
 
@@ -63,30 +65,28 @@ public abstract class SubgraphMiningBase extends CollectionOperatorBase {
     GrowAllChildren growAllChildren = new GrowAllChildren(input);
 
 
-    List<DFSCodeEmbeddingsPair> parents = input
+    Stream<Map.Entry<DFSCode, List<DFSEmbedding>>> candidateStream = input
       .values()
       .stream()
       .flatMap(initializeParents)
       .collect(AGGREGATION)
       .entrySet()
-      .stream()
-      .map(ADD_SUPPORT)
-      .filter(patternPredicate)
-      .peek(store)
+      .stream();
+
+    Stream<DFSCodeEmbeddingsPair> parentStream = filterAndOutput(store, patternPredicate, candidateStream);
+
+    List<DFSCodeEmbeddingsPair> parents = parentStream
       .collect(Collectors.toList());
 
     while (!parents.isEmpty()) {
-      parents = parents
+      parents = filterAndOutput(store, patternPredicate, parents
         .stream()
         .flatMap(growAllChildren)
         .collect(AGGREGATION)
         .entrySet()
         .stream()
         .filter(VERIFICATION)
-        .filter(edgeCountLimit)
-        .map(ADD_SUPPORT)
-        .filter(patternPredicate)
-        .peek(store)
+        .filter(edgeCountLimit))
         .collect(Collectors.toList());
     }
 
@@ -106,9 +106,12 @@ public abstract class SubgraphMiningBase extends CollectionOperatorBase {
     return database.createGraph(outputCollectionLabel, outputVertices, new long[0]);
   }
 
-  protected abstract Preprocessor getPreprocessor();
+  public Stream<DFSCodeEmbeddingsPair> filterAndOutput(Consumer<DFSCodeEmbeddingsPair> store, Predicate<DFSCodeEmbeddingsPair> patternPredicate, Stream<Map.Entry<DFSCode, List<DFSEmbedding>>> candidateStream) {
+    return candidateStream
+      .map(ADD_SUPPORT)
+      .filter(patternPredicate)
+      .peek(store);
+  }
 
-  protected abstract FilterOrOutput<DFSCodeEmbeddingsPair> getFilterAndOutput(List<CachedGraph> rawInput, GraphDB db);
-
-
+  protected abstract Map<Long,CachedGraph> preprocess(Map<Long, CachedGraph> input);
 }
