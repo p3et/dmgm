@@ -1,6 +1,6 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
 
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.CachedGraph;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.Preprocessor;
 
 import java.util.Map;
@@ -16,7 +16,7 @@ public abstract class PreprocessorBase implements Preprocessor {
     this.minSupport = minSupport;
   }
 
-  protected Set<Integer> getFrequentLabels(Stream<SmallGraph> graphs, Function<SmallGraph, Stream<Integer>> labelSelector, Integer minSupportAbsolute) {
+  protected Set<Integer> getFrequentLabels(Stream<CachedGraph> graphs, Function<CachedGraph, Stream<Integer>> labelSelector, Integer minSupportAbsolute) {
     return graphs
           .flatMap(labelSelector)
           .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))

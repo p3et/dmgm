@@ -1,8 +1,8 @@
 package org.biiig.dmgm.impl.loader.tlf;
 
 import org.biiig.dmgm.DMGMTestBase;
-import org.biiig.dmgm.api.HyperVertexDB;
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.GraphDB;
+import org.biiig.dmgm.api.CachedGraph;
 import org.biiig.dmgm.impl.loader.TLFConstants;
 import org.junit.Test;
 
@@ -16,15 +16,16 @@ public class TLFReaderTest extends DMGMTestBase {
 
   @Test
   public void testRead() throws IOException {
-    HyperVertexDB database = getPredictableDatabase();
+    GraphDB database = getPredictableDatabase();
 
     int graphLabel = database.encode(TLFConstants.GRAPH_SYMBOL);
     int colLabel = database.encode("COL");
 
-    long cid = database.createCollectionByLabel(graphLabel, colLabel);
+    long[] graphIds = database.getElementsByLabel(i -> i == graphLabel);
+    long cid = database.createCollection(colLabel, graphIds);
 
 
-    List<SmallGraph> graphCollection = database.getCollection(cid);
+    List<CachedGraph> graphCollection = database.getCachedCollection(cid);
 
     assertEquals("graph count", 10, graphCollection.size());
 

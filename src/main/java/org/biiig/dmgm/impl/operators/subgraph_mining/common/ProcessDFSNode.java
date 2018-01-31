@@ -3,32 +3,28 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 import de.jesemann.paralleasy.recursion.Children;
 import de.jesemann.paralleasy.recursion.Output;
 import de.jesemann.paralleasy.recursion.RecursionStep;
-import javafx.util.Pair;
-import org.biiig.dmgm.api.HyperVertexDB;
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.GraphDB;
+import org.biiig.dmgm.api.CachedGraph;
 import org.biiig.dmgm.impl.graph.DFSCode;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-public class ProcessDFSNode implements RecursionStep<DFSCodeEmbeddingsPair, Consumer<HyperVertexDB>> {
+public class ProcessDFSNode implements RecursionStep<DFSCodeEmbeddingsPair, Consumer<GraphDB>> {
 
 
-  private final List<SmallGraph> input;
+  private final List<CachedGraph> input;
   private final FilterOrOutput<DFSCodeEmbeddingsPair> filterOrOutput;
   private final int maxEdgeCount;
 
-  ProcessDFSNode(List<SmallGraph> input, FilterOrOutput<DFSCodeEmbeddingsPair> filterOrOutput, int maxEdgeCount) {
+  ProcessDFSNode(List<CachedGraph> input, FilterOrOutput<DFSCodeEmbeddingsPair> filterOrOutput, int maxEdgeCount) {
     this.input = input;
     this.filterOrOutput = filterOrOutput;
     this.maxEdgeCount = maxEdgeCount;
   }
 
   @Override
-  public void process(DFSCodeEmbeddingsPair pair, Children<DFSCodeEmbeddingsPair> children, Output<Consumer<HyperVertexDB>> output) {
+  public void process(DFSCodeEmbeddingsPair pair, Children<DFSCodeEmbeddingsPair> children, Output<Consumer<GraphDB>> output) {
     DFSCode parentCode = pair.getDFSCode();
 
     int[] rightmostPath = parentCode.getRightmostPath();

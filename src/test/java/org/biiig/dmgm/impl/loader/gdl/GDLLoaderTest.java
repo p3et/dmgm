@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.loader.gdl;
 
-import org.biiig.dmgm.api.HyperVertexDB;
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.GraphDB;
+import org.biiig.dmgm.api.CachedGraph;
 import org.biiig.dmgm.impl.loader.GDLLoader;
 import org.junit.Test;
 
@@ -15,13 +15,14 @@ public class GDLLoaderTest {
   public void testSimpleGraph() {
     String gdl = "g1:G[(v1:A)-[:a]->(v1)-[:b]->(:B)], g2:G[(v1:A)-[:a]->(v1)-[:c]->(:C)]";
 
-    HyperVertexDB db = GDLLoader.fromString(gdl).get();
+    GraphDB db = GDLLoader.fromString(gdl).get();
 
     int graphLabel = db.encode("G");
     int colLabel = db.encode("COL");
 
-    Long colId = db.createCollectionByLabel(graphLabel, colLabel);
-    List<SmallGraph> graphCollection = db.getCollection(colId);
+    long[] graphIds = db.getElementsByLabel(i -> i == graphLabel);
+    Long colId = db.createCollection(colLabel, graphIds);
+    List<CachedGraph> graphCollection = db.getCachedCollection(colId);
 
     assertEquals("graph count", 2, graphCollection.size());
 

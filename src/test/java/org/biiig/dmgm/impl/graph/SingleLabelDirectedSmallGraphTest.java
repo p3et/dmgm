@@ -1,11 +1,9 @@
 package org.biiig.dmgm.impl.graph;
 
 import org.biiig.dmgm.DMGMTestBase;
-import org.biiig.dmgm.api.SmallGraph;
-import org.junit.Test;
+import org.biiig.dmgm.api.CachedGraph;
 
 import java.util.Objects;
-import java.util.function.Supplier;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -17,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 public abstract class SingleLabelDirectedSmallGraphTest extends DMGMTestBase {
 
 
-  protected void test(SmallGraph graph, int lab0, int lab1) {
+  protected void test(CachedGraph graph, int lab0, int lab1) {
     assertEquals("vertex count", 2, graph.getVertexCount());
     assertEquals("vertex format 0", lab0, graph.getVertexLabel(0));
     assertEquals("vertex format 1", lab1, graph.getVertexLabel(1));

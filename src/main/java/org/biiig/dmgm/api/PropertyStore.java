@@ -4,7 +4,13 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
 
+/**
+ * A storage for labels and typed properties.
+ */
 public interface PropertyStore {
+
+
+
   void set(long id, int key, boolean value);
   boolean is(long id, int key);
 
@@ -30,4 +36,6 @@ public interface PropertyStore {
   void set(long id, int key, String[] values);
   void add(long id, int key, String value);
   String[] getStrings(long id, int key);
+
+
 }

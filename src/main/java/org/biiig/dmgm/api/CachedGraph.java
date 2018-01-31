@@ -5,7 +5,7 @@ import java.util.stream.IntStream;
 /**
  * A directed graph with integer labels.
  */
-public interface SmallGraph {
+public interface CachedGraph {
   long getId();
   int getLabel();
 
@@ -24,5 +24,5 @@ public interface SmallGraph {
   IntStream vertexIdStream();
   IntStream edgeIdStream();
 
-  String toString(HyperVertexDB db);
+  String toString(GraphDB db);
 }

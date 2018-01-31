@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.statistics;
 
 import org.biiig.dmgm.DMGMTestBase;
-import org.biiig.dmgm.api.HyperVertexDB;
+import org.biiig.dmgm.api.GraphDB;
 import org.biiig.dmgm.impl.loader.TLFConstants;
 import org.junit.Test;
 
@@ -12,13 +12,14 @@ import static org.junit.Assert.assertTrue;
 
 public class VertexLabelSupportTest extends DMGMTestBase {
 
-  private final HyperVertexDB db;
+  private final GraphDB db;
   private final long cid;
 
   public VertexLabelSupportTest() throws IOException {
     db = getPredictableDatabase();
     int label = db.encode(TLFConstants.GRAPH_SYMBOL);
-    this.cid = db.createCollectionByLabel(label, label);
+    long[] graphIds = db.getElementsByLabel(i -> i == label);
+    this.cid = db.createCollection(label, graphIds);
   }
 
   @Test

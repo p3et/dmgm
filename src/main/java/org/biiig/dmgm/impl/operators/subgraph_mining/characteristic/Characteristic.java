@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
 
 import com.google.common.collect.Maps;
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.CachedGraph;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.Preprocessor;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.Supportable;
@@ -14,7 +14,7 @@ public interface Characteristic {
     return new CharacteristicLabels(minSupport);
   }
 
-  default <T extends Supportable> FilterOrOutput<T> getCharacteristicFilter(List<SmallGraph> rawInput, float minSupport, Interestingness interestingness) {
+  default <T extends Supportable> FilterOrOutput<T> getCharacteristicFilter(List<CachedGraph> rawInput, float minSupport, Interestingness interestingness) {
     Map<Integer, Integer> labelCounts = Maps.newHashMap();
     Map<Integer, Integer> graphLabel = Maps.newHashMap();
 

@@ -1,6 +1,6 @@
 package org.biiig.dmgm.impl.graph;
 
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.CachedGraph;
 import org.junit.Test;
 
 public class SourceTargetMuxTest extends SingleLabelDirectedSmallGraphTest {
@@ -9,7 +9,7 @@ public class SourceTargetMuxTest extends SingleLabelDirectedSmallGraphTest {
     int lab0 = 0;
     int lab1 = 1;
 
-    SmallGraph graph = new SmallGraphBase(
+    CachedGraph graph = new CachedGraphBase(
       0L,
       0,
       new int[] {lab0, lab1},

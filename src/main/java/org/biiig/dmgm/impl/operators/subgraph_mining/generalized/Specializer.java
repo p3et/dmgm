@@ -3,7 +3,7 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.generalized;
 import com.google.common.collect.Lists;
 import de.jesemann.paralleasy.recursion.RecursionStrategy;
 import de.jesemann.paralleasy.recursion.RecursiveTask;
-import org.biiig.dmgm.api.HyperVertexDB;
+import org.biiig.dmgm.api.GraphDB;
 import org.biiig.dmgm.api.PropertyStore;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCodeEmbeddingsPair;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class Specializer implements Function<DFSCodeEmbeddingsPair, Collection<Consumer<HyperVertexDB>>> {
+public class Specializer implements Function<DFSCodeEmbeddingsPair, Collection<Consumer<GraphDB>>> {
 
   private final PropertyStore dataStore;
   private final FilterOrOutput<PatternVectorsPair> filter;
@@ -28,7 +28,7 @@ public class Specializer implements Function<DFSCodeEmbeddingsPair, Collection<C
   }
 
   @Override
-  public Collection<Consumer<HyperVertexDB>> apply(DFSCodeEmbeddingsPair pair) {
+  public Collection<Consumer<GraphDB>> apply(DFSCodeEmbeddingsPair pair) {
     List<MultiDimensionalVector> vectors = pair
       .getEmbeddings()
       .stream()
@@ -37,7 +37,7 @@ public class Specializer implements Function<DFSCodeEmbeddingsPair, Collection<C
 
     DFSCode pattern = pair.getDFSCode();
 
-    RecursiveTask<PatternVectorsPair, Consumer<HyperVertexDB>> recursiveTask = RecursiveTask
+    RecursiveTask<PatternVectorsPair, Consumer<GraphDB>> recursiveTask = RecursiveTask
       .createFor(new Specialize(pattern, filter))
       .on(Lists.newArrayList(new PatternVectorsPair(pattern, vectors)))
       .withStrategy(RecursionStrategy.SEQUENTIAL);

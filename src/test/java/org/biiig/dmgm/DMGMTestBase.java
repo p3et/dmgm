@@ -3,9 +3,9 @@ package org.biiig.dmgm;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.biiig.dmgm.api.DMGraphFormatter;
-import org.biiig.dmgm.api.HyperVertexDB;
-import org.biiig.dmgm.api.HyperVertexOperator;
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.GraphDB;
+import org.biiig.dmgm.api.CollectionOperator;
+import org.biiig.dmgm.api.CachedGraph;
 import org.biiig.dmgm.impl.loader.GDLLoader;
 import org.biiig.dmgm.impl.loader.TLFLoader;
 import org.biiig.dmgm.impl.to_string.cam.CAMGraphFormatter;
@@ -26,16 +26,16 @@ public class DMGMTestBase {
   String EXPECTATION_GRAPH_LABEL = "EX";
 
 
-  protected HyperVertexDB getPredictableDatabase() throws IOException {
+  protected GraphDB getPredictableDatabase() throws IOException {
     String inputPath = TLFLoader.class.getResource("/samples/predictable.tlf").getFile();
     return TLFLoader
       .fromFile(inputPath)
       .get();
   }
 
-  protected boolean equal(HyperVertexDB db, long expId, long resId) {
-    Collection<SmallGraph> expected = db.getCollection(expId);
-    Collection<SmallGraph> actual = db.getCollection(resId);
+  protected boolean equal(GraphDB db, long expId, long resId) {
+    Collection<CachedGraph> expected = db.getCachedCollection(expId);
+    Collection<CachedGraph> actual = db.getCachedCollection(resId);
 
     boolean equal = expected.size() == actual.size();
 
@@ -88,7 +88,7 @@ public class DMGMTestBase {
     }
   }
 
-  private Map<String, String> getCanonicalPrintLabelMap(Collection<SmallGraph> expected, HyperVertexDB db) {
+  private Map<String, String> getCanonicalPrintLabelMap(Collection<CachedGraph> expected, GraphDB db) {
     DMGraphFormatter keyFormatter =
       new CAMGraphFormatter(db);
 
@@ -96,7 +96,7 @@ public class DMGMTestBase {
       new ELGraphFormatter(db);
 
     Map<String, String> canonicalLabels = Maps.newHashMapWithExpectedSize(expected.size());
-    for (SmallGraph graph : expected) {
+    for (CachedGraph graph : expected) {
       canonicalLabels.put(keyFormatter.format(graph), valueFormatter.format(graph));
     }
 
@@ -114,13 +114,19 @@ public class DMGMTestBase {
 //    }
 //  }
 
-  protected void runAndTestExpectation(HyperVertexOperator operator, String gdl) {
-    HyperVertexDB db = GDLLoader
+  protected void runAndTestExpectation(CollectionOperator operator, String gdl) {
+    GraphDB db = GDLLoader
       .fromString(gdl)
       .get();
 
-    long inId = db.createCollectionByLabel(db.encode(INPUT_GRAPH_LABEL), 0);
-    long exId = db.createCollectionByLabel(db.encode(EXPECTATION_GRAPH_LABEL), 0);
+    int inLabel = db.encode(INPUT_GRAPH_LABEL);
+    long[] inIds = db.getElementsByLabel(l -> l == inLabel);
+    long inId = db.createCollection(inLabel, inIds);
+
+
+    int exLabel = db.encode(EXPECTATION_GRAPH_LABEL);
+    long[] exIds = db.getElementsByLabel(l -> l == exLabel);
+    long exId = db.createCollection(exLabel, exIds);
     long outId = operator.apply(db, inId);
 
     assertTrue(equal(db, exId, outId));

@@ -1,8 +1,8 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
 
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
-import org.biiig.dmgm.api.HyperVertexDB;
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.GraphDB;
+import org.biiig.dmgm.api.CachedGraph;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DistinctEdgeLabels;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DistinctVertexLabels;
 
@@ -21,10 +21,10 @@ public class CharacteristicLabels extends PreprocessorBase {
   }
 
   @Override
-  public List<SmallGraph> apply(List<SmallGraph> collection, HyperVertexDB db) {
+  public List<CachedGraph> apply(List<CachedGraph> collection, GraphDB db) {
     Set<Integer> frequentVertexLabels = getCategoryFrequentLabels(collection, new DistinctVertexLabels());
 
-    List<SmallGraph> vertexPrunedCollection = collection
+    List<CachedGraph> vertexPrunedCollection = collection
       .stream()
 //      .map(new PruneVertices(frequentVertexLabels))
       .collect(Collectors.toList());
@@ -38,10 +38,10 @@ public class CharacteristicLabels extends PreprocessorBase {
       .collect(Collectors.toList());
   }
 
-  private Set<Integer> getCategoryFrequentLabels(List<SmallGraph> collection, Function<SmallGraph, Stream<Integer>> labelSelector) {
-    Map<Integer, List<SmallGraph>> categorizedGraphs = collection
+  private Set<Integer> getCategoryFrequentLabels(List<CachedGraph> collection, Function<CachedGraph, Stream<Integer>> labelSelector) {
+    Map<Integer, List<CachedGraph>> categorizedGraphs = collection
       .stream()
-      .collect(new GroupByKeyListValues<>(SmallGraph::getLabel, Function.identity()));
+      .collect(new GroupByKeyListValues<>(CachedGraph::getLabel, Function.identity()));
 
     return categorizedGraphs
       .values()

@@ -5,7 +5,7 @@ import de.jesemann.paralleasy.recursion.Children;
 import de.jesemann.paralleasy.recursion.Output;
 import de.jesemann.paralleasy.recursion.RecursionStep;
 import javafx.util.Pair;
-import org.biiig.dmgm.api.HyperVertexDB;
+import org.biiig.dmgm.api.GraphDB;
 import org.biiig.dmgm.impl.graph.DFSCode;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
 
@@ -16,7 +16,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Specialize
-  implements RecursionStep<PatternVectorsPair, Consumer<HyperVertexDB>> {
+  implements RecursionStep<PatternVectorsPair, Consumer<GraphDB>> {
 
 
   private final AllSpecializations allSpecializations;
@@ -33,10 +33,10 @@ public class Specialize
   public void process(
     PatternVectorsPair parent,
     Children<PatternVectorsPair> children,
-    Output<Consumer<HyperVertexDB>> output
+    Output<Consumer<GraphDB>> output
   ) {
 
-    List<Pair<Optional<PatternVectorsPair>, Optional<Consumer<HyperVertexDB>>>> childPairs = parent
+    List<Pair<Optional<PatternVectorsPair>, Optional<Consumer<GraphDB>>>> childPairs = parent
       .getVectors()
       .stream()
       .flatMap(allSpecializations)

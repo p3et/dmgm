@@ -1,11 +1,8 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.frequent;
 
-import org.biiig.dmgm.api.HyperVertexDB;
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.GraphDB;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterAndOutputFactory;
-
-import java.util.List;
 
 public class FrequentFactory implements FilterAndOutputFactory {
 
@@ -16,7 +13,7 @@ public class FrequentFactory implements FilterAndOutputFactory {
   }
 
   @Override
-  public FilterOrOutput create(HyperVertexDB db) {
+  public FilterOrOutput create(GraphDB db) {
     return new FrequentFilter(minSupportAbsolute);
   }
 }

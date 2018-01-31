@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.frequent;
 
 import javafx.util.Pair;
-import org.biiig.dmgm.api.HyperVertexDB;
+import org.biiig.dmgm.api.GraphDB;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.Supportable;
 
@@ -17,13 +17,13 @@ public class FrequentFilter<T extends Supportable> implements FilterOrOutput<T> 
   }
 
   @Override
-  public Pair<Optional<T>, Optional<Consumer<HyperVertexDB>>> apply(T supportable) {    int embeddingCount = supportable.getFrequency();
+  public Pair<Optional<T>, Optional<Consumer<GraphDB>>> apply(T supportable) {    int embeddingCount = supportable.getFrequency();
     long support = supportable.getSupport();
 
     boolean frequent = support >= minSupportAbsolute;
 
     Optional<T> child;
-    Optional<Consumer<HyperVertexDB>> store;
+    Optional<Consumer<GraphDB>> store;
 
     if (frequent) {
       child = Optional.of(supportable);

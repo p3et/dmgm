@@ -1,6 +1,6 @@
 package org.biiig.dmgm.impl.graph;
 
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.CachedGraph;
 import org.junit.Test;
 
 public class DFSCodeTest extends SingleLabelDirectedSmallGraphTest {
@@ -14,7 +14,7 @@ public class DFSCodeTest extends SingleLabelDirectedSmallGraphTest {
     int lab0 = 0;
     int lab1 = 1;
 
-    SmallGraph graph = new DFSCode(
+    CachedGraph graph = new DFSCode(
       0, new int[] {lab0, lab1},
       new int[] {lab0, lab1},
       new int[] {0, 0},

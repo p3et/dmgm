@@ -1,6 +1,6 @@
 package org.biiig.dmgm.impl.graph;
 
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.CachedGraph;
 import org.junit.Test;
 
 public class AdjacencyListTest extends SingleLabelDirectedSmallGraphTest {
@@ -10,7 +10,7 @@ public class AdjacencyListTest extends SingleLabelDirectedSmallGraphTest {
     int lab0 = 0;
     int lab1 = 1;
 
-    SmallGraph graph = new AdjacencyList(
+    CachedGraph graph = new AdjacencyList(
       0L,
       0,
       new int[] {lab0, lab1},

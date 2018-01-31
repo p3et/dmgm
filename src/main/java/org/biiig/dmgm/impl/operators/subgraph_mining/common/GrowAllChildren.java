@@ -1,6 +1,6 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.CachedGraph;
 import org.biiig.dmgm.impl.graph.DFSCode;
 
 import java.util.Map;
@@ -8,9 +8,9 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class GrowAllChildren implements Function<DFSCodeEmbeddingsPair, Stream<DFSCodeEmbeddingPair>> {
-  private final Map<Long, SmallGraph> input;
+  private final Map<Long, CachedGraph> input;
 
-  public GrowAllChildren(Map<Long, SmallGraph> input) {
+  public GrowAllChildren(Map<Long, CachedGraph> input) {
     this.input = input;
   }
 

@@ -2,10 +2,10 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
 import com.google.common.collect.Maps;
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
-import org.biiig.dmgm.api.HyperVertexDB;
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.GraphDB;
+import org.biiig.dmgm.api.CachedGraph;
 import org.biiig.dmgm.impl.graph.DFSCode;
-import org.biiig.dmgm.impl.operators.HyperVertexOperatorBase;
+import org.biiig.dmgm.impl.operators.CollectionOperatorBase;
 
 import java.util.List;
 import java.util.Map;
@@ -16,7 +16,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class SubgraphMiningBase extends HyperVertexOperatorBase {
+public abstract class SubgraphMiningBase extends CollectionOperatorBase {
   private static final GroupByKeyListValues<DFSCodeEmbeddingPair, DFSCode, DFSEmbedding> AGGREGATION = new GroupByKeyListValues<>(DFSCodeEmbeddingPair::getDfsCode, DFSCodeEmbeddingPair::getEmbedding);
 
   private static final Predicate<DFSCode> IS_MINIMAL = new IsMinimal();
@@ -35,16 +35,16 @@ public abstract class SubgraphMiningBase extends HyperVertexOperatorBase {
 
   // ORCHESTRATION
   @Override
-  public Long apply(HyperVertexDB database, Long collectionId) {
+  public Long apply(GraphDB database, Long collectionId) {
     int supportKey = database.encode(SubgraphMiningPropertyKeys.SUPPORT);
     int frequencyKey = database.encode(SubgraphMiningPropertyKeys.FREQUENCY);
     int dfsCodeKey = database.encode(SubgraphMiningPropertyKeys.DFS_CODE);
     int patternLabel = database.encode(FSG_LABEL);
     int outputCollectionLabel = database.encode(FSG_LABEL);
 
-    Map<DFSCode, BiConsumer<HyperVertexDB, Long>> output = Maps.newConcurrentMap();
+    Map<DFSCode, BiConsumer<GraphDB, Long>> output = Maps.newConcurrentMap();
 
-    Function<SmallGraph, Stream<DFSCodeEmbeddingPair>> initializeParents = new InitializeParents(patternLabel);
+    Function<CachedGraph, Stream<DFSCodeEmbeddingPair>> initializeParents = new InitializeParents(patternLabel);
     
     Consumer<DFSCodeEmbeddingsPair> store =
       s -> output.put(s.getDFSCode(), (db, gid) -> {
@@ -52,10 +52,10 @@ public abstract class SubgraphMiningBase extends HyperVertexOperatorBase {
         db.set(gid, frequencyKey, s.getFrequency());
       });
     
-    Map<Long, SmallGraph> input = database
-      .getCollection(collectionId)
+    Map<Long, CachedGraph> input = database
+      .getCachedCollection(collectionId)
       .stream()
-      .collect(Collectors.toMap(SmallGraph::getId, Function.identity()));
+      .collect(Collectors.toMap(CachedGraph::getId, Function.identity()));
 
     long minSupportAbsolute = Math.round(input.size() * minSupport);
 
@@ -95,7 +95,7 @@ public abstract class SubgraphMiningBase extends HyperVertexOperatorBase {
       .stream()
       .mapToLong(entry -> {
         DFSCode dfsCode = entry.getKey();
-        long id = database.createHyperVertex(dfsCode);
+        long id = createGraph(database, dfsCode);
         database.set(id, dfsCodeKey, dfsCode.toString(database));
         entry.getValue().accept(database, id);
         return id;
@@ -103,12 +103,12 @@ public abstract class SubgraphMiningBase extends HyperVertexOperatorBase {
       .toArray();
 
 
-    return database.createHyperVertex(outputCollectionLabel, outputVertices, new long[0]);
+    return database.createGraph(outputCollectionLabel, outputVertices, new long[0]);
   }
 
   protected abstract Preprocessor getPreprocessor();
 
-  protected abstract FilterOrOutput<DFSCodeEmbeddingsPair> getFilterAndOutput(List<SmallGraph> rawInput, HyperVertexDB db);
+  protected abstract FilterOrOutput<DFSCodeEmbeddingsPair> getFilterAndOutput(List<CachedGraph> rawInput, GraphDB db);
 
 
 }

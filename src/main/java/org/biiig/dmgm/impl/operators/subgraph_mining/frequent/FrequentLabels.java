@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.frequent;
 
-import org.biiig.dmgm.api.HyperVertexDB;
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.GraphDB;
+import org.biiig.dmgm.api.CachedGraph;
 import org.biiig.dmgm.impl.operators.subgraph.FilterVerticesAndEdgesByLabel;
 import org.biiig.dmgm.impl.operators.subgraph_mining.characteristic.PreprocessorBase;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DistinctEdgeLabels;
@@ -18,13 +18,13 @@ public class FrequentLabels extends PreprocessorBase {
   }
 
   @Override
-  public List<SmallGraph> apply(List<SmallGraph> collection, HyperVertexDB builder) {
+  public List<CachedGraph> apply(List<CachedGraph> collection, GraphDB builder) {
     Integer minSupportAbsolute = Math.round(collection.size() * minSupport);
 
     Set<Integer> frequentVertexLabels =
       getFrequentLabels(collection.stream(), new DistinctVertexLabels(), minSupportAbsolute);
 
-    List<SmallGraph> vertexPrunedCollection = collection
+    List<CachedGraph> vertexPrunedCollection = collection
         .stream()
         .map(new FilterVerticesAndEdgesByLabel(frequentVertexLabels::contains, i -> true, true))
         .collect(Collectors.toList());

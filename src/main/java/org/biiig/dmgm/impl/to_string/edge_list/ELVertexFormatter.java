@@ -1,17 +1,17 @@
 package org.biiig.dmgm.impl.to_string.edge_list;
 
-import org.biiig.dmgm.api.HyperVertexDB;
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.GraphDB;
+import org.biiig.dmgm.api.CachedGraph;
 
 public class ELVertexFormatter {
 
-  private final HyperVertexDB vertexDictionary;
+  private final GraphDB vertexDictionary;
 
-  public ELVertexFormatter(HyperVertexDB db) {
+  public ELVertexFormatter(GraphDB db) {
     this.vertexDictionary = db;
   }
 
-  public String format(SmallGraph graph, int vertexId) {
+  public String format(CachedGraph graph, int vertexId) {
     return "(" + vertexId + ":" + vertexDictionary.decode(graph.getVertexLabel(vertexId)) + ")";
   }
 }

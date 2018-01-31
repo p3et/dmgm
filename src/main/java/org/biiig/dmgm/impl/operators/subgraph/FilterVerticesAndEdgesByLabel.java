@@ -1,14 +1,14 @@
 package org.biiig.dmgm.impl.operators.subgraph;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.api.SmallGraph;
-import org.biiig.dmgm.impl.graph.SmallGraphBase;
+import org.biiig.dmgm.api.CachedGraph;
+import org.biiig.dmgm.impl.graph.CachedGraphBase;
 
 import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.stream.IntStream;
 
-public class FilterVerticesAndEdgesByLabel implements Function<SmallGraph, SmallGraph> {
+public class FilterVerticesAndEdgesByLabel implements Function<CachedGraph, CachedGraph> {
   public static final IntPredicate NO_PREDICATE = i -> true;
 
   private final IntPredicate vertexLabelPredicate;
@@ -22,7 +22,7 @@ public class FilterVerticesAndEdgesByLabel implements Function<SmallGraph, Small
   }
 
   @Override
-  public SmallGraph apply(SmallGraph graph) {
+  public CachedGraph apply(CachedGraph graph) {
     int[] vertexCandidates = graph
       .vertexIdStream()
       .filter(v -> vertexLabelPredicate.test(graph.getVertexLabel(v)))
@@ -79,6 +79,6 @@ public class FilterVerticesAndEdgesByLabel implements Function<SmallGraph, Small
         targetIds[edgeId] = vertexIdMap[graph.getTargetId(edgeId)];
       });
 
-    return new SmallGraphBase(graph.getId(), graph.getLabel(), vertexLabels, edgeLabels, sourceIds, targetIds);
+    return new CachedGraphBase(graph.getId(), graph.getLabel(), vertexLabels, edgeLabels, sourceIds, targetIds);
   }
 }

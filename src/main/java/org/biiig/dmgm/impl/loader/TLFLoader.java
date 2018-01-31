@@ -2,8 +2,8 @@ package org.biiig.dmgm.impl.loader;
 
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.api.HyperVertexDB;
-import org.biiig.dmgm.impl.db.HyperVertexDBBase;
+import org.biiig.dmgm.api.GraphDB;
+import org.biiig.dmgm.impl.db.GraphDBBase;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class TLFLoader implements Supplier<HyperVertexDB> {
+public class TLFLoader implements Supplier<GraphDB> {
   private final String filePath;
 
   private TLFLoader(String filePath) {
@@ -24,8 +24,8 @@ public class TLFLoader implements Supplier<HyperVertexDB> {
   }
 
   @Override
-  public HyperVertexDB get() {
-    HyperVertexDB db = new HyperVertexDBBase();
+  public GraphDB get() {
+    GraphDB db = new GraphDBBase();
 
     try {
       Iterator<String> iterator = Files.lines(Paths.get(filePath)).iterator();
@@ -66,17 +66,17 @@ public class TLFLoader implements Supplier<HyperVertexDB> {
     return db;
   }
 
-  private void readGraph(HyperVertexDB db, String line, long[] vertexIds, long[] edgeIds) {
+  private void readGraph(GraphDB db, String line, long[] vertexIds, long[] edgeIds) {
     String[] split = line.split(TLFConstants.FIELD_SEPARATOR);
 
     String label = split.length > TLFConstants.GRAPH_LABEL_INDEX ?
       split[TLFConstants.GRAPH_LABEL_INDEX] :
       TLFConstants.GRAPH_SYMBOL;
 
-    db.createHyperVertex(db.encode(label), vertexIds, edgeIds);
+    db.createGraph(db.encode(label), vertexIds, edgeIds);
   }
 
-  private long readVertex(HyperVertexDB db, String line, Map<String, Long> vertexIdMap) {
+  private long readVertex(GraphDB db, String line, Map<String, Long> vertexIdMap) {
     String[] split = line.split(TLFConstants.FIELD_SEPARATOR);
 
     String label = split[TLFConstants.VERTEX_LABEL_INDEX];
@@ -88,7 +88,7 @@ public class TLFLoader implements Supplier<HyperVertexDB> {
     return dbId;
   }
 
-  private long readEdge(HyperVertexDB db, String line, Map<String, Long> vertexIdMap) {
+  private long readEdge(GraphDB db, String line, Map<String, Long> vertexIdMap) {
     String[] split = line.split(TLFConstants.FIELD_SEPARATOR);
 
     String source = split[TLFConstants.EDGE_SOURCE_INDEX];

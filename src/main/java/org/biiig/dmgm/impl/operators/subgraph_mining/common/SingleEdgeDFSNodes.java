@@ -1,8 +1,8 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
 import javafx.util.Pair;
-import org.biiig.dmgm.api.HyperVertexDB;
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.GraphDB;
+import org.biiig.dmgm.api.CachedGraph;
 
 import java.util.Collection;
 import java.util.List;
@@ -11,17 +11,17 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class SingleEdgeDFSNodes implements Runnable {
-  private final List<SmallGraph> input;
+  private final List<CachedGraph> input;
   private final FilterOrOutput<DFSCodeEmbeddingsPair> filterOrOutput;
-  private Collection<Consumer<HyperVertexDB>> output;
+  private Collection<Consumer<GraphDB>> output;
   private Collection<DFSCodeEmbeddingsPair> singleEdgeDFSNodes;
 
-  public SingleEdgeDFSNodes(List<SmallGraph> input, FilterOrOutput<DFSCodeEmbeddingsPair> filterOrOutput) {
+  public SingleEdgeDFSNodes(List<CachedGraph> input, FilterOrOutput<DFSCodeEmbeddingsPair> filterOrOutput) {
     this.input = input;
     this.filterOrOutput = filterOrOutput;
   }
 
-  public Collection<Consumer<HyperVertexDB>> getOutput() {
+  public Collection<Consumer<GraphDB>> getOutput() {
     return output;
   }
 
@@ -32,7 +32,7 @@ public class SingleEdgeDFSNodes implements Runnable {
 
   @Override
   public void run() {
-    List<Pair<Optional<DFSCodeEmbeddingsPair>, Optional<Consumer<HyperVertexDB>>>> initalized =
+    List<Pair<Optional<DFSCodeEmbeddingsPair>, Optional<Consumer<GraphDB>>>> initalized =
       input
         .stream()
         .flatMap(new InitializeParents(0))

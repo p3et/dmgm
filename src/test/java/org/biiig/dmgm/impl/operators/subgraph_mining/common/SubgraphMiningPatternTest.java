@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
 import org.biiig.dmgm.DMGMTestBase;
-import org.biiig.dmgm.api.HyperVertexOperator;
+import org.biiig.dmgm.api.CollectionOperator;
 import org.junit.Test;
 
 public abstract class SubgraphMiningPatternTest extends DMGMTestBase {
@@ -45,6 +45,6 @@ public abstract class SubgraphMiningPatternTest extends DMGMTestBase {
     runAndTestExpectation(getOperator(), SubgraphMiningTestData.MULTI_LABELED_CIRCLE_INPUT);
   }
 
-  protected abstract HyperVertexOperator getOperator();
+  protected abstract CollectionOperator getOperator();
 
 }

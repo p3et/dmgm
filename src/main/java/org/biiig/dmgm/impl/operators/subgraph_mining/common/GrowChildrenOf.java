@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.CachedGraph;
 import org.biiig.dmgm.impl.graph.DFSCode;
 
 import java.util.Map;
@@ -14,16 +14,16 @@ public class GrowChildrenOf implements Function<DFSEmbedding, Stream<DFSCodeEmbe
   private final GrowChildrenByIncomingEdges growChildrenByIncomingEdges = new GrowChildrenByIncomingEdges();
   private final DFSCode parent;
   private final int[] rightmostPaath;
-  private final Map<Long, SmallGraph> input;
+  private final Map<Long, CachedGraph> input;
 
-  public GrowChildrenOf(DFSCode parent, Map<Long, SmallGraph> input) {
+  public GrowChildrenOf(DFSCode parent, Map<Long, CachedGraph> input) {
     this.input = input;
     this.parent = parent;
     this.rightmostPaath = parent.getRightmostPath();
   }
 
 
-  public DFSCodeEmbeddingPair[] apply(SmallGraph graph, DFSCode parent, int[] rightmostPath, DFSEmbedding parentEmbedding) {
+  public DFSCodeEmbeddingPair[] apply(CachedGraph graph, DFSCode parent, int[] rightmostPath, DFSEmbedding parentEmbedding) {
 
     DFSCodeEmbeddingPair[] children =
       growChildrenByOutgoingEdges.apply(graph, parent, rightmostPath, parentEmbedding);
@@ -36,7 +36,7 @@ public class GrowChildrenOf implements Function<DFSEmbedding, Stream<DFSCodeEmbe
 
   @Override
   public Stream<DFSCodeEmbeddingPair> apply(DFSEmbedding dfsEmbedding) {
-    SmallGraph graph = input.get(dfsEmbedding.getGraphId());
+    CachedGraph graph = input.get(dfsEmbedding.getGraphId());
 
     DFSCodeEmbeddingPair[] outChildren = growChildrenByOutgoingEdges
       .apply(graph, parent, rightmostPaath, dfsEmbedding);

@@ -4,8 +4,8 @@ import com.google.common.collect.Maps;
 import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.biiig.dmgm.api.HyperVertexDB;
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.GraphDB;
+import org.biiig.dmgm.api.CachedGraph;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SubgraphMiningBase;
 
@@ -19,7 +19,7 @@ public abstract class GeneralizedSubgraphsBase extends SubgraphMiningBase {
     super(minSupport, maxEdgeCount);
   }
 
-  protected Specializer getSpecializer(List<SmallGraph> rawInput, FilterOrOutput<PatternVectorsPair> vectorFilter, HyperVertexDB db, int taxonomyPathKey) {
+  protected Specializer getSpecializer(List<CachedGraph> rawInput, FilterOrOutput<PatternVectorsPair> vectorFilter, GraphDB db, int taxonomyPathKey) {
     Specializer spezializer = new Specializer(db, vectorFilter, taxonomyPathKey);
     Map<Integer, Pair<Integer, int[]>> pathCache = Maps.newConcurrentMap();
 

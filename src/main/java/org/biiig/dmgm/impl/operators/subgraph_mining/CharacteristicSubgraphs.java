@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining;
 
-import org.biiig.dmgm.api.HyperVertexDB;
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.GraphDB;
+import org.biiig.dmgm.api.CachedGraph;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCodeEmbeddingsPair;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.Preprocessor;
@@ -34,7 +34,7 @@ public class CharacteristicSubgraphs extends SubgraphMiningBase implements Chara
   }
 
   @Override
-  protected FilterOrOutput<DFSCodeEmbeddingsPair> getFilterAndOutput(List<SmallGraph> rawInput, HyperVertexDB db) {
+  protected FilterOrOutput<DFSCodeEmbeddingsPair> getFilterAndOutput(List<CachedGraph> rawInput, GraphDB db) {
     return getCharacteristicFilter(rawInput, minSupport, interestingness);
   }
 }

@@ -1,14 +1,14 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.CachedGraph;
 import org.biiig.dmgm.impl.graph.DFSCode;
 
 public abstract class GrowChildrenBase implements GrowChildren {
 
   @Override
   public DFSCodeEmbeddingPair[] apply(
-    SmallGraph graph, DFSCode parentCode, int[] rightmostPath, DFSEmbedding parentEmbedding) {
+    CachedGraph graph, DFSCode parentCode, int[] rightmostPath, DFSEmbedding parentEmbedding) {
 
     DFSCodeEmbeddingPair[] children = new DFSCodeEmbeddingPair[0];
 
@@ -55,9 +55,9 @@ public abstract class GrowChildrenBase implements GrowChildren {
     return children;
   }
 
-  protected abstract int[] getEdgeIds(SmallGraph graph, int fromId);
+  protected abstract int[] getEdgeIds(CachedGraph graph, int fromId);
 
-  protected abstract int getToId(SmallGraph graph, int edgeId);
+  protected abstract int getToId(CachedGraph graph, int edgeId);
 
   protected abstract boolean isOutgoing();
 }

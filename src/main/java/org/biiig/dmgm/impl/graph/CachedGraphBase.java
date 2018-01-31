@@ -1,13 +1,13 @@
 package org.biiig.dmgm.impl.graph;
 
-import org.biiig.dmgm.api.HyperVertexDB;
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.GraphDB;
+import org.biiig.dmgm.api.CachedGraph;
 
 import java.util.Arrays;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
-public class SmallGraphBase implements SmallGraph {
+public class CachedGraphBase implements CachedGraph {
   private final long id;
   protected final int label;
   protected  final int[] vertexLabels;
@@ -15,7 +15,7 @@ public class SmallGraphBase implements SmallGraph {
   protected final int[] sourceIds;
   protected final int[] targetIds;
 
-  public SmallGraphBase(long id, int label, int[] vertexLabels, int[] edgeLabels, int[] sourceIds, int[] targetIds) {
+  public CachedGraphBase(long id, int label, int[] vertexLabels, int[] edgeLabels, int[] sourceIds, int[] targetIds) {
     this.id = id;
     this.label = label;
     this.vertexLabels = vertexLabels;
@@ -90,7 +90,7 @@ public class SmallGraphBase implements SmallGraph {
   }
 
   @Override
-  public String toString(HyperVertexDB db) {
+  public String toString(GraphDB db) {
     return toString(db::decode);
   }
 

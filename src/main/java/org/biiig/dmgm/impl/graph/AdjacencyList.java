@@ -2,7 +2,7 @@ package org.biiig.dmgm.impl.graph;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-public class AdjacencyList extends SmallGraphBase {
+public class AdjacencyList extends CachedGraphBase {
 
   private final int[][] outgoingEdgeIds;
   private final int[][] incomingEdgeIds;

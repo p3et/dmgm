@@ -3,12 +3,10 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
 import com.google.common.collect.Lists;
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 import javafx.util.Pair;
-import org.biiig.dmgm.api.HyperVertexDB;
+import org.biiig.dmgm.api.GraphDB;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.SubgraphMiningPropertyKeys;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.Supportable;
-import org.biiig.dmgm.impl.graph.DFSCode;
 
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -43,7 +41,7 @@ public class CharacteristicFilter<T extends Supportable> implements FilterOrOutp
   }
 
   @Override
-  public Pair<Optional<T>, Optional<Consumer<HyperVertexDB>>> apply(T supportable) {
+  public Pair<Optional<T>, Optional<Consumer<GraphDB>>> apply(T supportable) {
     Map<Integer, List<DFSEmbedding>> categoryEmbeddings = supportable
       .getEmbeddings()
       .stream()
@@ -68,7 +66,7 @@ public class CharacteristicFilter<T extends Supportable> implements FilterOrOutp
 
 
     Optional<T> child;
-    Optional<Consumer<HyperVertexDB>> store;
+    Optional<Consumer<GraphDB>> store;
 
     boolean atLeastOnceFrequent = false;
 
@@ -82,7 +80,7 @@ public class CharacteristicFilter<T extends Supportable> implements FilterOrOutp
       int[] labels = interestingness.getInterestingCategories(labelSupports, totalSupport);
 
       if (labels != null && labels.length > 0) {
-        Collection<Consumer<HyperVertexDB>> outputs = Lists.newArrayListWithCapacity(labels.length);
+        Collection<Consumer<GraphDB>> outputs = Lists.newArrayListWithCapacity(labels.length);
 
         for (int label : labels) {
           outputs.add(output -> {

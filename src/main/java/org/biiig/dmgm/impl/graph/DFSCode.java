@@ -1,12 +1,12 @@
 package org.biiig.dmgm.impl.graph;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.api.HyperVertexDB;
+import org.biiig.dmgm.api.GraphDB;
 
 import java.util.Arrays;
 import java.util.function.Function;
 
-public class DFSCode extends SmallGraphBase implements Comparable<DFSCode> {
+public class DFSCode extends CachedGraphBase implements Comparable<DFSCode> {
 
   private final boolean[] outgoings;
 
@@ -153,7 +153,7 @@ public class DFSCode extends SmallGraphBase implements Comparable<DFSCode> {
 
 
   @Override
-  public String toString(HyperVertexDB db) {
+  public String toString(GraphDB db) {
     return toString(db::decode);
   }
 

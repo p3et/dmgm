@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.loader;
 
-import org.biiig.dmgm.api.HyperVertexDB;
-import org.biiig.dmgm.impl.db.HyperVertexDBBase;
+import org.biiig.dmgm.api.GraphDB;
+import org.biiig.dmgm.impl.db.GraphDBBase;
 import org.biiig.dmgm.impl.db.LongPair;
 import org.s1ck.gdl.GDLHandler;
 import org.s1ck.gdl.model.Element;
@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class GDLLoader implements Supplier<HyperVertexDB> {
+public class GDLLoader implements Supplier<GraphDB> {
 
   private final String gdlString;
 
@@ -20,8 +20,8 @@ public class GDLLoader implements Supplier<HyperVertexDB> {
   }
 
   @Override
-  public HyperVertexDB get() {
-    HyperVertexDB db = new HyperVertexDBBase();
+  public GraphDB get() {
+    GraphDB db = new GraphDBBase();
 
     GDLHandler gdlHandler = new GDLHandler.Builder().buildFromString(gdlString);
 
@@ -72,14 +72,14 @@ public class GDLLoader implements Supplier<HyperVertexDB> {
           .map(edgeIdMap::get)
           .toArray();
 
-        long dbId = db.createHyperVertex(label, vertices, edges);
+        long dbId = db.createGraph(label, vertices, edges);
         addProperties(db, graph, dbId);
       });
 
     return db;
   }
 
-  private void addProperties(HyperVertexDB db, Element vertex, long dbId) {
+  private void addProperties(GraphDB db, Element vertex, long dbId) {
     vertex.getProperties()
       .forEach((key, value) -> {
         int symbol = db.encode(key);

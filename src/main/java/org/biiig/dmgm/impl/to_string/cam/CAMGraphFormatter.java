@@ -1,8 +1,8 @@
 package org.biiig.dmgm.impl.to_string.cam;
 
 import org.apache.commons.lang3.StringUtils;
-import org.biiig.dmgm.api.HyperVertexDB;
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.GraphDB;
+import org.biiig.dmgm.api.CachedGraph;
 import org.biiig.dmgm.api.DMGraphFormatter;
 
 import java.util.Arrays;
@@ -13,13 +13,13 @@ public class CAMGraphFormatter implements DMGraphFormatter {
 
   private final CAMVertexFormatter vertexFormatter;
 
-  public CAMGraphFormatter(HyperVertexDB db) {
+  public CAMGraphFormatter(GraphDB db) {
     this.vertexFormatter = new CAMVertexFormatter(db);
   }
 
 
   @Override
-  public String format(SmallGraph graph) {
+  public String format(CachedGraph graph) {
 
     String[] vertexStrings = new String[graph.getVertexCount()];
 

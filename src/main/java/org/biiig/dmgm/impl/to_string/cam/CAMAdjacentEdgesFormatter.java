@@ -3,8 +3,8 @@ package org.biiig.dmgm.impl.to_string.cam;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.biiig.dmgm.api.HyperVertexDB;
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.GraphDB;
+import org.biiig.dmgm.api.CachedGraph;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -14,13 +14,13 @@ public abstract class CAMAdjacentEdgesFormatter {
   protected static final char OUTGOING = '>';
   protected static final char INCOMING = '<';
   protected static final char EDGE_START_END = '-';
-  protected final HyperVertexDB db;
+  protected final GraphDB db;
 
-  public CAMAdjacentEdgesFormatter(HyperVertexDB db) {
+  public CAMAdjacentEdgesFormatter(GraphDB db) {
     this.db = db;
   }
 
-  public String format(SmallGraph graph, int vertexId) {
+  public String format(CachedGraph graph, int vertexId) {
     // determine outgoing edge labels
     Map<Integer, String[]> edgeLabels = Maps.newHashMap();
 
@@ -62,7 +62,7 @@ public abstract class CAMAdjacentEdgesFormatter {
 
   protected abstract String formatEdge(String edgeLabelsString);
 
-  protected abstract int getAdjacentVertexId(SmallGraph graph, int edgeId);
+  protected abstract int getAdjacentVertexId(CachedGraph graph, int edgeId);
 
-  protected abstract int[] getEdgeIds(SmallGraph graph, int vertexId);
+  protected abstract int[] getEdgeIds(CachedGraph graph, int vertexId);
 }

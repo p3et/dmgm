@@ -1,11 +1,11 @@
 package org.biiig.dmgm.impl.to_string.cam;
 
-import org.biiig.dmgm.api.HyperVertexDB;
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.GraphDB;
+import org.biiig.dmgm.api.CachedGraph;
 
 public class CAMIncomingEdgesFormatter extends CAMAdjacentEdgesFormatter {
 
-  public CAMIncomingEdgesFormatter(HyperVertexDB db) {
+  public CAMIncomingEdgesFormatter(GraphDB db) {
     super(db);
   }
 
@@ -15,12 +15,12 @@ public class CAMIncomingEdgesFormatter extends CAMAdjacentEdgesFormatter {
   }
 
   @Override
-  protected int getAdjacentVertexId(SmallGraph graph, int edgeId) {
+  protected int getAdjacentVertexId(CachedGraph graph, int edgeId) {
     return graph.getSourceId(edgeId);
   }
 
   @Override
-  protected int[] getEdgeIds(SmallGraph graph, int vertexId) {
+  protected int[] getEdgeIds(CachedGraph graph, int vertexId) {
     return graph.getIncomingEdgeIds(vertexId);
   }
 }

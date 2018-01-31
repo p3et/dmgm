@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
 import javafx.util.Pair;
-import org.biiig.dmgm.api.HyperVertexDB;
+import org.biiig.dmgm.api.GraphDB;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -12,5 +12,5 @@ import java.util.function.Consumer;
  * - a task for the data store, if something should be stored
  */
 public interface FilterOrOutput<T extends Supportable> {
-  Pair<Optional<T>, Optional<Consumer<HyperVertexDB>>> apply(T supportable);
+  Pair<Optional<T>, Optional<Consumer<GraphDB>>> apply(T supportable);
 }

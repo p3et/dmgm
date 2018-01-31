@@ -1,16 +1,16 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
-import org.biiig.dmgm.api.SmallGraph;
+import org.biiig.dmgm.api.CachedGraph;
 
 public class GrowChildrenByOutgoingEdges extends GrowChildrenBase {
 
   @Override
-  protected int[] getEdgeIds(SmallGraph graph, int fromId) {
+  protected int[] getEdgeIds(CachedGraph graph, int fromId) {
     return graph.getOutgoingEdgeIds(fromId);
   }
 
   @Override
-  protected int getToId(SmallGraph graph, int edgeId) {
+  protected int getToId(CachedGraph graph, int edgeId) {
     return graph.getTargetId(edgeId);
   }
 
