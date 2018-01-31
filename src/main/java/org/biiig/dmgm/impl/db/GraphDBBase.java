@@ -2,9 +2,12 @@ package org.biiig.dmgm.impl.db;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import de.jesemann.paralleasy.collectors.GroupByKeyArrayValues;
+import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.api.GraphDB;
 import org.biiig.dmgm.api.CachedGraph;
+import org.biiig.dmgm.api.GraphDB;
+import org.biiig.dmgm.api.Property;
 import org.biiig.dmgm.api.PropertyPredicate;
 import org.biiig.dmgm.impl.graph.CachedGraphBase;
 
@@ -387,6 +390,74 @@ public class GraphDBBase implements GraphDB {
   }
 
   @Override
+  public Property[] getProperties(long id) {
+    List<Property> properties = booleanProperties
+      .entrySet()
+      .parallelStream()
+      .filter(e -> e.getValue().contains(id))
+      .map(e -> new Property(e.getKey(), true))
+      .collect(Collectors.toList());
+
+    properties.addAll(getProperties(intProperties, id));
+    properties.addAll(getProperties(doubleProperties, id));
+    properties.addAll(getProperties(stringProperties, id));
+    properties.addAll(getProperties(bigDecimalProperties, id));
+    properties.addAll(getProperties(localDateProperties, id));
+    properties.addAll(getProperties(intsProperties, id));
+    properties.addAll(getProperties(stringsProperties, id));
+
+    return properties
+      .toArray(new Property[properties.size()]);
+  }
+
+  private <T> List<Property> getProperties(Map<Integer, Map<Long, T>> intProperties, long id) {
+    return intProperties
+      .entrySet()
+      .parallelStream()
+      .flatMap(e -> e.getValue()
+        .entrySet()
+        .stream()
+        .filter(f -> f.getKey() == id)
+        .map(f -> new Property(e.getKey(), f.getValue())))
+      .collect(Collectors.toList());
+  }
+
+  @Override
+  public Map<Long, Property[]> getAllProperties() {
+
+    List<Pair<Long, Property>> properties = booleanProperties
+      .entrySet()
+      .parallelStream()
+      .flatMap(e -> e.getValue()
+        .stream()
+        .map(id -> new Pair<>(id, new Property(e.getKey(), true))))
+      .collect(Collectors.toList());
+
+    properties.addAll(getProperties(intProperties));
+    properties.addAll(getProperties(doubleProperties));
+    properties.addAll(getProperties(stringProperties));
+    properties.addAll(getProperties(bigDecimalProperties));
+    properties.addAll(getProperties(localDateProperties));
+    properties.addAll(getProperties(intsProperties));
+    properties.addAll(getProperties(stringsProperties));
+
+    return properties
+      .parallelStream()
+      .collect(new GroupByKeyArrayValues<>(Pair::getKey, Pair::getValue, Property.class));
+  }
+
+  private <T> List<Pair<Long, Property>> getProperties(Map<Integer, Map<Long, T>> intProperties) {
+    return intProperties
+      .entrySet()
+      .parallelStream()
+      .flatMap(e -> e.getValue()
+        .entrySet()
+        .stream()
+        .map(f -> new Pair<>(f.getKey(), new Property(e.getKey(), f.getValue()))))
+      .collect(Collectors.toList());
+  }
+
+  @Override
   public String toString() {
     return 
       "nid=" + nextId +
@@ -416,7 +487,4 @@ public class GraphDBBase implements GraphDB {
   private static <K, V>  Map<K, V> createMap() {
     return Maps.newConcurrentMap();
   }
-
-
-
 }

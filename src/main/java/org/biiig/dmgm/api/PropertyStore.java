@@ -2,6 +2,7 @@ package org.biiig.dmgm.api;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -37,5 +38,8 @@ public interface PropertyStore {
   void add(long id, int key, String value);
   String[] getStrings(long id, int key);
 
+
+  Property[] getProperties(long id);
+  Map<Long, Property[]> getAllProperties();
 
 }
