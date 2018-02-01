@@ -25,4 +25,8 @@ public interface CachedGraph {
   IntStream edgeIdStream();
 
   String toString(GraphDB db);
+
+  int[] getVertexLabels();
+  int[] getEdgeLabels();
+
 }

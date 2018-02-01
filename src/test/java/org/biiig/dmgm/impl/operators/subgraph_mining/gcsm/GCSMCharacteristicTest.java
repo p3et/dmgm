@@ -1,20 +1,21 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.gcsm;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.DMGMTestBase;
 import org.biiig.dmgm.api.CollectionOperator;
+import org.biiig.dmgm.api.GraphDB;
+import org.biiig.dmgm.impl.db.GraphDBBase;
 import org.biiig.dmgm.impl.operators.subgraph_mining.GeneralizedCharacteristicSubgraphs;
 import org.junit.Test;
+
+import java.util.function.Function;
 
 public class GCSMCharacteristicTest extends DMGMTestBase {
 
   @Test
   public void testAlgorithm() {
-    CollectionOperator operator = new GeneralizedCharacteristicSubgraphs(
-      1.0f,
-      10,
-      (c, t) -> c.size() == 1 ? ArrayUtils.toPrimitive(c.keySet().toArray(new Integer[1])) : null
-    );
+    Function<GraphDB, CollectionOperator> operator =
+      db -> new GeneralizedCharacteristicSubgraphs(
+      db,1.0f,10);
 
     String gdl =
       ":IN{_category:\"X\"}[(:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(:D)]" +

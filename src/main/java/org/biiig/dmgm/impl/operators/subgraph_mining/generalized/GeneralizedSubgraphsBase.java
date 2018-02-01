@@ -6,17 +6,23 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.GraphDB;
 import org.biiig.dmgm.api.CachedGraph;
+import org.biiig.dmgm.impl.graph.DFSCode;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCodeEmbeddingsPair;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
+import org.biiig.dmgm.impl.operators.subgraph_mining.frequent.AddTotalSupport;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SubgraphMiningBase;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class GeneralizedSubgraphsBase extends SubgraphMiningBase {
   public static final String LEVEL_SEPARATOR = "_";
 
-  public GeneralizedSubgraphsBase(float minSupport, int maxEdgeCount) {
-    super(minSupport, maxEdgeCount);
+  public GeneralizedSubgraphsBase(GraphDB database, float minSupport, int maxEdgeCount) {
+    super(database, minSupport, maxEdgeCount);
   }
 
   protected Specializer getSpecializer(List<CachedGraph> rawInput, FilterOrOutput<PatternVectorsPair> vectorFilter, GraphDB db, int taxonomyPathKey) {
@@ -74,4 +80,5 @@ public abstract class GeneralizedSubgraphsBase extends SubgraphMiningBase {
         }));
     return spezializer;
   }
+
 }

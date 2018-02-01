@@ -95,6 +95,16 @@ public class CachedGraphBase implements CachedGraph {
   }
 
   @Override
+  public int[] getVertexLabels() {
+    return vertexLabels;
+  }
+
+  @Override
+  public int[] getEdgeLabels() {
+    return edgeLabels;
+  }
+
+  @Override
   public String toString() {
     return toString(Object::toString);
   }
@@ -114,4 +124,6 @@ public class CachedGraphBase implements CachedGraph {
       "\nS=" + Arrays.toString(sourceIds) +
       "\nT=" + Arrays.toString(targetIds);
   }
+
+
 }

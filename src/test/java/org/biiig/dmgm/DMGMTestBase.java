@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 import static org.junit.Assert.assertTrue;
 
@@ -128,7 +129,7 @@ public class DMGMTestBase {
 //    }
 //  }
 
-  protected void runAndTestExpectation(CollectionOperator operator, String gdl, boolean includeProperties) {
+  protected void runAndTestExpectation(Function<GraphDB, CollectionOperator> operatorFactory, String gdl, boolean includeProperties) {
     GraphDB db = GDLLoader
       .fromString(gdl)
       .get();
@@ -137,11 +138,10 @@ public class DMGMTestBase {
     long[] inIds = db.getElementsByLabel(l -> l == inLabel);
     long inId = db.createCollection(inLabel, inIds);
 
-
     int exLabel = db.encode(EXPECTATION_GRAPH_LABEL);
     long[] exIds = db.getElementsByLabel(l -> l == exLabel);
     long exId = db.createCollection(exLabel, exIds);
-    long outId = operator.apply(db, inId);
+    long outId = operatorFactory.apply(db).apply(inId);
 
     assertTrue(equal(db, exId, outId, includeProperties));
   }
