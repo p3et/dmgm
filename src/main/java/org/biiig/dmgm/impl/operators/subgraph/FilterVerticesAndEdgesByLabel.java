@@ -71,13 +71,13 @@ public class FilterVerticesAndEdgesByLabel implements Function<CachedGraph, Cach
     int[] sourceIds = new int[edgeCount];
     int[] targetIds = new int[edgeCount];
 
-    IntStream
-      .of(keepEdges)
-      .forEach(edgeId -> {
-        edgeLabels[edgeId] = graph.getEdgeLabel(edgeId);
-        sourceIds[edgeId] = vertexIdMap[graph.getSourceId(edgeId)];
-        targetIds[edgeId] = vertexIdMap[graph.getTargetId(edgeId)];
-      });
+    int outId = 0;
+    for (int inId : keepEdges) {
+      edgeLabels[outId] = graph.getEdgeLabel(inId);
+      sourceIds[outId] = vertexIdMap[graph.getSourceId(inId)];
+      targetIds[outId] = vertexIdMap[graph.getTargetId(inId)];
+      outId++;
+    }
 
     return new CachedGraphBase(graph.getId(), graph.getLabel(), vertexLabels, edgeLabels, sourceIds, targetIds);
   }

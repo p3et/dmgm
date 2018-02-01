@@ -128,7 +128,7 @@ public class CharacteristicSubgraphs extends SubgraphMiningBase implements Chara
       .peek(p -> p.getValue()
         .forEach((key, value) ->
           output.put(p.getKey(), (db, gid) -> {
-            db.set(gid, categoryKey, key);
+            db.set(gid, categoryKey, database.decode(key));
             db.set(gid, supportKey, Math.toIntExact(value)); })))
       .map(Pair::getKey)
       .collect(Collectors.toSet());
