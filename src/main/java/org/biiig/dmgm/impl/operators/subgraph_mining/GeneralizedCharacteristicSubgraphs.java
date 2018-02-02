@@ -58,8 +58,7 @@ public class GeneralizedCharacteristicSubgraphs extends CollectionOperatorBase {
   public Long apply(Long collectionId) {
     List<CachedGraph> input = database.getCachedCollection(collectionId);
 
-    Map<Long, CachedGraph> indexedGraphs = input
-      .stream()
+    Map<Long, CachedGraph> indexedGraphs = (parallel ? input.parallelStream() : input.stream())
       .collect(Collectors.toMap(CachedGraph::getId, Function.identity()));
 
     Map<Long, int[]> graphCategories = getGraphCategories(input);
@@ -78,8 +77,7 @@ public class GeneralizedCharacteristicSubgraphs extends CollectionOperatorBase {
     
     int edgeCount = 1;
     while (edgeCount < maxEdgeCount && !parents.isEmpty()) {
-      reports = parents
-        .stream()
+      reports = (parallel ? parents.parallelStream() : parents.stream())
         .map(Pair::getKey)
         .flatMap(new GrowAllChildren(indexedGraphs));
 
@@ -100,8 +98,7 @@ public class GeneralizedCharacteristicSubgraphs extends CollectionOperatorBase {
     Map<Integer, Long> vertexLabelSupport = getVertexLabelSupport(input);
     Map<Integer, int[]> dimensionPathMap = getDimensionPathMap(vertexLabelSupport);
 
-    return input
-      .stream()
+    return (parallel ? input.parallelStream() : input.stream())
       .collect(Collectors.toMap(
         CachedGraph::getId,
         g -> {
@@ -151,8 +148,7 @@ public class GeneralizedCharacteristicSubgraphs extends CollectionOperatorBase {
   }
 
   public Stream<Pair<DFSCode,DFSEmbedding>> getSingleEdgeReports(List<CachedGraph> input) {
-    return input
-      .stream()
+    return (parallel ? input.parallelStream() : input.stream())
       .flatMap(new InitializeParents(patternLabel));
   }
 
@@ -184,8 +180,7 @@ public class GeneralizedCharacteristicSubgraphs extends CollectionOperatorBase {
   }
 
   public Map<Integer, Long> getVertexLabelSupport(List<CachedGraph> input) {
-    return input
-      .stream()
+    return (parallel ? input.parallelStream() : input.stream())
       .flatMapToInt(g -> IntStream
         .of(g.getVertexLabels())
         .distinct())

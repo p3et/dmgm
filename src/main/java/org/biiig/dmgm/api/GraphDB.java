@@ -122,4 +122,10 @@ public interface GraphDB extends PropertyStore, LabelDictionary {
    * @return list of cached immutable graph pojos
    */
   List<CachedGraph> getCachedCollection(long collectionId);
+
+  long[] getAllHyperVertexIds();
+  long[] getAllGraphIds();
+  long[] getAllCollectionIds();
+  long[] getAllVertexIds();
+  long[] getAllEdgeIds();
 }

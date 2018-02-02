@@ -22,6 +22,7 @@ import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
+import java.util.stream.Stream;
 
 /**
  * Pragmatic reference implementation of {@code GraphCollectionDatabase}.
@@ -165,6 +166,56 @@ public class GraphDBBase implements GraphDB {
       .mapToObj(this::getCachedGraph)
       .collect(Collectors.toList());
   }
+
+  @Override
+  public long[] getAllHyperVertexIds() {
+    return elements
+      .keySet()
+      .stream()
+      .mapToLong(id -> id)
+      .toArray();
+  }
+
+  @Override
+  public long[] getAllGraphIds() {
+    return elements
+      .entrySet()
+      .stream()
+      .filter(e -> e.getValue().getRight().length != 0)
+      .mapToLong(Map.Entry::getKey)
+      .toArray();
+  }
+
+  @Override
+  public long[] getAllCollectionIds() {
+    return elements
+      .entrySet()
+      .stream()
+      .filter(e -> e.getValue().getRight().length == 0)
+      .mapToLong(Map.Entry::getKey)
+      .toArray();
+  }
+
+  @Override
+  public long[] getAllVertexIds() {
+    return elements
+      .values()
+      .stream()
+      .map(LongsPair::getLeft)
+      .flatMapToLong(LongStream::of)
+      .toArray();
+  }
+
+  @Override
+  public long[] getAllEdgeIds() {
+    return elements
+      .values()
+      .stream()
+      .map(LongsPair::getRight)
+      .flatMapToLong(LongStream::of)
+      .toArray();
+  }
+
 
   @Override
   public LongsPair getGraphElementIds(long graphId) {
