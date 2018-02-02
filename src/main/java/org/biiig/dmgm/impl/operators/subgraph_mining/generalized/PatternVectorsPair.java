@@ -1,13 +1,13 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.generalized;
 
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.Supportable;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCodeSupportablePair;
 import org.biiig.dmgm.impl.graph.DFSCode;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class PatternVectorsPair implements Supportable {
+public class PatternVectorsPair implements DFSCodeSupportablePair {
 
   private final DFSCode dfsCode;
   private final Collection<MultiDimensionalVector> vectors;
@@ -25,16 +25,6 @@ public class PatternVectorsPair implements Supportable {
   @Override
   public Collection<DFSEmbedding> getEmbeddings() {
     return vectors.stream().map(MultiDimensionalVector::getEmbedding).collect(Collectors.toList());
-  }
-
-  @Override
-  public long getSupport() {
-    return (int) getEmbeddings().stream().map(DFSEmbedding::getGraphId).distinct().count();
-  }
-
-  @Override
-  public int getFrequency() {
-    return vectors.size();
   }
 
   public Collection<MultiDimensionalVector> getVectors() {

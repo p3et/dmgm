@@ -3,6 +3,7 @@ package org.biiig.dmgm.impl.statistics;
 import org.biiig.dmgm.DMGMTestBase;
 import org.biiig.dmgm.api.GraphDB;
 import org.biiig.dmgm.impl.loader.TLFConstants;
+import org.biiig.dmgm.impl.operators.subgraph_mining.GeneralizedCharacteristicSubgraphs;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -24,21 +25,21 @@ public class VertexLabelSupportTest extends DMGMTestBase {
 
   @Test
   public void getAbsolute() throws IOException {
-    Map<Integer, Integer> support = new VertexLabelSupport()
-      .getAbsolute(db, cid);
+    Map<Integer, Long> support = new GeneralizedCharacteristicSubgraphs(db, 0f, 0)
+      .getVertexLabelSupport(db.getCachedCollection(cid));
 
     for (int i = 1; i <= 10; i++)
       assertTrue("cannot find support of 1", support.values().contains(i));
   }
 
-  @Test
-  public void getRelative() throws IOException {
-    Map<Integer, Double> support = new VertexLabelSupport()
-      .getRelative(db, cid);
-
-    for (int i = 1; i <= 10; i++)
-      assertTrue("cannot find support of 1", support.values().contains((double) i / 10));
-  }
+//  @Test
+//  public void getRelative() throws IOException {
+//    Map<Integer, Double> support = new VertexLabelSupport()
+//      .getRelative(db, cid);
+//
+//    for (int i = 1; i <= 10; i++)
+//      assertTrue("cannot find support of 1", support.values().contains((double) i / 10));
+//  }
 
 //  @Test
 //  public void generalization() throws IOException {

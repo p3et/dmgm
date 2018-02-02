@@ -1,12 +1,14 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
+import javafx.util.Pair;
 import org.biiig.dmgm.api.CachedGraph;
 import org.biiig.dmgm.impl.graph.DFSCode;
 
+import java.lang.reflect.Array;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class InitializeParents implements Function<CachedGraph, Stream<DFSCodeEmbeddingPair>> {
+public class InitializeParents implements Function<CachedGraph, Stream<Pair<DFSCode,DFSEmbedding>>> {
 
   private final int label;
 
@@ -14,11 +16,12 @@ public class InitializeParents implements Function<CachedGraph, Stream<DFSCodeEm
     this.label = label;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public Stream<DFSCodeEmbeddingPair> apply(CachedGraph graph) {
+  public Stream<Pair<DFSCode,DFSEmbedding>> apply(CachedGraph graph) {
 
     int edgeCount = graph.getEdgeCount();
-    DFSCodeEmbeddingPair[] pairs = new DFSCodeEmbeddingPair[edgeCount];
+    Pair<DFSCode,DFSEmbedding>[] pairs = (Pair<DFSCode, DFSEmbedding>[]) Array.newInstance(Pair.class, edgeCount);
 
     for (int edgeId = 0; edgeId < edgeCount; edgeId++) {
 
@@ -68,7 +71,7 @@ public class InitializeParents implements Function<CachedGraph, Stream<DFSCodeEm
 
 
       DFSEmbedding embedding = new DFSEmbedding(graph.getId(), fromId, edgeId, toId);
-      DFSCodeEmbeddingPair codeEmbeddingPair = new DFSCodeEmbeddingPair(dfsCode, embedding);
+      Pair<DFSCode,DFSEmbedding> codeEmbeddingPair = new Pair<>(dfsCode, embedding);
 
       pairs[edgeId] = codeEmbeddingPair;
     }

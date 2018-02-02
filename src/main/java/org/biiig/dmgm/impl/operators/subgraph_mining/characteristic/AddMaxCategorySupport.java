@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class AddMaxCategorySupport implements Function<Map.Entry<DFSCode,List<DFSEmbedding>>, DFSCodeEmbeddingsPair> {
 
@@ -38,6 +37,6 @@ public class AddMaxCategorySupport implements Function<Map.Entry<DFSCode,List<DF
       .get()
       .getValue();
 
-    return new DFSCodeEmbeddingsPair(entry.getKey(), entry.getValue(), maxSupport);
+    return new DFSCodeEmbeddingsPair(entry.getKey(), entry.getValue());
   }
 }

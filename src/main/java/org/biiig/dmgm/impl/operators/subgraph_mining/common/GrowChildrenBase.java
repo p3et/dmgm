@@ -1,16 +1,20 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
+import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.CachedGraph;
 import org.biiig.dmgm.impl.graph.DFSCode;
 
+import java.lang.reflect.Array;
+
 public abstract class GrowChildrenBase implements GrowChildren {
 
+  @SuppressWarnings("unchecked")
   @Override
-  public DFSCodeEmbeddingPair[] apply(
+  public Pair<DFSCode,DFSEmbedding>[] apply(
     CachedGraph graph, DFSCode parentCode, int[] rightmostPath, DFSEmbedding parentEmbedding) {
 
-    DFSCodeEmbeddingPair[] children = new DFSCodeEmbeddingPair[0];
+    Pair<DFSCode,DFSEmbedding>[] children = (Pair<DFSCode, DFSEmbedding>[]) Array.newInstance(Pair.class, 0);
 
     boolean rightmost = true;
     for (int fromTime : parentCode.getRightmostPath()) {
@@ -34,7 +38,7 @@ public abstract class GrowChildrenBase implements GrowChildren {
             DFSEmbedding childEmbedding = parentEmbedding.expandByEdgeId(edgeId);
 
             children =
-              ArrayUtils.add(children, new DFSCodeEmbeddingPair(childCode, childEmbedding));
+              ArrayUtils.add(children, new Pair<>(childCode, childEmbedding));
 
             // grow backwards from to
           } else if (toTime < 0) {
@@ -45,7 +49,7 @@ public abstract class GrowChildrenBase implements GrowChildren {
             DFSEmbedding childEmbedding = parentEmbedding.expandByEdgeIdAndVertexId(edgeId, toId);
 
             children =
-              ArrayUtils.add(children, new DFSCodeEmbeddingPair(childCode, childEmbedding));            }
+              ArrayUtils.add(children, new Pair<>(childCode, childEmbedding));            }
         }
       }
 

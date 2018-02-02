@@ -64,7 +64,7 @@
 //      EdgeData next = iterator.next();
 //
 //      if (last.equals(next)) {
-//        //aggregate multi-edge labels
+//        //aggregateAndFilter multi-edge labels
 //        last.setEdgeLabels(ArrayUtils.addAll(last.getEdgeLabels(), next.getEdgeLabels()));
 //        iterator.remove();
 //      } else {

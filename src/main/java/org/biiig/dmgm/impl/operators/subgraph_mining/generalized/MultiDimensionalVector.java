@@ -2,13 +2,12 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.generalized;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.WithGraphId;
 
 import java.util.Arrays;
 import java.util.Optional;
 
-public class MultiDimensionalVector {
-
-  public static final int ARBITRARY = -1;
+public class MultiDimensionalVector implements WithGraphId {
 
   private final DFSEmbedding embedding;
   private final int lastSpecialization;
@@ -111,7 +110,7 @@ public class MultiDimensionalVector {
     int[] levels = new int[size];
 
     for (int i = 0; i < size; i++)
-      levels[i] = ARBITRARY;
+      levels[i] = 0;
 
     return new MultiDimensionalVector(embedding, dimensionPaths, levels, 0);
   }
@@ -137,9 +136,13 @@ public class MultiDimensionalVector {
 
   }
 
-  public Optional<Integer> getSpecializedValue(int dim) {
-    return levels[dim] >= 0 ? Optional.of(dimensionPaths[dim][levels[dim]]) : Optional.empty();
+  public int getSpecializedValue(int dim) {
+    return dimensionPaths[dim][levels[dim]];
   }
 
 
+  @Override
+  public long getGraphId() {
+    return embedding.getGraphId();
+  }
 }

@@ -11,6 +11,6 @@ import java.util.function.Consumer;
  * - the input as key, if the input should be fed back to the next iteration
  * - a task for the data store, if something should be stored
  */
-public interface FilterOrOutput<T extends Supportable> {
+public interface FilterOrOutput<T extends DFSCodeSupportablePair> {
   Pair<Optional<T>, Optional<Consumer<GraphDB>>> apply(T supportable);
 }

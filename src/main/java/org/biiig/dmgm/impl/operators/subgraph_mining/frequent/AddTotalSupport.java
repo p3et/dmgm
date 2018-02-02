@@ -19,6 +19,6 @@ public class AddTotalSupport implements Function<Map.Entry<DFSCode,List<DFSEmbed
       .distinct()
       .count();
 
-    return new DFSCodeEmbeddingsPair(entry.getKey(), entry.getValue(), support);
+    return new DFSCodeEmbeddingsPair(entry.getKey(), entry.getValue());
   }
 }

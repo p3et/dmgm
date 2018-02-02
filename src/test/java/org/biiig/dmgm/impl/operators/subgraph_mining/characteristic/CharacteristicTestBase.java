@@ -20,7 +20,8 @@ public abstract class CharacteristicTestBase extends DMGMTestBase {
       ":EX[(:B)-[:a]->(:C)-[:a]->(:D)]" +
       ":EX[(:B)-[:a]->(:C)]" +
       ":EX[(:C)-[:a]->(:D)]" +
-      ":EX[(:A)-[:a]->(:B)]" +
+      ":EX{_category:\"X\"}[(:A)-[:a]->(:B)]" +
+      ":EX{_category:\"Y\"}[(:A)-[:a]->(:B)]" +
       ":EX[(:A)-[:a]->(:B)-[:b]->(:C)]" +
       ":EX[(:B)-[:b]->(:C)]" ;
 

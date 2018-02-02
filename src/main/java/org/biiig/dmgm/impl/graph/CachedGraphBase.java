@@ -105,6 +105,11 @@ public class CachedGraphBase implements CachedGraph {
   }
 
   @Override
+  public void setVertexLabel(int vertexId, int label) {
+    this.vertexLabels[vertexId] = label;
+  }
+
+  @Override
   public String toString() {
     return toString(Object::toString);
   }
@@ -124,6 +129,4 @@ public class CachedGraphBase implements CachedGraph {
       "\nS=" + Arrays.toString(sourceIds) +
       "\nT=" + Arrays.toString(targetIds);
   }
-
-
 }

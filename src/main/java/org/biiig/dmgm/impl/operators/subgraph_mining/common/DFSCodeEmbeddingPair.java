@@ -3,7 +3,7 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 import org.biiig.dmgm.impl.graph.DFSCode;
 
 public class DFSCodeEmbeddingPair {
-  private final DFSCode dfsCode;
+  private DFSCode dfsCode;
   private final DFSEmbedding embedding;
 
   public DFSCodeEmbeddingPair(DFSCode dfsCode, DFSEmbedding embedding) {
@@ -13,6 +13,10 @@ public class DFSCodeEmbeddingPair {
 
   public DFSCode getDfsCode() {
     return dfsCode;
+  }
+
+  public void setDfsCode(DFSCode dfsCode) {
+    this.dfsCode = dfsCode;
   }
 
   public DFSEmbedding getEmbedding() {

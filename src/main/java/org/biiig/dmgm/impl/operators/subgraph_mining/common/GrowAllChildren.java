@@ -1,13 +1,15 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
+import javafx.util.Pair;
 import org.biiig.dmgm.api.CachedGraph;
 import org.biiig.dmgm.impl.graph.DFSCode;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class GrowAllChildren implements Function<DFSCodeEmbeddingsPair, Stream<DFSCodeEmbeddingPair>> {
+public class GrowAllChildren implements Function<Pair<DFSCode,List<DFSEmbedding>>, Stream<Pair<DFSCode,DFSEmbedding>>> {
   private final Map<Long, CachedGraph> input;
 
   public GrowAllChildren(Map<Long, CachedGraph> input) {
@@ -15,11 +17,11 @@ public class GrowAllChildren implements Function<DFSCodeEmbeddingsPair, Stream<D
   }
 
   @Override
-  public Stream<DFSCodeEmbeddingPair> apply(DFSCodeEmbeddingsPair dfsCodeEmbeddingsPair) {
-    DFSCode parent = dfsCodeEmbeddingsPair.getDFSCode();
+  public Stream<Pair<DFSCode,DFSEmbedding>> apply(Pair<DFSCode,List<DFSEmbedding>> dfsCodeEmbeddingsPair) {
+    DFSCode parent = dfsCodeEmbeddingsPair.getKey();
 
     return dfsCodeEmbeddingsPair
-      .getEmbeddings()
+      .getValue()
       .stream()
       .flatMap(new GrowChildrenOf(parent, input));
   }

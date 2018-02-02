@@ -4,9 +4,7 @@ import org.biiig.dmgm.impl.graph.DFSCode;
 
 import java.util.Collection;
 
-public interface Supportable {
+public interface DFSCodeSupportablePair {
   DFSCode getDFSCode();
   Collection<DFSEmbedding> getEmbeddings();
-  long getSupport();
-  int getFrequency();
 }

@@ -6,7 +6,7 @@ import javafx.util.Pair;
 import org.biiig.dmgm.api.GraphDB;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.Supportable;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCodeSupportablePair;
 
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class CharacteristicFilter<T extends Supportable> implements FilterOrOutput<T> {
+public class CharacteristicFilter<T extends DFSCodeSupportablePair> implements FilterOrOutput<T> {
   private final Map<Integer, Integer> graphLabel;
   private final Map<Integer, Integer> graphLabelCounts;
 
@@ -62,7 +62,7 @@ public class CharacteristicFilter<T extends Supportable> implements FilterOrOutp
           .count()
           / graphLabelCounts.get(e.getKey())));
 
-    float totalSupport = (float) supportable.getSupport() / graphCount;
+    float totalSupport = 0l;
 
 
     Optional<T> child;

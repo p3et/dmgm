@@ -3,12 +3,12 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.frequent;
 import javafx.util.Pair;
 import org.biiig.dmgm.api.GraphDB;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.Supportable;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCodeSupportablePair;
 
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class FrequentFilter<T extends Supportable> implements FilterOrOutput<T> {
+public class FrequentFilter<T extends DFSCodeSupportablePair> implements FilterOrOutput<T> {
 
   private final int minSupportAbsolute;
 
@@ -17,8 +17,8 @@ public class FrequentFilter<T extends Supportable> implements FilterOrOutput<T> 
   }
 
   @Override
-  public Pair<Optional<T>, Optional<Consumer<GraphDB>>> apply(T supportable) {    int embeddingCount = supportable.getFrequency();
-    long support = supportable.getSupport();
+  public Pair<Optional<T>, Optional<Consumer<GraphDB>>> apply(T supportable) {    int embeddingCount = 0;
+    long support =0l;
 
     boolean frequent = support >= minSupportAbsolute;
 

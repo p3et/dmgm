@@ -13,14 +13,14 @@ public abstract class GeneralizationTestBase extends DMGMTestBase {
     Function<GraphDB, CollectionOperator> operator = getOperator();
 
     String inputGDL =
-      ":IN[(:A_a_a)-[:a]->(:B_b_b)-[:a]->(:C)]" +
-      ":IN[(:A_a_b)-[:a]->(:B_b_b_b)-[:a]->(:C)]" +
-      ":EX[(:A_a)-[:a]->(:B_b)-[:a]->(:C)]" +
-      ":EX[(:A_a)-[:a]->(:B_b_b)-[:a]->(:C)]" +
-      ":EX[(:A_a)-[:a]->(:B_b)]" +
-      ":EX[(:A_a)-[:a]->(:B_b_b)]" +
-      ":EX[(:B_b)-[:a]->(:C)]" +
-      ":EX[(:B_b_b)-[:a]->(:C)]";
+      ":IN[(:A_A)-[:a]->(:B_B)-[:a]->(:C)]" +
+      ":IN[(:A_B)-[:a]->(:B_B_B)-[:a]->(:C)]" +
+      ":EX[(:A)-[:a]->(:B)]" +
+      ":EX[(:A)-[:a]->(:B_B)]" +
+      ":EX[(:B)-[:a]->(:C)]" +
+      ":EX[(:B_B)-[:a]->(:C)]" +
+      ":EX[(:A)-[:a]->(:B_B)-[:a]->(:C)]" +
+      ":EX[(:A)-[:a]->(:B)-[:a]->(:C)]";
 
     runAndTestExpectation(operator, inputGDL, false);
   }

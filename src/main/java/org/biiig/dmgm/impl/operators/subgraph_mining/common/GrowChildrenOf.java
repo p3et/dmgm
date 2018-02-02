@@ -1,5 +1,6 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
+import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.CachedGraph;
 import org.biiig.dmgm.impl.graph.DFSCode;
@@ -8,7 +9,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class GrowChildrenOf implements Function<DFSEmbedding, Stream<DFSCodeEmbeddingPair>> {
+public class GrowChildrenOf implements Function<DFSEmbedding, Stream<Pair<DFSCode,DFSEmbedding>>> {
 
   private final GrowChildrenByOutgoingEdges growChildrenByOutgoingEdges = new GrowChildrenByOutgoingEdges();
   private final GrowChildrenByIncomingEdges growChildrenByIncomingEdges = new GrowChildrenByIncomingEdges();
@@ -23,9 +24,9 @@ public class GrowChildrenOf implements Function<DFSEmbedding, Stream<DFSCodeEmbe
   }
 
 
-  public DFSCodeEmbeddingPair[] apply(CachedGraph graph, DFSCode parent, int[] rightmostPath, DFSEmbedding parentEmbedding) {
+  public Pair<DFSCode,DFSEmbedding>[] apply(CachedGraph graph, DFSCode parent, int[] rightmostPath, DFSEmbedding parentEmbedding) {
 
-    DFSCodeEmbeddingPair[] children =
+    Pair<DFSCode,DFSEmbedding>[] children =
       growChildrenByOutgoingEdges.apply(graph, parent, rightmostPath, parentEmbedding);
 
     children = ArrayUtils
@@ -35,13 +36,13 @@ public class GrowChildrenOf implements Function<DFSEmbedding, Stream<DFSCodeEmbe
   }
 
   @Override
-  public Stream<DFSCodeEmbeddingPair> apply(DFSEmbedding dfsEmbedding) {
+  public Stream<Pair<DFSCode,DFSEmbedding>> apply(DFSEmbedding dfsEmbedding) {
     CachedGraph graph = input.get(dfsEmbedding.getGraphId());
 
-    DFSCodeEmbeddingPair[] outChildren = growChildrenByOutgoingEdges
+    Pair<DFSCode,DFSEmbedding>[] outChildren = growChildrenByOutgoingEdges
       .apply(graph, parent, rightmostPaath, dfsEmbedding);
 
-    DFSCodeEmbeddingPair[] inChildren = growChildrenByIncomingEdges
+    Pair<DFSCode,DFSEmbedding>[] inChildren = growChildrenByIncomingEdges
       .apply(graph, parent, rightmostPaath, dfsEmbedding);
 
     return Stream.of(ArrayUtils.addAll(outChildren, inChildren));

@@ -1,10 +1,13 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
 import com.google.common.collect.Maps;
+import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
+import javafx.util.Pair;
 import org.biiig.dmgm.impl.graph.DFSCode;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -17,32 +20,32 @@ public class IsMinimal implements java.util.function.Predicate<DFSCode> {
     GrowChildrenOf growChildrenOf = new GrowChildrenOf(dfsCode, Maps.newHashMap());
 
 
-    Optional<DFSCodeEmbeddingsPair> minPair = initializeParents
+    Optional<Pair<DFSCode,List<DFSEmbedding>>> minPair = initializeParents
       .apply(dfsCode)
-      .collect(new GroupByDFSCodeListEmbeddings())
+      .collect(new GroupByKeyListValues<>(Pair::getKey, Pair::getValue))
       .entrySet()
       .stream()
-      .map(e -> new DFSCodeEmbeddingsPair(e.getKey(), e.getValue(), 0l))
-      .min(Comparator.comparing(DFSCodeEmbeddingsPair::getDFSCode));
+      .map(e -> new Pair<>(e.getKey(), e.getValue()))
+      .min(Comparator.comparing(Pair::getKey));
 
-    boolean minimal =  minPair.isPresent() && minPair.get().getDFSCode().parentOf(dfsCode);
+    boolean minimal =  minPair.isPresent() && minPair.get().getKey().parentOf(dfsCode);
 
     while (minPair.isPresent() && minimal) {
-      DFSCode parentCode = minPair.get().getDFSCode();
+      DFSCode parentCode = minPair.get().getKey();
       int[] rightmostPath = parentCode.getRightmostPath();
-      Collection<DFSEmbedding> parentEmbeddings = minPair.get().getEmbeddings();
+      Collection<DFSEmbedding> parentEmbeddings = minPair.get().getValue();
 
       minPair = parentEmbeddings
         .stream()
         .flatMap(e -> Stream.of(growChildrenOf.apply(dfsCode, parentCode, rightmostPath, e)))
-        .collect(new GroupByDFSCodeListEmbeddings())
+        .collect(new GroupByKeyListValues<>(Pair::getKey, Pair::getValue))
         .entrySet()
         .stream()
-        .map(e -> new DFSCodeEmbeddingsPair(e.getKey(), e.getValue(), 0l))
-        .min(Comparator.comparing(DFSCodeEmbeddingsPair::getDFSCode));
+        .map(e -> new Pair<>(e.getKey(), e.getValue()))
+        .min(Comparator.comparing(Pair::getKey));
 
       if (minPair.isPresent()) {
-        DFSCode minCode = minPair.get().getDFSCode();
+        DFSCode minCode = minPair.get().getKey();
         minimal = minCode.parentOf(dfsCode);
       }
     }

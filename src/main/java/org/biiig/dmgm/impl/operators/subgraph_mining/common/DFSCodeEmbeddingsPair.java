@@ -4,33 +4,23 @@ import org.biiig.dmgm.impl.graph.DFSCode;
 
 import java.util.Collection;
 
-public class DFSCodeEmbeddingsPair implements Comparable<DFSCodeEmbeddingsPair>, Supportable {
+public class DFSCodeEmbeddingsPair implements Comparable<DFSCodeEmbeddingsPair> {
   private final DFSCode dfsCode;
-  private final long support;
   private Collection<DFSEmbedding> embeddings;
 
-  public DFSCodeEmbeddingsPair(DFSCode dfsCode, Collection<DFSEmbedding> embeddings, long support) {
+  public DFSCodeEmbeddingsPair(DFSCode dfsCode, Collection<DFSEmbedding> embeddings) {
     this.dfsCode = dfsCode;
     this.embeddings = embeddings;
-    this.support = support;
   }
 
-  @Override
   public DFSCode getDFSCode() {
     return dfsCode;
   }
 
-  @Override
   public Collection<DFSEmbedding> getEmbeddings() {
     return embeddings;
   }
 
-  @Override
-  public long getSupport() {
-    return support;
-  }
-
-  @Override
   public int getFrequency() {
     return embeddings.size();
   }

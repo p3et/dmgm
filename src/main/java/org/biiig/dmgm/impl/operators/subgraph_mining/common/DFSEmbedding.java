@@ -7,7 +7,7 @@ import java.util.Arrays;
 /**
  * Created by peet on 13.07.17.
  */
-public class DFSEmbedding {
+public class DFSEmbedding implements WithGraphId {
   private final int[] vertexIds;
   private final int[] edgeIds;
   private final long graphId;
