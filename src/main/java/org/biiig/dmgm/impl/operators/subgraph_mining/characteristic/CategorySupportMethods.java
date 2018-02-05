@@ -2,16 +2,15 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
 
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 import javafx.util.Pair;
-import org.biiig.dmgm.api.CachedGraph;
 import org.biiig.dmgm.api.GraphDB;
 import org.biiig.dmgm.impl.graph.DFSCode;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportMethods;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.PropertyKeys;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.WithGraphId;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -25,8 +24,8 @@ public class CategorySupportMethods extends SupportMethodsBase
   protected final int categoryKey;
 
 
-  public CategorySupportMethods(GraphDB database, Map<Long, int[]> graphCategories, Map<Integer, Long> categoryMinSupport, int categoryKey) {
-    super(database);
+  public CategorySupportMethods(GraphDB database, boolean parallel, Map<Long, int[]> graphCategories, Map<Integer, Long> categoryMinSupport, int categoryKey) {
+    super(database, parallel);
     this.graphCategories = graphCategories;
     this.categoryMinSupport = categoryMinSupport;
     this.categoryKey = categoryKey;
@@ -35,10 +34,15 @@ public class CategorySupportMethods extends SupportMethodsBase
   @Override
   public <K, V extends WithGraphId> Stream<Pair<Pair<K, List<V>>, Map<Integer, Long>>> aggregateAndFilter(Stream<Pair<K, V>> reports) {
 
-    return reports
+    Set<Map.Entry<K, List<V>>> entrySet = reports
       .collect(new GroupByKeyListValues<>(Pair::getKey, Pair::getValue))
-      .entrySet()
-      .stream()
+      .entrySet();
+
+    Stream<Map.Entry<K, List<V>>> stream = parallel ?
+      entrySet.parallelStream() :
+      entrySet.stream();
+
+    return stream
       .map(e -> new Pair<>(
         new Pair<>(e.getKey(), e.getValue()),
         e.getValue().stream()

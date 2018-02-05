@@ -9,11 +9,13 @@ public class SupportMethodsBase {
   protected final GraphDB database;
   protected final int dfsCodeKey;
   protected final int supportKey;
+  protected final boolean parallel;
 
-  public SupportMethodsBase(GraphDB database) {
+  public SupportMethodsBase(GraphDB database, boolean parallel) {
     this.database = database;
     supportKey = database.encode(PropertyKeys.SUPPORT);
     dfsCodeKey = database.encode(DFS_CODE);
+    this.parallel = parallel;
   }
 
   public long createGraph(GraphDB db, CachedGraph graph) {

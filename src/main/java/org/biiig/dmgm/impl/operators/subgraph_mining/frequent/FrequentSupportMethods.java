@@ -10,6 +10,8 @@ import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportMethods;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.WithGraphId;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public class FrequentSupportMethods extends SupportMethodsBase
@@ -17,18 +19,23 @@ public class FrequentSupportMethods extends SupportMethodsBase
 
   private final long minSupportAbsolute;
 
-  public FrequentSupportMethods(GraphDB database, long minSupportAbsolute) {
-    super(database);
+  public FrequentSupportMethods(GraphDB database, boolean parallel, long minSupportAbsolute) {
+    super(database, parallel);
     this.minSupportAbsolute = minSupportAbsolute;
   }
 
   @Override
   public <K, V extends WithGraphId> Stream<Pair<Pair<K, List<V>>, Long>> aggregateAndFilter(Stream<Pair<K, V>> reports) {
 
-    return reports
+    Set<Map.Entry<K, List<V>>> entrySet = reports
       .collect(new GroupByKeyListValues<>(Pair::getKey, Pair::getValue))
-      .entrySet()
-      .stream()
+      .entrySet();
+
+    Stream<Map.Entry<K, List<V>>> stream = parallel ?
+      entrySet.parallelStream() :
+      entrySet.stream();
+
+    return stream
       .map(e ->
         new Pair<>(
           new Pair<>(e.getKey(), e.getValue()),

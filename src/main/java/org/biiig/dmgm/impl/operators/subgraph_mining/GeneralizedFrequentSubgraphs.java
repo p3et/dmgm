@@ -17,6 +17,6 @@ public class GeneralizedFrequentSubgraphs extends GeneralizedSubgraphsBase<Long>
   @Override
   public SupportMethods<Long> getAggregateAndFilter(List<CachedGraph> input) {
     long minSupportAbsolute = (long) Math.round(input.size() * minSupportRel);
-    return new FrequentSupportMethods(database, minSupportAbsolute);
+    return new FrequentSupportMethods(database, parallel, minSupportAbsolute);
   }
 }

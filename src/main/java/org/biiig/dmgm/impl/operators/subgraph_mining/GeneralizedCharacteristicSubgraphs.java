@@ -31,7 +31,7 @@ public class GeneralizedCharacteristicSubgraphs
   public SupportMethods getAggregateAndFilter(List<CachedGraph> input) {
     Map<Long, int[]> graphCategories = getGraphCategories(input);
     Map<Integer, Long> categoryMinSupport = getCategoryMinSupport(graphCategories);
-    return new CategorySupportMethods(database, graphCategories, categoryMinSupport, categoryKey);
+    return new CategorySupportMethods(database, parallel, graphCategories, categoryMinSupport, categoryKey);
   }
 
   private Map<Integer, Long> getCategoryMinSupport(Map<Long, int[]> graphCategories) {
