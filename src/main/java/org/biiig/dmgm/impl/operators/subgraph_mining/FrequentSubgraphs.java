@@ -5,7 +5,7 @@ import org.biiig.dmgm.api.GraphDB;
 /**
  * Directed Multigraph gSpan
  */
-public class FrequentSubgraphs extends GeneralizedCharacteristicSubgraphs {
+public class FrequentSubgraphs extends GeneralizedFrequentSubgraphs {
   public FrequentSubgraphs(GraphDB database, float minSupportRel, int maxEdgeCount) {
     super(database, minSupportRel, maxEdgeCount);
   }
