@@ -75,10 +75,8 @@ public class MultiDimensionalVector implements WithGraphId {
         if (equal) {
           for (int dim = 0; dim < levels.length; dim++) {
             int level = levels[dim];
-            if (level >= 0) {
-              equal = this.dimensionPaths[dim][level] == that.dimensionPaths[dim][level];
-              if (!equal) break;
-            }
+            equal = this.dimensionPaths[dim][level] == that.dimensionPaths[dim][level];
+            if (!equal) break;
           }
         }
       }
