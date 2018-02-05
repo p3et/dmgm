@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.impl.graph.DFSCode;
-import org.biiig.dmgm.impl.operators.subgraph_mining.characteristic.CharacteristicMethods;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.AggregateAndFilter;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
 
 import java.util.Collection;
@@ -17,17 +17,12 @@ import java.util.stream.Stream;
 public class FrequentSpecializations
   implements Function<Pair<Pair<DFSCode,List<DFSEmbedding>>, Map<Integer, Long>>, Stream<Pair<Pair<DFSCode,List<DFSEmbedding>>, Map<Integer, Long>>>> {
 
-  private static final CharacteristicMethods METHODS = new CharacteristicMethods();
-
-
   private final Map<Long, int[][]> graphDimensionPaths;
-  private final Map<Long, int[]> graphCategories;
-  private final Map<Integer, Long> categoryMinSupport;
+  private final AggregateAndFilter aggregateAndFilter;
 
-  public FrequentSpecializations(Map<Long, int[][]> graphDimensionPaths, Map<Long, int[]> graphCategories, Map<Integer, Long> categoryMinSupport) {
+  public FrequentSpecializations(Map<Long, int[][]> graphDimensionPaths, AggregateAndFilter aggregateAndFilter) {
     this.graphDimensionPaths = graphDimensionPaths;
-    this.graphCategories = graphCategories;
-    this.categoryMinSupport = categoryMinSupport;
+    this.aggregateAndFilter = aggregateAndFilter;
   }
 
   @Override
@@ -42,8 +37,8 @@ public class FrequentSpecializations
 
     Stream<Pair<MultiDimensionalVector, MultiDimensionalVector>> children = specialize(parents, dimCount);
 
-    List<Pair<Pair<MultiDimensionalVector, List<MultiDimensionalVector>>, Map<Integer, Long>>> frequent = METHODS
-      .aggregateAndFilter(children, graphCategories, categoryMinSupport)
+    List<Pair<Pair<MultiDimensionalVector, List<MultiDimensionalVector>>, Map<Integer, Long>>> frequent = aggregateAndFilter
+      .aggregateAndFilter(children)
       .collect(Collectors.toList());
 
     while (!frequent.isEmpty()) {
@@ -81,8 +76,8 @@ public class FrequentSpecializations
 
       children = specialize(parents, dimCount);
 
-      frequent = METHODS
-        .aggregateAndFilter(children, graphCategories, categoryMinSupport)
+      frequent = aggregateAndFilter
+        .aggregateAndFilter(children)
         .collect(Collectors.toList());
     }
 

@@ -8,7 +8,8 @@ import org.biiig.dmgm.api.CachedGraph;
 import org.biiig.dmgm.api.GraphDB;
 import org.biiig.dmgm.impl.graph.DFSCode;
 import org.biiig.dmgm.impl.operators.CollectionOperatorBase;
-import org.biiig.dmgm.impl.operators.subgraph_mining.characteristic.CharacteristicMethods;
+import org.biiig.dmgm.impl.operators.subgraph_mining.characteristic.CharacteristicAggregateAndFilter;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.AggregateAndFilter;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.GrowAllChildren;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.InitializeParents;
@@ -24,8 +25,6 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class GeneralizedCharacteristicSubgraphs extends CollectionOperatorBase {
-  
-  private static final CharacteristicMethods METHODS = new CharacteristicMethods();
 
   private static final String DEFAULT_CATEGORY = "_default";
   private static final String LEVEL_SEPARATOR = "_";
@@ -68,10 +67,12 @@ public class GeneralizedCharacteristicSubgraphs extends CollectionOperatorBase {
 
     Stream<Pair<DFSCode,DFSEmbedding>> reports = getSingleEdgeReports(input);
 
-    Stream<Pair<Pair<DFSCode,List<DFSEmbedding>>, Map<Integer, Long>>> filtered = 
-      METHODS.aggregateAndFilter(reports, graphCategories, categoryMinSupport);
+    AggregateAndFilter aggregateAndFilter = new CharacteristicAggregateAndFilter(graphCategories, categoryMinSupport);
 
-    List<Pair<Pair<DFSCode,List<DFSEmbedding>>, Map<Integer, Long>>> parents = specialize(filtered, graphDimensionPaths, graphCategories, categoryMinSupport);
+    Stream<Pair<Pair<DFSCode,List<DFSEmbedding>>, Map<Integer, Long>>> filtered = 
+      aggregateAndFilter.aggregateAndFilter(reports);
+
+    List<Pair<Pair<DFSCode,List<DFSEmbedding>>, Map<Integer, Long>>> parents = specialize(filtered, aggregateAndFilter, graphDimensionPaths);
 
     long[] graphIds = output(parents);
     
@@ -81,10 +82,10 @@ public class GeneralizedCharacteristicSubgraphs extends CollectionOperatorBase {
         .map(Pair::getKey)
         .flatMap(new GrowAllChildren(indexedGraphs));
 
-      filtered = METHODS.aggregateAndFilter(reports, graphCategories, categoryMinSupport)
+      filtered = aggregateAndFilter.aggregateAndFilter(reports)
         .filter(e -> new IsMinimal().test(e.getKey().getKey()));
       
-      parents = specialize(filtered, graphDimensionPaths, graphCategories, categoryMinSupport);
+      parents = specialize(filtered, aggregateAndFilter, graphDimensionPaths);
 
       graphIds = ArrayUtils.addAll(graphIds, output(parents));
 
@@ -117,10 +118,10 @@ public class GeneralizedCharacteristicSubgraphs extends CollectionOperatorBase {
   }
 
   private List<Pair<Pair<DFSCode,List<DFSEmbedding>>, Map<Integer, Long>>> specialize(
-    Stream<Pair<Pair<DFSCode,List<DFSEmbedding>>, Map<Integer, Long>>> filtered, Map<Long, int[][]> graphDimensionPaths, Map<Long, int[]> graphCategories, Map<Integer, Long> categoryMinSupport) {
+    Stream<Pair<Pair<DFSCode, List<DFSEmbedding>>, Map<Integer, Long>>> filtered, AggregateAndFilter aggregateAndFilter, Map<Long, int[][]> graphDimensionPaths) {
 
     return filtered
-      .flatMap(new FrequentSpecializations(graphDimensionPaths, graphCategories, categoryMinSupport))
+      .flatMap(new FrequentSpecializations(graphDimensionPaths, aggregateAndFilter))
       .collect(Collectors.toList());
   }
 

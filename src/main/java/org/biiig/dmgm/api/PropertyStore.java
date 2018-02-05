@@ -15,8 +15,8 @@ public interface PropertyStore {
   void set(long id, int key, boolean value);
   boolean is(long id, int key);
 
-  void set(long id, int key, int value);
-  int getInt(long id, int key);
+  void set(long id, int key, long value);
+  long getLong(long id, int key);
 
   void set(long id, int key, double value);
   double getDouble(long id, int key);

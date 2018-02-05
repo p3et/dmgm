@@ -22,7 +22,6 @@ import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
-import java.util.stream.Stream;
 
 /**
  * Pragmatic reference implementation of {@code GraphCollectionDatabase}.
@@ -40,7 +39,7 @@ public class GraphDBBase implements GraphDB {
   private final Map<Long, LongsPair> elements = createMap();
 
   private final Map<Integer, Set<Long>> booleanProperties = createMap();
-  private final Map<Integer, Map<Long, Integer>> intProperties = createMap();
+  private final Map<Integer, Map<Long, Long>> longProperties = createMap();
   private final Map<Integer, Map<Long, Double>> doubleProperties = createMap();
   private final Map<Integer, Map<Long, String>> stringProperties = createMap();
   private final Map<Integer, Map<Long, BigDecimal>> bigDecimalProperties = createMap();
@@ -290,18 +289,18 @@ public class GraphDBBase implements GraphDB {
    * @param key property key
    * @return map of set int values
    */
-  private Map<Long, Integer> getIntValues(int key) {
-    return getProperties(key, this.intProperties);
+  private Map<Long, Long> getLongValues(int key) {
+    return getProperties(key, this.longProperties);
   }
 
   @Override
-  public void set(long id, int key, int value) {
-    getIntValues(key).put(id, value);
+  public void set(long id, int key, long value) {
+    getLongValues(key).put(id, value);
   }
 
   @Override
-  public int getInt(long id, int key) {
-    return getIntValues(key).get(id);
+  public long getLong(long id, int key) {
+    return getLongValues(key).get(id);
   }
 
   /**
@@ -449,7 +448,7 @@ public class GraphDBBase implements GraphDB {
       .map(e -> new Property(e.getKey(), true))
       .collect(Collectors.toList());
 
-    properties.addAll(getProperties(intProperties, id));
+    properties.addAll(getProperties(longProperties, id));
     properties.addAll(getProperties(doubleProperties, id));
     properties.addAll(getProperties(stringProperties, id));
     properties.addAll(getProperties(bigDecimalProperties, id));
@@ -484,7 +483,7 @@ public class GraphDBBase implements GraphDB {
         .map(id -> new Pair<>(id, new Property(e.getKey(), true))))
       .collect(Collectors.toList());
 
-    properties.addAll(getProperties(intProperties));
+    properties.addAll(getProperties(longProperties));
     properties.addAll(getProperties(doubleProperties));
     properties.addAll(getProperties(stringProperties));
     properties.addAll(getProperties(bigDecimalProperties));
@@ -519,7 +518,7 @@ public class GraphDBBase implements GraphDB {
       "\negs=" + edges +
       "\nels=" + elements +
       "\nbol=" + booleanProperties +
-      "\nint=" + intProperties +
+      "\nint=" + longProperties +
       "\ndob=" + doubleProperties +
       "\nstr=" + stringProperties +
       "\nbdc=" + bigDecimalProperties +

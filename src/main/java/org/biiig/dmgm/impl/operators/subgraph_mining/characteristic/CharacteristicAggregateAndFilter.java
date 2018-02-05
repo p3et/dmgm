@@ -2,6 +2,7 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
 
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 import javafx.util.Pair;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.AggregateAndFilter;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.WithGraphId;
 
 import java.util.List;
@@ -11,10 +12,18 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class CharacteristicMethods {
+public class CharacteristicAggregateAndFilter implements AggregateAndFilter {
 
-  public <K, V extends WithGraphId> Stream<Pair<Pair<K, List<V>>, Map<Integer, Long>>> aggregateAndFilter(
-    Stream<Pair<K, V>> reports, Map<Long, int[]> graphCategories, Map<Integer, Long> categoryMinSupport) {
+  private final Map<Long, int[]> graphCategories;
+  private final Map<Integer, Long> categoryMinSupport;
+
+  public CharacteristicAggregateAndFilter(Map<Long, int[]> graphCategories, Map<Integer, Long> categoryMinSupport) {
+    this.graphCategories = graphCategories;
+    this.categoryMinSupport = categoryMinSupport;
+  }
+
+  @Override
+  public <K, V extends WithGraphId> Stream<Pair<Pair<K, List<V>>, Map<Integer, Long>>> aggregateAndFilter(Stream<Pair<K, V>> reports) {
 
     return reports
       .collect(new GroupByKeyListValues<>(Pair::getKey, Pair::getValue))
