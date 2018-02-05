@@ -105,12 +105,11 @@ public abstract class GeneralizedSubgraphsBase<S> extends CollectionOperatorBase
         g -> {
           int[][] dimensionPaths = new int[g.getVertexCount()][];
 
-          g.vertexIdStream()
-            .forEach(v -> {
-              int[] dimensionPath = dimensionPathMap.get(g.getVertexLabel(v));
-              dimensionPaths[v] = dimensionPath;
-              g.setVertexLabel(v, dimensionPath[0]);
-            });
+          for (int v =0; v < g.getVertexCount(); v++) {
+            int[] dimensionPath = dimensionPathMap.get(g.getVertexLabel(v));
+            dimensionPaths[v] = dimensionPath;
+            g.setVertexLabel(v, dimensionPath[0]);
+          }
 
           return dimensionPaths;
         }

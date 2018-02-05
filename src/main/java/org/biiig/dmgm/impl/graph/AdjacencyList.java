@@ -14,11 +14,10 @@ public class AdjacencyList extends CachedGraphBase {
     outgoingEdgeIds = new int[vertexCount][];
     incomingEdgeIds = new int[vertexCount][];
 
-    vertexIdStream()
-      .forEach(vertexId -> {
-        outgoingEdgeIds[vertexId] = super.getOutgoingEdgeIds(vertexId);
-        incomingEdgeIds[vertexId] = super.getIncomingEdgeIds(vertexId);
-      });
+    for (int vertexId = 0; vertexId < getVertexCount(); vertexId++) {
+      outgoingEdgeIds[vertexId] = super.getOutgoingEdgeIds(vertexId);
+      incomingEdgeIds[vertexId] = super.getIncomingEdgeIds(vertexId);
+    }
   }
 
   @Override

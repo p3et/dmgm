@@ -19,21 +19,20 @@ public class SupportMethodsBase {
   }
 
   public long createGraph(GraphDB db, CachedGraph graph) {
-    long[] vertexIds = graph
-      .vertexIdStream()
-      .map(graph::getVertexLabel)
-      .mapToLong(db::createVertex)
-      .toArray();
+    int vertexCount = graph.getVertexCount();
+    long[] vertexIds = new long[vertexCount];
+    for (int v = 0; v < vertexCount; v++)
+      vertexIds[v] = db.createVertex(graph.getVertexLabel(v));
 
-    long[] edgeIds = graph
-      .edgeIdStream()
-      .mapToLong(edgeId -> {
-        int label = graph.getEdgeLabel(edgeId);
-        long sourceId = vertexIds[graph.getSourceId(edgeId)];
-        long targetId = vertexIds[graph.getTargetId(edgeId)];
-        return db.createEdge(label, sourceId, targetId);
-      })
-      .toArray();
+
+    int edgeCount = graph.getEdgeCount();
+    long[] edgeIds = new long[edgeCount];
+    for (int e = 0; e < edgeCount; e++) {
+      int label = graph.getEdgeLabel(e);
+      long sourceId = vertexIds[graph.getSourceId(e)];
+      long targetId = vertexIds[graph.getTargetId(e)];
+      edgeIds[e] = db.createEdge(label, sourceId, targetId);
+    }
 
     return db.createGraph(graph.getLabel(), vertexIds, edgeIds);
   }

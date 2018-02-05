@@ -23,13 +23,13 @@ public class FilterVerticesAndEdgesByLabel implements Function<CachedGraph, Cach
 
   @Override
   public CachedGraph apply(CachedGraph graph) {
-    int[] vertexCandidates = graph
-      .vertexIdStream()
+    int[] vertexCandidates = IntStream
+      .range(0, graph.getVertexCount())
       .filter(v -> vertexLabelPredicate.test(graph.getVertexLabel(v)))
       .toArray();
 
-    int[] keepEdges = graph
-      .edgeIdStream()
+    int[] keepEdges = IntStream
+      .range(0, graph.getEdgeCount())
       .filter(v -> edgeLabelPredicate.test(graph.getEdgeLabel(v)))
       .filter(e -> ArrayUtils.contains(vertexCandidates, graph.getSourceId(e)))
       .filter(e -> ArrayUtils.contains(vertexCandidates, graph.getTargetId(e)))
@@ -57,14 +57,14 @@ public class FilterVerticesAndEdgesByLabel implements Function<CachedGraph, Cach
 
     int[] vertexIdMap = new int[graph.getVertexCount()];
 
-    int[] vertexLabels = IntStream
-      .range(0, keepVertices.length)
-      .map(outVertexId -> {
-        int inVertexId = keepVertices[outVertexId];
-        vertexIdMap[inVertexId] = outVertexId;
-        return graph.getVertexLabel(inVertexId);
-      })
-      .toArray();
+
+    int vertexCount = keepVertices.length;
+    int[] vertexLabels = new int[vertexCount];
+    for(int outVertexId = 0; outVertexId < vertexCount; outVertexId++)  {
+      int inVertexId = keepVertices[outVertexId];
+      vertexIdMap[inVertexId] = outVertexId;
+      vertexLabels[outVertexId] = graph.getVertexLabel(inVertexId);
+    }
 
     int edgeCount = keepEdges.length;
     int[] edgeLabels = new int[edgeCount];

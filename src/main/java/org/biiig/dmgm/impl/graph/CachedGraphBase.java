@@ -80,16 +80,6 @@ public class CachedGraphBase implements CachedGraph {
   }
 
   @Override
-  public IntStream vertexIdStream() {
-    return IntStream.range(0, getVertexCount());
-  }
-
-  @Override
-  public IntStream edgeIdStream() {
-    return IntStream.range(0, getEdgeCount());
-  }
-
-  @Override
   public String toString(GraphDB db) {
     return toString(db::decode);
   }

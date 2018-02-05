@@ -1,7 +1,5 @@
 package org.biiig.dmgm.api;
 
-import java.util.stream.IntStream;
-
 /**
  * A directed graph with integer labels.
  */
@@ -20,9 +18,6 @@ public interface CachedGraph {
 
   int getVertexCount();
   int getEdgeCount();
-
-  IntStream vertexIdStream();
-  IntStream edgeIdStream();
 
   String toString(GraphDB db);
 
