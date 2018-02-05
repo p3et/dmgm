@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.impl.graph.DFSCode;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.AggregateAndFilter;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportMethods;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
 
 import java.util.Collection;
@@ -14,20 +14,20 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class FrequentSpecializations
-  implements Function<Pair<Pair<DFSCode,List<DFSEmbedding>>, Map<Integer, Long>>, Stream<Pair<Pair<DFSCode,List<DFSEmbedding>>, Map<Integer, Long>>>> {
+public class FrequentSpecializations<S>
+  implements Function<Pair<Pair<DFSCode,List<DFSEmbedding>>, S>, Stream<Pair<Pair<DFSCode,List<DFSEmbedding>>, S>>> {
 
   private final Map<Long, int[][]> graphDimensionPaths;
-  private final AggregateAndFilter aggregateAndFilter;
+  private final SupportMethods<S> supportMethods;
 
-  public FrequentSpecializations(Map<Long, int[][]> graphDimensionPaths, AggregateAndFilter aggregateAndFilter) {
+  public FrequentSpecializations(Map<Long, int[][]> graphDimensionPaths, SupportMethods<S> supportMethods) {
     this.graphDimensionPaths = graphDimensionPaths;
-    this.aggregateAndFilter = aggregateAndFilter;
+    this.supportMethods = supportMethods;
   }
 
   @Override
-  public Stream<Pair<Pair<DFSCode,List<DFSEmbedding>>, Map<Integer, Long>>> apply(Pair<Pair<DFSCode,List<DFSEmbedding>>, Map<Integer, Long>> input) {
-    List<Pair<Pair<DFSCode, List<DFSEmbedding>>, Map<Integer, Long>>> frequentSpecializations = Lists.newArrayList(input);
+  public Stream<Pair<Pair<DFSCode,List<DFSEmbedding>>, S>> apply(Pair<Pair<DFSCode,List<DFSEmbedding>>, S> input) {
+    List<Pair<Pair<DFSCode, List<DFSEmbedding>>, S>> frequentSpecializations = Lists.newArrayList(input);
 
 
     DFSCode topLevel = input.getKey().getKey();
@@ -37,7 +37,7 @@ public class FrequentSpecializations
 
     Stream<Pair<MultiDimensionalVector, MultiDimensionalVector>> children = specialize(parents, dimCount);
 
-    List<Pair<Pair<MultiDimensionalVector, List<MultiDimensionalVector>>, Map<Integer, Long>>> frequent = aggregateAndFilter
+    List<Pair<Pair<MultiDimensionalVector, List<MultiDimensionalVector>>, S>> frequent = supportMethods
       .aggregateAndFilter(children)
       .collect(Collectors.toList());
 
@@ -76,7 +76,7 @@ public class FrequentSpecializations
 
       children = specialize(parents, dimCount);
 
-      frequent = aggregateAndFilter
+      frequent = supportMethods
         .aggregateAndFilter(children)
         .collect(Collectors.toList());
     }
@@ -101,7 +101,7 @@ public class FrequentSpecializations
       .map(v -> new Pair<>(v, v));
   }
 
-  public Stream<MultiDimensionalVector> initVectors(Pair<Pair<DFSCode, List<DFSEmbedding>>, Map<Integer, Long>> input) {
+  public Stream<MultiDimensionalVector> initVectors(Pair<Pair<DFSCode, List<DFSEmbedding>>, S> input) {
     return input
       .getKey()
       .getValue()
