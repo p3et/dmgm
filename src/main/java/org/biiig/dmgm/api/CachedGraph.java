@@ -30,4 +30,8 @@ public interface CachedGraph {
   int[] getEdgeLabels();
 
   void setVertexLabel(int vertexId, int label);
+
+  int[] getSourceIds();
+
+  int[] getTargetIds();
 }

@@ -6,6 +6,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.CachedGraph;
 import org.biiig.dmgm.api.GraphDB;
+import org.biiig.dmgm.impl.graph.AdjacencyList;
 import org.biiig.dmgm.impl.graph.DFSCode;
 import org.biiig.dmgm.impl.operators.CollectionOperatorBase;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportMethods;
@@ -47,7 +48,16 @@ public abstract class GeneralizedSubgraphsBase<S> extends CollectionOperatorBase
     List<CachedGraph> input = database.getCachedCollection(collectionId);
 
     Map<Long, CachedGraph> indexedGraphs = (parallel ? input.parallelStream() : input.stream())
-      .collect(Collectors.toMap(CachedGraph::getId, Function.identity()));
+      .collect(Collectors.toMap(
+        CachedGraph::getId,
+        g -> new AdjacencyList(
+          g.getId(),
+          g.getLabel(),
+          g.getVertexLabels(),
+          g.getEdgeLabels(),
+          g.getSourceIds(),
+          g.getTargetIds())
+      ));
 
     SupportMethods<S> supportMethods = getAggregateAndFilter(input);
 

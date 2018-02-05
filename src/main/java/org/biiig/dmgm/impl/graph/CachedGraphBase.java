@@ -110,6 +110,16 @@ public class CachedGraphBase implements CachedGraph {
   }
 
   @Override
+  public int[] getSourceIds() {
+    return sourceIds;
+  }
+
+  @Override
+  public int[] getTargetIds() {
+    return targetIds;
+  }
+
+  @Override
   public String toString() {
     return toString(Object::toString);
   }
