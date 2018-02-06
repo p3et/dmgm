@@ -3,6 +3,7 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.generalized;
 import com.google.common.collect.Lists;
 import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
+import org.biiig.dmgm.api.SpecializableCachedGraph;
 import org.biiig.dmgm.impl.graph.DFSCode;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportMethods;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
@@ -17,22 +18,20 @@ import java.util.stream.Stream;
 public class FrequentSpecializations<S>
   implements Function<Pair<Pair<DFSCode,List<DFSEmbedding>>, S>, Stream<Pair<Pair<DFSCode,List<DFSEmbedding>>, S>>> {
 
-  private final Map<Long, int[][]> graphDimensionPaths;
   private final SupportMethods<S> supportMethods;
+  private final Map<Long, SpecializableCachedGraph> indexedGraphs;
 
-  public FrequentSpecializations(Map<Long, int[][]> graphDimensionPaths, SupportMethods<S> supportMethods) {
-    this.graphDimensionPaths = graphDimensionPaths;
+  public FrequentSpecializations(SupportMethods<S> supportMethods, Map<Long, SpecializableCachedGraph> indexedGraphs) {
     this.supportMethods = supportMethods;
+    this.indexedGraphs = indexedGraphs;
   }
 
   @Override
   public Stream<Pair<Pair<DFSCode,List<DFSEmbedding>>, S>> apply(Pair<Pair<DFSCode,List<DFSEmbedding>>, S> input) {
     List<Pair<Pair<DFSCode, List<DFSEmbedding>>, S>> frequentSpecializations = Lists.newArrayList(input);
 
-
     DFSCode topLevel = input.getKey().getKey();
     int dimCount = topLevel.getVertexCount();
-
     Stream<MultiDimensionalVector> parents = initVectors(input);
 
     Stream<Pair<MultiDimensionalVector, MultiDimensionalVector>> children = specialize(parents, dimCount);
@@ -102,6 +101,7 @@ public class FrequentSpecializations<S>
   }
 
   public Stream<MultiDimensionalVector> initVectors(Pair<Pair<DFSCode, List<DFSEmbedding>>, S> input) {
+
     return input
       .getKey()
       .getValue()
@@ -110,10 +110,22 @@ public class FrequentSpecializations<S>
         int[][] dimensionPaths = new int[e.getVertexCount()][];
 
         for (int time = 0; time < e.getVertexCount(); time++) {
-          dimensionPaths[time] = graphDimensionPaths.get(e.getGraphId())[e.getVertexId(time)];
+          SpecializableCachedGraph graph = indexedGraphs.get(e.getGraphId());
+          int vertexId = e.getVertexId(time);
+          int vertexLabel = graph.getVertexLabel(vertexId);
+          int[] taxonomyTail = graph.getTaxonomyTail(vertexId);
+          int[] dimensionPath = new int[]{vertexLabel};
+
+          if (taxonomyTail != null)
+            dimensionPath = ArrayUtils.addAll(dimensionPath, taxonomyTail);
+
+          dimensionPaths[time] = dimensionPath;
         }
 
-        return MultiDimensionalVector.create(e, dimensionPaths);
+        MultiDimensionalVector vector = MultiDimensionalVector.create(e, dimensionPaths);
+
+        System.out.println(vector);
+        return vector;
       });
   }
 }

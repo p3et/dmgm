@@ -3,6 +3,7 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.CachedGraph;
+import org.biiig.dmgm.api.SpecializableCachedGraph;
 import org.biiig.dmgm.impl.graph.DFSCode;
 
 import java.util.Map;
@@ -15,9 +16,9 @@ public class GrowChildrenOf implements Function<DFSEmbedding, Stream<Pair<DFSCod
   private final GrowChildrenByIncomingEdges growChildrenByIncomingEdges = new GrowChildrenByIncomingEdges();
   private final DFSCode parent;
   private final int[] rightmostPaath;
-  private final Map<Long, CachedGraph> input;
+  private final Map<Long, SpecializableCachedGraph> input;
 
-  public GrowChildrenOf(DFSCode parent, Map<Long, CachedGraph> input) {
+  public GrowChildrenOf(DFSCode parent, Map<Long, SpecializableCachedGraph> input) {
     this.input = input;
     this.parent = parent;
     this.rightmostPaath = parent.getRightmostPath();
