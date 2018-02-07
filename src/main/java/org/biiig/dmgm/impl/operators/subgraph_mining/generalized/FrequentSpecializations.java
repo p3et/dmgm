@@ -31,6 +31,7 @@ public class FrequentSpecializations<S>
     List<Pair<Pair<DFSCode, List<DFSEmbedding>>, S>> frequentSpecializations = Lists.newArrayList(input);
 
     DFSCode topLevel = input.getKey().getKey();
+
     int dimCount = topLevel.getVertexCount();
     Stream<MultiDimensionalVector> parents = initVectors(input);
 
@@ -124,7 +125,6 @@ public class FrequentSpecializations<S>
 
         MultiDimensionalVector vector = MultiDimensionalVector.create(e, dimensionPaths);
 
-        System.out.println(vector);
         return vector;
       });
   }

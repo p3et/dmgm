@@ -1,5 +1,6 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining;
 
+import com.google.common.collect.Lists;
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
@@ -17,6 +18,7 @@ import org.biiig.dmgm.impl.operators.subgraph_mining.common.InitializeParents;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.IsMinimal;
 import org.biiig.dmgm.impl.operators.subgraph_mining.generalized.FrequentSpecializations;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -50,6 +52,16 @@ public abstract class GeneralizedSubgraphsBase<S> extends CollectionOperatorBase
 
     Map<Integer, Pair<Integer, int[]>> taxonomyPaths = generalize(input);
 
+    taxonomyPaths
+      .entrySet()
+      .forEach(e -> {
+
+        List<String> path =Lists.newArrayList(database.decode(e.getValue().getKey()));
+
+        IntStream.of(e.getValue().getValue()).mapToObj(database::decode)
+          .forEach(s -> path.add(s));
+      });
+
     Map<Long, SpecializableCachedGraph> indexedGraphs = (parallel ? input.parallelStream() : input.stream())
       .collect(Collectors.toMap(
         CachedGraph::getId,
@@ -81,9 +93,9 @@ public abstract class GeneralizedSubgraphsBase<S> extends CollectionOperatorBase
         }
       ));
 
-    SupportMethods<S> supportMethods = getAggregateAndFilter(input);
+    SupportMethods<S> supportMethods = getAggregateAndFilter(indexedGraphs);
 
-    Stream<Pair<DFSCode,DFSEmbedding>> reports = getSingleEdgeReports(input);
+    Stream<Pair<DFSCode,DFSEmbedding>> reports = getSingleEdgeReports(indexedGraphs);
 
     Stream<Pair<Pair<DFSCode,List<DFSEmbedding>>, S>> filtered =
       supportMethods.aggregateAndFilter(reports);
@@ -111,7 +123,7 @@ public abstract class GeneralizedSubgraphsBase<S> extends CollectionOperatorBase
     return database.createCollection(collectionLabel, graphIds);
   }
 
-  public abstract SupportMethods<S> getAggregateAndFilter(List<CachedGraph> input);
+  public abstract SupportMethods<S> getAggregateAndFilter(Map<Long, SpecializableCachedGraph> input);
 
   private Map<Integer, Pair<Integer, int[]>> generalize(List<CachedGraph> input) {
     Map<Integer, Long> vertexLabelSupport = getVertexLabelSupport(input);
@@ -122,11 +134,11 @@ public abstract class GeneralizedSubgraphsBase<S> extends CollectionOperatorBase
       .map(database::decode)
       .filter(s -> s.contains(LEVEL_SEPARATOR))
       .map(s -> {
-        int[] ints = new int[0];
+        int[] ints = new int[] {database.encode(s)};
 
         while (s.contains(LEVEL_SEPARATOR)) {
-          ints = ArrayUtils.add(ints, database.encode(s));
           s = StringUtils.substringBeforeLast(s, LEVEL_SEPARATOR);
+          ints = ArrayUtils.add(ints, database.encode(s));
         }
 
         ArrayUtils.reverse(ints);
@@ -148,8 +160,9 @@ public abstract class GeneralizedSubgraphsBase<S> extends CollectionOperatorBase
 
 
 
-  public Stream<Pair<DFSCode,DFSEmbedding>> getSingleEdgeReports(List<CachedGraph> input) {
-    return (parallel ? input.parallelStream() : input.stream())
+  public Stream<Pair<DFSCode,DFSEmbedding>> getSingleEdgeReports(Map<Long, SpecializableCachedGraph> input) {
+    Collection<SpecializableCachedGraph> values = input.values();
+    return (parallel ? values.parallelStream() : values.stream())
       .flatMap(new InitializeParents(patternLabel));
   }
 

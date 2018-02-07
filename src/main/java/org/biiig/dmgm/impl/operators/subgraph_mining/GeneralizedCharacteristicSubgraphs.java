@@ -2,6 +2,7 @@ package org.biiig.dmgm.impl.operators.subgraph_mining;
 
 import org.biiig.dmgm.api.CachedGraph;
 import org.biiig.dmgm.api.GraphDB;
+import org.biiig.dmgm.api.SpecializableCachedGraph;
 import org.biiig.dmgm.impl.operators.subgraph_mining.characteristic.CategorySupportMethods;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportMethods;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.PropertyKeys;
@@ -28,7 +29,7 @@ public class GeneralizedCharacteristicSubgraphs
   }
 
   @Override
-  public SupportMethods getAggregateAndFilter(List<CachedGraph> input) {
+  public SupportMethods getAggregateAndFilter(Map<Long, SpecializableCachedGraph> input) {
     Map<Long, int[]> graphCategories = getGraphCategories(input);
     Map<Integer, Long> categoryMinSupport = getCategoryMinSupport(graphCategories);
     return new CategorySupportMethods(database, parallel, graphCategories, categoryMinSupport, categoryKey);
@@ -48,8 +49,9 @@ public class GeneralizedCharacteristicSubgraphs
       .collect(Collectors.toMap(Map.Entry::getKey, e -> (long) Math.round(e.getValue() * minSupportRel)));
   }
 
-  private Map<Long, int[]> getGraphCategories(List<CachedGraph> input) {
+  private Map<Long, int[]> getGraphCategories(Map<Long, SpecializableCachedGraph> input) {
     return input
+      .values()
       .stream()
       .collect(Collectors.toMap(
         CachedGraph::getId,
