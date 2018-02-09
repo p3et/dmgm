@@ -32,34 +32,27 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.api;
+package org.biiig.dmgm.impl;
 
-import java.util.function.UnaryOperator;
+public class Property {
+  private final int key;
+  private final Object value;
 
-/**
- * An operator that creates a new graph collection from an existing one.
- */
-public interface CollectionOperator extends UnaryOperator<Long> {
-  /**
-   * Ensure the operator is executed in parallel.
-   *
-   * @return parallel operator
-   */
-  CollectionOperator parallel();
+  public Property(int key, Object value) {
+    this.key = key;
+    this.value = value;
+  }
 
-  /**
-   * Ensure the operator is executed sequentially (default).
-   *
-   * @return sequential operator
-   */
-  CollectionOperator sequential();
+  public int getKey() {
+    return key;
+  }
 
-  /**
-   * Execute the operation.
-   *
-   * @param inputCollectionId id of the input graph collection
-   * @return id of the output graph collection
-   */
+  public Object getValue() {
+    return value;
+  }
+
   @Override
-  Long apply(Long inputCollectionId);
+  public String toString() {
+    return key + ":" + value;
+  }
 }

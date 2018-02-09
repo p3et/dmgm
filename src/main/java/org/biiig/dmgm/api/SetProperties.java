@@ -34,32 +34,27 @@
 
 package org.biiig.dmgm.api;
 
-import java.util.function.UnaryOperator;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
-/**
- * An operator that creates a new graph collection from an existing one.
- */
-public interface CollectionOperator extends UnaryOperator<Long> {
-  /**
-   * Ensure the operator is executed in parallel.
-   *
-   * @return parallel operator
-   */
-  CollectionOperator parallel();
+public interface SetProperties {
+  void set(long id, int key, boolean value);
 
-  /**
-   * Ensure the operator is executed sequentially (default).
-   *
-   * @return sequential operator
-   */
-  CollectionOperator sequential();
+  void set(long id, int key, long value);
 
-  /**
-   * Execute the operation.
-   *
-   * @param inputCollectionId id of the input graph collection
-   * @return id of the output graph collection
-   */
-  @Override
-  Long apply(Long inputCollectionId);
+  void set(long id, int key, double value);
+
+  void set(long id, int key, String value);
+
+  void set(long id, int key, BigDecimal value);
+
+  void set(long id, int key, LocalDate value);
+
+  void set(long id, int key, int[] values);
+
+  void add(long id, int key, int value);
+
+  void set(long id, int key, String[] values);
+
+  void add(long id, int key, String value);
 }

@@ -34,32 +34,31 @@
 
 package org.biiig.dmgm.api;
 
-import java.util.function.UnaryOperator;
+import java.util.List;
 
 /**
- * An operator that creates a new graph collection from an existing one.
+ * Describes a database that supports:
+ * - the Extended Property Graph Model
+ * - edges between arbitrary elements (vertices, graphs, edges)
+ * - dictionary coding for all symbols such as labels and property keys
  */
-public interface CollectionOperator extends UnaryOperator<Long> {
-  /**
-   * Ensure the operator is executed in parallel.
-   *
-   * @return parallel operator
-   */
-  CollectionOperator parallel();
+public interface PropertyGraphDB
+  extends SymbolDictionary, CreateElements, GetElements, SetProperties, GetProperties, QueryElements {
 
   /**
-   * Ensure the operator is executed sequentially (default).
+   * Materialize a single graph and return a Pojo representation.
    *
-   * @return sequential operator
+   * @param graphId graph id
+   * @return cached immutable graph pojo
    */
-  CollectionOperator sequential();
+  CachedGraph getCachedGraph(long graphId);
 
   /**
-   * Execute the operation.
+   * Materialize a single graph and return a List of it's graphs pojo representations.
    *
-   * @param inputCollectionId id of the input graph collection
-   * @return id of the output graph collection
+   * @param collectionId hypervertex id
+   * @return list of cached immutable graph pojos
    */
-  @Override
-  Long apply(Long inputCollectionId);
+  List<CachedGraph> getCachedCollection(long collectionId);
+
 }

@@ -34,32 +34,54 @@
 
 package org.biiig.dmgm.api;
 
-import java.util.function.UnaryOperator;
+import com.google.common.collect.Sets;
+import org.apache.commons.lang3.ArrayUtils;
+
+import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.IntPredicate;
 
 /**
- * An operator that creates a new graph collection from an existing one.
+ * Get vertices, edges, graphs and graph collections by data-related queries.
  */
-public interface CollectionOperator extends UnaryOperator<Long> {
+public interface QueryElements {
   /**
-   * Ensure the operator is executed in parallel.
+   * Query identifiers of elements matching a given label predicate.
    *
-   * @return parallel operator
+   * @param labelPredicate label predicate
+   * @return identifiers
    */
-  CollectionOperator parallel();
+  long[] queryElements(IntPredicate labelPredicate);
 
   /**
-   * Ensure the operator is executed sequentially (default).
+   * Query identifiers of elements matching a given property predicate.
    *
-   * @return sequential operator
+   * @param propertyPredicate over elementId and property store
+   * @return
    */
-  CollectionOperator sequential();
+  long[] queryElements(PropertyPredicate propertyPredicate);
 
   /**
-   * Execute the operation.
+   * Query identifiers of elements matching a given label and property predicate.
    *
-   * @param inputCollectionId id of the input graph collection
-   * @return id of the output graph collection
+   * @param propertyPredicate over elementId and property store
+   * @return
    */
-  @Override
-  Long apply(Long inputCollectionId);
+  long[] queryElements(IntPredicate labelPredicate, PropertyPredicate propertyPredicate);
+
+  /**
+   * A predicate that evaluates an element's properties.
+   */
+  interface PropertyPredicate extends BiFunction<GetProperties, Long, Boolean> {
+
+    /**
+     * Evaluate the predicate.
+     *
+     * @param getProperties property store read access
+     * @param elementId id of a graph, vertex or edge
+     * @return evaluation result
+     */
+    @Override
+    Boolean apply(GetProperties getProperties, Long elementId);
+  }
 }

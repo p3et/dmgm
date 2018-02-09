@@ -1,8 +1,25 @@
+/*
+ * This file is part of Directed Multigraph Miner (DMGM).
+ *
+ * DMGM is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * DMGM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.biiig.dmgm.impl.loader;
 
-import org.biiig.dmgm.api.GraphDB;
-import org.biiig.dmgm.impl.db.GraphDBBase;
-import org.biiig.dmgm.impl.db.LongPair;
+import org.biiig.dmgm.api.PropertyGraphDB;
+import org.biiig.dmgm.impl.db.InMemoryGraphDB;
+import org.biiig.dmgm.impl.db.SourceIdTargetId;
 import org.s1ck.gdl.GDLHandler;
 import org.s1ck.gdl.model.Element;
 
@@ -11,7 +28,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class GDLLoader implements Supplier<GraphDB> {
+public class GDLLoader implements Supplier<PropertyGraphDB> {
 
   private final String gdlString;
 
@@ -20,8 +37,8 @@ public class GDLLoader implements Supplier<GraphDB> {
   }
 
   @Override
-  public GraphDB get() {
-    GraphDB db = new GraphDBBase();
+  public PropertyGraphDB get() {
+    PropertyGraphDB db = new InMemoryGraphDB(true);
 
     GDLHandler gdlHandler = new GDLHandler.Builder().buildFromString(gdlString);
 
@@ -33,9 +50,9 @@ public class GDLLoader implements Supplier<GraphDB> {
         long gdlId = vertex.getId();
         long dbId = db.createVertex(label);
         addProperties(db, vertex, dbId);
-        return new LongPair(gdlId, dbId);
+        return new SourceIdTargetId(gdlId, dbId);
       })
-      .collect(Collectors.toMap(LongPair::getLeft, LongPair::getRight));
+      .collect(Collectors.toMap(SourceIdTargetId::getSourceId, SourceIdTargetId::getRight));
 
     Map<Long, Long> edgeIdMap = gdlHandler
       .getEdges()
@@ -47,9 +64,9 @@ public class GDLLoader implements Supplier<GraphDB> {
         long targetId = vertexIdMap.get(edge.getTargetVertexId());
         long dbId = db.createEdge(label, sourceId, targetId);
         addProperties(db, edge, dbId);
-        return new LongPair(gdlId, dbId);
+        return new SourceIdTargetId(gdlId, dbId);
       })
-      .collect(Collectors.toMap(LongPair::getLeft, LongPair::getRight));
+      .collect(Collectors.toMap(SourceIdTargetId::getSourceId, SourceIdTargetId::getRight));
 
     gdlHandler
       .getGraphs()
@@ -79,7 +96,7 @@ public class GDLLoader implements Supplier<GraphDB> {
     return db;
   }
 
-  private void addProperties(GraphDB db, Element vertex, long dbId) {
+  private void addProperties(PropertyGraphDB db, Element vertex, long dbId) {
     vertex.getProperties()
       .forEach((key, value) -> {
         int symbol = db.encode(key);

@@ -15,13 +15,38 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.subgraph_mining.generalized;
+package org.biiig.dmgm.api;
 
-import org.biiig.dmgm.api.PropertyGraphDB;
-import org.biiig.dmgm.impl.operators.subgraph_mining.GeneralizedCharacteristicSubgraphs;
+import org.biiig.dmgm.impl.Property;
 
-public abstract class GeneralizedSubgraphsBase extends GeneralizedCharacteristicSubgraphs {
-  public GeneralizedSubgraphsBase(PropertyGraphDB database, float minSupportRel, int maxEdgeCount) {
-    super(database, minSupportRel, maxEdgeCount);
-  }
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Map;
+
+/**
+ * A storage for labels and typed properties.
+ */
+public interface GetProperties {
+
+
+  boolean is(long id, int key);
+
+  long getLong(long id, int key);
+
+  double getDouble(long id, int key);
+
+  String getString(long id, int key);
+
+  BigDecimal getBigDecimal(long id, int key);
+
+  LocalDate getLocalDate(long id, int key);
+
+  int[] getInts(long id, int key);
+
+  String[] getStrings(long id, int key);
+
+
+  Property[] getProperties(long id);
+  Map<Long, Property[]> getAllProperties();
+
 }

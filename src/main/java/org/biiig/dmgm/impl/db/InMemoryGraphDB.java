@@ -1,3 +1,20 @@
+/*
+ * This file is part of Directed Multigraph Miner (DMGM).
+ *
+ * DMGM is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * DMGM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.biiig.dmgm.impl.db;
 
 import com.google.common.collect.Maps;
@@ -6,46 +23,127 @@ import de.jesemann.paralleasy.collectors.GroupByKeyArrayValues;
 import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.CachedGraph;
-import org.biiig.dmgm.api.GraphDB;
-import org.biiig.dmgm.api.Property;
-import org.biiig.dmgm.api.PropertyPredicate;
+import org.biiig.dmgm.api.PropertyGraphDB;
+import org.biiig.dmgm.impl.Property;
 import org.biiig.dmgm.impl.graph.CachedGraphBase;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
 import java.util.function.IntPredicate;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
+import java.util.stream.Stream;
 
 /**
- * Pragmatic reference implementation of {@code GraphCollectionDatabase}.
+ * Pragmatic reference implementation of {@code PropertyGraphDB}.
  */
-public class GraphDBBase implements GraphDB {
+public class InMemoryGraphDB implements PropertyGraphDB {
 
-  private final AtomicLong nextId = new AtomicLong();
+  /**
+   * Parallel read mode.
+   * true <=> enabled.
+   */
+  private final boolean parallelRead;
 
+  // SymbolDictionary
+
+  /**
+   * Symbol that will be mapped to the next new string value that shall be encoded.
+   */
   private final AtomicInteger nextSymbol = new AtomicInteger();
+  /**
+   * dictionary coding: string -> integer
+   */
   private final Map<String, Integer> stringIntegerDictionary = createMap();
+  /**
+   * dictionary coding: integer -> symbol
+   */
   private final Map<Integer, String> integerStringDictionary = createMap();
 
-  private final Map<Long, Integer> labels = createMap();
-  private final Map<Long, LongPair> edges  = createMap();
-  private final Map<Long, LongsPair> elements = createMap();
 
+  // CreateElements & GetElements
+
+  /**
+   * Identifier that will be mapped to the next created element.
+   */
+  private final AtomicLong nextId = new AtomicLong();
+  /**
+   * Stores labels of elements.
+   * element id -> encoded label
+   */
+  private final Map<Long, Integer> labels = createMap();
+  /**
+   * Stores edge elements.
+   * element id -> (sourceId, targetId)
+   */
+  private final Map<Long, SourceIdTargetId> edges  = createMap();
+  /**
+   * Stores graph elements.
+   * element id -> (vertexId..., edgeId...)
+   */
+  private final Map<Long, VertexIdsEdgeIds> graphs = createMap();
+
+  // SetProperties & GetProperties
+
+  /**
+   * Stores boolean properties.
+   * property key -> element id...
+   * element.property == true <=> map.get(property).contains(element)
+   */
   private final Map<Integer, Set<Long>> booleanProperties = createMap();
+  /**
+   * Stores long properties.
+   * property key -> element id -> property value
+   */
   private final Map<Integer, Map<Long, Long>> longProperties = createMap();
+  /**
+   * Stores double properties.
+   * property key -> element id -> property value
+   */
   private final Map<Integer, Map<Long, Double>> doubleProperties = createMap();
+  /**
+   * Stores long properties.
+   * property string -> element id -> property value
+   */
   private final Map<Integer, Map<Long, String>> stringProperties = createMap();
+  /**
+   * Stores decimal properties.
+   * property key -> element id -> property value
+   */
   private final Map<Integer, Map<Long, BigDecimal>> bigDecimalProperties = createMap();
+  /**
+   * Stores date properties.
+   * property key -> element id -> property value
+   */
   private final Map<Integer, Map<Long, LocalDate>> localDateProperties = createMap();
+  /**
+   * Stores multi-value integer properties.
+   * property key -> element id -> property value...
+   */
   private final Map<Integer, Map<Long, int[]>> intsProperties = createMap();
+  /**
+   * Stores multi-value string properties.
+   * property key -> element id -> property value...
+   */
   private final Map<Integer, Map<Long, String[]>> stringsProperties = createMap();
+
+  /**
+   * Constructor.
+   *
+   * @param parallelRead true <=> enabled
+   */
+  public InMemoryGraphDB(boolean parallelRead) {
+    this.parallelRead = parallelRead;
+  }
+
+  // SymbolDictionary
 
   @Override
   public int encode(String value) {
@@ -61,6 +159,28 @@ public class GraphDBBase implements GraphDB {
     return integerStringDictionary.get(integer);
   }
 
+  // CreateElements
+
+  @Override
+  public long createVertex(int label) {
+    return createElement(label);
+  }
+
+
+  @Override
+  public long createEdge(int label, long sourceId, long targetId) {
+    long id = createElement(label);
+    edges.put(id, new SourceIdTargetId(sourceId, targetId));
+    return id;
+  }
+
+  @Override
+  public long createGraph(int label, long[] vertexIds, long[] edgeIds) {
+    long id = createElement(label);
+    graphs.put(id, new VertexIdsEdgeIds(vertexIds, edgeIds));
+    return id;
+  }
+
   /**
    * Associates an id and stores the label of a new graph, vertex or edge
    *
@@ -73,153 +193,8 @@ public class GraphDBBase implements GraphDB {
     return id;
   }
 
+  // GetElements
 
-  @Override
-  public long createVertex(int label) {
-    return createElement(label);
-  }
-
-
-  @Override
-  public long createEdge(int label, long sourceId, long targetId) {
-    long id = createElement(label);
-    edges.put(id, new LongPair(sourceId, targetId));
-    return id;
-  }
-
-  @Override
-  public long createGraph(int label, long[] vertexIds, long[] edgeIds) {
-    long id = createElement(label);
-    elements.put(id, new LongsPair(vertexIds, edgeIds));
-    return id;
-  }
-
-  @Override
-  public long[] getGraphIdsOfVertex(long vertexId) {
-    return getGraphsOfElement(e -> ArrayUtils.contains(e.getValue().getLeft(), vertexId));
-  }
-
-
-  /**
-   * Query all graph ids in which an element appears.
-   *
-   * @param predicate element predicate
-   * @return all graph ids
-   */
-  public long[] getGraphsOfElement(Predicate<Map.Entry<Long, LongsPair>> predicate) {
-    return elements
-      .entrySet()
-      .stream()
-      .filter(predicate)
-      .mapToLong(Map.Entry::getKey)
-      .toArray();
-  }
-
-  @Override
-  public long[] getGraphIdsOfEdge(long edgeId) {
-    return getGraphsOfElement(e -> ArrayUtils.contains(e.getValue().getRight(), edgeId));
-  }
-
-  @Override
-  public CachedGraph getCachedGraph(long graphId) {
-    int graphLabel = labels.get(graphId);
-
-    LongsPair globalVertexIdsEdgeIds = elements.get(graphId);
-
-    long[] globalVertexIds = globalVertexIdsEdgeIds.getLeft();
-
-    int[] vertexLabels = LongStream
-      .of(globalVertexIds)
-      .mapToInt(labels::get)
-      .toArray();
-
-    long[] globalEdgeIds = globalVertexIdsEdgeIds.getRight();
-
-    int edgeCount = globalEdgeIds.length;
-    int[] edgeLabels = new int[edgeCount];
-    int[] sourceIds = new int[edgeCount];
-    int[] targetIds = new int[edgeCount];
-
-    for (int localEdgeId = 0; localEdgeId < edgeCount; localEdgeId++) {
-      Long globalEdgeId = globalEdgeIds[localEdgeId];
-      LongPair globalSourceTargetPair = edges.get(globalEdgeId);
-
-      long globalSourceId = globalSourceTargetPair.getLeft();
-      int sourceId = ArrayUtils.indexOf(globalVertexIds, globalSourceId);
-      sourceIds[localEdgeId] = sourceId;
-
-      long globalTargetId = globalSourceTargetPair.getRight();
-      int targetId = ArrayUtils.indexOf(globalVertexIds, globalTargetId);
-      targetIds[localEdgeId] = targetId;
-
-      edgeLabels[localEdgeId] = labels.get(globalEdgeId);
-    }
-
-    return new CachedGraphBase(graphId, graphLabel, vertexLabels, edgeLabels, sourceIds, targetIds);
-  }
-
-  @Override
-  public List<CachedGraph> getCachedCollection(long collectionId) {
-    return LongStream
-      .of(elements.get(collectionId).getLeft())
-      .mapToObj(this::getCachedGraph)
-      .collect(Collectors.toList());
-  }
-
-  @Override
-  public long[] getAllHyperVertexIds() {
-    return elements
-      .keySet()
-      .stream()
-      .mapToLong(id -> id)
-      .toArray();
-  }
-
-  @Override
-  public long[] getAllGraphIds() {
-    return elements
-      .entrySet()
-      .stream()
-      .filter(e -> e.getValue().getRight().length != 0)
-      .mapToLong(Map.Entry::getKey)
-      .toArray();
-  }
-
-  @Override
-  public long[] getAllCollectionIds() {
-    return elements
-      .entrySet()
-      .stream()
-      .filter(e -> e.getValue().getRight().length == 0)
-      .mapToLong(Map.Entry::getKey)
-      .toArray();
-  }
-
-  @Override
-  public long[] getAllVertexIds() {
-    return elements
-      .values()
-      .stream()
-      .map(LongsPair::getLeft)
-      .flatMapToLong(LongStream::of)
-      .toArray();
-  }
-
-  @Override
-  public long[] getAllEdgeIds() {
-    return elements
-      .values()
-      .stream()
-      .map(LongsPair::getRight)
-      .flatMapToLong(LongStream::of)
-      .toArray();
-  }
-
-
-  @Override
-  public LongsPair getGraphElementIds(long graphId) {
-    return elements.get(graphId);
-  }
 
   @Override
   public int getLabel(long id) {
@@ -227,24 +202,80 @@ public class GraphDBBase implements GraphDB {
   }
 
   @Override
-  public long[] getElementsByLabel(IntPredicate predicate) {
-    return labels
-      .entrySet()
-      .stream()
-      .filter(e -> predicate.test(e.getValue()))
+  public SourceIdTargetId getEdgeVertexIds(long edgeId) {
+    return edges.get(edgeId);
+  }
+
+  @Override
+  public VertexIdsEdgeIds getGraphElementIds(long graphId) {
+    return graphs.get(graphId);
+  }
+
+  @Override
+  public long[] getGraphIdsOfVertex(long vertexId) {
+    return getGraphsOfElement(vertexId, VertexIdsEdgeIds::getVertexIds);
+  }
+
+
+  @Override
+  public long[] getGraphIdsOfEdge(long edgeId) {
+    return getGraphsOfElement(edgeId, VertexIdsEdgeIds::getEdgeIds);
+  }
+
+  /**
+   * Query all graph ids in which an element appears.
+   *
+   * @param id vertex or edge id
+   * @param getter getter for vertex or edge ids
+   * @return graph ids
+   */
+  private long[] getGraphsOfElement(long id, Function<VertexIdsEdgeIds, long[]> getter) {
+    return getParallelizableEntryStream(graphs)
+      .filter(e -> ArrayUtils.contains(getter.apply(e.getValue()), id))
       .mapToLong(Map.Entry::getKey)
       .toArray();
   }
 
   @Override
-  public long[] getElementsByProperties(PropertyPredicate predicate) {
-    return labels
-      .keySet()
-      .stream()
-      .filter(id -> predicate.apply(this, id))
+  public long[] getVertexIds() {
+    return getParallelizableValueStream(graphs)
+      .map(VertexIdsEdgeIds::getVertexIds)
+      .flatMapToLong(LongStream::of)
+      .toArray();
+  }
+
+  @Override
+  public long[] getEdgeIds() {
+    return getParallelizableValueStream(graphs)
+      .map(VertexIdsEdgeIds::getEdgeIds)
+      .flatMapToLong(LongStream::of)
+      .toArray();
+  }
+
+
+  @Override
+  public long[] getGraphIds() {
+    return getParallelizableEntryStream(graphs)
+      .filter(e -> e.getValue().getEdgeIds().length != 0)
+      .mapToLong(Map.Entry::getKey)
+      .toArray();
+  }
+
+  @Override
+  public long[] getCollectionIds() {
+    return getParallelizableEntryStream(graphs)
+      .filter(e -> e.getValue().getEdgeIds().length == 0)
+      .mapToLong(Map.Entry::getKey)
+      .toArray();
+  }
+
+  @Override
+  public long[] getHyperVertexIds() {
+    return getParallelizableKeyStream(graphs)
       .mapToLong(id -> id)
       .toArray();
   }
+
 
   /**
    * Get boolean values by key.
@@ -460,10 +491,16 @@ public class GraphDBBase implements GraphDB {
       .toArray(new Property[properties.size()]);
   }
 
-  private <T> List<Property> getProperties(Map<Integer, Map<Long, T>> intProperties, long id) {
-    return intProperties
-      .entrySet()
-      .parallelStream()
+  /**
+   * Get all properties of a given element id and type.
+   *
+   * @param propertyMap key -> id -> value
+   * @param id element id
+   * @param <T> value type
+   * @return all properties with of the given id and type
+   */
+  private <T> List<Property> getProperties(Map<Integer, Map<Long, T>> propertyMap, long id) {
+    return getParallelizableEntryStream(propertyMap)
       .flatMap(e -> e.getValue()
         .entrySet()
         .stream()
@@ -475,9 +512,7 @@ public class GraphDBBase implements GraphDB {
   @Override
   public Map<Long, Property[]> getAllProperties() {
 
-    List<Pair<Long, Property>> properties = booleanProperties
-      .entrySet()
-      .parallelStream()
+    List<Pair<Long, Property>> properties = getParallelizableEntryStream(booleanProperties)
       .flatMap(e -> e.getValue()
         .stream()
         .map(id -> new Pair<>(id, new Property(e.getKey(), true))))
@@ -496,16 +531,143 @@ public class GraphDBBase implements GraphDB {
       .collect(new GroupByKeyArrayValues<>(Pair::getKey, Pair::getValue, Property.class));
   }
 
-  private <T> List<Pair<Long, Property>> getProperties(Map<Integer, Map<Long, T>> intProperties) {
-    return intProperties
-      .entrySet()
-      .parallelStream()
+  /**
+   * Get all properties of a given type.
+   *
+   * @param propertyMap key -> id -> value
+   * @param <T> value type
+   * @return all properties of a given type
+   */
+  private <T> List<Pair<Long, Property>> getProperties(Map<Integer, Map<Long, T>> propertyMap) {
+    return getParallelizableEntryStream(propertyMap)
       .flatMap(e -> e.getValue()
         .entrySet()
         .stream()
         .map(f -> new Pair<>(f.getKey(), new Property(e.getKey(), f.getValue()))))
       .collect(Collectors.toList());
   }
+
+  // QueryElements
+
+  @Override
+  public long[] queryElements(IntPredicate labelPredicate) {
+    return labels
+      .entrySet()
+      .stream()
+      .filter(e -> labelPredicate.test(e.getValue()))
+      .mapToLong(Map.Entry::getKey)
+      .toArray();
+  }
+
+  @Override
+  public long[] queryElements(PropertyPredicate propertyPredicate) {
+    return labels
+      .keySet()
+      .stream()
+      .filter(id -> propertyPredicate.apply(this, id))
+      .mapToLong(id -> id)
+      .toArray();
+  }
+
+  @Override
+  public long[] queryElements(IntPredicate labelPredicate, PropertyPredicate propertyPredicate) {
+    return labels
+      .entrySet()
+      .stream()
+      .filter(e -> labelPredicate.test(e.getValue()))
+      .mapToLong(Map.Entry::getKey)
+      .filter(id -> propertyPredicate.apply(this, id))
+      .toArray();
+  }
+
+  /**
+   * Return a map's entry stream according to parallel read mode.
+   *
+   * @param map map
+   * @param <K> key type
+   * @param <V> value type
+   * @return value stream
+   */
+  public <K, V> Stream<Map.Entry<K,V>> getParallelizableEntryStream(Map<K, V> map) {
+    Set<Map.Entry<K, V>> entries = map.entrySet();
+    return parallelRead ? entries.parallelStream() : entries.stream();
+  }
+
+  /**
+   * Return a map's key stream according to parallel read mode.
+   *
+   * @param map map
+   * @param <K> key type
+   * @param <V> value type
+   * @return value stream
+   */
+  public <K, V> Stream<K> getParallelizableKeyStream(Map<K, V> map) {
+    Set<K> values = map.keySet();
+    return parallelRead ? values.parallelStream() : values.stream();
+  }
+
+  /**
+   * Return a map's value stream according to parallel read mode.
+   *
+   * @param map map
+   * @param <K> key type
+   * @param <V> value type
+   * @return value stream
+   */
+  public <K, V> Stream<V> getParallelizableValueStream(Map<K, V> map) {
+    Collection<V> values = map.values();
+    return parallelRead ? values.parallelStream() : values.stream();
+  }
+
+
+  // PropertyGraphDB
+
+  @Override
+  public CachedGraph getCachedGraph(long graphId) {
+    int graphLabel = labels.get(graphId);
+
+    VertexIdsEdgeIds globalVertexIdsEdgeIds = graphs.get(graphId);
+
+    long[] globalVertexIds = globalVertexIdsEdgeIds.getVertexIds();
+
+    int[] vertexLabels = LongStream
+      .of(globalVertexIds)
+      .mapToInt(labels::get)
+      .toArray();
+
+    long[] globalEdgeIds = globalVertexIdsEdgeIds.getEdgeIds();
+
+    int edgeCount = globalEdgeIds.length;
+    int[] edgeLabels = new int[edgeCount];
+    int[] sourceIds = new int[edgeCount];
+    int[] targetIds = new int[edgeCount];
+
+    for (int localEdgeId = 0; localEdgeId < edgeCount; localEdgeId++) {
+      Long globalEdgeId = globalEdgeIds[localEdgeId];
+      SourceIdTargetId globalSourceTargetPair = edges.get(globalEdgeId);
+
+      long globalSourceId = globalSourceTargetPair.getSourceId();
+      int sourceId = ArrayUtils.indexOf(globalVertexIds, globalSourceId);
+      sourceIds[localEdgeId] = sourceId;
+
+      long globalTargetId = globalSourceTargetPair.getRight();
+      int targetId = ArrayUtils.indexOf(globalVertexIds, globalTargetId);
+      targetIds[localEdgeId] = targetId;
+
+      edgeLabels[localEdgeId] = labels.get(globalEdgeId);
+    }
+
+    return new CachedGraphBase(graphId, graphLabel, vertexLabels, edgeLabels, sourceIds, targetIds);
+  }
+
+  @Override
+  public List<CachedGraph> getCachedCollection(long collectionId) {
+    return LongStream
+      .of(graphs.get(collectionId).getVertexIds())
+      .mapToObj(this::getCachedGraph)
+      .collect(Collectors.toList());
+  }
+
 
   @Override
   public String toString() {
@@ -516,7 +678,7 @@ public class GraphDBBase implements GraphDB {
       "\nisd=" + integerStringDictionary +
       "\nlbs=" + labels +
       "\negs=" + edges +
-      "\nels=" + elements +
+      "\nels=" + graphs +
       "\nbol=" + booleanProperties +
       "\nint=" + longProperties +
       "\ndob=" + doubleProperties +

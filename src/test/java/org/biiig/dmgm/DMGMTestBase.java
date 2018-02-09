@@ -1,13 +1,30 @@
+/*
+ * This file is part of Directed Multigraph Miner (DMGM).
+ *
+ * DMGM is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * DMGM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.biiig.dmgm;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
-import org.biiig.dmgm.api.DMGraphFormatter;
-import org.biiig.dmgm.api.GraphDB;
+import org.biiig.dmgm.api.PropertyGraphDB;
 import org.biiig.dmgm.api.CollectionOperator;
 import org.biiig.dmgm.api.CachedGraph;
-import org.biiig.dmgm.api.Property;
+import org.biiig.dmgm.api.QueryElements;
+import org.biiig.dmgm.impl.Property;
 import org.biiig.dmgm.impl.loader.GDLLoader;
 import org.biiig.dmgm.impl.loader.TLFLoader;
 import org.biiig.dmgm.impl.to_string.cam.CAMGraphFormatter;
@@ -29,14 +46,14 @@ public class DMGMTestBase {
   String EXPECTATION_GRAPH_LABEL = "EX";
 
 
-  protected GraphDB getPredictableDatabase() throws IOException {
+  protected PropertyGraphDB getPredictableDatabase() throws IOException {
     String inputPath = TLFLoader.class.getResource("/samples/predictable.tlf").getFile();
     return TLFLoader
       .fromFile(inputPath)
       .get();
   }
 
-  protected boolean equal(GraphDB db, long expId, long resId, boolean includeProperties) {
+  protected boolean equal(PropertyGraphDB db, long expId, long resId, boolean includeProperties) {
     Collection<CachedGraph> expected = db.getCachedCollection(expId);
     Collection<CachedGraph> result = db.getCachedCollection(resId);
 
@@ -52,7 +69,7 @@ public class DMGMTestBase {
     return equalSize && allFound && allExpected;
   }
 
-  private boolean compare(GraphDB db, String msg, long aId, Collection<CachedGraph> aCol, long bId, Collection<CachedGraph> bCol, boolean includeProperties) {
+  private boolean compare(PropertyGraphDB db, String msg, long aId, Collection<CachedGraph> aCol, long bId, Collection<CachedGraph> bCol, boolean includeProperties) {
     Map<String, String> aMap = getLabelMap(aCol, db, includeProperties);
     Map<String, String> bMap = getLabelMap(bCol, db, includeProperties);
 
@@ -86,11 +103,11 @@ public class DMGMTestBase {
     }
   }
 
-  private Map<String, String> getLabelMap(Collection<CachedGraph> expected, GraphDB db, boolean includeProperties) {
-    DMGraphFormatter keyFormatter =
+  private Map<String, String> getLabelMap(Collection<CachedGraph> expected, PropertyGraphDB db, boolean includeProperties) {
+    CachedGraphFormatter keyFormatter =
       new CAMGraphFormatter(db);
 
-    DMGraphFormatter valueFormatter =
+    CachedGraphFormatter valueFormatter =
       new ELGraphFormatter(db);
 
     Map<String, String> canonicalLabels = Maps.newHashMapWithExpectedSize(expected.size());
@@ -110,8 +127,8 @@ public class DMGMTestBase {
       }
 
 
-      String canonicalLabel = keyFormatter.format(graph) + "\t" + propertyLabel;
-      String printLabel = valueFormatter.format(graph) + "\t" + propertyLabel;
+      String canonicalLabel = keyFormatter.apply(graph) + "\t" + propertyLabel;
+      String printLabel = valueFormatter.apply(graph) + "\t" + propertyLabel;
       canonicalLabels.put(canonicalLabel, printLabel);
     }
 
@@ -129,17 +146,17 @@ public class DMGMTestBase {
 //    }
 //  }
 
-  protected void runAndTestExpectation(Function<GraphDB, CollectionOperator> operatorFactory, String gdl, boolean includeProperties) {
-    GraphDB db = GDLLoader
+  protected void runAndTestExpectation(Function<QueryElements, CollectionOperator> operatorFactory, String gdl, boolean includeProperties) {
+    PropertyGraphDB db = GDLLoader
       .fromString(gdl)
       .get();
 
     int inLabel = db.encode(INPUT_GRAPH_LABEL);
-    long[] inIds = db.getElementsByLabel(l -> l == inLabel);
+    long[] inIds = db.queryElements(l -> l == inLabel);
     long inId = db.createCollection(inLabel, inIds);
 
     int exLabel = db.encode(EXPECTATION_GRAPH_LABEL);
-    long[] exIds = db.getElementsByLabel(l -> l == exLabel);
+    long[] exIds = db.queryElements(l -> l == exLabel);
     long exId = db.createCollection(exLabel, exIds);
     long outId = operatorFactory.apply(db).apply(inId);
 

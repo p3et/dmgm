@@ -34,32 +34,23 @@
 
 package org.biiig.dmgm.api;
 
-import java.util.function.UnaryOperator;
-
 /**
- * An operator that creates a new graph collection from an existing one.
+ * Dictionary coding for string values.
  */
-public interface CollectionOperator extends UnaryOperator<Long> {
+public interface SymbolDictionary {
   /**
-   * Ensure the operator is executed in parallel.
+   * Encode a string symbol (e.g., label or property key).
    *
-   * @return parallel operator
+   * @param value symbol
+   * @return int value
    */
-  CollectionOperator parallel();
+  int encode(String value);
 
   /**
-   * Ensure the operator is executed sequentially (default).
+   * Decode a symbol (e.g., label or property key).
    *
-   * @return sequential operator
+   * @param symbol int value
+   * @return symbol
    */
-  CollectionOperator sequential();
-
-  /**
-   * Execute the operation.
-   *
-   * @param inputCollectionId id of the input graph collection
-   * @return id of the output graph collection
-   */
-  @Override
-  Long apply(Long inputCollectionId);
+  String decode(int symbol);
 }

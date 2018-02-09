@@ -1,9 +1,26 @@
+/*
+ * This file is part of Directed Multigraph Miner (DMGM).
+ *
+ * DMGM is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * DMGM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
 
 import com.google.common.collect.Lists;
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 import javafx.util.Pair;
-import org.biiig.dmgm.api.GraphDB;
+import org.biiig.dmgm.api.QueryElements;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCodeSupportablePair;
@@ -41,7 +58,7 @@ public class CharacteristicFilter<T extends DFSCodeSupportablePair> implements F
   }
 
   @Override
-  public Pair<Optional<T>, Optional<Consumer<GraphDB>>> apply(T supportable) {
+  public Pair<Optional<T>, Optional<Consumer<QueryElements>>> apply(T supportable) {
     Map<Integer, List<DFSEmbedding>> categoryEmbeddings = supportable
       .getEmbeddings()
       .stream()
@@ -66,7 +83,7 @@ public class CharacteristicFilter<T extends DFSCodeSupportablePair> implements F
 
 
     Optional<T> child;
-    Optional<Consumer<GraphDB>> store;
+    Optional<Consumer<QueryElements>> store;
 
     boolean atLeastOnceFrequent = false;
 
@@ -80,7 +97,7 @@ public class CharacteristicFilter<T extends DFSCodeSupportablePair> implements F
       int[] labels = interestingness.getInterestingCategories(labelSupports, totalSupport);
 
       if (labels != null && labels.length > 0) {
-        Collection<Consumer<GraphDB>> outputs = Lists.newArrayListWithCapacity(labels.length);
+        Collection<Consumer<QueryElements>> outputs = Lists.newArrayListWithCapacity(labels.length);
 
         for (int label : labels) {
           outputs.add(output -> {
