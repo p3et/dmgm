@@ -1,4 +1,4 @@
-package org.biiig.dmgm.impl.graph;/*
+/*
  * This file is part of Gradoop.
  *
  * Gradoop is free software: you can redistribute it and/or modify
@@ -15,6 +15,7 @@ package org.biiig.dmgm.impl.graph;/*
  * along with Gradoop. If not, see <http://www.gnu.org/licenses/>.
  */
 
+package org.biiig.dmgm.impl.graph;
 
 import java.io.Serializable;
 import java.util.Comparator;

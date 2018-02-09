@@ -47,8 +47,8 @@ public abstract class GeneralizedSubgraphsBase<S> extends CollectionOperatorBase
   }
 
   @Override
-  public Long apply(Long collectionId) {
-    List<CachedGraph> input = database.getCachedCollection(collectionId);
+  public Long apply(Long inputCollectionId) {
+    List<CachedGraph> input = database.getCachedCollection(inputCollectionId);
 
     Map<Integer, Pair<Integer, int[]>> taxonomyPaths = generalize(input);
 
