@@ -34,8 +34,9 @@
 
 package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
 
+import org.biiig.dmgm.TestConstants;
+import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
-import org.biiig.dmgm.api.db.QueryElements;
 import org.biiig.dmgm.impl.operators.subgraph_mining.CharacteristicSubgraphs;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SubgraphMiningPatternTest;
 
@@ -45,8 +46,8 @@ public class CSMPatternTest extends SubgraphMiningPatternTest {
 
 
   @Override
-  protected Function<QueryElements, CollectionToCollectionOperator> getOperator() {
-    return db -> new CharacteristicSubgraphs(db, 0.6f, 10);
+  protected Function<PropertyGraphDB, CollectionToCollectionOperator> getOperator() {
+    return db -> new CharacteristicSubgraphs(db, TestConstants.PARALLEL, 0.6f, 10);
   }
 
 }

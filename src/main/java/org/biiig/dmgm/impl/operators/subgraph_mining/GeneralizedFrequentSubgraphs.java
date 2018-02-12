@@ -35,17 +35,18 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining;
 
 import org.biiig.dmgm.api.db.PropertyGraphDB;
-import org.biiig.dmgm.impl.operators.subgraph_mining.generalized.SpecializableCachedGraph;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportMethods;
 import org.biiig.dmgm.impl.operators.subgraph_mining.frequent.FrequentSupportMethods;
+import org.biiig.dmgm.impl.operators.subgraph_mining.generalized.SpecializableCachedGraph;
 
 import java.util.Map;
 
 public class GeneralizedFrequentSubgraphs extends GeneralizedSubgraphsBase<Long> {
 
 
-  public GeneralizedFrequentSubgraphs(PropertyGraphDB database, float minSupportRel, int maxEdgeCount) {
-    super(maxEdgeCount, database, minSupportRel);
+  public GeneralizedFrequentSubgraphs(
+    PropertyGraphDB database, boolean parallel, float minSupportRel, int maxEdgeCount) {
+    super(database, parallel, minSupportRel, maxEdgeCount);
   }
 
   @Override

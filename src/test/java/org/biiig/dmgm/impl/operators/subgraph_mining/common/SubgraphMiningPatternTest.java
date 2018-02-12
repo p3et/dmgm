@@ -35,8 +35,8 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
 import org.biiig.dmgm.DMGMTestBase;
+import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
-import org.biiig.dmgm.api.db.QueryElements;
 import org.junit.Test;
 
 import java.util.function.Function;
@@ -82,6 +82,6 @@ public abstract class SubgraphMiningPatternTest extends DMGMTestBase {
     runAndTestExpectation(getOperator(), SubgraphMiningTestData.MULTI_LABELED_CIRCLE_INPUT, false);
   }
 
-  protected abstract Function<QueryElements, CollectionToCollectionOperator> getOperator();
+  protected abstract Function<PropertyGraphDB, CollectionToCollectionOperator> getOperator();
 
 }

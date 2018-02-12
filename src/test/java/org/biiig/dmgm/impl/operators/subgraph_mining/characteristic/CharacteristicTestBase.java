@@ -35,8 +35,8 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
 
 import org.biiig.dmgm.DMGMTestBase;
+import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
-import org.biiig.dmgm.api.db.QueryElements;
 import org.junit.Test;
 
 import java.util.function.Function;
@@ -62,5 +62,5 @@ public abstract class CharacteristicTestBase extends DMGMTestBase {
     runAndTestExpectation(getOperator(), gdl, false);
   }
 
-  public abstract Function<QueryElements, CollectionToCollectionOperator> getOperator();
+  public abstract Function<PropertyGraphDB, CollectionToCollectionOperator> getOperator();
 }

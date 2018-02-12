@@ -34,15 +34,16 @@
 
 package org.biiig.dmgm.impl.operators.subgraph_mining.gcsm;
 
-import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
+import org.biiig.dmgm.TestConstants;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
+import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
 import org.biiig.dmgm.impl.operators.subgraph_mining.GeneralizedCharacteristicSubgraphs;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SubgraphMiningThresholdTest;
 
 public class GCSMThresholdTest extends SubgraphMiningThresholdTest {
 
   @Override
-  protected CollectionToCollectionOperator getOperator(PropertyGraphDB db, float minSupportRel, int maxEdgeCount) {
-    return new GeneralizedCharacteristicSubgraphs(db, minSupportRel, maxEdgeCount);
+  protected CollectionToCollectionOperator getOperator(PropertyGraphDB db, boolean b, float minSupportRel, int maxEdgeCount) {
+    return new GeneralizedCharacteristicSubgraphs(db, TestConstants.PARALLEL, minSupportRel, maxEdgeCount);
   }
 }

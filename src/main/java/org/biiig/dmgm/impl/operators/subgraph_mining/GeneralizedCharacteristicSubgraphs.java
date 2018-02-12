@@ -55,8 +55,9 @@ public class GeneralizedCharacteristicSubgraphs
   private final int categoryKey;
 
 
-  public GeneralizedCharacteristicSubgraphs(PropertyGraphDB database, float minSupportRel, int maxEdgeCount) {
-    super(maxEdgeCount, database, minSupportRel);
+  public GeneralizedCharacteristicSubgraphs(
+    PropertyGraphDB database, boolean parallel, float minSupportRel, int maxEdgeCount) {
+    super(database, parallel, minSupportRel, maxEdgeCount);
     defaultCategory = database.encode(DEFAULT_CATEGORY);
     categoryKey = database.encode(PropertyKeys.CATEGORY);
   }

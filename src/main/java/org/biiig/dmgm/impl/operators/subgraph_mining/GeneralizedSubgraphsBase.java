@@ -15,23 +15,6 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * This file is part of Directed Multigraph Miner (DMGM).
- *
- * DMGM is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * DMGM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
- */
-
 package org.biiig.dmgm.impl.operators.subgraph_mining;
 
 import com.google.common.collect.Lists;
@@ -41,7 +24,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.model.CachedGraph;
-import org.biiig.dmgm.impl.operators.CollectionToCollectionOperatorBase;
+import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
+import org.biiig.dmgm.impl.operators.DMGMOperatorBase;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.GrowAllChildren;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.InitializeParents;
@@ -59,7 +43,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public abstract class GeneralizedSubgraphsBase<S> extends CollectionToCollectionOperatorBase {
+public abstract class GeneralizedSubgraphsBase<S> extends DMGMOperatorBase implements CollectionToCollectionOperator {
   private static final String LEVEL_SEPARATOR = "_";
   private static final String FREQUENT_SUBGRAPH = "Frequent Subgraph";
   private static final String FREQUENT_SUBGRAPHS = "Frequent Subgraphs";
@@ -71,7 +55,8 @@ public abstract class GeneralizedSubgraphsBase<S> extends CollectionToCollection
   protected final float minSupportRel;
 
 
-  public GeneralizedSubgraphsBase(int maxEdgeCount, PropertyGraphDB database, float minSupportRel) {
+  public GeneralizedSubgraphsBase(PropertyGraphDB database, boolean parallel, float minSupportRel, int maxEdgeCount) {
+    super(parallel);
     this.minSupportRel = minSupportRel;
     this.maxEdgeCount = maxEdgeCount;
     this.database = database;
@@ -86,13 +71,11 @@ public abstract class GeneralizedSubgraphsBase<S> extends CollectionToCollection
     Map<Integer, Pair<Integer, int[]>> taxonomyPaths = generalize(input);
 
     taxonomyPaths
-      .entrySet()
-      .forEach(e -> {
+      .forEach((key, value) -> {
+        List<String> path = Lists.newArrayList(database.decode(value.getKey()));
 
-        List<String> path =Lists.newArrayList(database.decode(e.getValue().getKey()));
-
-        IntStream.of(e.getValue().getValue()).mapToObj(database::decode)
-          .forEach(s -> path.add(s));
+        IntStream.of(value.getValue()).mapToObj(database::decode)
+          .forEach(path::add);
       });
 
     Map<Long, SpecializableCachedGraph> indexedGraphs = (parallel ? input.parallelStream() : input.stream())

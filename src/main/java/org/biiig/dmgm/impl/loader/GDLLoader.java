@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 /**
  * Turn a GDL String into a {@code PropertyGraphDB}.
  * GDL is a graph description language.
- * @see <a href="https://github.com/s1ck/gdl</a>
+ * @see <a href="https://github.com/s1ck/gdl">Graph Definition Language</a>
  */
 public class GDLLoader extends PropertyGraphDBLoaderBase {
 
@@ -46,7 +46,7 @@ public class GDLLoader extends PropertyGraphDBLoaderBase {
    * @param dbFactory database factory.
    * @param gdlString GDL
    */
-  private GDLLoader(PropertyGraphDBFactory dbFactory, String gdlString) {
+  public GDLLoader(PropertyGraphDBFactory dbFactory, String gdlString) {
     super(dbFactory);
     this.gdlString = gdlString;
   }

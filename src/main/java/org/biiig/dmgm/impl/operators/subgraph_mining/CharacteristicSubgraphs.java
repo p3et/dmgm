@@ -41,7 +41,7 @@ import org.biiig.dmgm.api.db.PropertyGraphDB;
  */
 public class CharacteristicSubgraphs extends GeneralizedCharacteristicSubgraphs {
 
-  public CharacteristicSubgraphs(PropertyGraphDB database, float minSupportRel, int maxEdgeCount) {
-    super(database, minSupportRel, maxEdgeCount);
+  public CharacteristicSubgraphs(PropertyGraphDB database, boolean parallel, float minSupportRel, int maxEdgeCount) {
+    super(database, parallel, minSupportRel, maxEdgeCount);
   }
 }

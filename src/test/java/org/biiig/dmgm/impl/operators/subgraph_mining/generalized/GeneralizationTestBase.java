@@ -35,8 +35,8 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.generalized;
 
 import org.biiig.dmgm.DMGMTestBase;
+import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
-import org.biiig.dmgm.api.db.QueryElements;
 import org.junit.Test;
 
 import java.util.function.Function;
@@ -44,7 +44,7 @@ import java.util.function.Function;
 public abstract class GeneralizationTestBase extends DMGMTestBase {
   @Test
   public void testAlgorithm() {
-    Function<QueryElements, CollectionToCollectionOperator> operator = getOperator();
+    Function<PropertyGraphDB, CollectionToCollectionOperator> operator = getOperator();
 
     String inputGDL =
       ":IN[(:A_A)-[:a]->(:B_B)-[:a]->(:C)]" +
@@ -59,5 +59,5 @@ public abstract class GeneralizationTestBase extends DMGMTestBase {
     runAndTestExpectation(operator, inputGDL, false);
   }
 
-  public abstract Function<QueryElements, CollectionToCollectionOperator> getOperator();
+  public abstract Function<PropertyGraphDB, CollectionToCollectionOperator> getOperator();
 }

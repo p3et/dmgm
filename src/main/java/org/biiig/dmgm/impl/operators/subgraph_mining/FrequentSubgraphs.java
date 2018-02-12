@@ -40,7 +40,7 @@ import org.biiig.dmgm.api.db.PropertyGraphDB;
  * Directed Multigraph gSpan
  */
 public class FrequentSubgraphs extends GeneralizedFrequentSubgraphs {
-  public FrequentSubgraphs(PropertyGraphDB database, float minSupportRel, int maxEdgeCount) {
-    super(database, minSupportRel, maxEdgeCount);
+  public FrequentSubgraphs(PropertyGraphDB database, boolean parallel, float minSupportRel, int maxEdgeCount) {
+    super(database, parallel, minSupportRel, maxEdgeCount);
   }
 }

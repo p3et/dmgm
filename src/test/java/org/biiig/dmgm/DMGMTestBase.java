@@ -35,19 +35,18 @@
 package org.biiig.dmgm;
 
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
+import org.biiig.dmgm.api.db.Property;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
-import org.biiig.dmgm.api.db.QueryElements;
+import org.biiig.dmgm.api.loader.PropertyGraphDBFactory;
 import org.biiig.dmgm.api.model.CachedGraph;
 import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
-import org.biiig.dmgm.impl.db.KeyObjectPair;
 import org.biiig.dmgm.impl.loader.GDLLoader;
+import org.biiig.dmgm.impl.loader.InMemoryGraphDBFactory;
 import org.biiig.dmgm.impl.loader.TLFLoader;
 import org.biiig.dmgm.impl.to_string.cam.CAMGraphFormatter;
 import org.biiig.dmgm.impl.to_string.edge_list.ELGraphFormatter;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -56,21 +55,28 @@ import java.util.function.Function;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by peet on 11.08.17.
+ * Superclass of tests to provide them with useful utils.
  */
 public class DMGMTestBase {
-  String INPUT_GRAPH_LABEL = "IN";
-  String EXPECTATION_GRAPH_LABEL = "EX";
+  /**
+   *
+   */
+  protected static final PropertyGraphDBFactory DB_FACTORY = new InMemoryGraphDBFactory(true);
 
-
-  protected PropertyGraphDB getPredictableDatabase() throws IOException {
+  /**
+   * Returns a sample database with a predictable amount of frequent patterns.
+   * A description of this database can be found in Section 5.3 of
+   * Petermann et al. "DIMSpan: Transactional Frequent Subgraph Mining with Distributed In-Memory Dataflow Systems"
+   * @see <a href = "https://dl.acm.org/citation.cfm?id=3148064">ACM Digital Library</a>
+   *
+   * @return
+   */
+  protected PropertyGraphDB getPredictableDatabase() {
     String inputPath = TLFLoader.class.getResource("/samples/predictable.tlf").getFile();
-    return TLFLoader
-      .fromFile(inputPath)
-      .get();
+    return new TLFLoader(DB_FACTORY, inputPath).get();
   }
 
-  protected boolean equal(PropertyGraphDB db, long expId, long resId, boolean includeProperties) {
+  private boolean equal(PropertyGraphDB db, long expId, long resId, boolean includeProperties) {
     Collection<CachedGraph> expected = db.getCachedCollection(expId);
     Collection<CachedGraph> result = db.getCachedCollection(resId);
 
@@ -80,13 +86,13 @@ public class DMGMTestBase {
       System.out.println("Expected " + expected.size() + " graphs but found " + result.size() );
     }
 
-    boolean allFound = compare(db, "Not found :", expId, expected, resId, result, includeProperties);
-    boolean allExpected = compare(db, "Unexpected :", resId, result, expId, expected, includeProperties);
+    boolean allFound = compare(db, "Not found :", expected, result, includeProperties);
+    boolean allExpected = compare(db, "Unexpected :", result, expected, includeProperties);
 
     return equalSize && allFound && allExpected;
   }
 
-  private boolean compare(PropertyGraphDB db, String msg, long aId, Collection<CachedGraph> aCol, long bId, Collection<CachedGraph> bCol, boolean includeProperties) {
+  private boolean compare(PropertyGraphDB db, String msg, Collection<CachedGraph> aCol, Collection<CachedGraph> bCol, boolean includeProperties) {
     Map<String, String> aMap = getLabelMap(aCol, db, includeProperties);
     Map<String, String> bMap = getLabelMap(bCol, db, includeProperties);
 
@@ -102,37 +108,17 @@ public class DMGMTestBase {
     return notInB.isEmpty();
   }
 
-  private Set<String> keyMinus(Map<String, String> first, Map<String, String> second) {
-    Set<String> difference = Sets.newHashSet();
-
-    for (Map.Entry<String, String> secondEntry : second.entrySet()) {
-      if (!first.containsKey(secondEntry.getKey())) {
-        difference.add(secondEntry.getValue());
-      }
-    }
-
-    return difference;
-  }
-
-  private void print(Set<String> strings) {
-    for (String s : strings) {
-      System.out.println(s);
-    }
-  }
-
   private Map<String, String> getLabelMap(Collection<CachedGraph> expected, PropertyGraphDB db, boolean includeProperties) {
-    CachedGraphFormatter keyFormatter =
-      new CAMGraphFormatter(db);
+    Function<CachedGraph, String> keyFormatter = new CAMGraphFormatter(db);
 
-    CachedGraphFormatter valueFormatter =
-      new ELGraphFormatter(db);
+    Function<CachedGraph, String> valueFormatter = new ELGraphFormatter(db);
 
     Map<String, String> canonicalLabels = Maps.newHashMapWithExpectedSize(expected.size());
     for (CachedGraph graph : expected) {
 
       String propertyLabel;
       if (includeProperties) {
-        KeyObjectPair[] properties = db.getProperties(graph.getId());
+        Property[] properties = db.getProperties(graph.getId());
         String[] propertyStrings = new String[properties.length];
 
         for (int i = 0; i < properties.length; i++)
@@ -152,70 +138,20 @@ public class DMGMTestBase {
     return canonicalLabels;
   }
 
-//  protected void print(GraphCollection graphCollection) {
-//    DMGraphFormatter formatter =
-//      new ELGraphFormatter(graphCollection.getLabelDictionary());
-//
-//    System.out.println(graphCollection.size());
-//
-//    for (SmallGraph model : graphCollection) {
-//      System.out.println(formatter.format(model));
-//    }
-//  }
+  protected void runAndTestExpectation(
+    Function<PropertyGraphDB, CollectionToCollectionOperator> operatorFactory, String gdl, boolean includeProperties) {
 
-  protected void runAndTestExpectation(Function<QueryElements, CollectionToCollectionOperator> operatorFactory, String gdl, boolean includeProperties) {
-    PropertyGraphDB db = GDLLoader
-      .fromString(gdl)
-      .get();
+    PropertyGraphDB db = new GDLLoader(DB_FACTORY, gdl).get();
 
-    int inLabel = db.encode(INPUT_GRAPH_LABEL);
+    int inLabel = db.encode(TestConstants.INPUT_GRAPH_LABEL);
     long[] inIds = db.queryElements(l -> l == inLabel);
     long inId = db.createCollection(inLabel, inIds);
 
-    int exLabel = db.encode(EXPECTATION_GRAPH_LABEL);
+    int exLabel = db.encode(TestConstants.EXPECTATION_GRAPH_LABEL);
     long[] exIds = db.queryElements(l -> l == exLabel);
     long exId = db.createCollection(exLabel, exIds);
     long outId = operatorFactory.apply(db).apply(inId);
 
     assertTrue(equal(db, exId, outId, includeProperties));
   }
-
-//  protected void testExpectation(GraphCollection output, String expectedGDL) {
-//    GraphCollection expected = GDLLoader
-//      .fromString(expectedGDL)
-//      .getGraphCollection();
-//
-//    assertTrue("constistent", isConsistent(output));
-//    assertTrue("equals", equal(expected, output, db));
-//  }
-//
-//  private boolean isConsistent(GraphCollection collection) {
-//    boolean consistent = true;
-//
-//    for (SmallGraph model : collection) {
-//      for (int vertexId = 0; vertexId < model.getVertexCount(); vertexId++ ) {
-//        int vertexLabel = model.getVertexLabel(vertexId);
-//        String translation = collection.getLabelDictionary().translate(vertexLabel);
-//
-//        consistent = consistent && translation != null;
-//
-//        if (translation == null) {
-//          System.out.println("no translation found for integer vertex label " + vertexLabel);
-//        }
-//      }
-//
-//      for (int edgeId = 0; edgeId < model.getEdgeCount(); edgeId++ ) {
-//        int edgeLabel = model.getEdgeLabel(edgeId);
-//        String translation = collection.getLabelDictionary().translate(edgeLabel);
-//
-//        consistent = consistent && translation != null;
-//
-//        if (translation == null) {
-//          System.out.println("no translation found for integer edge label " + edgeLabel);
-//        }
-//      }
-//    }
-//
-//    return consistent;
-//  }
 }

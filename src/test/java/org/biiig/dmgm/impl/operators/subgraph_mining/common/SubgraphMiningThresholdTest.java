@@ -35,8 +35,8 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
 import org.biiig.dmgm.DMGMTestBase;
-import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
+import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -45,7 +45,7 @@ import static junit.framework.TestCase.assertEquals;
 
 public abstract class SubgraphMiningThresholdTest extends DMGMTestBase {
 
-  protected abstract CollectionToCollectionOperator getOperator(PropertyGraphDB db, float minSupportRel, int maxEdgeCount);
+  protected abstract CollectionToCollectionOperator getOperator(PropertyGraphDB db, boolean b, float minSupportRel, int maxEdgeCount);
 
   @Test
   public void mine10() throws Exception {
@@ -60,17 +60,15 @@ public abstract class SubgraphMiningThresholdTest extends DMGMTestBase {
   private void mine(float minSupportThreshold, int expectedResultSize) throws IOException {
     PropertyGraphDB db = getPredictableDatabase();
 
-    CollectionToCollectionOperator fsm = getOperator(db, minSupportThreshold, 20);
+    CollectionToCollectionOperator fsm = getOperator(db, false, minSupportThreshold, 20);
 
     long inId = db.createCollection(0, db.getGraphIds());
-
-    fsm.sequential();
 
     Long outId = fsm.apply(inId);
     long[] graphIds = db.getGraphElementIds(outId).getVertexIds();
     assertEquals("sequential @ " + minSupportThreshold,expectedResultSize, graphIds.length);
 
-    fsm.parallel();
+    fsm = getOperator(db, true, minSupportThreshold, 20);
 
     outId = fsm.apply(inId);
     graphIds = db.getGraphElementIds(outId).getVertexIds();

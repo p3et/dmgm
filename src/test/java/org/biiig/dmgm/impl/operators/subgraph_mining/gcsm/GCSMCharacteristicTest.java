@@ -34,8 +34,9 @@
 
 package org.biiig.dmgm.impl.operators.subgraph_mining.gcsm;
 
+import org.biiig.dmgm.TestConstants;
+import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
-import org.biiig.dmgm.api.db.QueryElements;
 import org.biiig.dmgm.impl.operators.subgraph_mining.GeneralizedCharacteristicSubgraphs;
 
 import java.util.function.Function;
@@ -43,8 +44,8 @@ import java.util.function.Function;
 public class GCSMCharacteristicTest extends org.biiig.dmgm.impl.operators.subgraph_mining.characteristic.CharacteristicTestBase {
 
   @Override
-  public Function<QueryElements, CollectionToCollectionOperator> getOperator() {
+  public Function<PropertyGraphDB, CollectionToCollectionOperator> getOperator() {
     return db -> new GeneralizedCharacteristicSubgraphs(
-    db,1.0f,10);
+    db, TestConstants.PARALLEL, 1.0f,10);
   }
 }

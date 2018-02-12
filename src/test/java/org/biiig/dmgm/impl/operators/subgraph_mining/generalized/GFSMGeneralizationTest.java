@@ -34,8 +34,9 @@
 
 package org.biiig.dmgm.impl.operators.subgraph_mining.generalized;
 
+import org.biiig.dmgm.TestConstants;
+import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
-import org.biiig.dmgm.api.db.QueryElements;
 import org.biiig.dmgm.impl.operators.subgraph_mining.GeneralizedFrequentSubgraphs;
 
 import java.util.function.Function;
@@ -43,7 +44,7 @@ import java.util.function.Function;
 public class GFSMGeneralizationTest extends GeneralizationTestBase {
 
   @Override
-  public Function<QueryElements, CollectionToCollectionOperator> getOperator() {
-    return db -> new GeneralizedFrequentSubgraphs(db,1.0f, 10);
+  public Function<PropertyGraphDB, CollectionToCollectionOperator> getOperator() {
+    return db -> new GeneralizedFrequentSubgraphs(db, TestConstants.PARALLEL, 1.0f, 10);
   }
 }

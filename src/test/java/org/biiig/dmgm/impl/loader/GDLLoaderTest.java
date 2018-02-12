@@ -32,13 +32,39 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.subgraph_mining.generalized;
 
+package org.biiig.dmgm.impl.loader;
+
+import org.biiig.dmgm.DMGMTestBase;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
-import org.biiig.dmgm.impl.operators.subgraph_mining.GeneralizedCharacteristicSubgraphs;
+import org.biiig.dmgm.api.model.CachedGraph;
+import org.junit.Test;
 
-public abstract class GeneralizedSubgraphsBase extends GeneralizedCharacteristicSubgraphs {
-  public GeneralizedSubgraphsBase(PropertyGraphDB database, float minSupportRel, int maxEdgeCount) {
-    super(database, minSupportRel, maxEdgeCount);
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+
+/**
+ * Test reading a GDL string.
+ */
+public class GDLLoaderTest extends DMGMTestBase {
+
+  @Test
+  public void testSimpleGraph() {
+    String gdl = "g1:G[(v1:A)-[:a]->(v1)-[:b]->(:B)], g2:G[(v1:A)-[:a]->(v1)-[:c]->(:C)]";
+
+    PropertyGraphDB db = new GDLLoader(DB_FACTORY, gdl).get();
+
+    int graphLabel = db.encode("G");
+    int colLabel = db.encode("COL");
+
+    long[] graphIds = db.queryElements(i -> i == graphLabel);
+    Long colId = db.createCollection(colLabel, graphIds);
+    List<CachedGraph> graphCollection = db.getCachedCollection(colId);
+
+    assertEquals("model count", 2, graphCollection.size());
+
+    System.out.println(db);
   }
+
 }
