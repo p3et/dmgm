@@ -15,29 +15,7 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.model;
-
-import org.biiig.dmgm.api.model.CachedGraph;
-import org.junit.Test;
-
-public class AdjacencyListTest extends SingleLabelDirectedSmallGraphTest {
-
-  @Test
-  public void testGetterAndSetter() throws Exception {
-    int lab0 = 0;
-    int lab1 = 1;
-
-    CachedGraph graph = new AdjacencyList(
-      0L,
-      0,
-      new int[] {lab0, lab1},
-      new int[] {lab0, lab1},
-      new int[] {0, 0},
-      new int[] {0, 1}
-    );
-
-    System.out.println(graph);
-
-    test(graph, lab0, lab1);
-  }
-}
+/**
+ * Implementations of the external API.
+ */
+package org.biiig.dmgm.impl;
