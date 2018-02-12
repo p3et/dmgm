@@ -3,7 +3,7 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 import com.google.common.collect.Maps;
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 import javafx.util.Pair;
-import org.biiig.dmgm.impl.model.DFSCode;
+import org.biiig.dmgm.impl.operators.subgraph_mining.DFSCode;
 
 import java.util.Collection;
 import java.util.Comparator;

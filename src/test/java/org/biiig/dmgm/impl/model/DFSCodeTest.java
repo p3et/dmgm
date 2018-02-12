@@ -18,6 +18,7 @@
 package org.biiig.dmgm.impl.model;
 
 import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.operators.subgraph_mining.DFSCode;
 import org.junit.Test;
 
 public class DFSCodeTest extends SingleLabelDirectedSmallGraphTest {
@@ -59,9 +60,9 @@ public class DFSCodeTest extends SingleLabelDirectedSmallGraphTest {
 //      .getGraphCollection();
 //
 //    GraphCollection output = new InMemoryGraphCollectionBuilderFactory()
-//      .create()
+//      .get()
 //      .withLabelDictionary(input.getLabelDictionary())
-//      .create();
+//      .get();
 //
 //    input.forEach(g -> output.add(((DFSCode) g).getParent()));
 //

@@ -36,6 +36,7 @@ public interface DMGMConstants {
      * Separator of key-value pairs.
      */
     String KEY_VALUE = "=";
+    String ID_LABEL = ":";
   }
 
   /**
@@ -57,6 +58,22 @@ public interface DMGMConstants {
        * End of a vertex.
        */
       String CLOSE = ")";
+    }
+
+    /**
+     * Symbols for the representation of vertices.
+     */
+    interface Edge {
+
+      /**
+       * Start of an outgoing edge.
+       */
+      String OPEN_OUTGOING = "-";
+
+      /**
+       * End of an outgoing edge.
+       */
+      String CLOSE_OUTGOING = ">";
     }
 
     /**

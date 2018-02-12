@@ -4,7 +4,7 @@
 //import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 //import org.biiig.dmgm.api.model.CachedGraph;
 //import org.biiig.dmgm.api.GraphDB;
-//import org.biiig.dmgm.impl.model.DFSCode;
+//import org.biiig.dmgm.impl.operators.subgraph_mining.DFSCode;
 //import org.biiig.dmgm.impl.operators.CollectionOperatorBase;
 //
 //import java.util.List;

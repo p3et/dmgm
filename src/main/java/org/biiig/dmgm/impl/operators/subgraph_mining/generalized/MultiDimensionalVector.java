@@ -5,7 +5,6 @@ import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.WithGraphId;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 public class MultiDimensionalVector implements WithGraphId {
 
@@ -98,7 +97,7 @@ public class MultiDimensionalVector implements WithGraphId {
   }
 
   /**
-   * Factory method to create a vector at its most general state.
+   * Factory method to get a vector at its most general state.
    *
    * @param embedding
    * @param dimensionPaths paths of dimension values from general to special

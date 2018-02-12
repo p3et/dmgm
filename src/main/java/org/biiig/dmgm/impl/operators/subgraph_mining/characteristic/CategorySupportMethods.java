@@ -37,7 +37,7 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 import javafx.util.Pair;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
-import org.biiig.dmgm.impl.model.DFSCode;
+import org.biiig.dmgm.impl.operators.subgraph_mining.DFSCode;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportMethods;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.WithGraphId;

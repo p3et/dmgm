@@ -15,12 +15,25 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.subgraph_mining.common;
+package org.biiig.dmgm.impl.loader;
 
-import javafx.util.Pair;
-import org.biiig.dmgm.api.model.CachedGraph;
-import org.biiig.dmgm.impl.operators.subgraph_mining.DFSCode;
+import org.biiig.dmgm.api.loader.PropertyGraphDBFactory;
+import org.biiig.dmgm.api.loader.PropertyGraphDBLoader;
 
-public interface GrowChildren {
-  Pair<DFSCode,DFSEmbedding>[] apply(CachedGraph graph, DFSCode parentCode, int[] rightmostPath, DFSEmbedding parentEmbedding);
+/**
+ * Superclass of database loaders.
+ */
+public abstract class PropertyGraphDBLoaderBase implements PropertyGraphDBLoader {
+  /**
+   * Factory to create database objects.
+   */
+  final PropertyGraphDBFactory dbFactory;
+
+  /**
+   *
+   * @param dbFactory a factory for databases
+   */
+  protected PropertyGraphDBLoaderBase(PropertyGraphDBFactory dbFactory) {
+    this.dbFactory = dbFactory;
+  }
 }

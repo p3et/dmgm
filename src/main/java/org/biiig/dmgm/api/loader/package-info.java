@@ -15,22 +15,7 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.model;
-
-import org.biiig.dmgm.impl.operators.subgraph_mining.generalized.SpecializableCachedGraph;
-
-public class SpecializableAdjacencyList extends AdjacencyList implements SpecializableCachedGraph {
-
-
-  private final int[][] taxonomyTails;
-
-  public SpecializableAdjacencyList(long id, int label, int[] vertexLabels, int[] edgeLabels, int[] sourceIds, int[] targetIds, int[][] taxonomyTails) {
-    super(id, label, vertexLabels, edgeLabels, sourceIds, targetIds);
-    this.taxonomyTails = taxonomyTails;
-  }
-
-  @Override
-  public int[] getTaxonomyTail(int vertexId) {
-    return taxonomyTails[vertexId];
-  }
-}
+/**
+ * Load graph data from sources like input files.
+ */
+package org.biiig.dmgm.api.loader;

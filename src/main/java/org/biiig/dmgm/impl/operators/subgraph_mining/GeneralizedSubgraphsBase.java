@@ -41,8 +41,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.model.CachedGraph;
-import org.biiig.dmgm.impl.model.DFSCode;
-import org.biiig.dmgm.impl.model.SpecializableAdjacencyList;
 import org.biiig.dmgm.impl.operators.CollectionToCollectionOperatorBase;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.GrowAllChildren;
@@ -50,6 +48,7 @@ import org.biiig.dmgm.impl.operators.subgraph_mining.common.InitializeParents;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.IsMinimal;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportMethods;
 import org.biiig.dmgm.impl.operators.subgraph_mining.generalized.FrequentSpecializations;
+import org.biiig.dmgm.impl.operators.subgraph_mining.generalized.SpecializableAdjacencyList;
 import org.biiig.dmgm.impl.operators.subgraph_mining.generalized.SpecializableCachedGraph;
 
 import java.util.Collection;

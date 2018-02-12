@@ -17,23 +17,56 @@
 
 package org.biiig.dmgm.impl.loader;
 
+/**
+ * Constants of TLF (graph Transaction List Format).
+ * This format is often used by prototypes for Frequent Subgraph Mining.
+ */
 public class TLFConstants {
-  public static final java.lang.String FIELD_SEPARATOR = " ";
+  /**
+   * Separator of fields in a line.
+   */
+  public static final String FIELD_SEPARATOR = " ";
 
-  public static final java.lang.String GRAPH_SYMBOL = "t";
+  /**
+   * Lines starting with this string represent graphs.
+   */
+  public static final String GRAPH_SYMBOL = "t";
+  /**
+   * Index of the id field in a split graph line.
+   */
   public static final int GRAPH_ID_INDEX = 2;
+  /**
+   * Index of the label field in a split graph line.
+   */
   public static final int GRAPH_LABEL_INDEX = 3;
-  public static final int GRAPH_DATA_START = 4;
 
-  public static final java.lang.String VERTEX_SYMBOL = "v";
+  /**
+   * Lines starting with this string represent vertices.
+   */
+  public static final String VERTEX_SYMBOL = "v";
+  /**
+   * Index of the id field in a split vertex line.
+   */
   public static final int VERTEX_ID_INDEX = 1;
+  /**
+   * Index of the label field in a split vertex line.
+   */
   public static final int VERTEX_LABEL_INDEX = 2;
-  public static final int VERTEX_DATA_START = 3;
 
-  public static final java.lang.String EDGE_SYMBOL = "e";
+  /**
+   * Lines starting with this string represent edges.
+   */
+  public static final String EDGE_SYMBOL = "e";
+  /**
+   * Index of the source vertex id field in a split edge line.
+   */
   public static final int EDGE_SOURCE_INDEX = 1;
+  /**
+   * Index of the target vertex id field in a split edge line.
+   */
   public static final int EDGE_TARGET_INDEX = 2;
+  /**
+   * Index of the label field in a split edge line.
+   */
   public static final int EDGE_LABEL_INDEX = 3;
-  public static final int EDGE_DATA_START = 4;
-
 }

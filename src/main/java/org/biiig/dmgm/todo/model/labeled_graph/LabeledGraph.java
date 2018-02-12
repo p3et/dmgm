@@ -2,7 +2,7 @@ package org.biiig.dmgm.todo.model.labeled_graph;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.biiig.dmgm.impl.model.DFSCode;
+import org.biiig.dmgm.impl.operators.subgraph_mining.DFSCode;
 
 import java.util.Arrays;
 

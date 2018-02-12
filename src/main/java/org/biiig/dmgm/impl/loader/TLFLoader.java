@@ -21,6 +21,7 @@ package org.biiig.dmgm.impl.loader;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
+import org.biiig.dmgm.api.loader.PropertyGraphDBFactory;
 import org.biiig.dmgm.impl.db.InMemoryGraphDB;
 
 import java.io.IOException;
@@ -28,17 +29,25 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.function.Supplier;
 
-public class TLFLoader implements Supplier<PropertyGraphDB> {
+/**
+ * Read a database from a TLF file (graph Transaction List Format).
+ */
+public class TLFLoader extends PropertyGraphDBLoaderBase {
+  /**
+   * Input file path.
+   */
   private final String filePath;
 
-  private TLFLoader(String filePath) {
+  /**
+   * Constructor.
+   *
+   * @param dbFactory database factory
+   * @param filePath input file path
+   */
+  public TLFLoader(PropertyGraphDBFactory dbFactory, String filePath) {
+    super(dbFactory);
     this.filePath = filePath;
-  }
-
-  public static TLFLoader fromFile(String filePath) {
-    return new TLFLoader(filePath);
   }
 
   @Override
@@ -49,12 +58,13 @@ public class TLFLoader implements Supplier<PropertyGraphDB> {
       Iterator<String> iterator = Files.lines(Paths.get(filePath)).iterator();
 
       if (iterator.hasNext()) {
-        // cache
+        // create cache for first graph
         String graphLine = iterator.next();
         Map<String, Long> vertexIdMap = Maps.newHashMap();
         long[] vertexIds = new long[0];
         long[] edgeIds = new long[0];
 
+        // read vertices and edges
         while (iterator.hasNext()) {
           String line = iterator.next();
 
@@ -65,14 +75,16 @@ public class TLFLoader implements Supplier<PropertyGraphDB> {
             edgeIds = ArrayUtils.add(edgeIds, readEdge(db, line, vertexIdMap));
 
           } else {
-            // save model
+            // save graph
             readGraph(db, graphLine, vertexIds, edgeIds);
             // reset cache
+            vertexIdMap.clear();
             vertexIds = new long[0];
             edgeIds = new long[0];
-            vertexIdMap.clear();
           }
         }
+
+        // save last graph
         readGraph(db, graphLine, vertexIds, edgeIds);
       }
 
@@ -80,10 +92,17 @@ public class TLFLoader implements Supplier<PropertyGraphDB> {
       e.printStackTrace();
     }
 
-
     return db;
   }
 
+  /**
+   * Read a graph line, i.e., add a graph to the database.
+   *
+   * @param db target database
+   * @param line current line
+   * @param vertexIds the graph's vertex ids
+   * @param edgeIds the graph's edge ids
+   */
   private void readGraph(PropertyGraphDB db, String line, long[] vertexIds, long[] edgeIds) {
     String[] split = line.split(TLFConstants.FIELD_SEPARATOR);
 
@@ -94,6 +113,15 @@ public class TLFLoader implements Supplier<PropertyGraphDB> {
     db.createGraph(db.encode(label), vertexIds, edgeIds);
   }
 
+  /**
+   * Read a vertex line, i.e., add a vertex to the database.
+   * Additionally, update vertex id mapping.
+   *
+   * @param db target database
+   * @param line current line
+   * @param vertexIdMap tlf vertex id -> db vertex id
+   * @return db vertex id
+   */
   private long readVertex(PropertyGraphDB db, String line, Map<String, Long> vertexIdMap) {
     String[] split = line.split(TLFConstants.FIELD_SEPARATOR);
 
@@ -106,6 +134,14 @@ public class TLFLoader implements Supplier<PropertyGraphDB> {
     return dbId;
   }
 
+  /**
+   * Read an edge line, i.e., add an edge to the database.
+   *
+   * @param db target database
+   * @param line current line
+   * @param vertexIdMap tlf vertex id -> db vertex id
+   * @return db edge id
+   */
   private long readEdge(PropertyGraphDB db, String line, Map<String, Long> vertexIdMap) {
     String[] split = line.split(TLFConstants.FIELD_SEPARATOR);
 

@@ -18,30 +18,47 @@
 package org.biiig.dmgm.impl.loader;
 
 import org.biiig.dmgm.api.db.PropertyGraphDB;
-import org.biiig.dmgm.impl.db.InMemoryGraphDB;
+import org.biiig.dmgm.api.db.SetProperties;
+import org.biiig.dmgm.api.loader.PropertyGraphDBFactory;
 import org.biiig.dmgm.impl.db.LongPair;
 import org.s1ck.gdl.GDLHandler;
 import org.s1ck.gdl.model.Element;
 
 import java.math.BigDecimal;
 import java.util.Map;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class GDLLoader implements Supplier<PropertyGraphDB> {
+/**
+ * Turn a GDL String into a {@code PropertyGraphDB}.
+ * GDL is a graph description language.
+ * @see <a href="https://github.com/s1ck/gdl</a>
+ */
+public class GDLLoader extends PropertyGraphDBLoaderBase {
 
+  /**
+   * String containing the GDL.
+   */
   private final String gdlString;
 
-  private GDLLoader(String gdlString) {
+  /**
+   * Constructor.
+   *
+   * @param dbFactory database factory.
+   * @param gdlString GDL
+   */
+  private GDLLoader(PropertyGraphDBFactory dbFactory, String gdlString) {
+    super(dbFactory);
     this.gdlString = gdlString;
   }
 
   @Override
   public PropertyGraphDB get() {
-    PropertyGraphDB db = new InMemoryGraphDB(true);
+    PropertyGraphDB db = dbFactory.get();
 
-    GDLHandler gdlHandler = new GDLHandler.Builder().buildFromString(gdlString);
+    GDLHandler gdlHandler = new GDLHandler.Builder()
+      .buildFromString(gdlString);
 
+    // VERTICES
     Map<Long, Long> vertexIdMap = gdlHandler
       .getVertices()
       .stream()
@@ -52,8 +69,12 @@ public class GDLLoader implements Supplier<PropertyGraphDB> {
         addProperties(db, vertex, dbId);
         return new LongPair(gdlId, dbId);
       })
-      .collect(Collectors.toMap(LongPair::getSourceId, LongPair::getTargetId));
+      .collect(Collectors.toMap(
+        LongPair::getSourceId,
+        LongPair::getTargetId
+      ));
 
+    // EDGES
     Map<Long, Long> edgeIdMap = gdlHandler
       .getEdges()
       .stream()
@@ -66,8 +87,12 @@ public class GDLLoader implements Supplier<PropertyGraphDB> {
         addProperties(db, edge, dbId);
         return new LongPair(gdlId, dbId);
       })
-      .collect(Collectors.toMap(LongPair::getSourceId, LongPair::getTargetId));
+      .collect(Collectors.toMap(
+        LongPair::getSourceId,
+        LongPair::getTargetId
+      ));
 
+    // GRAPHS
     gdlHandler
       .getGraphs()
       .forEach(graph -> {
@@ -96,25 +121,34 @@ public class GDLLoader implements Supplier<PropertyGraphDB> {
     return db;
   }
 
-  private void addProperties(PropertyGraphDB db, Element vertex, long dbId) {
-    vertex.getProperties()
+  /**
+   * Add GDL properties to the database
+   *
+   * @param db database to store properties
+   * @param element vertex, edge or graph
+   * @param dbId the element's database id
+   */
+  private void addProperties(SetProperties db, Element element, long dbId) {
+    element.getProperties()
       .forEach((key, value) -> {
-        int symbol = db.encode(key);
-        if (value instanceof String)
-          db.set(dbId, symbol, (String) value);
-        else if (value instanceof Integer)
-          db.set(dbId, symbol, (Integer) value);
-        else if (value instanceof Long)
-          db.set(dbId, symbol, Math.toIntExact((Long) value));
-        else if (value instanceof BigDecimal)
-          db.set(dbId, symbol, (BigDecimal) value);
+        if (value != null) {
+          int encodedKey = db.encode(key);
+
+          if (value instanceof Integer)
+            db.set(dbId, encodedKey, (int) value);
+          else if (value instanceof Long)
+            db.set(dbId, encodedKey, (long) value);
+          else if (value instanceof Float)
+            db.set(dbId, encodedKey, (float) value);
+          else if (value instanceof Double)
+            db.set(dbId, encodedKey, (double) value);
+          else if (value instanceof String)
+            db.set(dbId, encodedKey, (String) value);
+          else if (value instanceof BigDecimal)
+            db.set(dbId, encodedKey, (BigDecimal) value);
+          else if (value instanceof Boolean && (boolean) value)
+            db.set(dbId, encodedKey, true);
+        }
       });
   }
-
-  public static GDLLoader fromString(String gdlString) {
-    return new GDLLoader(gdlString);
-  }
-
-
-
 }

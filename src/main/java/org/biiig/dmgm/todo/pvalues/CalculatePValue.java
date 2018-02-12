@@ -1,6 +1,6 @@
 package org.biiig.dmgm.todo.pvalues;
 
-import org.biiig.dmgm.impl.model.DFSCode;
+import org.biiig.dmgm.impl.operators.subgraph_mining.DFSCode;
 import org.biiig.dmgm.todo.pvalues.algorithm.EDDModel;
 import org.biiig.dmgm.todo.pvalues.algorithm.GraphUtility;
 import org.biiig.dmgm.todo.pvalues.algorithm.MathUtility;
