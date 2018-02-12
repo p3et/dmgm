@@ -60,9 +60,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Test reading a TLF file.
- */
 public class TLFReaderTest extends DMGMTestBase {
 
   @Test

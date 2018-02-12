@@ -215,13 +215,18 @@ public class InMemoryGraphDB implements PropertyGraphDB {
   }
 
   @Override
-  public LongPair getEdgeVertexIds(long edgeId) {
+  public LongPair getSourceIdTargetId(long edgeId) {
     return edges.get(edgeId);
   }
 
   @Override
-  public LongsPair getGraphElementIds(long graphId) {
+  public LongsPair getVertexIdsEdgeIds(long graphId) {
     return graphs.get(graphId);
+  }
+
+  @Override
+  public long[] getGraphIds(Long collectionId) {
+    return collections.get(collectionId);
   }
 
   @Override

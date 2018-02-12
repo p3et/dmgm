@@ -34,6 +34,7 @@
 
 package org.biiig.dmgm.impl.statistics;
 
+import com.google.common.collect.Maps;
 import org.biiig.dmgm.DMGMTestBase;
 import org.biiig.dmgm.TestConstants;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
@@ -41,17 +42,33 @@ import org.biiig.dmgm.impl.loader.TLFConstants;
 import org.biiig.dmgm.impl.operators.subgraph_mining.GeneralizedCharacteristicSubgraphs;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class VertexLabelSupportTest extends DMGMTestBase {
 
+  private static final Map<String, Long> EXPECTED_SUPPORT = Maps.newHashMap();
+
+  static {
+    EXPECTED_SUPPORT.put("S", 10L);
+    EXPECTED_SUPPORT.put("A", 10L);
+    EXPECTED_SUPPORT.put("B", 9L);
+    EXPECTED_SUPPORT.put("C", 8L);
+    EXPECTED_SUPPORT.put("D", 7L);
+    EXPECTED_SUPPORT.put("E", 6L);
+    EXPECTED_SUPPORT.put("F", 5L);
+    EXPECTED_SUPPORT.put("G", 4L);
+    EXPECTED_SUPPORT.put("H", 3L);
+    EXPECTED_SUPPORT.put("J", 2L);
+    EXPECTED_SUPPORT.put("K", 1L);
+  }
+
   private final PropertyGraphDB db;
   private final long cid;
 
-  public VertexLabelSupportTest() throws IOException {
+  public VertexLabelSupportTest() {
     db = getPredictableDatabase();
     int label = db.encode(TLFConstants.GRAPH_SYMBOL);
     long[] graphIds = db.queryElements(i -> i == label);
@@ -59,11 +76,22 @@ public class VertexLabelSupportTest extends DMGMTestBase {
   }
 
   @Test
-  public void getAbsolute() throws IOException {
-    Map<Integer, Long> support = new GeneralizedCharacteristicSubgraphs(db, TestConstants.PARALLEL, 0f, 0)
+  public void getAbsolute() {
+    Map<Integer, Long> support = new GeneralizedCharacteristicSubgraphs(
+      db, TestConstants.PARALLEL, 0f, 0)
       .getVertexLabelSupport(db.getCachedCollection(cid));
 
-    for (int i = 1; i <= 10; i++)
-      assertTrue("cannot find support of 1", support.values().contains(i));
+    for (Map.Entry<Integer, Long> entry : support.entrySet()) {
+      String label = db.decode(entry.getKey());
+
+      assertTrue("did not expect " + entry, EXPECTED_SUPPORT.containsKey(label));
+      assertEquals("wrong support for " + label, EXPECTED_SUPPORT.get(label), entry.getValue());
+    }
+
+    for (Map.Entry<String, Long> entry : EXPECTED_SUPPORT.entrySet()) {
+      String label = entry.getKey();
+
+      assertTrue("did not find " + label, support.containsKey(db.encode(label)));
+    }
   }
 }

@@ -32,51 +32,48 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.subgraph_mining.generalized;
+package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
 import org.biiig.dmgm.DMGMTestBase;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
-import org.biiig.dmgm.impl.db.InMemoryGraphDB;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.PropertyKeys;
+import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
 import org.junit.Test;
 
-import java.util.function.Function;
+import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
+import static junit.framework.TestCase.assertEquals;
 
-public class ToMultiDimensionalVectorTest extends DMGMTestBase {
+public abstract class SubgraphMiningThresholdTestBase extends DMGMTestBase {
+
+  protected abstract CollectionToCollectionOperator getOperator(
+    PropertyGraphDB db, boolean b, float minSupportRel, int maxEdgeCount);
 
   @Test
-  public void apply() {
-    PropertyGraphDB db = new InMemoryGraphDB(true);
-    int taxonomyPathKey = db.encode(PropertyKeys.TAXONOMY_PATH);
-
-    db.set(0l, taxonomyPathKey, new int[] {1, 2});
-
-    DFSEmbedding embeddingA = new DFSEmbedding(0, new int[]{1, 2}, new int[0]);
-    DFSEmbedding embeddingB = new DFSEmbedding(0, new int[]{1, 3}, new int[0]);
-
-
-    Function<DFSEmbedding, MultiDimensionalVector> function = new ToMultiDimensionalVector(db, taxonomyPathKey);
-
-    assertEquals("with data", getVectorA(), function.apply(embeddingA));
-    assertEquals("without data", getVectorB(), function.apply(embeddingB));
+  public void mine10() throws Exception {
+    mine(1.0f, 702);
   }
 
-  private MultiDimensionalVector getVectorA() {
-    int[][] dimensionPaths = new int[2][];
-    dimensionPaths[0] = new int[0];
-    dimensionPaths[1] = new int[] {1, 2};
-
-    return MultiDimensionalVector.create(null, dimensionPaths);
+  @Test
+  public void mine08() throws Exception {
+    mine(0.8f, 2106);
   }
 
-  private MultiDimensionalVector getVectorB() {
-    int[][] dimensionPaths = new int[2][];
-    dimensionPaths[0] = new int[0];
-    dimensionPaths[1] = new int[0];
+  private void mine(float minSupportThreshold, int expectedResultSize) throws IOException {
+    PropertyGraphDB db = getPredictableDatabase();
 
-    return MultiDimensionalVector.create(null, dimensionPaths);
+    CollectionToCollectionOperator fsm = getOperator(db, false, minSupportThreshold, 20);
+
+    long inId = db.createCollection(0, db.getGraphIds());
+
+    Long outId = fsm.apply(inId);
+    long[] graphIds = db.getGraphIds(outId);
+    assertEquals("sequential @ " + minSupportThreshold,expectedResultSize, graphIds.length);
+
+    fsm = getOperator(db, true, minSupportThreshold, 20);
+
+    outId = fsm.apply(inId);
+    graphIds = db.getGraphIds(outId);
+    assertEquals("parallel @ " + minSupportThreshold, expectedResultSize, graphIds.length);
   }
+
 }

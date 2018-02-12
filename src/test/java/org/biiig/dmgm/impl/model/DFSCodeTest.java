@@ -21,14 +21,10 @@ import org.biiig.dmgm.api.model.CachedGraph;
 import org.biiig.dmgm.impl.operators.subgraph_mining.DFSCode;
 import org.junit.Test;
 
-public class DFSCodeTest extends SingleLabelDirectedSmallGraphTest {
-
-  private static final String PATH_CHILD = "[(:V)-[:e]->(:V)-[:e]->(:V)]";
-  private static final String CYCLE_CHILD = "[(v:V)-[:e]->(:V)-[:e]->(v)]";
-  private static final String EXPECTED_PARENT = "[(:V)-[:e]->(:V)]";
+public class DFSCodeTest extends CachedGraphTestBase {
 
   @Test
-  public void testGetterAndSetter() throws Exception {
+  public void testGetterAndSetter() {
     int lab0 = 0;
     int lab1 = 1;
 
@@ -43,67 +39,4 @@ public class DFSCodeTest extends SingleLabelDirectedSmallGraphTest {
     test(graph, lab0, lab1);
   }
 
-//  @Test
-//  public void getParentOfPath() {
-//    getParentOf(PATH_CHILD);
-//  }
-//
-//  @Test
-//  public void getParentOfCycle() {
-//    getParentOf(CYCLE_CHILD);
-//  }
-//
-//  public void getParentOf(String child) {
-//    GraphCollection input = GDLLoader
-//      .fromString(child)
-//      .withGraphFactory(getFactory())
-//      .getGraphCollection();
-//
-//    GraphCollection output = new InMemoryGraphCollectionBuilderFactory()
-//      .get()
-//      .withLabelDictionary(input.getLabelDictionary())
-//      .get();
-//
-//    input.forEach(g -> output.add(((DFSCode) g).getParent()));
-//
-//    GraphCollection expected = GDLLoader
-//      .fromString(EXPECTED_PARENT)
-//      .withGraphFactory(getFactory())
-//      .getGraphCollection();
-//
-//    assertTrue(equal(expected, output, db));
-//  }
-
-//  @Test
-//  public void testForwardsGrowth() {
-//    DFSCode parent =
-//      new DFSCode(0, 1, 0, true, 0, 0);
-//
-//    DFSCode child = parent.growChild(1, 2, true, 0, 0);
-//
-//    assertEquals("forwards vertex count", 3, child.getVertexCount());
-//    assertEquals("forwards edge count", 2, child.getEdgeCount());
-//  }
-//
-//  @Test
-//  public void testBackwardsGrowth() {
-//    DFSCode parent =
-//      new DFSCode(0, 1, 0, true, 0, 0);
-//
-//    DFSCode child = parent.growChild(1, 0, true, 0, 0);
-//
-//    assertEquals("forwards vertex count", 2, child.getVertexCount());
-//    assertEquals("forwards edge count", 2, child.getEdgeCount());
-//  }
-//
-//  @Test
-//  public void testGetter() {
-//    DFSCode parent =
-//      new DFSCode(0, 1, 33, true, 44, 55);
-//
-//    DFSCode child = parent.growChild(1, 0, true, 66, 77);
-//
-//    assertEquals(child.getVertexLabel(child.getToTime(0)), 55);
-//    assertEquals(child.getVertexLabel(child.getToTime(1)), 33);
-//  }
 }

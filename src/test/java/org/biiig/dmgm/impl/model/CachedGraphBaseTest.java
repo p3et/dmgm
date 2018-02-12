@@ -20,14 +20,13 @@ package org.biiig.dmgm.impl.model;
 import org.biiig.dmgm.api.model.CachedGraph;
 import org.junit.Test;
 
-public class AdjacencyCollectionTest extends SingleLabelDirectedSmallGraphTest {
-
+public class CachedGraphBaseTest extends CachedGraphTestBase {
   @Test
   public void testGetterAndSetter() throws Exception {
     int lab0 = 0;
     int lab1 = 1;
 
-    CachedGraph graph = new AdjacencyList(
+    CachedGraph graph = new CachedGraphBase(
       0L,
       0,
       new int[] {lab0, lab1},
@@ -35,8 +34,6 @@ public class AdjacencyCollectionTest extends SingleLabelDirectedSmallGraphTest {
       new int[] {0, 0},
       new int[] {0, 1}
     );
-
-    System.out.println(graph);
 
     test(graph, lab0, lab1);
   }

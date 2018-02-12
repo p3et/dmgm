@@ -38,9 +38,9 @@ import org.biiig.dmgm.TestConstants;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
 import org.biiig.dmgm.impl.operators.subgraph_mining.GeneralizedFrequentSubgraphs;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.SubgraphMiningThresholdTest;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.SubgraphMiningThresholdTestBase;
 
-public class GFSMThresholdTest extends SubgraphMiningThresholdTest {
+public class GFSMThresholdTest extends SubgraphMiningThresholdTestBase {
 
   @Override
   protected CollectionToCollectionOperator getOperator(PropertyGraphDB db, boolean b, float minSupportRel, int maxEdgeCount) {

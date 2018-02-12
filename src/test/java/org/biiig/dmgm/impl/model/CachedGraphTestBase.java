@@ -22,13 +22,14 @@ import org.biiig.dmgm.api.model.CachedGraph;
 
 import java.util.Objects;
 
-import static org.junit.Assert.*;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertArrayEquals;
 
 /**
  * Created by peet on 02.08.17.
  */
-public abstract class SingleLabelDirectedSmallGraphTest extends DMGMTestBase {
-
+public abstract class CachedGraphTestBase extends DMGMTestBase {
 
   protected void test(CachedGraph graph, int lab0, int lab1) {
     assertEquals("vertex count", 2, graph.getVertexCount());

@@ -44,9 +44,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Test reading a GDL string.
- */
 public class GDLLoaderTest extends DMGMTestBase {
 
   @Test

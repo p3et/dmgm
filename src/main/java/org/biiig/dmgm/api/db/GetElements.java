@@ -35,15 +35,22 @@ public interface GetElements {
    * @param edgeId edge id
    * @return (sourceId, targetId)
    */
-  SourceIdTargetId getEdgeVertexIds(long edgeId);
+  SourceIdTargetId getSourceIdTargetId(long edgeId);
 
   /**
    * Get vertices and edges of a model.
    *
-   * @param graphId model id
+   * @param graphId graph id
    * @return (vertexId..., edgeId...)
    */
-  VertexIdsEdgeIds getGraphElementIds(long graphId);
+  VertexIdsEdgeIds getVertexIdsEdgeIds(long graphId);
+
+  /**
+   * get graph of a collection.
+   * @param collectionId collection id
+   * @return graphId...
+   */
+  long[] getGraphIds(Long collectionId);
 
   /**
    * Get all model ids in which a vertex appears.
