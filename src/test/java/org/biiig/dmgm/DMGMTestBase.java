@@ -44,8 +44,8 @@ import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
 import org.biiig.dmgm.impl.loader.GDLLoader;
 import org.biiig.dmgm.impl.loader.InMemoryGraphDBFactory;
 import org.biiig.dmgm.impl.loader.TLFLoader;
-import org.biiig.dmgm.impl.to_string.cam.CAMGraphFormatter;
-import org.biiig.dmgm.impl.to_string.edge_list.ELGraphFormatter;
+import org.biiig.dmgm.to_string.cam.CAMGraphFormatter;
+import org.biiig.dmgm.to_string.edge_list.ELGraphFormatter;
 
 import java.util.Collection;
 import java.util.Map;
