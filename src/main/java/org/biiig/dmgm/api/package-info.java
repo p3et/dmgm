@@ -32,25 +32,7 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.api;
-
 /**
- * Dictionary coding for string values.
+ * The DMGM external API.
  */
-public interface SymbolDictionary {
-  /**
-   * Encode a string symbol (e.g., label or property key).
-   *
-   * @param value symbol
-   * @return int value
-   */
-  int encode(String value);
-
-  /**
-   * Decode a symbol (e.g., label or property key).
-   *
-   * @param symbol int value
-   * @return symbol
-   */
-  String decode(int symbol);
-}
+package org.biiig.dmgm.api;

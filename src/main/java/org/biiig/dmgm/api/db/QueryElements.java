@@ -32,35 +32,52 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
+package org.biiig.dmgm.api.db;
 
-import org.biiig.dmgm.DMGMTestBase;
-import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
-import org.biiig.dmgm.api.db.QueryElements;
-import org.junit.Test;
+import java.util.function.BiFunction;
+import java.util.function.IntPredicate;
 
-import java.util.function.Function;
+/**
+ * Get vertices, edges, graphs and graph collections by data-related queries.
+ */
+public interface QueryElements {
+  /**
+   * Query identifiers of elements matching a given label predicate.
+   *
+   * @param labelPredicate label predicate
+   * @return identifiers
+   */
+  long[] queryElements(IntPredicate labelPredicate);
 
-public abstract class CharacteristicTestBase extends DMGMTestBase {
-  @Test
-  public void testAlgorithm() {
-    String gdl =
-      ":IN{_category:\"X\"}[(:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(:D)]" +
-      ":IN{_category:\"X\"}[(:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(:D)]" +
-      ":IN{_category:\"Y\"}[(:A)-[:a]->(:B)-[:b]->(:C)-[:b]->(:D)]" +
-      ":IN{_category:\"Y\"}[(:A)-[:a]->(:B)-[:b]->(:C)-[:b]->(:E)]" +
-      ":EX[(:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(:D)]" +
-      ":EX[(:A)-[:a]->(:B)-[:a]->(:C)]" +
-      ":EX[(:B)-[:a]->(:C)-[:a]->(:D)]" +
-      ":EX[(:B)-[:a]->(:C)]" +
-      ":EX[(:C)-[:a]->(:D)]" +
-      ":EX{_category:\"X\"}[(:A)-[:a]->(:B)]" +
-      ":EX{_category:\"Y\"}[(:A)-[:a]->(:B)]" +
-      ":EX[(:A)-[:a]->(:B)-[:b]->(:C)]" +
-      ":EX[(:B)-[:b]->(:C)]" ;
+  /**
+   * Query identifiers of elements matching a given property predicate.
+   *
+   * @param propertyPredicate over elementId and property store
+   * @return
+   */
+  long[] queryElements(PropertyPredicate propertyPredicate);
 
-    runAndTestExpectation(getOperator(), gdl, false);
+  /**
+   * Query identifiers of elements matching a given label and property predicate.
+   *
+   * @param propertyPredicate over elementId and property store
+   * @return
+   */
+  long[] queryElements(IntPredicate labelPredicate, PropertyPredicate propertyPredicate);
+
+  /**
+   * A predicate that evaluates an element's properties.
+   */
+  interface PropertyPredicate extends BiFunction<GetProperties, Long, Boolean> {
+
+    /**
+     * Evaluate the predicate.
+     *
+     * @param getProperties property store read access
+     * @param elementId id of a graph, vertex or edge
+     * @return evaluation result
+     */
+    @Override
+    Boolean apply(GetProperties getProperties, Long elementId);
   }
-
-  public abstract Function<QueryElements, CollectionToCollectionOperator> getOperator();
 }

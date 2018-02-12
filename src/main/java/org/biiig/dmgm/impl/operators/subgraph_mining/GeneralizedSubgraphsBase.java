@@ -15,6 +15,23 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+ * This file is part of Directed Multigraph Miner (DMGM).
+ *
+ * DMGM is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * DMGM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.biiig.dmgm.impl.operators.subgraph_mining;
 
 import com.google.common.collect.Lists;
@@ -22,12 +39,12 @@ import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.biiig.dmgm.api.CachedGraph;
-import org.biiig.dmgm.api.PropertyGraphDB;
-import org.biiig.dmgm.api.SpecializableCachedGraph;
+import org.biiig.dmgm.api.db.CachedGraph;
+import org.biiig.dmgm.api.db.PropertyGraphDB;
+import org.biiig.dmgm.impl.operators.subgraph_mining.generalized.SpecializableCachedGraph;
 import org.biiig.dmgm.impl.graph.DFSCode;
 import org.biiig.dmgm.impl.graph.SpecializableAdjacencyList;
-import org.biiig.dmgm.impl.operators.CollectionOperatorBase;
+import org.biiig.dmgm.impl.operators.CollectionToCollectionOperatorBase;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportMethods;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.GrowAllChildren;
@@ -43,7 +60,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public abstract class GeneralizedSubgraphsBase<S> extends CollectionOperatorBase {
+public abstract class GeneralizedSubgraphsBase<S> extends CollectionToCollectionOperatorBase {
   private static final String LEVEL_SEPARATOR = "_";
   private static final String FREQUENT_SUBGRAPH = "Frequent Subgraph";
   private static final String FREQUENT_SUBGRAPHS = "Frequent Subgraphs";

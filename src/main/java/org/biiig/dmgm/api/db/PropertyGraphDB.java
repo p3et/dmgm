@@ -32,56 +32,33 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.api;
+package org.biiig.dmgm.api.db;
 
-import com.google.common.collect.Sets;
-import org.apache.commons.lang3.ArrayUtils;
-
-import java.util.Set;
-import java.util.function.BiFunction;
-import java.util.function.IntPredicate;
+import java.util.List;
 
 /**
- * Get vertices, edges, graphs and graph collections by data-related queries.
+ * Describes a database that supports:
+ * - the Extended Property Graph Model
+ * - edges between arbitrary elements (vertices, graphs, edges)
+ * - dictionary coding for all symbols such as labels and property keys
  */
-public interface QueryElements {
+public interface PropertyGraphDB
+  extends SymbolDictionary, CreateElements, GetElements, SetProperties, GetProperties, QueryElements {
+
   /**
-   * Query identifiers of elements matching a given label predicate.
+   * Materialize a single graph and return a Pojo representation.
    *
-   * @param labelPredicate label predicate
-   * @return identifiers
+   * @param graphId graph id
+   * @return cached immutable graph pojo
    */
-  long[] queryElements(IntPredicate labelPredicate);
+  CachedGraph getCachedGraph(long graphId);
 
   /**
-   * Query identifiers of elements matching a given property predicate.
+   * Materialize a single graph and return a List of it's graphs pojo representations.
    *
-   * @param propertyPredicate over elementId and property store
-   * @return
+   * @param collectionId hypervertex id
+   * @return list of cached immutable graph pojos
    */
-  long[] queryElements(PropertyPredicate propertyPredicate);
+  List<CachedGraph> getCachedCollection(long collectionId);
 
-  /**
-   * Query identifiers of elements matching a given label and property predicate.
-   *
-   * @param propertyPredicate over elementId and property store
-   * @return
-   */
-  long[] queryElements(IntPredicate labelPredicate, PropertyPredicate propertyPredicate);
-
-  /**
-   * A predicate that evaluates an element's properties.
-   */
-  interface PropertyPredicate extends BiFunction<GetProperties, Long, Boolean> {
-
-    /**
-     * Evaluate the predicate.
-     *
-     * @param getProperties property store read access
-     * @param elementId id of a graph, vertex or edge
-     * @return evaluation result
-     */
-    @Override
-    Boolean apply(GetProperties getProperties, Long elementId);
-  }
 }

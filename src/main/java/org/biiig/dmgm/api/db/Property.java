@@ -32,35 +32,23 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
+package org.biiig.dmgm.api.db;
 
-import org.biiig.dmgm.DMGMTestBase;
-import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
-import org.biiig.dmgm.api.db.QueryElements;
-import org.junit.Test;
+/**
+ * A key-value pair.
+ */
+public interface Property {
+  /**
+   * Get key.
+   *
+   * @return encoded key
+   */
+  int getKey();
 
-import java.util.function.Function;
-
-public abstract class CharacteristicTestBase extends DMGMTestBase {
-  @Test
-  public void testAlgorithm() {
-    String gdl =
-      ":IN{_category:\"X\"}[(:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(:D)]" +
-      ":IN{_category:\"X\"}[(:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(:D)]" +
-      ":IN{_category:\"Y\"}[(:A)-[:a]->(:B)-[:b]->(:C)-[:b]->(:D)]" +
-      ":IN{_category:\"Y\"}[(:A)-[:a]->(:B)-[:b]->(:C)-[:b]->(:E)]" +
-      ":EX[(:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(:D)]" +
-      ":EX[(:A)-[:a]->(:B)-[:a]->(:C)]" +
-      ":EX[(:B)-[:a]->(:C)-[:a]->(:D)]" +
-      ":EX[(:B)-[:a]->(:C)]" +
-      ":EX[(:C)-[:a]->(:D)]" +
-      ":EX{_category:\"X\"}[(:A)-[:a]->(:B)]" +
-      ":EX{_category:\"Y\"}[(:A)-[:a]->(:B)]" +
-      ":EX[(:A)-[:a]->(:B)-[:b]->(:C)]" +
-      ":EX[(:B)-[:b]->(:C)]" ;
-
-    runAndTestExpectation(getOperator(), gdl, false);
-  }
-
-  public abstract Function<QueryElements, CollectionToCollectionOperator> getOperator();
+  /**
+   * Get value.
+   *
+   * @return value
+   */
+  Object getValue();
 }

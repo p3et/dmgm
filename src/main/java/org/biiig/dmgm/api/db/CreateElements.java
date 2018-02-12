@@ -32,7 +32,7 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.api;
+package org.biiig.dmgm.api.db;
 
 /**
  * Create vertices, edges, graphs and graph collections.

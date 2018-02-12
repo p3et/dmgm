@@ -32,33 +32,31 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.api;
+package org.biiig.dmgm.impl.db;
 
-import java.util.List;
+import org.biiig.dmgm.api.db.Property;
 
-/**
- * Describes a database that supports:
- * - the Extended Property Graph Model
- * - edges between arbitrary elements (vertices, graphs, edges)
- * - dictionary coding for all symbols such as labels and property keys
- */
-public interface PropertyGraphDB
-  extends SymbolDictionary, CreateElements, GetElements, SetProperties, GetProperties, QueryElements {
+public class KeyObjectPair implements Property {
+  private final int key;
+  private final Object value;
 
-  /**
-   * Materialize a single graph and return a Pojo representation.
-   *
-   * @param graphId graph id
-   * @return cached immutable graph pojo
-   */
-  CachedGraph getCachedGraph(long graphId);
+  public KeyObjectPair(int key, Object value) {
+    this.key = key;
+    this.value = value;
+  }
 
-  /**
-   * Materialize a single graph and return a List of it's graphs pojo representations.
-   *
-   * @param collectionId hypervertex id
-   * @return list of cached immutable graph pojos
-   */
-  List<CachedGraph> getCachedCollection(long collectionId);
+  @Override
+  public int getKey() {
+    return key;
+  }
 
+  @Override
+  public Object getValue() {
+    return value;
+  }
+
+  @Override
+  public String toString() {
+    return key + ":" + value;
+  }
 }

@@ -2,7 +2,7 @@
 //
 //import com.google.common.collect.Maps;
 //import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
-//import org.biiig.dmgm.api.CachedGraph;
+//import org.biiig.dmgm.api.db.CachedGraph;
 //import org.biiig.dmgm.api.GraphDB;
 //import org.biiig.dmgm.impl.graph.DFSCode;
 //import org.biiig.dmgm.impl.operators.CollectionOperatorBase;

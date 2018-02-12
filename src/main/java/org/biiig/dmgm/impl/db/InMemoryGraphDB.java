@@ -15,6 +15,23 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+ * This file is part of Directed Multigraph Miner (DMGM).
+ *
+ * DMGM is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * DMGM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.biiig.dmgm.impl.db;
 
 import com.google.common.collect.Maps;
@@ -22,9 +39,8 @@ import com.google.common.collect.Sets;
 import de.jesemann.paralleasy.collectors.GroupByKeyArrayValues;
 import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.api.CachedGraph;
-import org.biiig.dmgm.api.PropertyGraphDB;
-import org.biiig.dmgm.impl.Property;
+import org.biiig.dmgm.api.db.CachedGraph;
+import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.impl.graph.CachedGraphBase;
 
 import java.math.BigDecimal;
@@ -83,12 +99,12 @@ public class InMemoryGraphDB implements PropertyGraphDB {
    * Stores edge elements.
    * element id -> (sourceId, targetId)
    */
-  private final Map<Long, SourceIdTargetId> edges  = createMap();
+  private final Map<Long, LongPair> edges  = createMap();
   /**
    * Stores graph elements.
    * element id -> (vertexId..., edgeId...)
    */
-  private final Map<Long, VertexIdsEdgeIds> graphs = createMap();
+  private final Map<Long, LongsPair> graphs = createMap();
 
   // SetProperties & GetProperties
 
@@ -170,14 +186,14 @@ public class InMemoryGraphDB implements PropertyGraphDB {
   @Override
   public long createEdge(int label, long sourceId, long targetId) {
     long id = createElement(label);
-    edges.put(id, new SourceIdTargetId(sourceId, targetId));
+    edges.put(id, new LongPair(sourceId, targetId));
     return id;
   }
 
   @Override
   public long createGraph(int label, long[] vertexIds, long[] edgeIds) {
     long id = createElement(label);
-    graphs.put(id, new VertexIdsEdgeIds(vertexIds, edgeIds));
+    graphs.put(id, new LongsPair(vertexIds, edgeIds));
     return id;
   }
 
@@ -202,24 +218,24 @@ public class InMemoryGraphDB implements PropertyGraphDB {
   }
 
   @Override
-  public SourceIdTargetId getEdgeVertexIds(long edgeId) {
+  public LongPair getEdgeVertexIds(long edgeId) {
     return edges.get(edgeId);
   }
 
   @Override
-  public VertexIdsEdgeIds getGraphElementIds(long graphId) {
+  public LongsPair getGraphElementIds(long graphId) {
     return graphs.get(graphId);
   }
 
   @Override
   public long[] getGraphIdsOfVertex(long vertexId) {
-    return getGraphsOfElement(vertexId, VertexIdsEdgeIds::getVertexIds);
+    return getGraphsOfElement(vertexId, LongsPair::getVertexIds);
   }
 
 
   @Override
   public long[] getGraphIdsOfEdge(long edgeId) {
-    return getGraphsOfElement(edgeId, VertexIdsEdgeIds::getEdgeIds);
+    return getGraphsOfElement(edgeId, LongsPair::getEdgeIds);
   }
 
   /**
@@ -229,7 +245,7 @@ public class InMemoryGraphDB implements PropertyGraphDB {
    * @param getter getter for vertex or edge ids
    * @return graph ids
    */
-  private long[] getGraphsOfElement(long id, Function<VertexIdsEdgeIds, long[]> getter) {
+  private long[] getGraphsOfElement(long id, Function<LongsPair, long[]> getter) {
     return getParallelizableEntryStream(graphs)
       .filter(e -> ArrayUtils.contains(getter.apply(e.getValue()), id))
       .mapToLong(Map.Entry::getKey)
@@ -239,7 +255,7 @@ public class InMemoryGraphDB implements PropertyGraphDB {
   @Override
   public long[] getVertexIds() {
     return getParallelizableValueStream(graphs)
-      .map(VertexIdsEdgeIds::getVertexIds)
+      .map(LongsPair::getVertexIds)
       .flatMapToLong(LongStream::of)
       .toArray();
   }
@@ -247,7 +263,7 @@ public class InMemoryGraphDB implements PropertyGraphDB {
   @Override
   public long[] getEdgeIds() {
     return getParallelizableValueStream(graphs)
-      .map(VertexIdsEdgeIds::getEdgeIds)
+      .map(LongsPair::getEdgeIds)
       .flatMapToLong(LongStream::of)
       .toArray();
   }
@@ -471,12 +487,12 @@ public class InMemoryGraphDB implements PropertyGraphDB {
   }
 
   @Override
-  public Property[] getProperties(long id) {
-    List<Property> properties = booleanProperties
+  public KeyObjectPair[] getProperties(long id) {
+    List<KeyObjectPair> properties = booleanProperties
       .entrySet()
       .parallelStream()
       .filter(e -> e.getValue().contains(id))
-      .map(e -> new Property(e.getKey(), true))
+      .map(e -> new KeyObjectPair(e.getKey(), true))
       .collect(Collectors.toList());
 
     properties.addAll(getProperties(longProperties, id));
@@ -488,7 +504,7 @@ public class InMemoryGraphDB implements PropertyGraphDB {
     properties.addAll(getProperties(stringsProperties, id));
 
     return properties
-      .toArray(new Property[properties.size()]);
+      .toArray(new KeyObjectPair[properties.size()]);
   }
 
   /**
@@ -499,23 +515,23 @@ public class InMemoryGraphDB implements PropertyGraphDB {
    * @param <T> value type
    * @return all properties with of the given id and type
    */
-  private <T> List<Property> getProperties(Map<Integer, Map<Long, T>> propertyMap, long id) {
+  private <T> List<KeyObjectPair> getProperties(Map<Integer, Map<Long, T>> propertyMap, long id) {
     return getParallelizableEntryStream(propertyMap)
       .flatMap(e -> e.getValue()
         .entrySet()
         .stream()
         .filter(f -> f.getKey() == id)
-        .map(f -> new Property(e.getKey(), f.getValue())))
+        .map(f -> new KeyObjectPair(e.getKey(), f.getValue())))
       .collect(Collectors.toList());
   }
 
   @Override
-  public Map<Long, Property[]> getAllProperties() {
+  public Map<Long, KeyObjectPair[]> getAllProperties() {
 
-    List<Pair<Long, Property>> properties = getParallelizableEntryStream(booleanProperties)
+    List<Pair<Long, KeyObjectPair>> properties = getParallelizableEntryStream(booleanProperties)
       .flatMap(e -> e.getValue()
         .stream()
-        .map(id -> new Pair<>(id, new Property(e.getKey(), true))))
+        .map(id -> new Pair<>(id, new KeyObjectPair(e.getKey(), true))))
       .collect(Collectors.toList());
 
     properties.addAll(getProperties(longProperties));
@@ -528,7 +544,7 @@ public class InMemoryGraphDB implements PropertyGraphDB {
 
     return properties
       .parallelStream()
-      .collect(new GroupByKeyArrayValues<>(Pair::getKey, Pair::getValue, Property.class));
+      .collect(new GroupByKeyArrayValues<>(Pair::getKey, Pair::getValue, KeyObjectPair.class));
   }
 
   /**
@@ -538,12 +554,12 @@ public class InMemoryGraphDB implements PropertyGraphDB {
    * @param <T> value type
    * @return all properties of a given type
    */
-  private <T> List<Pair<Long, Property>> getProperties(Map<Integer, Map<Long, T>> propertyMap) {
+  private <T> List<Pair<Long, KeyObjectPair>> getProperties(Map<Integer, Map<Long, T>> propertyMap) {
     return getParallelizableEntryStream(propertyMap)
       .flatMap(e -> e.getValue()
         .entrySet()
         .stream()
-        .map(f -> new Pair<>(f.getKey(), new Property(e.getKey(), f.getValue()))))
+        .map(f -> new Pair<>(f.getKey(), new KeyObjectPair(e.getKey(), f.getValue()))))
       .collect(Collectors.toList());
   }
 
@@ -626,7 +642,7 @@ public class InMemoryGraphDB implements PropertyGraphDB {
   public CachedGraph getCachedGraph(long graphId) {
     int graphLabel = labels.get(graphId);
 
-    VertexIdsEdgeIds globalVertexIdsEdgeIds = graphs.get(graphId);
+    LongsPair globalVertexIdsEdgeIds = graphs.get(graphId);
 
     long[] globalVertexIds = globalVertexIdsEdgeIds.getVertexIds();
 
@@ -644,13 +660,13 @@ public class InMemoryGraphDB implements PropertyGraphDB {
 
     for (int localEdgeId = 0; localEdgeId < edgeCount; localEdgeId++) {
       Long globalEdgeId = globalEdgeIds[localEdgeId];
-      SourceIdTargetId globalSourceTargetPair = edges.get(globalEdgeId);
+      LongPair globalSourceTargetPair = edges.get(globalEdgeId);
 
       long globalSourceId = globalSourceTargetPair.getSourceId();
       int sourceId = ArrayUtils.indexOf(globalVertexIds, globalSourceId);
       sourceIds[localEdgeId] = sourceId;
 
-      long globalTargetId = globalSourceTargetPair.getRight();
+      long globalTargetId = globalSourceTargetPair.getTargetId();
       int targetId = ArrayUtils.indexOf(globalVertexIds, globalTargetId);
       targetIds[localEdgeId] = targetId;
 

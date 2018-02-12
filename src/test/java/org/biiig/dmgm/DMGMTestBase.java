@@ -15,16 +15,33 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+ * This file is part of Directed Multigraph Miner (DMGM).
+ *
+ * DMGM is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * DMGM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.biiig.dmgm;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
-import org.biiig.dmgm.api.PropertyGraphDB;
-import org.biiig.dmgm.api.CollectionOperator;
-import org.biiig.dmgm.api.CachedGraph;
-import org.biiig.dmgm.api.QueryElements;
-import org.biiig.dmgm.impl.Property;
+import org.biiig.dmgm.api.db.PropertyGraphDB;
+import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
+import org.biiig.dmgm.api.db.CachedGraph;
+import org.biiig.dmgm.api.db.QueryElements;
+import org.biiig.dmgm.impl.db.KeyObjectPair;
 import org.biiig.dmgm.impl.loader.GDLLoader;
 import org.biiig.dmgm.impl.loader.TLFLoader;
 import org.biiig.dmgm.impl.to_string.cam.CAMGraphFormatter;
@@ -115,7 +132,7 @@ public class DMGMTestBase {
 
       String propertyLabel;
       if (includeProperties) {
-        Property[] properties = db.getProperties(graph.getId());
+        KeyObjectPair[] properties = db.getProperties(graph.getId());
         String[] propertyStrings = new String[properties.length];
 
         for (int i = 0; i < properties.length; i++)
@@ -146,7 +163,7 @@ public class DMGMTestBase {
 //    }
 //  }
 
-  protected void runAndTestExpectation(Function<QueryElements, CollectionOperator> operatorFactory, String gdl, boolean includeProperties) {
+  protected void runAndTestExpectation(Function<QueryElements, CollectionToCollectionOperator> operatorFactory, String gdl, boolean includeProperties) {
     PropertyGraphDB db = GDLLoader
       .fromString(gdl)
       .get();

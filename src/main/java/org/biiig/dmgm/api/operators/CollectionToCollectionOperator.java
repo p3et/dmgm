@@ -32,29 +32,19 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.api;
+package org.biiig.dmgm.api.operators;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
+/**
+ * An operator that creates a new graph collection from an existing one.
+ */
+public interface CollectionToCollectionOperator extends DMGMUnaryOperator {
 
-public interface SetProperties {
-  void set(long id, int key, boolean value);
-
-  void set(long id, int key, long value);
-
-  void set(long id, int key, double value);
-
-  void set(long id, int key, String value);
-
-  void set(long id, int key, BigDecimal value);
-
-  void set(long id, int key, LocalDate value);
-
-  void set(long id, int key, int[] values);
-
-  void add(long id, int key, int value);
-
-  void set(long id, int key, String[] values);
-
-  void add(long id, int key, String value);
+  /**
+   * Execute the operation.
+   *
+   * @param inputCollectionId id of the input graph collection
+   * @return id of the output graph collection
+   */
+  @Override
+  Long apply(Long inputCollectionId);
 }

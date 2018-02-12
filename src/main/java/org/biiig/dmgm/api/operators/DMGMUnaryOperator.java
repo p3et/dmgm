@@ -32,27 +32,13 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl;
+package org.biiig.dmgm.api.operators;
 
-public class Property {
-  private final int key;
-  private final Object value;
+import java.util.function.UnaryOperator;
 
-  public Property(int key, Object value) {
-    this.key = key;
-    this.value = value;
-  }
+/**
+ * A unary DMGM operator, i.e., one with a single input element.
+ */
+public interface DMGMUnaryOperator extends UnaryOperator<Long> {
 
-  public int getKey() {
-    return key;
-  }
-
-  public Object getValue() {
-    return value;
-  }
-
-  @Override
-  public String toString() {
-    return key + ":" + value;
-  }
 }

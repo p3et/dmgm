@@ -32,10 +32,7 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.api;
-
-import org.biiig.dmgm.impl.db.SourceIdTargetId;
-import org.biiig.dmgm.impl.db.VertexIdsEdgeIds;
+package org.biiig.dmgm.api.db;
 
 /**
  * Read vertices, edges, graphs and graph collections.
@@ -112,12 +109,4 @@ public interface GetElements {
    * @return element ids
    */
   long[] getCollectionIds();
-
-  /**
-   * Get all ids of elements that appear in the role of a graph or graph graph collection,
-   * i.e., have associated vertices.
-   *
-   * @return element ids
-   */
-  long[] getHyperVertexIds();
 }
