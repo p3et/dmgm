@@ -15,23 +15,6 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * This file is part of Directed Multigraph Miner (DMGM).
- *
- * DMGM is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * DMGM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
- */
-
 package org.biiig.dmgm.impl.db;
 
 import com.google.common.collect.Maps;
@@ -39,9 +22,10 @@ import com.google.common.collect.Sets;
 import de.jesemann.paralleasy.collectors.GroupByKeyArrayValues;
 import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.api.db.CachedGraph;
+import org.biiig.dmgm.api.db.Property;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
-import org.biiig.dmgm.impl.graph.CachedGraphBase;
+import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.model.CachedGraphBase;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -101,10 +85,16 @@ public class InMemoryGraphDB implements PropertyGraphDB {
    */
   private final Map<Long, LongPair> edges  = createMap();
   /**
-   * Stores graph elements.
+   * Stores model elements.
    * element id -> (vertexId..., edgeId...)
    */
   private final Map<Long, LongsPair> graphs = createMap();
+  /**
+   * Stores model collections.
+   * element id -> (graphId...)
+   */
+  private final Map<Long, long[]> collections = createMap();
+
 
   // SetProperties & GetProperties
 
@@ -197,8 +187,15 @@ public class InMemoryGraphDB implements PropertyGraphDB {
     return id;
   }
 
+  @Override
+  public long createCollection(int label, long[] graphIds) {
+    long id = createElement(label);
+    collections.put(id, graphIds);
+    return id;
+  }
+
   /**
-   * Associates an id and stores the label of a new graph, vertex or edge
+   * Associates an id and stores the label of a new model, vertex or edge
    *
    * @param label label
    * @return id
@@ -239,11 +236,11 @@ public class InMemoryGraphDB implements PropertyGraphDB {
   }
 
   /**
-   * Query all graph ids in which an element appears.
+   * Query all model ids in which an element appears.
    *
    * @param id vertex or edge id
    * @param getter getter for vertex or edge ids
-   * @return graph ids
+   * @return model ids
    */
   private long[] getGraphsOfElement(long id, Function<LongsPair, long[]> getter) {
     return getParallelizableEntryStream(graphs)
@@ -272,26 +269,16 @@ public class InMemoryGraphDB implements PropertyGraphDB {
   @Override
   public long[] getGraphIds() {
     return getParallelizableEntryStream(graphs)
-      .filter(e -> e.getValue().getEdgeIds().length != 0)
       .mapToLong(Map.Entry::getKey)
       .toArray();
   }
 
   @Override
   public long[] getCollectionIds() {
-    return getParallelizableEntryStream(graphs)
-      .filter(e -> e.getValue().getEdgeIds().length == 0)
+    return getParallelizableEntryStream(collections)
       .mapToLong(Map.Entry::getKey)
       .toArray();
   }
-
-  @Override
-  public long[] getHyperVertexIds() {
-    return getParallelizableKeyStream(graphs)
-      .mapToLong(id -> id)
-      .toArray();
-  }
-
 
   /**
    * Get boolean values by key.
@@ -526,7 +513,7 @@ public class InMemoryGraphDB implements PropertyGraphDB {
   }
 
   @Override
-  public Map<Long, KeyObjectPair[]> getAllProperties() {
+  public Map<Long, Property[]> getAllProperties() {
 
     List<Pair<Long, KeyObjectPair>> properties = getParallelizableEntryStream(booleanProperties)
       .flatMap(e -> e.getValue()
@@ -544,7 +531,7 @@ public class InMemoryGraphDB implements PropertyGraphDB {
 
     return properties
       .parallelStream()
-      .collect(new GroupByKeyArrayValues<>(Pair::getKey, Pair::getValue, KeyObjectPair.class));
+      .collect(new GroupByKeyArrayValues<>(Pair::getKey, Pair::getValue, Property.class));
   }
 
   /**
@@ -604,7 +591,7 @@ public class InMemoryGraphDB implements PropertyGraphDB {
    * @param <V> value type
    * @return value stream
    */
-  public <K, V> Stream<Map.Entry<K,V>> getParallelizableEntryStream(Map<K, V> map) {
+  private <K, V> Stream<Map.Entry<K,V>> getParallelizableEntryStream(Map<K, V> map) {
     Set<Map.Entry<K, V>> entries = map.entrySet();
     return parallelRead ? entries.parallelStream() : entries.stream();
   }
@@ -630,7 +617,7 @@ public class InMemoryGraphDB implements PropertyGraphDB {
    * @param <V> value type
    * @return value stream
    */
-  public <K, V> Stream<V> getParallelizableValueStream(Map<K, V> map) {
+  private <K, V> Stream<V> getParallelizableValueStream(Map<K, V> map) {
     Collection<V> values = map.values();
     return parallelRead ? values.parallelStream() : values.stream();
   }
@@ -678,8 +665,13 @@ public class InMemoryGraphDB implements PropertyGraphDB {
 
   @Override
   public List<CachedGraph> getCachedCollection(long collectionId) {
-    return LongStream
-      .of(graphs.get(collectionId).getVertexIds())
+    LongStream graphIdStream = LongStream
+      .of(collections.get(collectionId));
+
+    if (parallelRead)
+      graphIdStream = graphIdStream.parallel();
+
+    return graphIdStream
       .mapToObj(this::getCachedGraph)
       .collect(Collectors.toList());
   }

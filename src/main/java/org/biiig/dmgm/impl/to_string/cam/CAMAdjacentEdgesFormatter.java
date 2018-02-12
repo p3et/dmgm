@@ -38,7 +38,7 @@ import com.google.common.collect.Maps;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
-import org.biiig.dmgm.api.db.CachedGraph;
+import org.biiig.dmgm.api.model.CachedGraph;
 
 import java.util.Arrays;
 import java.util.Map;

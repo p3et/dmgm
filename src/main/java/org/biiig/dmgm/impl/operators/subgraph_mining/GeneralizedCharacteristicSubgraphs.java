@@ -34,12 +34,12 @@
 
 package org.biiig.dmgm.impl.operators.subgraph_mining;
 
-import org.biiig.dmgm.api.db.CachedGraph;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
-import org.biiig.dmgm.impl.operators.subgraph_mining.generalized.SpecializableCachedGraph;
+import org.biiig.dmgm.api.model.CachedGraph;
 import org.biiig.dmgm.impl.operators.subgraph_mining.characteristic.CategorySupportMethods;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportMethods;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.PropertyKeys;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportMethods;
+import org.biiig.dmgm.impl.operators.subgraph_mining.generalized.SpecializableCachedGraph;
 
 import java.util.Map;
 import java.util.function.Function;

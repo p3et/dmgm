@@ -32,10 +32,10 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.graph;
+package org.biiig.dmgm.impl.model;
 
 import org.biiig.dmgm.api.db.PropertyGraphDB;
-import org.biiig.dmgm.api.db.CachedGraph;
+import org.biiig.dmgm.api.model.CachedGraph;
 
 import java.util.Arrays;
 import java.util.function.Function;

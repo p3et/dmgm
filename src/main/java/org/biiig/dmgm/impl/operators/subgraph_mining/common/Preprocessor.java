@@ -35,8 +35,8 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
 
-import org.biiig.dmgm.api.db.CachedGraph;
 import org.biiig.dmgm.api.db.QueryElements;
+import org.biiig.dmgm.api.model.CachedGraph;
 
 import java.util.List;
 import java.util.function.BiFunction;

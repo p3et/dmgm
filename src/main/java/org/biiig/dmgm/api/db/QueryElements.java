@@ -21,7 +21,7 @@ import java.util.function.BiFunction;
 import java.util.function.IntPredicate;
 
 /**
- * Get vertices, edges, graphs and graph collections by data-related queries.
+ * Get vertices, edges, graphs and model collections by data-related queries.
  */
 public interface QueryElements {
   /**
@@ -57,7 +57,7 @@ public interface QueryElements {
      * Evaluate the predicate.
      *
      * @param getProperties property store read access
-     * @param elementId id of a graph, vertex or edge
+     * @param elementId id of a model, vertex or edge
      * @return evaluation result
      */
     @Override

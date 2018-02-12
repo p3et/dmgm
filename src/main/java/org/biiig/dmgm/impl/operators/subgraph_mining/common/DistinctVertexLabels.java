@@ -18,7 +18,7 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
 import com.google.common.collect.Sets;
-import org.biiig.dmgm.api.db.CachedGraph;
+import org.biiig.dmgm.api.model.CachedGraph;
 
 import java.util.Set;
 import java.util.function.Function;

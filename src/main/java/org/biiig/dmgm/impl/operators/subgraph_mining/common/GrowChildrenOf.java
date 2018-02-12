@@ -19,9 +19,9 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
 import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.api.db.CachedGraph;
+import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.model.DFSCode;
 import org.biiig.dmgm.impl.operators.subgraph_mining.generalized.SpecializableCachedGraph;
-import org.biiig.dmgm.impl.graph.DFSCode;
 
 import java.util.Map;
 import java.util.function.Function;

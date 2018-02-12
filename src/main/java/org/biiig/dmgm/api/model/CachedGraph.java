@@ -15,28 +15,29 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
+package org.biiig.dmgm.api.model;
 
-package org.biiig.dmgm.api.db;
+import org.biiig.dmgm.api.db.SymbolDictionary;
 
 /**
- * A materialized graph, i.e., a graph including all its vertices and edges.
+ * A materialized model, i.e., a model including all its vertices and edges.
  *
  * NOTE:  There are global ids (long) and local ids (int).
- *        The latter are only valid in the scope of a graph.
+ *        The latter are only valid in the scope of a model.
  *        Local ids typically correspond to indexes of vertex and edge arrays.
  *        Thus, the structure of cached graphs is immutable.
  *
  */
 public interface CachedGraph {
   /**
-   * Get the graph's identifier.
+   * Get the model's identifier.
    *
-   * @return global graph id
+   * @return global model id
    */
   long getId();
 
   /**
-   * Get the graph's label.
+   * Get the model's label.
    *
    * @return label
    */

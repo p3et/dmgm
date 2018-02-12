@@ -35,7 +35,7 @@
 package org.biiig.dmgm.impl.loader.gdl;
 
 import org.biiig.dmgm.api.db.PropertyGraphDB;
-import org.biiig.dmgm.api.db.CachedGraph;
+import org.biiig.dmgm.api.model.CachedGraph;
 import org.biiig.dmgm.impl.loader.GDLLoader;
 import org.junit.Test;
 
@@ -58,7 +58,7 @@ public class GDLLoaderTest {
     Long colId = db.createCollection(colLabel, graphIds);
     List<CachedGraph> graphCollection = db.getCachedCollection(colId);
 
-    assertEquals("graph count", 2, graphCollection.size());
+    assertEquals("model count", 2, graphCollection.size());
 
     System.out.println(db);
   }

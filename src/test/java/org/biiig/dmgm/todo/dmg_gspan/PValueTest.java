@@ -40,18 +40,18 @@
 //
 //    List<EdgeData> edgeLabels = Lists.newArrayList();
 //
-//    for (LabeledGraph graph : graphs) {
-//      globalVertexCount += graph.getVertexCount();
+//    for (LabeledGraph model : graphs) {
+//      globalVertexCount += model.getVertexCount();
 //
-//      for (LabeledEdge edge : graph.getEdges()) {
+//      for (LabeledEdge edge : model.getEdges()) {
 //        //System.out.println(edge.getTopLevelLabel()+" --> "+edgeDictionary.get(edge.getTopLevelLabel()));
 //        edgeLabels.addParentChild(new EdgeData(
-//          graph.getId(),
+//          model.getId(),
 //          edge.getSource(),
 //          edge.getTarget(),
-//          db.get(graph.getVertices()[edge.getSource()].getLabel()),
+//          db.get(model.getVertices()[edge.getSource()].getLabel()),
 //          edgeDictionary.get(edge.getLabel()),
-//          db.get(graph.getVertices()[edge.getTarget()].getLabel())));
+//          db.get(model.getVertices()[edge.getTarget()].getLabel())));
 //      }
 //    }
 //
@@ -145,9 +145,9 @@
 //
 //    //Compute vertex format distribution
 //    Map<String, Float> vertexLabelDistribution=new HashMap<>();
-//    for (LabeledGraph graph : graphs)
+//    for (LabeledGraph model : graphs)
 //    {
-//      for (LabeledVertex vertex : graph.getVertices())
+//      for (LabeledVertex vertex : model.getVertices())
 //      {
 //        int vertexLab=vertex.getLabel();
 //        String vertexStringLab=db.get(vertexLab);

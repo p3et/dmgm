@@ -7,7 +7,7 @@
 //import org.biiig.dmgm.api.PropertyStore;
 //import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCodeEmbeddingsPair;
 //import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
-//import org.biiig.dmgm.impl.graph.DFSCode;
+//import org.biiig.dmgm.impl.model.DFSCode;
 //
 //import java.util.Collection;
 //import java.util.List;

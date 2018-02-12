@@ -18,8 +18,8 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
 import javafx.util.Pair;
+import org.biiig.dmgm.impl.model.DFSCode;
 import org.biiig.dmgm.impl.operators.subgraph_mining.generalized.SpecializableCachedGraph;
-import org.biiig.dmgm.impl.graph.DFSCode;
 
 import java.util.List;
 import java.util.Map;

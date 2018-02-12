@@ -15,7 +15,7 @@
  * along with Gradoop. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.graph;
+package org.biiig.dmgm.impl.model;
 
 import java.io.Serializable;
 import java.util.Comparator;

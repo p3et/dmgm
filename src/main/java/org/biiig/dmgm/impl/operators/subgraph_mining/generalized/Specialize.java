@@ -6,7 +6,7 @@
 //import de.jesemann.paralleasy.recursion.RecursionStep;
 //import javafx.util.Pair;
 //import org.biiig.dmgm.api.GraphDB;
-//import org.biiig.dmgm.impl.graph.DFSCode;
+//import org.biiig.dmgm.impl.model.DFSCode;
 //import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
 //
 //import java.util.List;

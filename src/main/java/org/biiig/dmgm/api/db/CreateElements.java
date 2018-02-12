@@ -18,7 +18,7 @@
 package org.biiig.dmgm.api.db;
 
 /**
- * Create vertices, edges, graphs and graph collections.
+ * Create vertices, edges, graphs and model collections.
  */
 public interface CreateElements extends SymbolDictionary {
   /**
@@ -31,6 +31,7 @@ public interface CreateElements extends SymbolDictionary {
 
   /**
    * Create an edge.
+   * Edges may connect arbitrary elements, i.e., vertices, edges, graphs or model collections.
    *
    * @param label label
    * @param sourceId source element id
@@ -40,7 +41,7 @@ public interface CreateElements extends SymbolDictionary {
   long createEdge(int label, long sourceId, long targetId);
 
   /**
-   * Create a graph (Hypervertex).
+   * Create a model.
    *
    * @param label label
    * @param vertexIds element ids in the role of vertices
@@ -50,15 +51,13 @@ public interface CreateElements extends SymbolDictionary {
   long createGraph(int label, long[] vertexIds, long[] edgeIds);
 
   /**
-   * Create a graph collection (Hypervertex without edges).
+   * Create a model collection.
    *
    * @param label label
-   * @param graphIds graph ids
+   * @param graphIds model ids
    * @return id
    */
-  default long createCollection(int label, long[] graphIds) {
-    return createGraph(label, graphIds, new long[0]);
-  }
+  long createCollection(int label, long[] graphIds);
 
   /**
    * Create a vertex.
@@ -83,7 +82,7 @@ public interface CreateElements extends SymbolDictionary {
   }
 
   /**
-   * Create a graph (Hypervertex).
+   * Create a model (Hypervertex).
    *
    * @param label label
    * @param vertexIds element ids in the role of vertices
@@ -95,10 +94,10 @@ public interface CreateElements extends SymbolDictionary {
   }
 
   /**
-   * Create a graph collection (Hypervertex without edges).
+   * Create a model collection (Hypervertex without edges).
    *
    * @param label label
-   * @param graphIds graph ids
+   * @param graphIds model ids
    * @return id
    */
   default long createCollection(String label, long[] graphIds) {

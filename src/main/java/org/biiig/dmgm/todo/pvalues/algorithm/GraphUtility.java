@@ -2,7 +2,7 @@ package org.biiig.dmgm.todo.pvalues.algorithm;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.mutable.MutableDouble;
-import org.biiig.dmgm.impl.graph.DFSCode;
+import org.biiig.dmgm.impl.model.DFSCode;
 
 import java.util.Arrays;
 import java.util.Map;

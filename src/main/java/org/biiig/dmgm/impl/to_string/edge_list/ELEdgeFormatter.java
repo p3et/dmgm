@@ -35,7 +35,7 @@
 package org.biiig.dmgm.impl.to_string.edge_list;
 
 import org.biiig.dmgm.api.db.PropertyGraphDB;
-import org.biiig.dmgm.api.db.CachedGraph;
+import org.biiig.dmgm.api.model.CachedGraph;
 
 public class ELEdgeFormatter {
 

@@ -34,8 +34,8 @@
 
 package org.biiig.dmgm.impl.operators.subgraph_mining.frequent;
 
-import org.biiig.dmgm.api.db.CachedGraph;
 import org.biiig.dmgm.api.db.QueryElements;
+import org.biiig.dmgm.api.model.CachedGraph;
 import org.biiig.dmgm.impl.operators.subgraph.FilterVerticesAndEdgesByLabel;
 import org.biiig.dmgm.impl.operators.subgraph_mining.characteristic.PreprocessorBase;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DistinctEdgeLabels;

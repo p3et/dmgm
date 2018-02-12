@@ -18,10 +18,10 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
 
 import com.google.common.collect.Maps;
-import org.biiig.dmgm.api.db.CachedGraph;
+import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCodeSupportablePair;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.Preprocessor;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCodeSupportablePair;
 
 import java.util.List;
 import java.util.Map;

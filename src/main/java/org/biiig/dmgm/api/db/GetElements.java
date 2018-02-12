@@ -18,13 +18,13 @@
 package org.biiig.dmgm.api.db;
 
 /**
- * Read vertices, edges, graphs and graph collections.
+ * Read vertices, edges, graphs and model collections.
  */
 public interface GetElements {
   /**
    * Get the label of an element.
    *
-   * @param id graph, vertex or edge id
+   * @param id model, vertex or edge id
    * @return label
    */
   int getLabel(long id);
@@ -38,18 +38,18 @@ public interface GetElements {
   SourceIdTargetId getEdgeVertexIds(long edgeId);
 
   /**
-   * Get vertices and edges of a graph.
+   * Get vertices and edges of a model.
    *
-   * @param graphId graph id
+   * @param graphId model id
    * @return (vertexId..., edgeId...)
    */
   VertexIdsEdgeIds getGraphElementIds(long graphId);
 
   /**
-   * Get all graph ids in which a vertex appears.
+   * Get all model ids in which a vertex appears.
    *
    * @param vertexId vertex id
-   * @return graph ids
+   * @return model ids
    */
   long[] getGraphIdsOfVertex(long vertexId);
 
@@ -57,13 +57,13 @@ public interface GetElements {
    * Get all edge ids in which a vertex appears.
    *
    * @param edgeId edge id
-   * @return graph ids
+   * @return model ids
    */
   long[] getGraphIdsOfEdge(long edgeId);
 
   /**
    * Get all ids of elements that appear at least once in the role of a vertex,
-   * i.e., are part of the vertex set of at least one graph.
+   * i.e., are part of the vertex set of at least one model.
    *
    * @return element ids
    */
@@ -78,7 +78,7 @@ public interface GetElements {
   long[] getEdgeIds();
 
   /**
-   * Get all ids of elements that appear in the role of a graph,
+   * Get all ids of elements that appear in the role of a model,
    * i.e., have associated vertices and edges.
    *
    * @return element ids
@@ -86,7 +86,7 @@ public interface GetElements {
   long[] getGraphIds();
 
   /**
-   * Get all ids of elements that appear in the role of a graph collection,
+   * Get all ids of elements that appear in the role of a model collection,
    * i.e., have associated vertices (graphs) but no edges.
    *
    * @return element ids

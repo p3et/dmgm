@@ -1,7 +1,11 @@
 package org.biiig.dmgm.todo.pvalues;
 
-import org.biiig.dmgm.impl.graph.DFSCode;
-import org.biiig.dmgm.todo.pvalues.algorithm.*;
+import org.biiig.dmgm.impl.model.DFSCode;
+import org.biiig.dmgm.todo.pvalues.algorithm.EDDModel;
+import org.biiig.dmgm.todo.pvalues.algorithm.GraphUtility;
+import org.biiig.dmgm.todo.pvalues.algorithm.MathUtility;
+import org.biiig.dmgm.todo.pvalues.algorithm.Occurrence;
+import org.biiig.dmgm.todo.pvalues.algorithm.PolyaAeppli;
 import org.biiig.dmgm.todo.pvalues.model.MultiEdgeLabelDistributionKey;
 import org.biiig.dmgm.todo.pvalues.model.VertexDegreeKey;
 

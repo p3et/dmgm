@@ -35,8 +35,8 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
 
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
-import org.biiig.dmgm.api.db.CachedGraph;
 import org.biiig.dmgm.api.db.QueryElements;
+import org.biiig.dmgm.api.model.CachedGraph;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DistinctEdgeLabels;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DistinctVertexLabels;
 

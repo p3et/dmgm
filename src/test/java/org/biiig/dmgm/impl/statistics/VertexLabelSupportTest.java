@@ -77,12 +77,12 @@ public class VertexLabelSupportTest extends DMGMTestBase {
 
 //  @Test
 //  public void generalization() throws IOException {
-//    SmallGraph graph = new SmallGraphBase(id, label, vertexLabels, edgeLabels, sourceIds, targetIds);
+//    SmallGraph model = new SmallGraphBase(id, label, vertexLabels, edgeLabels, sourceIds, targetIds);
 //
 //    String label = "A_a_a_a";
-//    graph.addVertex(collection.getLabelDictionary().translate(label));
+//    model.addVertex(collection.getLabelDictionary().translate(label));
 //
-//    collection.add(graph);
+//    collection.add(model);
 //
 //    Map<Integer, Integer> support = new VertexLabelSupport().getAbsolute(collection);
 //

@@ -15,29 +15,22 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.graph;
+package org.biiig.dmgm.impl.model;
 
-import org.biiig.dmgm.api.db.CachedGraph;
-import org.junit.Test;
+import org.biiig.dmgm.impl.operators.subgraph_mining.generalized.SpecializableCachedGraph;
 
-public class AdjacencyListTest extends SingleLabelDirectedSmallGraphTest {
+public class SpecializableAdjacencyList extends AdjacencyList implements SpecializableCachedGraph {
 
-  @Test
-  public void testGetterAndSetter() throws Exception {
-    int lab0 = 0;
-    int lab1 = 1;
 
-    CachedGraph graph = new AdjacencyList(
-      0L,
-      0,
-      new int[] {lab0, lab1},
-      new int[] {lab0, lab1},
-      new int[] {0, 0},
-      new int[] {0, 1}
-    );
+  private final int[][] taxonomyTails;
 
-    System.out.println(graph);
+  public SpecializableAdjacencyList(long id, int label, int[] vertexLabels, int[] edgeLabels, int[] sourceIds, int[] targetIds, int[][] taxonomyTails) {
+    super(id, label, vertexLabels, edgeLabels, sourceIds, targetIds);
+    this.taxonomyTails = taxonomyTails;
+  }
 
-    test(graph, lab0, lab1);
+  @Override
+  public int[] getTaxonomyTail(int vertexId) {
+    return taxonomyTails[vertexId];
   }
 }

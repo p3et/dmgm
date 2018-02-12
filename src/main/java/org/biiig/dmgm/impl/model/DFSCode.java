@@ -32,7 +32,7 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.graph;
+package org.biiig.dmgm.impl.model;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.db.PropertyGraphDB;

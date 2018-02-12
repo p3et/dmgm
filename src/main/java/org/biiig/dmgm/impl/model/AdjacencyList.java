@@ -1,4 +1,4 @@
-package org.biiig.dmgm.impl.graph;
+package org.biiig.dmgm.impl.model;
 
 import org.apache.commons.lang3.ArrayUtils;
 

@@ -16,6 +16,6 @@
  */
 
 /**
- * The DMGM graph database model.
+ * The DMGM model database model.
  */
 package org.biiig.dmgm.api.db;

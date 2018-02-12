@@ -38,9 +38,9 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
-import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
-import org.biiig.dmgm.api.db.CachedGraph;
 import org.biiig.dmgm.api.db.QueryElements;
+import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
 import org.biiig.dmgm.impl.db.KeyObjectPair;
 import org.biiig.dmgm.impl.loader.GDLLoader;
 import org.biiig.dmgm.impl.loader.TLFLoader;
@@ -158,8 +158,8 @@ public class DMGMTestBase {
 //
 //    System.out.println(graphCollection.size());
 //
-//    for (SmallGraph graph : graphCollection) {
-//      System.out.println(formatter.format(graph));
+//    for (SmallGraph model : graphCollection) {
+//      System.out.println(formatter.format(model));
 //    }
 //  }
 
@@ -192,9 +192,9 @@ public class DMGMTestBase {
 //  private boolean isConsistent(GraphCollection collection) {
 //    boolean consistent = true;
 //
-//    for (SmallGraph graph : collection) {
-//      for (int vertexId = 0; vertexId < graph.getVertexCount(); vertexId++ ) {
-//        int vertexLabel = graph.getVertexLabel(vertexId);
+//    for (SmallGraph model : collection) {
+//      for (int vertexId = 0; vertexId < model.getVertexCount(); vertexId++ ) {
+//        int vertexLabel = model.getVertexLabel(vertexId);
 //        String translation = collection.getLabelDictionary().translate(vertexLabel);
 //
 //        consistent = consistent && translation != null;
@@ -204,8 +204,8 @@ public class DMGMTestBase {
 //        }
 //      }
 //
-//      for (int edgeId = 0; edgeId < graph.getEdgeCount(); edgeId++ ) {
-//        int edgeLabel = graph.getEdgeLabel(edgeId);
+//      for (int edgeId = 0; edgeId < model.getEdgeCount(); edgeId++ ) {
+//        int edgeLabel = model.getEdgeLabel(edgeId);
 //        String translation = collection.getLabelDictionary().translate(edgeLabel);
 //
 //        consistent = consistent && translation != null;

@@ -36,7 +36,7 @@ package org.biiig.dmgm.impl.loader.tlf;
 
 import org.biiig.dmgm.DMGMTestBase;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
-import org.biiig.dmgm.api.db.CachedGraph;
+import org.biiig.dmgm.api.model.CachedGraph;
 import org.biiig.dmgm.impl.loader.TLFConstants;
 import org.junit.Test;
 
@@ -61,7 +61,7 @@ public class TLFReaderTest extends DMGMTestBase {
 
     List<CachedGraph> graphCollection = database.getCachedCollection(cid);
 
-    assertEquals("graph count", 10, graphCollection.size());
+    assertEquals("model count", 10, graphCollection.size());
 
     System.out.println(database);
   }

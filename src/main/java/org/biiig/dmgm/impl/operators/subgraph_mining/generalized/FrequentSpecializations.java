@@ -20,9 +20,9 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.generalized;
 import com.google.common.collect.Lists;
 import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.impl.graph.DFSCode;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportMethods;
+import org.biiig.dmgm.impl.model.DFSCode;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportMethods;
 
 import java.util.Collection;
 import java.util.List;

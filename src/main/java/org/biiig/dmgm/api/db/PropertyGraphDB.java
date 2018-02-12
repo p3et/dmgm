@@ -17,6 +17,8 @@
 
 package org.biiig.dmgm.api.db;
 
+import org.biiig.dmgm.api.model.CachedGraph;
+
 import java.util.List;
 
 /**
@@ -29,18 +31,18 @@ public interface PropertyGraphDB
   extends SymbolDictionary, CreateElements, GetElements, SetProperties, GetProperties, QueryElements {
 
   /**
-   * Materialize a single graph and return a Pojo representation.
+   * Materialize a single model and return a Pojo representation.
    *
-   * @param graphId graph id
-   * @return cached immutable graph pojo
+   * @param graphId model id
+   * @return cached immutable model pojo
    */
   CachedGraph getCachedGraph(long graphId);
 
   /**
-   * Materialize a single graph and return a List of it's graphs pojo representations.
+   * Materialize a single model and return a List of it's graphs pojo representations.
    *
    * @param collectionId hypervertex id
-   * @return list of cached immutable graph pojos
+   * @return list of cached immutable model pojos
    */
   List<CachedGraph> getCachedCollection(long collectionId);
 

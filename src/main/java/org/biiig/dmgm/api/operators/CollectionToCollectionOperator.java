@@ -18,15 +18,15 @@
 package org.biiig.dmgm.api.operators;
 
 /**
- * An operator that creates a new graph collection from an existing one.
+ * An operator that creates a new model collection from an existing one.
  */
 public interface CollectionToCollectionOperator extends DMGMUnaryOperator {
 
   /**
    * Execute the operation.
    *
-   * @param inputCollectionId id of the input graph collection
-   * @return id of the output graph collection
+   * @param inputCollectionId id of the input model collection
+   * @return id of the output model collection
    */
   @Override
   Long apply(Long inputCollectionId);

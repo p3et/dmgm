@@ -18,8 +18,8 @@
 package org.biiig.dmgm.impl.operators.subgraph;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.api.db.CachedGraph;
-import org.biiig.dmgm.impl.graph.CachedGraphBase;
+import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.model.CachedGraphBase;
 
 import java.util.function.Function;
 import java.util.function.IntPredicate;

@@ -34,8 +34,8 @@
 
 package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
 
-import org.biiig.dmgm.api.db.CachedGraph;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
+import org.biiig.dmgm.api.model.CachedGraph;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.PropertyKeys;
 
 public class SupportMethodsBase {

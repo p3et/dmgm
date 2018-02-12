@@ -1,6 +1,6 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
 
-import org.biiig.dmgm.impl.graph.DFSCode;
+import org.biiig.dmgm.impl.model.DFSCode;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCodeEmbeddingsPair;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
 

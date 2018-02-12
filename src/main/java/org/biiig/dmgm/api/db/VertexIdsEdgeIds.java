@@ -18,18 +18,18 @@
 package org.biiig.dmgm.api.db;
 
 /**
- * A basic graph representation.
+ * A basic model representation.
  */
 public interface VertexIdsEdgeIds {
   /**
-   * Get the graph's vertices.
+   * Get the model's vertices.
    *
    * @return vertex ids
    */
   long[] getVertexIds();
 
   /**
-   * Get the graph's edges.
+   * Get the model's edges.
    *
    * @return edge ids
    */

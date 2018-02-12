@@ -34,7 +34,7 @@
 
 package org.biiig.dmgm.impl.operators.subgraph_mining.generalized;
 
-import org.biiig.dmgm.api.db.CachedGraph;
+import org.biiig.dmgm.api.model.CachedGraph;
 
 public interface SpecializableCachedGraph extends CachedGraph {
   int[] getTaxonomyTail(int vertexId);
