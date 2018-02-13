@@ -19,13 +19,12 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
 import javafx.util.Pair;
 import org.biiig.dmgm.api.model.CachedGraph;
-import org.biiig.dmgm.impl.operators.subgraph_mining.DFSCode;
 
 import java.lang.reflect.Array;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class InitializeParents implements Function<CachedGraph, Stream<Pair<DFSCode,DFSEmbedding>>> {
+public class InitializeParents<G extends CachedGraph> implements Function<G, Stream<Pair<DFSCode,DFSEmbedding>>> {
 
   private final int label;
 
@@ -35,7 +34,7 @@ public class InitializeParents implements Function<CachedGraph, Stream<Pair<DFSC
 
   @SuppressWarnings("unchecked")
   @Override
-  public Stream<Pair<DFSCode,DFSEmbedding>> apply(CachedGraph graph) {
+  public Stream<Pair<DFSCode,DFSEmbedding>> apply(G graph) {
 
     int edgeCount = graph.getEdgeCount();
     Pair<DFSCode,DFSEmbedding>[] pairs = (Pair<DFSCode, DFSEmbedding>[]) Array.newInstance(Pair.class, edgeCount);

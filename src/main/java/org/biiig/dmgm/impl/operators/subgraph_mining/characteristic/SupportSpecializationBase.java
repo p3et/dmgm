@@ -34,25 +34,29 @@
 
 package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
 
+import org.biiig.dmgm.api.config.DMGMConstants;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.model.CachedGraph;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.PropertyKeys;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportSpecialization;
 
-public class SupportMethodsBase {
-  protected static final String DFS_CODE = "_dfsCode";
-  protected final PropertyGraphDB database;
+public abstract class SupportSpecializationBase<G extends CachedGraph, S> implements SupportSpecialization<S> {
+
+  protected final boolean parallel;
+  protected final S minSupportAbsolute;
+  protected final PropertyGraphDB db;
   protected final int dfsCodeKey;
   protected final int supportKey;
-  protected final boolean parallel;
 
-  public SupportMethodsBase(PropertyGraphDB database, boolean parallel) {
-    this.database = database;
-    supportKey = database.encode(PropertyKeys.SUPPORT);
-    dfsCodeKey = database.encode(DFS_CODE);
+  public SupportSpecializationBase(PropertyGraphDB db, S minSupportAbsolute, boolean parallel) {
     this.parallel = parallel;
+    this.minSupportAbsolute = minSupportAbsolute;
+    this.db = db;
+    this.supportKey = db.encode(PropertyKeys.SUPPORT);
+    this.dfsCodeKey = db.encode(DMGMConstants.PropertyKeys.DFS_CODE);
   }
 
-  public long createGraph(PropertyGraphDB db, CachedGraph graph) {
+  protected long createGraph(PropertyGraphDB db, CachedGraph graph) {
     int vertexCount = graph.getVertexCount();
     long[] vertexIds = new long[vertexCount];
     for (int v = 0; v < vertexCount; v++)

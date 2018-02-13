@@ -1,6 +1,5 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
-import org.biiig.dmgm.impl.operators.subgraph_mining.DFSCode;
 import org.junit.Test;
 
 public class IsMinimalTest {

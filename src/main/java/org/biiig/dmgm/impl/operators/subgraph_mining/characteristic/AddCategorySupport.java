@@ -1,7 +1,7 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
 
 import javafx.util.Pair;
-import org.biiig.dmgm.impl.operators.subgraph_mining.DFSCode;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCode;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
 
 import java.util.List;

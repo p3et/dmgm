@@ -21,17 +21,36 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.model.CachedGraph;
 import org.biiig.dmgm.impl.model.CachedGraphBase;
 
-import java.util.function.Function;
 import java.util.function.IntPredicate;
+import java.util.function.UnaryOperator;
 import java.util.stream.IntStream;
 
-public class FilterVerticesAndEdgesByLabel implements Function<CachedGraph, CachedGraph> {
-  public static final IntPredicate NO_PREDICATE = i -> true;
+/**
+ * Take a graph an filter vertices and edges by given label predicates.
+ */
+public class FilterVerticesAndEdgesByLabel implements UnaryOperator<CachedGraph> {
 
+  /**
+   * Vertex label predicate.
+   */
   private final IntPredicate vertexLabelPredicate;
+  /**
+   * Edge label predicate.
+   */
   private final IntPredicate edgeLabelPredicate;
+  /**
+   * Flag to drop isolated vertices,
+   * i.e., those who are neither source not target of any edge.
+   */
   private final Boolean dropIsolatedVertices;
 
+  /**
+   * Constructor.
+   *
+   * @param vertexLabelPredicate vertex predicate
+   * @param edgeLabelPredicate edge predicate
+   * @param dropIsolatedVertices flag to trigger the deletion of isolated vertices
+   */
   public FilterVerticesAndEdgesByLabel(IntPredicate vertexLabelPredicate, IntPredicate edgeLabelPredicate, Boolean dropIsolatedVertices) {
     this.vertexLabelPredicate = vertexLabelPredicate;
     this.edgeLabelPredicate = edgeLabelPredicate;
@@ -40,62 +59,71 @@ public class FilterVerticesAndEdgesByLabel implements Function<CachedGraph, Cach
 
   @Override
   public CachedGraph apply(CachedGraph graph) {
-    int[] vertexCandidates = IntStream
-      .range(0, graph.getVertexCount())
+    // apply vertex predicate
+    int inVertexCount = graph.getVertexCount();
+    int[] candidateVertexIds = IntStream
+      .range(0, inVertexCount)
       .filter(v -> vertexLabelPredicate.test(graph.getVertexLabel(v)))
       .toArray();
 
-    int[] keepEdges = IntStream
+    // apply edge predicate and filter edges without source or target
+    int[] outEdgeIds = IntStream
       .range(0, graph.getEdgeCount())
       .filter(v -> edgeLabelPredicate.test(graph.getEdgeLabel(v)))
-      .filter(e -> ArrayUtils.contains(vertexCandidates, graph.getSourceId(e)))
-      .filter(e -> ArrayUtils.contains(vertexCandidates, graph.getTargetId(e)))
+      .filter(e -> ArrayUtils.contains(candidateVertexIds, graph.getSourceId(e)))
+      .filter(e -> ArrayUtils.contains(candidateVertexIds, graph.getTargetId(e)))
       .toArray();
 
-    int[] keepVertices;
+    // vertices to keep
+    int[] outVertexIds;
 
     if (dropIsolatedVertices) {
+      // drop vertices without edges
       IntStream sourceIds = IntStream
-        .of(keepEdges)
+        .of(outEdgeIds)
         .map(graph::getSourceId);
 
       IntStream targetIds = IntStream
-        .of(keepEdges)
+        .of(outEdgeIds)
         .map(graph::getTargetId);
 
-      keepVertices = IntStream
+      outVertexIds = IntStream
         .concat(sourceIds, targetIds)
         .distinct()
-        .filter(v -> ArrayUtils.contains(vertexCandidates, v))
+        .filter(v -> ArrayUtils.contains(candidateVertexIds, v))
         .toArray();
     } else {
-      keepVertices = vertexCandidates;
+      // keep all vertices
+      outVertexIds = candidateVertexIds;
     }
 
-    int[] vertexIdMap = new int[graph.getVertexCount()];
+    // in vertex id -> out vertex id
+    int[] vertexIdMap = new int[inVertexCount];
 
-
-    int vertexCount = keepVertices.length;
-    int[] vertexLabels = new int[vertexCount];
-    for(int outVertexId = 0; outVertexId < vertexCount; outVertexId++)  {
-      int inVertexId = keepVertices[outVertexId];
+    // create out vertex data
+    int outVertexCount = outVertexIds.length;
+    int[] outVertexLabels = new int[outVertexCount];
+    for(int outVertexId = 0; outVertexId < outVertexCount; outVertexId++)  {
+      int inVertexId = outVertexIds[outVertexId];
       vertexIdMap[inVertexId] = outVertexId;
-      vertexLabels[outVertexId] = graph.getVertexLabel(inVertexId);
+      outVertexLabels[outVertexId] = graph.getVertexLabel(inVertexId);
     }
 
-    int edgeCount = keepEdges.length;
-    int[] edgeLabels = new int[edgeCount];
-    int[] sourceIds = new int[edgeCount];
-    int[] targetIds = new int[edgeCount];
+    // create out edge data
+    int edgeCount = outEdgeIds.length;
+    int[] outEdgeLabels = new int[edgeCount];
+    int[] outSourceIds = new int[edgeCount];
+    int[] outTargetIds = new int[edgeCount];
 
     int outId = 0;
-    for (int inId : keepEdges) {
-      edgeLabels[outId] = graph.getEdgeLabel(inId);
-      sourceIds[outId] = vertexIdMap[graph.getSourceId(inId)];
-      targetIds[outId] = vertexIdMap[graph.getTargetId(inId)];
+    for (int inId : outEdgeIds) {
+      outEdgeLabels[outId] = graph.getEdgeLabel(inId);
+      outSourceIds[outId] = vertexIdMap[graph.getSourceId(inId)];
+      outTargetIds[outId] = vertexIdMap[graph.getTargetId(inId)];
       outId++;
     }
 
-    return new CachedGraphBase(graph.getId(), graph.getLabel(), vertexLabels, edgeLabels, sourceIds, targetIds);
+    return new CachedGraphBase(
+      graph.getId(), graph.getLabel(), outVertexLabels, outEdgeLabels, outSourceIds, outTargetIds);
   }
 }

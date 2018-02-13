@@ -23,23 +23,6 @@ package org.biiig.dmgm.api.config;
 public interface DMGMConstants {
 
   /**
-   * Separators, e.g., for lists.
-   */
-  interface Separators{
-
-    /**
-     * Separator for lists.
-     */
-    String LIST = ",";
-
-    /**
-     * Separator of key-value pairs.
-     */
-    String KEY_VALUE = "=";
-    String ID_LABEL = ":";
-  }
-
-  /**
    * Symbols for the representation of different elements.
    */
   interface Elements {
@@ -107,5 +90,60 @@ public interface DMGMConstants {
        */
       String CLOSE = "]";
     }
+  }
+
+  /**
+   * Labels for vertices, edges, graph or collections.
+   */
+  interface Labels {
+    /**
+     * Frequent subgraph graph label.
+     */
+    String FREQUENT_SUBGRAPH = "Frequent Subgraph";
+    /**
+     * Frequent subgraphs collection label.
+     */
+    String FREQUENT_SUBGRAPHS = "Frequent Subgraphs";
+  }
+
+  /**
+   * Property keys.
+   */
+  interface PropertyKeys {
+
+    /**
+     * DFS code. A specific canonical label for graph patterns.
+     */
+    String DFS_CODE = "_dfsCode";
+    /**
+     * The category of a graph.
+     */
+    String CATEGORY = "_category";
+  }
+
+  /**
+   * Separators, e.g., for lists.
+   */
+  interface Separators {
+
+    /**
+     * Separator for lists.
+     */
+    String LIST = ",";
+
+    /**
+     * Separator of key-value pairs.
+     */
+    String KEY_VALUE = "=";
+    /**
+     * Separator for id-label substrings, e.g., vertex (1:A)
+     */
+    String ID_LABEL = ":";
+    /**
+     * Separator for taxonomy paths, e.g., {@code "2018_01_01"} or {@code "Animal_Mammal_Cat"}
+     * For compatibility with GDL it should not be changed.
+     *
+     */
+    String TAXONOMY_PATH_LEVEL = "_";
   }
 }

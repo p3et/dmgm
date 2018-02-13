@@ -20,9 +20,9 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.generalized;
 import com.google.common.collect.Lists;
 import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.impl.operators.subgraph_mining.DFSCode;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCode;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportMethods;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportSpecialization;
 
 import java.util.Collection;
 import java.util.List;
@@ -34,11 +34,11 @@ import java.util.stream.Stream;
 public class FrequentSpecializations<S>
   implements Function<Pair<Pair<DFSCode,List<DFSEmbedding>>, S>, Stream<Pair<Pair<DFSCode,List<DFSEmbedding>>, S>>> {
 
-  private final SupportMethods<S> supportMethods;
+  private final SupportSpecialization<S> supportSpecialization;
   private final Map<Long, SpecializableCachedGraph> indexedGraphs;
 
-  public FrequentSpecializations(SupportMethods<S> supportMethods, Map<Long, SpecializableCachedGraph> indexedGraphs) {
-    this.supportMethods = supportMethods;
+  public FrequentSpecializations(SupportSpecialization<S> supportSpecialization, Map<Long, SpecializableCachedGraph> indexedGraphs) {
+    this.supportSpecialization = supportSpecialization;
     this.indexedGraphs = indexedGraphs;
   }
 
@@ -53,7 +53,7 @@ public class FrequentSpecializations<S>
 
     Stream<Pair<MultiDimensionalVector, MultiDimensionalVector>> children = specialize(parents, dimCount);
 
-    List<Pair<Pair<MultiDimensionalVector, List<MultiDimensionalVector>>, S>> frequent = supportMethods
+    List<Pair<Pair<MultiDimensionalVector, List<MultiDimensionalVector>>, S>> frequent = supportSpecialization
       .aggregateAndFilter(children)
       .collect(Collectors.toList());
 
@@ -92,7 +92,7 @@ public class FrequentSpecializations<S>
 
       children = specialize(parents, dimCount);
 
-      frequent = supportMethods
+      frequent = supportSpecialization
         .aggregateAndFilter(children)
         .collect(Collectors.toList());
     }

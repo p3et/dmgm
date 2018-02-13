@@ -22,63 +22,41 @@ import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.biiig.dmgm.api.config.DMGMConstants;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.model.CachedGraph;
-import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
-import org.biiig.dmgm.impl.operators.DMGMOperatorBase;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCode;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.GrowAllChildren;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.InitializeParents;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.IsMinimal;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportMethods;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportSpecialization;
 import org.biiig.dmgm.impl.operators.subgraph_mining.generalized.FrequentSpecializations;
 import org.biiig.dmgm.impl.operators.subgraph_mining.generalized.SpecializableAdjacencyList;
 import org.biiig.dmgm.impl.operators.subgraph_mining.generalized.SpecializableCachedGraph;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
-public abstract class GeneralizedSubgraphsBase<S> extends DMGMOperatorBase implements CollectionToCollectionOperator {
-  private static final String LEVEL_SEPARATOR = "_";
-  private static final String FREQUENT_SUBGRAPH = "Frequent Subgraph";
-  private static final String FREQUENT_SUBGRAPHS = "Frequent Subgraphs";
-  protected final PropertyGraphDB database;
-  protected final int maxEdgeCount;
-  protected final int patternLabel;
-  protected final int collectionLabel;
-
-  protected final float minSupportRel;
-
-
-  public GeneralizedSubgraphsBase(PropertyGraphDB database, boolean parallel, float minSupportRel, int maxEdgeCount) {
-    super(parallel);
-    this.minSupportRel = minSupportRel;
-    this.maxEdgeCount = maxEdgeCount;
-    this.database = database;
-    patternLabel = database.encode(FREQUENT_SUBGRAPH);
-    collectionLabel = database.encode(FREQUENT_SUBGRAPHS);
+public abstract class GeneralizedSubgraphsBase<S> extends SubgraphMiningBase<SpecializableCachedGraph, S> {
+  public GeneralizedSubgraphsBase(PropertyGraphDB db, boolean parallel, float minSupportRel, int maxEdgeCount) {
+    super(db, parallel, minSupportRel, maxEdgeCount);
   }
 
   @Override
-  public Long apply(Long inputCollectionId) {
-    List<CachedGraph> input = database.getCachedCollection(inputCollectionId);
+  public Map<Long, SpecializableCachedGraph> preProcess(Long inputCollectionId) {
+    List<CachedGraph> input = db.getCachedCollection(inputCollectionId);
 
-    Map<Integer, Pair<Integer, int[]>> taxonomyPaths = generalize(input);
+    Map<Integer, Pair<Integer, int[]>> taxonomyPaths = getLabelTaxonomyPaths(getVertexLabelSupport(input));
 
     taxonomyPaths
       .forEach((key, value) -> {
-        List<String> path = Lists.newArrayList(database.decode(value.getKey()));
+        List<String> path = Lists.newArrayList(db.decode(value.getKey()));
 
-        IntStream.of(value.getValue()).mapToObj(database::decode)
+        IntStream.of(value.getValue()).mapToObj(db::decode)
           .forEach(path::add);
       });
 
-    Map<Long, SpecializableCachedGraph> indexedGraphs = (parallel ? input.parallelStream() : input.stream())
+    return getParallelizableStream(input)
       .collect(Collectors.toMap(
         CachedGraph::getId,
         g -> {
@@ -108,98 +86,29 @@ public abstract class GeneralizedSubgraphsBase<S> extends DMGMOperatorBase imple
             taxonomyTails);
         }
       ));
-
-    SupportMethods<S> supportMethods = getAggregateAndFilter(indexedGraphs);
-
-    Stream<Pair<DFSCode,DFSEmbedding>> reports = getSingleEdgeReports(indexedGraphs);
-
-    Stream<Pair<Pair<DFSCode,List<DFSEmbedding>>, S>> filtered =
-      supportMethods.aggregateAndFilter(reports);
-
-    List<Pair<Pair<DFSCode,List<DFSEmbedding>>, S>> parents = specialize(filtered, supportMethods, indexedGraphs);
-
-    long[] graphIds = supportMethods.output(parents);
-
-    int edgeCount = 1;
-    while (edgeCount < maxEdgeCount && !parents.isEmpty()) {
-      reports = (parallel ? parents.parallelStream() : parents.stream())
-        .map(Pair::getKey)
-        .flatMap(new GrowAllChildren(indexedGraphs));
-
-      filtered = supportMethods.aggregateAndFilter(reports)
-        .filter(e -> new IsMinimal().test(e.getKey().getKey()));
-
-      parents = specialize(filtered, supportMethods, indexedGraphs);
-
-      graphIds = ArrayUtils.addAll(graphIds, supportMethods.output(parents));
-
-      edgeCount++;
-    }
-
-    return database.createCollection(collectionLabel, graphIds);
   }
 
-  public abstract SupportMethods<S> getAggregateAndFilter(Map<Long, SpecializableCachedGraph> input);
-
-  private Map<Integer, Pair<Integer, int[]>> generalize(List<CachedGraph> input) {
-    Map<Integer, Long> vertexLabelSupport = getVertexLabelSupport(input);
-
-    return vertexLabelSupport
-      .keySet()
-      .stream()
-      .map(database::decode)
-      .filter(s -> s.contains(LEVEL_SEPARATOR))
-      .map(s -> {
-        int[] ints = new int[] {database.encode(s)};
-
-        while (s.contains(LEVEL_SEPARATOR)) {
-          s = StringUtils.substringBeforeLast(s, LEVEL_SEPARATOR);
-          ints = ArrayUtils.add(ints, database.encode(s));
-        }
-
-        ArrayUtils.reverse(ints);
-
-        return ints;
-      })
-      .collect(Collectors.toMap(
-        a -> a[a.length - 1],
-        a -> new Pair<>(a[0], ArrayUtils.subarray(a, 1, a.length))));
-  }
-
-  private List<Pair<Pair<DFSCode,List<DFSEmbedding>>, S>> specialize(
-    Stream<Pair<Pair<DFSCode, List<DFSEmbedding>>, S>> filtered, SupportMethods<S> supportMethods, Map<Long, SpecializableCachedGraph> indexedGraphs) {
-
-    return filtered
-      .flatMap(new FrequentSpecializations<>(supportMethods, indexedGraphs))
+  @Override
+  public List<Pair<Pair<DFSCode, List<DFSEmbedding>>, S>> postProcess(Map<Long, SpecializableCachedGraph> indexedGraphs, List<Pair<Pair<DFSCode, List<DFSEmbedding>>, S>> filtered, SupportSpecialization afo) {
+    return getParallelizableStream(filtered)
+      .flatMap(new FrequentSpecializations<>(afo, indexedGraphs))
       .collect(Collectors.toList());
   }
 
-
-
-  public Stream<Pair<DFSCode,DFSEmbedding>> getSingleEdgeReports(Map<Long, SpecializableCachedGraph> input) {
-    Collection<SpecializableCachedGraph> values = input.values();
-    return (parallel ? values.parallelStream() : values.stream())
-      .flatMap(new InitializeParents(patternLabel));
-  }
-
+  @Override
   public Map<Integer, Long> getVertexLabelSupport(List<CachedGraph> input) {
-    return (parallel ? input.parallelStream() : input.stream())
-      .flatMapToInt(g -> IntStream
-        .of(g.getVertexLabels())
-        .distinct())
-      .boxed()
-      .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+    return super.getVertexLabelSupport(input)
       .entrySet()
       .stream()
-      .map(e -> new Pair<>(database.decode(e.getKey()), e.getValue()))
+      .map(e -> new Pair<>(db.decode(e.getKey()), e.getValue()))
       .flatMap(p -> {
         String child = p.getKey();
 
-        int[] labels = new int[] {database.encode(child)};
+        int[] labels = new int[] {db.encode(child)};
 
-        while (child.contains(LEVEL_SEPARATOR)) {
-          String parent = StringUtils.substringBeforeLast(child, LEVEL_SEPARATOR);
-          labels = ArrayUtils.add(labels, database.encode(parent));
+        while (child.contains(DMGMConstants.Separators.TAXONOMY_PATH_LEVEL)) {
+          String parent = StringUtils.substringBeforeLast(child, DMGMConstants.Separators.TAXONOMY_PATH_LEVEL);
+          labels = ArrayUtils.add(labels, db.encode(parent));
           child = parent;
         }
 
@@ -210,5 +119,28 @@ public abstract class GeneralizedSubgraphsBase<S> extends DMGMOperatorBase imple
       .entrySet()
       .stream()
       .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().stream().mapToLong(i -> i).sum()));
+  }
+
+  private Map<Integer, Pair<Integer, int[]>> getLabelTaxonomyPaths(Map<Integer, Long> vertexLabelSupport) {
+    return vertexLabelSupport
+      .keySet()
+      .stream()
+      .map(db::decode)
+      .filter(s -> s.contains(DMGMConstants.Separators.TAXONOMY_PATH_LEVEL))
+      .map(s -> {
+        int[] ints = new int[] {db.encode(s)};
+
+        while (s.contains(DMGMConstants.Separators.TAXONOMY_PATH_LEVEL)) {
+          s = StringUtils.substringBeforeLast(s, DMGMConstants.Separators.TAXONOMY_PATH_LEVEL);
+          ints = ArrayUtils.add(ints, db.encode(s));
+        }
+
+        ArrayUtils.reverse(ints);
+
+        return ints;
+      })
+      .collect(Collectors.toMap(
+        a -> a[a.length - 1],
+        a -> new Pair<>(a[0], ArrayUtils.subarray(a, 1, a.length))));
   }
 }

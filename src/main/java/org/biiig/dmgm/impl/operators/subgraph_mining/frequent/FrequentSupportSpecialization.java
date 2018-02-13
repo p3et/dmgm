@@ -37,10 +37,10 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.frequent;
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 import javafx.util.Pair;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
-import org.biiig.dmgm.impl.operators.subgraph_mining.DFSCode;
-import org.biiig.dmgm.impl.operators.subgraph_mining.characteristic.SupportMethodsBase;
+import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.operators.subgraph_mining.characteristic.SupportSpecializationBase;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCode;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportMethods;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.WithGraphId;
 
 import java.util.List;
@@ -48,20 +48,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-public class FrequentSupportMethods extends SupportMethodsBase
-  implements SupportMethods<Long> {
+public class FrequentSupportSpecialization<G extends CachedGraph> extends SupportSpecializationBase<G, Long>{
 
-  private final long minSupportAbsolute;
 
-  public FrequentSupportMethods(PropertyGraphDB database, boolean parallel, long minSupportAbsolute) {
-    super(database, parallel);
-    this.minSupportAbsolute = minSupportAbsolute;
+  public FrequentSupportSpecialization(PropertyGraphDB db, Long minSupportAbs, boolean parallel) {
+    super(db, minSupportAbs, parallel);
   }
 
   @Override
-  public <K, V extends WithGraphId> Stream<Pair<Pair<K, List<V>>, Long>> aggregateAndFilter(Stream<Pair<K, V>> reports) {
+  public <K, V extends WithGraphId> Stream<Pair<Pair<K, List<V>>, Long>> aggregateAndFilter(Stream<Pair<K, V>> candidates) {
 
-    Set<Map.Entry<K, List<V>>> entrySet = reports
+    Set<Map.Entry<K, List<V>>> entrySet = candidates
       .collect(new GroupByKeyListValues<>(Pair::getKey, Pair::getValue))
       .entrySet();
 
@@ -82,19 +79,14 @@ public class FrequentSupportMethods extends SupportMethodsBase
   }
 
   @Override
-  public long[] output(List<Pair<Pair<DFSCode, List<DFSEmbedding>>, Long>> filtered) {
-    return filtered
-      .stream()
-      .mapToLong(p -> {DFSCode dfsCode = p.getKey().getKey();
-        long support = p.getValue();
-        long graphId = createGraph(database, dfsCode);
+  public long[] output(Pair<Pair<DFSCode, List<DFSEmbedding>>, Long> pair) {
+    DFSCode dfsCode = pair.getKey().getKey();
+    long support = pair.getValue();
+    long graphId = createGraph(db, dfsCode);
 
-        database.set(graphId, dfsCodeKey, dfsCode.toString(database));
-        database.set(graphId, supportKey, support);
+    db.set(graphId, dfsCodeKey, dfsCode.toString(db));
+    db.set(graphId, supportKey, support);
 
-        return graphId;
-      })
-      .toArray();
+    return new long[] {graphId};
   }
-
 }

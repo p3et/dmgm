@@ -36,10 +36,11 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.characteristic;
 
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 import javafx.util.Pair;
+import org.biiig.dmgm.api.config.DMGMConstants;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
-import org.biiig.dmgm.impl.operators.subgraph_mining.DFSCode;
+import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCode;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportMethods;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.WithGraphId;
 
 import java.util.List;
@@ -50,25 +51,21 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class CategorySupportMethods extends SupportMethodsBase
-  implements SupportMethods<Map<Integer, Long>> {
+public class CategoryFrequentSupportSpecialization<G extends CachedGraph> extends SupportSpecializationBase<G, Map<Integer, Long>> {
 
-  private final Map<Long, int[]> graphCategories;
-  private final Map<Integer, Long> categoryMinSupport;
   protected final int categoryKey;
+  private final Map<Long, int[]> graphCategories;
 
 
-  public CategorySupportMethods(PropertyGraphDB database, boolean parallel, Map<Long, int[]> graphCategories, Map<Integer, Long> categoryMinSupport, int categoryKey) {
-    super(database, parallel);
+  public CategoryFrequentSupportSpecialization(PropertyGraphDB database, Map<Integer, Long> minSupportAbsolute, boolean parallel, Map<Long, int[]> graphCategories) {
+    super(database, minSupportAbsolute, parallel);
     this.graphCategories = graphCategories;
-    this.categoryMinSupport = categoryMinSupport;
-    this.categoryKey = categoryKey;
+    this.categoryKey = db.encode(DMGMConstants.PropertyKeys.CATEGORY);
   }
 
   @Override
-  public <K, V extends WithGraphId> Stream<Pair<Pair<K, List<V>>, Map<Integer, Long>>> aggregateAndFilter(Stream<Pair<K, V>> reports) {
-
-    Set<Map.Entry<K, List<V>>> entrySet = reports
+  public <K, V extends WithGraphId> Stream<Pair<Pair<K, List<V>>, Map<Integer, Long>>> aggregateAndFilter(Stream<Pair<K, V>> candidates) {
+    Set<Map.Entry<K, List<V>>> entrySet = candidates
       .collect(new GroupByKeyListValues<>(Pair::getKey, Pair::getValue))
       .entrySet();
 
@@ -90,31 +87,27 @@ public class CategorySupportMethods extends SupportMethodsBase
       .filter(p -> p.getValue()
         .entrySet()
         .stream()
-        .anyMatch(e -> e.getValue() >= categoryMinSupport.get(e.getKey())));
-  }
+        .anyMatch(e -> e.getValue() >= minSupportAbsolute.get(e.getKey())));  }
 
   @Override
-  public long[] output(List<Pair<Pair<DFSCode, List<DFSEmbedding>>, Map<Integer, Long>>> filtered) {
-    return filtered
+  public long[] output(Pair<Pair<DFSCode, List<DFSEmbedding>>, Map<Integer, Long>> pair) {
+    return pair
+      .getValue()
+      .entrySet()
       .stream()
-      .flatMapToLong(sp -> sp
-        .getValue()
-        .entrySet()
-        .stream()
-        .mapToLong(cs -> {
-          DFSCode dfsCode = sp.getKey().getKey();
-          int category = cs.getKey();
-          long support = cs.getValue();
+      .mapToLong(cs -> {
+        DFSCode dfsCode = pair.getKey().getKey();
+        int category = cs.getKey();
+        long support = cs.getValue();
 
-          long graphId = createGraph(database, dfsCode);
+        long graphId = createGraph(db, dfsCode);
 
-          database.set(graphId, dfsCodeKey, dfsCode.toString(database));
-          database.set(graphId, categoryKey, database.decode(category));
-          database.set(graphId, supportKey, support);
+        db.set(graphId, dfsCodeKey, dfsCode.toString(db));
+        db.set(graphId, categoryKey, db.decode(category));
+        db.set(graphId, supportKey, support);
 
-          return graphId;
-        }))
+        return graphId;
+      })
       .toArray();
   }
-
 }

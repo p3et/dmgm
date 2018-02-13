@@ -1,7 +1,5 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
-import org.biiig.dmgm.impl.operators.subgraph_mining.DFSCode;
-
 public class DFSCodeEmbeddingPair {
   private DFSCode dfsCode;
   private final DFSEmbedding embedding;

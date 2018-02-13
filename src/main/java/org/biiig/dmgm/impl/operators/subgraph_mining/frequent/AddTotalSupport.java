@@ -1,6 +1,6 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.frequent;
 
-import org.biiig.dmgm.impl.operators.subgraph_mining.DFSCode;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCode;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCodeEmbeddingsPair;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
 

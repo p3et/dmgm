@@ -15,34 +15,12 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
+package org.biiig.dmgm.impl.operators.subgraph_mining.frequent;
 
-package org.biiig.dmgm.impl.operators;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.OutputSubgraphs;
 
-import org.biiig.dmgm.api.db.PropertyGraphDB;
+public abstract class OutputSubgraphsBase implements OutputSubgraphs<Long> {
 
-/**
- * Superclass of DMGM operators.
- */
-public abstract class DMGMOperatorBase {
 
-  /**
-   * Flag to enable parallel execution of the operator.
-   * true <=> enabled
-   */
-  protected final boolean parallel;
-  /**
-   * Database of in- and output elements.
-   */
-  protected final PropertyGraphDB db;
 
-  /**
-   * Constructor.
-   *
-   * @param parallel parallel execution flag
-   * @param db database
-   */
-  protected DMGMOperatorBase(boolean parallel, PropertyGraphDB db) {
-    this.parallel = parallel;
-    this.db = db;
-  }
 }

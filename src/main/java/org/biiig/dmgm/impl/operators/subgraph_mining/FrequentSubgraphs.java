@@ -35,12 +35,23 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining;
 
 import org.biiig.dmgm.api.db.PropertyGraphDB;
+import org.biiig.dmgm.api.model.CachedGraph;
 
 /**
  * Directed Multigraph gSpan
  */
-public class FrequentSubgraphs extends GeneralizedFrequentSubgraphs {
-  public FrequentSubgraphs(PropertyGraphDB database, boolean parallel, float minSupportRel, int maxEdgeCount) {
-    super(database, parallel, minSupportRel, maxEdgeCount);
+public class FrequentSubgraphs extends SimpleSubgraphMining implements Frequent<CachedGraph> {
+
+  /**
+   * Constructor.
+   *
+   * @param db            database
+   * @param parallel      flag to enable parallel execution
+   * @param minSupportRel minimum support threshold
+   * @param maxEdgeCount  maximum result edge count
+   */
+  protected FrequentSubgraphs(PropertyGraphDB db, boolean parallel, float minSupportRel, int maxEdgeCount) {
+    super(db, parallel, minSupportRel, maxEdgeCount);
   }
+
 }

@@ -18,29 +18,9 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
 import javafx.util.Pair;
-import org.biiig.dmgm.api.model.CachedGraph;
 
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
-public class GrowAllChildren<G extends CachedGraph>
-  implements Function<Pair<DFSCode,List<DFSEmbedding>>, Stream<Pair<DFSCode,DFSEmbedding>>> {
-
-  private final Map<Long, G> input;
-
-  public GrowAllChildren(Map<Long, G> input) {
-    this.input = input;
-  }
-
-  @Override
-  public Stream<Pair<DFSCode,DFSEmbedding>> apply(Pair<DFSCode,List<DFSEmbedding>> dfsCodeEmbeddingsPair) {
-    DFSCode parent = dfsCodeEmbeddingsPair.getKey();
-
-    return dfsCodeEmbeddingsPair
-      .getValue()
-      .stream()
-      .flatMap(new GrowChildrenOf<>(parent, input));
-  }
+public interface OutputSubgraphs<S> extends Function<Pair<Pair<DFSCode, List<DFSEmbedding>>, S>, Long> {
 }

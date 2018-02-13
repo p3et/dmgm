@@ -35,19 +35,13 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining;
 
 import org.biiig.dmgm.api.db.PropertyGraphDB;
-import org.biiig.dmgm.api.model.CachedGraph;
-import org.biiig.dmgm.impl.operators.subgraph_mining.characteristic.CategorySupportMethods;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.PropertyKeys;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportMethods;
 import org.biiig.dmgm.impl.operators.subgraph_mining.generalized.SpecializableCachedGraph;
 
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class GeneralizedCharacteristicSubgraphs
-  extends GeneralizedSubgraphsBase<Map<Integer, Long>> {
+  extends GeneralizedSubgraphsBase<Map<Integer, Long>> implements Characteristic<SpecializableCachedGraph> {
 
   private static final String DEFAULT_CATEGORY = "_default";
 
@@ -63,37 +57,17 @@ public class GeneralizedCharacteristicSubgraphs
   }
 
   @Override
-  public SupportMethods getAggregateAndFilter(Map<Long, SpecializableCachedGraph> input) {
-    Map<Long, int[]> graphCategories = getGraphCategories(input);
-    Map<Integer, Long> categoryMinSupport = getCategoryMinSupport(graphCategories);
-    return new CategorySupportMethods(database, parallel, graphCategories, categoryMinSupport, categoryKey);
+  public int getDefaultCategory() {
+    return defaultCategory;
   }
 
-  private Map<Integer, Long> getCategoryMinSupport(Map<Long, int[]> graphCategories) {
-    Map<Integer, Long> categoryCounts = graphCategories
-      .values()
-      .stream()
-      .flatMapToInt(IntStream::of)
-      .boxed()
-      .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-
-    return categoryCounts
-      .entrySet()
-      .stream()
-      .collect(Collectors.toMap(Map.Entry::getKey, e -> (long) Math.round(e.getValue() * minSupportRel)));
+  @Override
+  public int getCategoryKey() {
+    return categoryKey;
   }
 
-  private Map<Long, int[]> getGraphCategories(Map<Long, SpecializableCachedGraph> input) {
-    return input
-      .values()
-      .stream()
-      .collect(Collectors.toMap(
-        CachedGraph::getId,
-        g -> {
-          String categoryString = database.getString(g.getId(), categoryKey);
-          int category = categoryString == null ? defaultCategory : database.encode(categoryString);
-          return new int[]{category};
-        }));
+  @Override
+  public PropertyGraphDB getDB() {
+    return db;
   }
-
 }

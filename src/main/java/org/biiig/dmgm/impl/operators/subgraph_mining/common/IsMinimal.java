@@ -3,7 +3,7 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 import com.google.common.collect.Maps;
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 import javafx.util.Pair;
-import org.biiig.dmgm.impl.operators.subgraph_mining.DFSCode;
+import org.biiig.dmgm.api.model.CachedGraph;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -13,11 +13,11 @@ import java.util.stream.Stream;
 
 public class IsMinimal implements java.util.function.Predicate<DFSCode> {
 
-  private final InitializeParents initializeParents = new InitializeParents(0);
+  private final InitializeParents<CachedGraph> initializeParents = new InitializeParents<>(0);
 
   @Override
   public boolean test(DFSCode dfsCode ) {
-    GrowChildrenOf growChildrenOf = new GrowChildrenOf(dfsCode, Maps.newHashMap());
+    GrowChildrenOf<CachedGraph> growChildrenOf = new GrowChildrenOf<>(dfsCode, Maps.newHashMap());
 
 
     Optional<Pair<DFSCode,List<DFSEmbedding>>> minPair = initializeParents

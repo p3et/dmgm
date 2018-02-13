@@ -15,32 +15,25 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.subgraph_mining.common;
+package org.biiig.dmgm.impl.operators.subgraph_mining;
 
-import javafx.util.Pair;
+import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportSpecialization;
+import org.biiig.dmgm.impl.operators.subgraph_mining.frequent.FrequentSupportSpecialization;
 
-import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
-public class GrowAllChildren<G extends CachedGraph>
-  implements Function<Pair<DFSCode,List<DFSEmbedding>>, Stream<Pair<DFSCode,DFSEmbedding>>> {
+public interface Frequent<G extends CachedGraph> extends SubgraphMiningVariant<G, Long> {
 
-  private final Map<Long, G> input;
-
-  public GrowAllChildren(Map<Long, G> input) {
-    this.input = input;
+  @Override
+  default SupportSpecialization<Long> getSupportSpecialization(
+    Map<Long, G> indexedGraphs, PropertyGraphDB db, Long minSupportAbs, boolean parallel) {
+    return new FrequentSupportSpecialization<>(db, minSupportAbs, parallel);
   }
 
   @Override
-  public Stream<Pair<DFSCode,DFSEmbedding>> apply(Pair<DFSCode,List<DFSEmbedding>> dfsCodeEmbeddingsPair) {
-    DFSCode parent = dfsCodeEmbeddingsPair.getKey();
-
-    return dfsCodeEmbeddingsPair
-      .getValue()
-      .stream()
-      .flatMap(new GrowChildrenOf<>(parent, input));
+  default Long getMinSupportAbsolute(Map<Long, G> indexedGraphs, float minSupportRel) {
+    return (long) Math.round(indexedGraphs.size() * minSupportRel);
   }
 }
