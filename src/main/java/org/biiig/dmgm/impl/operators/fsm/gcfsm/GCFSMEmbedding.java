@@ -17,11 +17,11 @@
 
 package org.biiig.dmgm.impl.operators.fsm.gcfsm;
 
-import org.biiig.dmgm.impl.operators.fsm.cfsm.WithCategory;
+import org.biiig.dmgm.impl.operators.fsm.cfsm.WithEmbeddingAndCategory;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
 import org.biiig.dmgm.impl.operators.fsm.gfsm.GFSMEmbedding;
 
-public class GCFSMEmbedding extends GFSMEmbedding implements WithCategory {
+public class GCFSMEmbedding extends GFSMEmbedding implements WithEmbeddingAndCategory {
   private final int category;
 
   public GCFSMEmbedding(DFSEmbedding embedding, int[][] taxonomyPaths, int category) {

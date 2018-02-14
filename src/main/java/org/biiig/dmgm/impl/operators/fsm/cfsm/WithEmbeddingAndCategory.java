@@ -15,16 +15,9 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.fsm.common;
+package org.biiig.dmgm.impl.operators.fsm.cfsm;
 
-import javafx.util.Pair;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCode;
+import org.biiig.dmgm.impl.operators.fsm.common.WithEmbedding;
 
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Stream;
-
-public interface SupportFilter<E extends WithEmbedding, S>
-  extends Function<Map<DFSCode, List<E>>, Stream<Pair<DFSCode, S>>> {
+public interface WithEmbeddingAndCategory extends WithEmbedding, WithCategory {
 }

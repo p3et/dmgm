@@ -17,17 +17,27 @@
 
 package org.biiig.dmgm.impl.operators.fsm;
 
-import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
-import org.biiig.dmgm.impl.operators.fsm.common.WithCachedGraph;
+import javafx.util.Pair;
+import org.biiig.dmgm.api.db.SetProperties;
+import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.operators.fsm.common.DFSCode;
 import org.biiig.dmgm.impl.operators.fsm.common.WithEmbedding;
 
-/**
- *
- *
- * @param <G> graph data
- * @param <E> embedding data
- * @param <S> support type
- */
-public interface SubgraphMining<G extends WithCachedGraph, E extends WithEmbedding, S>
-  extends CollectionToCollectionOperator, SubgraphMiningSupportMethods<E, S>, SubgraphMiningVariantMethods<G, E, S> {
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+
+public interface SubgraphMiningSupportMethods<E extends WithEmbedding, S> {
+  long[] output(List<Pair<DFSCode, Map<Integer, Long>>> frequentPatterns, SetProperties setProperties);
+
+  long getAbsoluteSupport(long count, float rel);
+
+  <K> Stream<Pair<K, S>> addSupportAndFilter(Map<K, List<E>> patternEmbeddings, S minSupportAbsolute, boolean parallel);
+
+  S getMinSupportAbsolute(Collection<CachedGraph> input, float minSupportRel);
+
+  int getSupportKey();
+
+  int getDfsCodeKey();
 }

@@ -42,11 +42,11 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
 import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.operators.fsm.common.DFSCode;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCode;
+import org.biiig.dmgm.impl.operators.fsm.common.InitializeSingleEdgePatterns;
+import org.biiig.dmgm.impl.operators.fsm.common.IsMinimal;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.GrowAllChildren;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.InitializeParents;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.IsMinimal;
 
 import java.util.Collection;
 import java.util.List;
@@ -73,8 +73,8 @@ public class CharacteristicSubgraphs<G extends CachedGraph> extends SubgraphMini
     Map<Integer, Map<Long, G>> categorizedGraphs = input
       .collect(new GroupByKeyListValues<>(
         g -> {
-          String category = db.getString(g.getId(), categoryKey);
-          return category == null ? defaultCategory : db.encode(category);
+          String category = database.getString(g.getId(), categoryKey);
+          return category == null ? defaultCategory : database.encode(category);
         },
         Function.identity()
       ))
@@ -108,7 +108,7 @@ public class CharacteristicSubgraphs<G extends CachedGraph> extends SubgraphMini
 
       // turn edges into 1-edge patterns and embeddings
       Stream<Pair<DFSCode,DFSEmbedding>> candidates = getParallelizableStream(entry.getValue().values())
-        .flatMap(new InitializeParents<>(patternLabel));
+        .flatMap(new InitializeSingleEdgePatterns<>(patternLabel, getEmbeddingFactory()));
 
       // aggregate support and filter by support
 
@@ -182,7 +182,7 @@ public class CharacteristicSubgraphs<G extends CachedGraph> extends SubgraphMini
       edgeCount++;
     }
 
-    return db.createCollection(collectionLabel, graphIds);
+    return database.createCollection(collectionLabel, graphIds);
   }
 
 }

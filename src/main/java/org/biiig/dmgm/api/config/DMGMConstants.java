@@ -119,6 +119,21 @@ public interface DMGMConstants {
      * The category of a graph.
      */
     String CATEGORY = "_category";
+    /**
+     * Support of a pattern.
+     */
+    String SUPPORT = "_support";
+  }
+
+  /**
+   * Default values of property ke
+   */
+  interface PropertyDefaultValues {
+
+    /**
+     * String default value.
+     */
+    String STRING = "_default";
   }
 
   /**

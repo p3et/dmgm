@@ -20,8 +20,8 @@ package org.biiig.dmgm.impl.operators.subgraph_mining;
 import javafx.util.Pair;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.operators.fsm.common.DFSCode;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCode;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportSpecialization;
 
 import java.util.List;
@@ -36,7 +36,7 @@ public abstract class SimpleSubgraphMining extends SubgraphMiningBase<CachedGrap
 
   @Override
   public Map<Long, CachedGraph> preProcess(Long inputCollectionId) {
-    return getParallelizableStream(db.getCachedCollection(inputCollectionId))
+    return getParallelizableStream(database.getCachedCollection(inputCollectionId))
       .collect(Collectors.toMap(CachedGraph::getId, Function.identity()));
   }
 

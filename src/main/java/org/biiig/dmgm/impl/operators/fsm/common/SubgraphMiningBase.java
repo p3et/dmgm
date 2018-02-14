@@ -15,10 +15,9 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.fsm;
+package org.biiig.dmgm.impl.operators.fsm.common;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
@@ -26,20 +25,16 @@ import org.biiig.dmgm.api.config.DMGMConstants;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.model.CachedGraph;
 import org.biiig.dmgm.impl.operators.DMGMOperatorBase;
-import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.fsm.common.GrowAllChildren;
-import org.biiig.dmgm.impl.operators.fsm.common.WithCachedGraph;
-import org.biiig.dmgm.impl.operators.fsm.common.WithEmbedding;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCode;
+import org.biiig.dmgm.impl.operators.fsm.SubgraphMining;
 
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class SubgraphMiningBase<G extends WithCachedGraph, E extends WithEmbedding, S>
   extends DMGMOperatorBase implements SubgraphMining<G, E, S> {
@@ -59,11 +54,19 @@ public abstract class SubgraphMiningBase<G extends WithCachedGraph, E extends Wi
   /**
    * Encoded label for result subgraphs.
    */
-  protected final int patternLabel;
+  private final int patternLabel;
   /**
    * Encoded label for the result subgraph collection.
    */
-  protected final int collectionLabel;
+  private final int collectionLabel;
+  /**
+   * Property key to store the support value of a pattern.
+   */
+  private final int supportKey;
+  /**
+   * Property key to store the canonical label (DFS code) of a pattern.
+   */
+  private final int dfsCodeKey;
 
   /**
    * Constructor.
@@ -80,38 +83,35 @@ public abstract class SubgraphMiningBase<G extends WithCachedGraph, E extends Wi
     this.maxEdgeCount = maxEdgeCount;
     this.patternLabel = db.encode(DMGMConstants.Labels.FREQUENT_SUBGRAPH);
     this.collectionLabel = db.encode(DMGMConstants.Labels.FREQUENT_SUBGRAPHS);
+    this.supportKey = db.encode(DMGMConstants.PropertyKeys.SUPPORT);
+    this.dfsCodeKey = db.encode(DMGMConstants.PropertyKeys.DFS_CODE);
   }
 
   @Override
   public Long apply(Long inputCollectionId) {
-    Collection<CachedGraph> input = db.getCachedCollection(inputCollectionId);
+    Collection<CachedGraph> input = database.getCachedCollection(inputCollectionId);
+    S minSupportAbsolute = getMinSupportAbsolute(input, minSupportRel);
 
     // create an index of graphs specific to the mining variant
-    Map<Long, G> graphIndex = preProcess(input)
-      .collect(Collectors.toMap(
-        g -> g.getGraph().getId(),
-        Function.identity()
-      ));
+    Stream<G> preProcessed = preProcess(input);
+    Map<Long, G> graphIndex = preProcessed
+      .collect(Collectors.toMap(g -> g.getGraph().getId(), Function.identity()));
 
     // init aggregate single edge patterns
     Map<DFSCode, List<E>> patternEmbeddings = getParallelizableStream(graphIndex.values())
-      .flatMap(this::initializeSingleEdgePatterns)
+      .flatMap(new InitializeSingleEdgePatterns<>(patternLabel, getEmbeddingFactory()))
       .collect(new GroupByKeyListValues<>(Pair::getKey, Pair::getValue));
 
-    Set<DFSCode> frequentPatterns = Sets.newConcurrentHashSet();
-
     // identify frequent patterns
-    List<Pair<DFSCode, S>> patternSupport = addSupportAndFilter(patternEmbeddings)
-      .peek(p -> frequentPatterns.add(p.getKey()))
+    List<Pair<DFSCode, S>> frequentPatterns = addSupportAndFilter(patternEmbeddings, minSupportAbsolute, parallel)
       .collect(Collectors.toList());
 
-    long[] graphIds = output(patternSupport, patternEmbeddings);
+    long[] graphIds = output(frequentPatterns, patternEmbeddings);
 
     int edgeCount = 1;
     while (!frequentPatterns.isEmpty() && edgeCount < maxEdgeCount) {
 
       patternEmbeddings = getParallelizableStream(patternEmbeddings.entrySet())
-        .filter(p -> frequentPatterns.contains(p.getKey()))
         // => (pattern, embedding...)
         .map(parentEmbeddings -> growPatternChildren(graphIndex, parentEmbeddings))
         // => map: pattern -> embedding...
@@ -119,56 +119,80 @@ public abstract class SubgraphMiningBase<G extends WithCachedGraph, E extends Wi
         // => (pattern, embedding...)
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-      // reset frequent patterns
-      frequentPatterns.clear();
-
-      patternSupport = addSupportAndFilter(patternEmbeddings)
-        .peek(p -> frequentPatterns.add(p.getKey()))
+      frequentPatterns = addSupportAndFilter(patternEmbeddings, minSupportAbsolute, false)
+        // additionally verify non-minimal DFS codes
+        .filter(p -> new IsMinimal().test(p.getKey()))
         .collect(Collectors.toList());
 
-      graphIds = ArrayUtils.addAll(graphIds, output(patternSupport, patternEmbeddings));
+      graphIds = ArrayUtils.addAll(graphIds, output(frequentPatterns, patternEmbeddings));
 
       edgeCount++;
     }
 
-    return db.createCollection(collectionLabel, graphIds);
+    return database.createCollection(collectionLabel, graphIds);
   }
 
   /**
    * Grow all children of a frequent pattern (parent).
-   * This method is executed in parallel.
+   * This method is executed in parallel, i.e., its body is executed sequentially.
+   * Note: Since most of the complexity and memory usage of FSM happens here
+   * the code is optimized to performance and intently breaking with functional concepts.
    *
-   * @param graphIndex
+   * @param graphIndex map: graph id -> graph (with attached data)
    * @param parentEmbeddings (parent, embedding...)
+   *
    * @return map: child -> embedding...
    */
-  private Map<DFSCode, List<E>> growPatternChildren(Map<Long, G> graphIndex, Map.Entry<DFSCode, List<E>> parentEmbeddings) {
-    DFSCode parent = parentEmbeddings.getKey();
-    List<Pair<DFSCode, E>> children = Lists.newArrayList();
+  private Map<DFSCode, List<E>> growPatternChildren(
+    Map<Long, G> graphIndex, Map.Entry<DFSCode, List<E>> parentEmbeddings) {
 
+    // set parent and pattern growth logic
+    DFSCode parent = parentEmbeddings.getKey();
     GrowAllChildren<G, E> growAllChildren = new GrowAllChildren<>(parent, getEmbeddingFactory());
 
+    // A single list for all children.
+    // The list is passed through the pattern growth process.
+    List<Pair<DFSCode, E>> children = Lists.newArrayList();
+
+    // order embeddings by graph id and use iterator
+    // to avoid loading the same graph multiple times from the graph index
     List<E> embeddings = parentEmbeddings.getValue();
     embeddings.sort(Comparator.comparing(e -> e.getEmbedding().getGraphId()));
-
     Iterator<E> iterator = embeddings.iterator();
     G withGraph = null;
 
+    // for each embedding
     while (iterator.hasNext()) {
       E withEmbedding = iterator.next();
       DFSEmbedding embedding = withEmbedding.getEmbedding();
       long graphId = embedding.getGraphId();
 
+      // load new graph if required
       if (withGraph == null || graphId != withGraph.getGraph().getId())
         withGraph = graphIndex.get(graphId);
 
+      // grow all children and add to list
       growAllChildren.addChildren(withGraph, embedding, children);
     }
 
-    Map<DFSCode, List<E>> childEmbeddings = children
+    // aggregate here since the same child may not be grown from different parents
+    return children
       .stream()
       .collect(new GroupByKeyListValues<>(Pair::getKey, Pair::getValue));
+  }
 
-    return childEmbeddings;
+  @Override
+  public long getAbsoluteSupport(long count, float rel) {
+    return Math.round((double) count * rel);
+  }
+
+  @Override
+  public int getSupportKey() {
+    return supportKey;
+  }
+
+  @Override
+  public int getDfsCodeKey() {
+    return dfsCodeKey;
   }
 }

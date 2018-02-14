@@ -24,11 +24,11 @@ import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.model.CachedGraph;
 import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
 import org.biiig.dmgm.impl.operators.DMGMOperatorBase;
+import org.biiig.dmgm.impl.operators.fsm.common.DFSCode;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCode;
+import org.biiig.dmgm.impl.operators.fsm.common.InitializeSingleEdgePatterns;
+import org.biiig.dmgm.impl.operators.fsm.common.IsMinimal;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.GrowAllChildren;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.InitializeParents;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.IsMinimal;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportSpecialization;
 
 import java.util.List;
@@ -98,10 +98,10 @@ public abstract class SubgraphMiningBase<G extends CachedGraph, S> extends DMGMO
 
     // turn edges into 1-edge patterns and embeddings
     Stream<Pair<DFSCode,DFSEmbedding>> candidates = getParallelizableStream(indexedGraphs.values())
-      .flatMap(new InitializeParents<>(patternLabel));
+      .flatMap(new InitializeSingleEdgePatterns<>(patternLabel, getEmbeddingFactory()));
     // aggregate support and filter by support
     S minSupportAbsolute = getMinSupportAbsolute(indexedGraphs, minSupportRel);
-    SupportSpecialization<S> afo = getSupportSpecialization(indexedGraphs, db, minSupportAbsolute, parallel);
+    SupportSpecialization<S> afo = getSupportSpecialization(indexedGraphs, database, minSupportAbsolute, parallel);
     Stream<Pair<Pair<DFSCode,List<DFSEmbedding>>, S>> aggregated = afo.aggregateAndFilter(candidates);
 
     // output 1-edge patterns
@@ -124,7 +124,7 @@ public abstract class SubgraphMiningBase<G extends CachedGraph, S> extends DMGMO
       edgeCount++;
     }
 
-    return db.createCollection(collectionLabel, graphIds);
+    return database.createCollection(collectionLabel, graphIds);
   }
 
   /**

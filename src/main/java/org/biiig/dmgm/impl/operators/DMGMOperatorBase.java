@@ -19,6 +19,7 @@
 package org.biiig.dmgm.impl.operators;
 
 import org.biiig.dmgm.api.db.PropertyGraphDB;
+import org.biiig.dmgm.api.model.CachedGraph;
 
 import java.util.Collection;
 import java.util.stream.Stream;
@@ -26,7 +27,7 @@ import java.util.stream.Stream;
 /**
  * Superclass of DMGM operators.
  */
-public abstract class DMGMOperatorBase {
+public abstract class DMGMOperatorBase implements DMGMOperator {
 
   /**
    * Flag to enable parallel execution of the operator.
@@ -36,29 +37,48 @@ public abstract class DMGMOperatorBase {
   /**
    * Database of in- and output elements.
    */
-  protected final PropertyGraphDB db;
+  protected final PropertyGraphDB database;
 
   /**
    * Constructor.
    *
    * @param parallel parallel execution flag
-   * @param db database
+   * @param database database
    */
-  protected DMGMOperatorBase(boolean parallel, PropertyGraphDB db) {
+  protected DMGMOperatorBase(boolean parallel, PropertyGraphDB database) {
     this.parallel = parallel;
-    this.db = db;
+    this.database = database;
   }
 
-  /**
-   * Stream a collection according to the parallel execution flag.
-   *
-   * @param collection collection to stream
-   * @param <T> element type
-   * @return sequential or parallel stream
-   */
-  protected <T> Stream<T> getParallelizableStream(Collection<T> collection) {
+  @Override
+  public <T> Stream<T> getParallelizableStream(Collection<T> collection) {
     return parallel ?
       collection.parallelStream() :
       collection.stream();
+  }
+
+  @Override
+  public PropertyGraphDB getDatabase() {
+    return database;
+  }
+
+  @Override
+  public long createGraph(CachedGraph graph) {
+    int vertexCount = graph.getVertexCount();
+    long[] vertexIds = new long[vertexCount];
+    for (int v = 0; v < vertexCount; v++)
+      vertexIds[v] = database.createVertex(graph.getVertexLabel(v));
+
+
+    int edgeCount = graph.getEdgeCount();
+    long[] edgeIds = new long[edgeCount];
+    for (int e = 0; e < edgeCount; e++) {
+      int label = graph.getEdgeLabel(e);
+      long sourceId = vertexIds[graph.getSourceId(e)];
+      long targetId = vertexIds[graph.getTargetId(e)];
+      edgeIds[e] = database.createEdge(label, sourceId, targetId);
+    }
+
+    return database.createGraph(graph.getLabel(), vertexIds, edgeIds);
   }
 }

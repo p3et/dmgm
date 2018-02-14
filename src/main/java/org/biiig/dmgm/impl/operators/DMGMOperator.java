@@ -15,26 +15,38 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.fsm.gfsm;
+package org.biiig.dmgm.impl.operators;
 
+import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.model.CachedGraph;
-import org.biiig.dmgm.impl.operators.fsm.fsm.FSMGraph;
 
-public class GFSMGraph extends FSMGraph implements WithTaxonomyPaths {
-  private final int[][] taxonomyPaths;
+import java.util.Collection;
+import java.util.stream.Stream;
 
-  public GFSMGraph(CachedGraph graph, int[][] taxonomyPaths) {
-    super(graph);
-    this.taxonomyPaths = taxonomyPaths;
-  }
+public interface DMGMOperator {
 
-  @Override
-  public int[] getTaxonomyPath(int vertexId) {
-    return taxonomyPaths[vertexId];
-  }
+  /**
+   * Stream a collection according to the parallel execution flag.
+   *
+   * @param collection collection to stream
+   * @param <T> element type
+   * @return sequential or parallel stream
+   */
+  <T> Stream<T> getParallelizableStream(Collection<T> collection);
 
-  @Override
-  public int[][] getTaxonomyPaths() {
-    return taxonomyPaths;
-  }
+  /**
+   * Add a graph to the database and get its id.
+   *
+   * @param graph cached graph
+   *
+   * @return graph id
+   */
+  long createGraph(CachedGraph graph);
+
+  /**
+   * Access the database.
+   *
+   * @return database
+   */
+  PropertyGraphDB getDatabase();
 }

@@ -25,11 +25,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.config.DMGMConstants;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.operators.fsm.common.DFSCode;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCode;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportSpecialization;
 import org.biiig.dmgm.impl.operators.subgraph_mining.generalized.FrequentSpecializations;
-import org.biiig.dmgm.impl.operators.subgraph_mining.generalized.SpecializableAdjacencyList;
 import org.biiig.dmgm.impl.operators.subgraph_mining.generalized.SpecializableCachedGraph;
 
 import java.util.List;
@@ -44,15 +43,15 @@ public abstract class GeneralizedSubgraphsBase<S> extends SubgraphMiningBase<Spe
 
   @Override
   public Map<Long, SpecializableCachedGraph> preProcess(Long inputCollectionId) {
-    List<CachedGraph> input = db.getCachedCollection(inputCollectionId);
+    List<CachedGraph> input = database.getCachedCollection(inputCollectionId);
 
     Map<Integer, Pair<Integer, int[]>> taxonomyPaths = getLabelTaxonomyPaths(getVertexLabelSupport(input));
 
     taxonomyPaths
       .forEach((key, value) -> {
-        List<String> path = Lists.newArrayList(db.decode(value.getKey()));
+        List<String> path = Lists.newArrayList(database.decode(value.getKey()));
 
-        IntStream.of(value.getValue()).mapToObj(db::decode)
+        IntStream.of(value.getValue()).mapToObj(database::decode)
           .forEach(path::add);
       });
 
@@ -100,15 +99,15 @@ public abstract class GeneralizedSubgraphsBase<S> extends SubgraphMiningBase<Spe
     return super.getVertexLabelSupport(input)
       .entrySet()
       .stream()
-      .map(e -> new Pair<>(db.decode(e.getKey()), e.getValue()))
+      .map(e -> new Pair<>(database.decode(e.getKey()), e.getValue()))
       .flatMap(p -> {
         String child = p.getKey();
 
-        int[] labels = new int[] {db.encode(child)};
+        int[] labels = new int[] {database.encode(child)};
 
         while (child.contains(DMGMConstants.Separators.TAXONOMY_PATH_LEVEL)) {
           String parent = StringUtils.substringBeforeLast(child, DMGMConstants.Separators.TAXONOMY_PATH_LEVEL);
-          labels = ArrayUtils.add(labels, db.encode(parent));
+          labels = ArrayUtils.add(labels, database.encode(parent));
           child = parent;
         }
 
@@ -125,14 +124,14 @@ public abstract class GeneralizedSubgraphsBase<S> extends SubgraphMiningBase<Spe
     return vertexLabelSupport
       .keySet()
       .stream()
-      .map(db::decode)
+      .map(database::decode)
       .filter(s -> s.contains(DMGMConstants.Separators.TAXONOMY_PATH_LEVEL))
       .map(s -> {
-        int[] ints = new int[] {db.encode(s)};
+        int[] ints = new int[] {database.encode(s)};
 
         while (s.contains(DMGMConstants.Separators.TAXONOMY_PATH_LEVEL)) {
           s = StringUtils.substringBeforeLast(s, DMGMConstants.Separators.TAXONOMY_PATH_LEVEL);
-          ints = ArrayUtils.add(ints, db.encode(s));
+          ints = ArrayUtils.add(ints, database.encode(s));
         }
 
         ArrayUtils.reverse(ints);

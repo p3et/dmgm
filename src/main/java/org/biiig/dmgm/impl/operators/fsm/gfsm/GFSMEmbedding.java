@@ -30,6 +30,11 @@ public class GFSMEmbedding extends FSMEmbedding implements WithTaxonomyPaths {
   }
 
   @Override
+  public int[] getTaxonomyPath(int vertexTime) {
+    return taxonomyPaths[vertexTime];
+  }
+
+  @Override
   public int[][] getTaxonomyPaths() {
     return taxonomyPaths;
   }

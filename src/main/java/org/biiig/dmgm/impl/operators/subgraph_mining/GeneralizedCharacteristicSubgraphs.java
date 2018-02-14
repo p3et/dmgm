@@ -68,6 +68,6 @@ public class GeneralizedCharacteristicSubgraphs
 
   @Override
   public PropertyGraphDB getDB() {
-    return db;
+    return database;
   }
 }

@@ -17,11 +17,13 @@
 
 package org.biiig.dmgm.api.operators;
 
+import org.biiig.dmgm.impl.operators.DMGMOperator;
+
 import java.util.function.UnaryOperator;
 
 /**
  * A unary DMGM operator, i.e., one with a single input element.
  */
-public interface DMGMUnaryOperator extends UnaryOperator<Long> {
+public interface DMGMUnaryOperator extends DMGMOperator, UnaryOperator<Long> {
 
 }

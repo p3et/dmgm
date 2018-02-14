@@ -18,5 +18,7 @@
 package org.biiig.dmgm.impl.operators.fsm.gfsm;
 
 public interface WithTaxonomyPaths {
+  int[] getTaxonomyPath(int vertexId);
+
   int[][] getTaxonomyPaths();
 }

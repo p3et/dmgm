@@ -69,7 +69,6 @@
 package org.biiig.dmgm.impl.operators.fsm.common;
 
 import org.biiig.dmgm.api.model.CachedGraph;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCode;
 
 import java.util.function.BiFunction;
 

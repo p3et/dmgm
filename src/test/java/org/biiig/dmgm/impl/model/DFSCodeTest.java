@@ -18,7 +18,7 @@
 package org.biiig.dmgm.impl.model;
 
 import org.biiig.dmgm.api.model.CachedGraph;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCode;
+import org.biiig.dmgm.impl.operators.fsm.common.DFSCode;
 import org.junit.Test;
 
 public class DFSCodeTest extends CachedGraphTestBase {

@@ -1,5 +1,6 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
+import org.biiig.dmgm.impl.operators.fsm.common.DFSCode;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
 
 public class DFSCodeEmbeddingPair {

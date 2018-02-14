@@ -20,7 +20,7 @@ package org.biiig.dmgm.impl.operators.fsm.cfsm;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
 import org.biiig.dmgm.impl.operators.fsm.fsm.FSMEmbedding;
 
-public class CFSMEmbedding extends FSMEmbedding implements WithCategory {
+public class CFSMEmbedding extends FSMEmbedding implements WithEmbeddingAndCategory {
   private final int category;
 
   public CFSMEmbedding(DFSEmbedding embedding, int category) {

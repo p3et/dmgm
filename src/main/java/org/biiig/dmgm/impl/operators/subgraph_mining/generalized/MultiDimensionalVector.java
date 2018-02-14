@@ -142,4 +142,8 @@ public class MultiDimensionalVector implements WithGraphId {
   public long getGraphId() {
     return embedding.getGraphId();
   }
+
+  public int size() {
+    return levels.length;
+  }
 }
