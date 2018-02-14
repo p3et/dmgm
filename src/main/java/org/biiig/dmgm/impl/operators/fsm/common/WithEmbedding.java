@@ -15,25 +15,15 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.subgraph_mining.common;
+package org.biiig.dmgm.impl.operators.fsm.common;
 
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.WithGraphId;
 
-public class GrowChildrenByOutgoingEdges extends GrowChildrenBase {
-
-  @Override
-  protected int[] getEdgeIds(CachedGraph graph, int fromId) {
-    return graph.getOutgoingEdgeIds(fromId);
-  }
+public interface WithEmbedding extends WithGraphId {
+  DFSEmbedding getEmbedding();
 
   @Override
-  protected int getToId(CachedGraph graph, int edgeId) {
-    return graph.getTargetId(edgeId);
+  default long getGraphId() {
+    return getEmbedding().getGraphId();
   }
-
-  @Override
-  protected boolean isOutgoing() {
-    return true;
-  }
-
 }

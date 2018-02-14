@@ -19,6 +19,7 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
 import javafx.util.Pair;
 import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
 
 import java.lang.reflect.Array;
 import java.util.function.Function;

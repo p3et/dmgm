@@ -15,13 +15,7 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.subgraph_mining.common;
+package org.biiig.dmgm.impl.operators.fsm.cfsm;
 
-import javafx.util.Pair;
-import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
-
-import java.util.List;
-import java.util.function.Function;
-
-public interface OutputSubgraphs<S> extends Function<Pair<Pair<DFSCode, List<DFSEmbedding>>, S>, Long> {
+public class CFSMGraph {
 }

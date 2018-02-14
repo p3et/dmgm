@@ -1,8 +1,8 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.generalized;
 
+import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCode;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCodeSupportablePair;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
 
 import java.util.Collection;
 import java.util.stream.Collectors;

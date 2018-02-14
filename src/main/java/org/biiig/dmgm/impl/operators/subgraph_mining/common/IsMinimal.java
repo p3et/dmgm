@@ -1,9 +1,12 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 
-import com.google.common.collect.Maps;
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 import javafx.util.Pair;
 import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
+import org.biiig.dmgm.impl.operators.fsm.common.GrowAllChildren;
+import org.biiig.dmgm.impl.operators.fsm.common.WithCachedGraph;
+import org.biiig.dmgm.impl.operators.fsm.common.WithEmbedding;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -17,7 +20,7 @@ public class IsMinimal implements java.util.function.Predicate<DFSCode> {
 
   @Override
   public boolean test(DFSCode dfsCode ) {
-    GrowChildrenOf<CachedGraph> growChildrenOf = new GrowChildrenOf<>(dfsCode, Maps.newHashMap());
+    GrowAllChildren<WithCachedGraph, WithEmbedding> growAllChildren = new GrowAllChildren<WithCachedGraph, WithEmbedding>(dfsCode, getEmbeddingFactory());
 
 
     Optional<Pair<DFSCode,List<DFSEmbedding>>> minPair = initializeParents
@@ -37,7 +40,7 @@ public class IsMinimal implements java.util.function.Predicate<DFSCode> {
 
       minPair = parentEmbeddings
         .stream()
-        .flatMap(e -> Stream.of(growChildrenOf.apply(dfsCode, parentCode, rightmostPath, e)))
+        .flatMap(e -> Stream.of(growAllChildren.apply(dfsCode, parentCode, rightmostPath, e)))
         .collect(new GroupByKeyListValues<>(Pair::getKey, Pair::getValue))
         .entrySet()
         .stream()

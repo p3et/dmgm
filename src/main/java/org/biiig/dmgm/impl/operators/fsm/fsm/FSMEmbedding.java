@@ -15,13 +15,20 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.subgraph_mining.common;
+package org.biiig.dmgm.impl.operators.fsm.fsm;
 
-import javafx.util.Pair;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
+import org.biiig.dmgm.impl.operators.fsm.common.WithEmbedding;
 
-import java.util.List;
-import java.util.function.Function;
+public class FSMEmbedding implements WithEmbedding {
+  private final DFSEmbedding embedding;
 
-public interface OutputSubgraphs<S> extends Function<Pair<Pair<DFSCode, List<DFSEmbedding>>, S>, Long> {
+  public FSMEmbedding(DFSEmbedding embedding) {
+    this.embedding = embedding;
+  }
+
+  @Override
+  public DFSEmbedding getEmbedding() {
+    return embedding;
+  }
 }

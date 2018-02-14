@@ -15,27 +15,32 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.subgraph_mining.common;
+package org.biiig.dmgm.impl.operators.fsm.common;
 
 import javafx.util.Pair;
-import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCode;
 
-import java.lang.reflect.Array;
+import java.util.Collection;
+import java.util.function.BiFunction;
 
-public abstract class GrowChildrenBase implements GrowChildren {
+public abstract class GrowChildrenBase<G extends WithCachedGraph, E extends WithEmbedding> implements GrowChildren<G, E> {
 
-  @SuppressWarnings("unchecked")
+  private final DFSCode parent;
+  private final BiFunction<G, DFSEmbedding, E> embeddingFactory;
+
+  GrowChildrenBase(DFSCode parent, BiFunction<G, DFSEmbedding, E> embeddingFactory) {
+    this.parent = parent;
+    this.embeddingFactory = embeddingFactory;
+  }
+
   @Override
-  public Pair<DFSCode,DFSEmbedding>[] apply(
-    CachedGraph graph, DFSCode parentCode, int[] rightmostPath, DFSEmbedding parentEmbedding) {
-
-    Pair<DFSCode,DFSEmbedding>[] children = (Pair<DFSCode, DFSEmbedding>[]) Array.newInstance(Pair.class, 0);
-
+  public void addChildren(G withGraph, DFSEmbedding parentEmbedding, Collection<Pair<DFSCode, E>> output) {
     boolean rightmost = true;
-    for (int fromTime : parentCode.getRightmostPath()) {
+    for (int fromTime : parent.getRightmostPath()) {
       int fromId = parentEmbedding.getVertexId(fromTime);
 
+      CachedGraph graph = withGraph.getGraph();
       for (int edgeId : getEdgeIds(graph, fromId)) {
         // if not contained in parent embedding
         if (! parentEmbedding.containsEdgeId(edgeId)) {
@@ -49,30 +54,31 @@ public abstract class GrowChildrenBase implements GrowChildren {
           // grow backwards
           if (rightmost && toTime >= 0) {
             int toLabel = graph.getVertexLabel(toId);
-            DFSCode childCode = parentCode.addEdge(fromTime, toTime, graph.getEdgeLabel(edgeId), isOutgoing(), toLabel);
+            DFSCode childCode = parent.addEdge(fromTime, toTime, graph.getEdgeLabel(edgeId), isOutgoing(), toLabel);
 
             DFSEmbedding childEmbedding = parentEmbedding.expandByEdgeId(edgeId);
 
-            children =
-              ArrayUtils.add(children, new Pair<>(childCode, childEmbedding));
+            add(output, withGraph, childCode, childEmbedding);
 
             // grow backwards from to
           } else if (toTime < 0) {
             int toLabel = graph.getVertexLabel(toId);
-            toTime = parentCode.getVertexCount();
-            DFSCode childCode = parentCode.addEdge(fromTime, toTime, graph.getEdgeLabel(edgeId), isOutgoing(), toLabel);
+            toTime = parent.getVertexCount();
+            DFSCode childCode = parent.addEdge(fromTime, toTime, graph.getEdgeLabel(edgeId), isOutgoing(), toLabel);
 
             DFSEmbedding childEmbedding = parentEmbedding.expandByEdgeIdAndVertexId(edgeId, toId);
 
-            children =
-              ArrayUtils.add(children, new Pair<>(childCode, childEmbedding));            }
+            add(output, withGraph, childCode, childEmbedding);
+          }
         }
       }
 
       rightmost = false;
     }
+  }
 
-    return children;
+  public void add(Collection<Pair<DFSCode, E>> output, G withGraph, DFSCode childCode, DFSEmbedding childEmbedding) {
+    output.add(new Pair<>(childCode, embeddingFactory.apply(withGraph, childEmbedding)));
   }
 
   protected abstract int[] getEdgeIds(CachedGraph graph, int fromId);

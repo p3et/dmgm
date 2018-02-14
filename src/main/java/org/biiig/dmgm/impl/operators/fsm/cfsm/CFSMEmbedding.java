@@ -15,13 +15,21 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.subgraph_mining.common;
+package org.biiig.dmgm.impl.operators.fsm.cfsm;
 
-import javafx.util.Pair;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
+import org.biiig.dmgm.impl.operators.fsm.fsm.FSMEmbedding;
 
-import java.util.List;
-import java.util.function.Function;
+public class CFSMEmbedding extends FSMEmbedding implements WithCategory {
+  private final int category;
 
-public interface OutputSubgraphs<S> extends Function<Pair<Pair<DFSCode, List<DFSEmbedding>>, S>, Long> {
+  public CFSMEmbedding(DFSEmbedding embedding, int category) {
+    super(embedding);
+    this.category = category;
+  }
+
+  @Override
+  public int getCategory() {
+    return category;
+  }
 }

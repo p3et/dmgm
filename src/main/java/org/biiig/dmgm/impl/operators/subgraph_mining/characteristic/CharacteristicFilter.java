@@ -38,9 +38,9 @@ import com.google.common.collect.Lists;
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 import javafx.util.Pair;
 import org.biiig.dmgm.api.db.QueryElements;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
+import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCodeSupportablePair;
+import org.biiig.dmgm.impl.operators.subgraph_mining.common.FilterOrOutput;
 
 import java.math.BigDecimal;
 import java.util.Collection;

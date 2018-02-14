@@ -20,12 +20,13 @@ package org.biiig.dmgm.impl.operators.subgraph_mining;
 import javafx.util.Pair;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCode;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportSpecialization;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * Methods that distinguish simple vs. generalized and frequent vs. category frequent subgraph mining.
@@ -39,12 +40,12 @@ public interface SubgraphMiningVariant<G extends CachedGraph, S> {
 
   /**
    * Prepare the input graph collection for the mining process.
-   * This method differs for generalize and simple subgraph mining.
+   * This method differs for preProcess and simple subgraph mining.
    *
    * @param inputCollectionId id of the input graph collection
    * @return map: graphId -> cached graph
    */
-  Map<Long, G> preProcess(Long inputCollectionId);
+  Stream<G> preProcess(Long inputCollectionId);
 
   /**
    *

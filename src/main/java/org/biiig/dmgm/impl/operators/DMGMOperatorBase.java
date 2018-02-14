@@ -20,6 +20,9 @@ package org.biiig.dmgm.impl.operators;
 
 import org.biiig.dmgm.api.db.PropertyGraphDB;
 
+import java.util.Collection;
+import java.util.stream.Stream;
+
 /**
  * Superclass of DMGM operators.
  */
@@ -44,5 +47,18 @@ public abstract class DMGMOperatorBase {
   protected DMGMOperatorBase(boolean parallel, PropertyGraphDB db) {
     this.parallel = parallel;
     this.db = db;
+  }
+
+  /**
+   * Stream a collection according to the parallel execution flag.
+   *
+   * @param collection collection to stream
+   * @param <T> element type
+   * @return sequential or parallel stream
+   */
+  protected <T> Stream<T> getParallelizableStream(Collection<T> collection) {
+    return parallel ?
+      collection.parallelStream() :
+      collection.stream();
   }
 }

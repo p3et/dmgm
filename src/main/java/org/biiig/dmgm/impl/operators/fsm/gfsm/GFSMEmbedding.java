@@ -15,13 +15,22 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.subgraph_mining.common;
+package org.biiig.dmgm.impl.operators.fsm.gfsm;
 
-import javafx.util.Pair;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
+import org.biiig.dmgm.impl.operators.fsm.fsm.FSMEmbedding;
 
-import java.util.List;
-import java.util.function.Function;
+public class GFSMEmbedding extends FSMEmbedding implements WithTaxonomyPaths {
 
-public interface OutputSubgraphs<S> extends Function<Pair<Pair<DFSCode, List<DFSEmbedding>>, S>, Long> {
+  private final int[][] taxonomyPaths;
+
+  public GFSMEmbedding(DFSEmbedding embedding, int[][] taxonomyPaths) {
+    super(embedding);
+    this.taxonomyPaths = taxonomyPaths;
+  }
+
+  @Override
+  public int[][] getTaxonomyPaths() {
+    return taxonomyPaths;
+  }
 }

@@ -15,25 +15,8 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.subgraph_mining.common;
+package org.biiig.dmgm.impl.operators.fsm.gfsm;
 
-import org.biiig.dmgm.api.model.CachedGraph;
-
-public class GrowChildrenByIncomingEdges extends GrowChildrenBase {
-
-  @Override
-  protected int[] getEdgeIds(CachedGraph graph, int fromId) {
-    return graph.getIncomingEdgeIds(fromId);
-  }
-
-  @Override
-  protected int getToId(CachedGraph graph, int edgeId) {
-    return graph.getSourceId(edgeId);
-  }
-
-  @Override
-  protected boolean isOutgoing() {
-    return false;
-  }
-
+public interface WithTaxonomyPaths {
+  int[][] getTaxonomyPaths();
 }

@@ -24,14 +24,13 @@ import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.model.CachedGraph;
 import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
 import org.biiig.dmgm.impl.operators.DMGMOperatorBase;
+import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSCode;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.DFSEmbedding;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.GrowAllChildren;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.InitializeParents;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.IsMinimal;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportSpecialization;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -66,11 +65,11 @@ public abstract class SubgraphMiningBase<G extends CachedGraph, S> extends DMGMO
   /**
    * Encoded label for result subgraphs.
    */
-  private final int patternLabel;
+  protected final int patternLabel;
   /**
    * Encoded label for the result subgraph collection.
    */
-  private final int collectionLabel;
+  protected final int collectionLabel;
 
   /**
    * Constructor.
@@ -143,19 +142,6 @@ public abstract class SubgraphMiningBase<G extends CachedGraph, S> extends DMGMO
       .map(supportSpecialization::output)
       .flatMapToLong(LongStream::of)
       .toArray();
-  }
-
-  /**
-   * Stream a collection according to the parallel execution flag.
-   *
-   * @param collection collection to stream
-   * @param <T> element type
-   * @return sequential or parallel stream
-   */
-  <T> Stream<T> getParallelizableStream(Collection<T> collection) {
-    return parallel ?
-      collection.parallelStream() :
-      collection.stream();
   }
 
   @Override

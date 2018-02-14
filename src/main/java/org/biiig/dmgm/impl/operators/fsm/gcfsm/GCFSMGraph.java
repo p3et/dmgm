@@ -15,13 +15,22 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.subgraph_mining.common;
+package org.biiig.dmgm.impl.operators.fsm.gcfsm;
 
-import javafx.util.Pair;
-import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
+import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.operators.fsm.cfsm.WithCategory;
+import org.biiig.dmgm.impl.operators.fsm.gfsm.GFSMGraph;
 
-import java.util.List;
-import java.util.function.Function;
+public class GCFSMGraph extends GFSMGraph implements WithCategory {
+  private final int category;
 
-public interface OutputSubgraphs<S> extends Function<Pair<Pair<DFSCode, List<DFSEmbedding>>, S>, Long> {
+  public GCFSMGraph(CachedGraph graph, int[][] taxonomyPaths, int category) {
+    super(graph, taxonomyPaths);
+    this.category = category;
+  }
+
+  @Override
+  public int getCategory() {
+    return category;
+  }
 }

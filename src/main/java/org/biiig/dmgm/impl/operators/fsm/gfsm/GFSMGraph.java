@@ -15,11 +15,21 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.subgraph_mining.common;
+package org.biiig.dmgm.impl.operators.fsm.gfsm;
 
-import javafx.util.Pair;
 import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.operators.fsm.fsm.FSMGraph;
 
-public interface GrowChildren {
-  Pair<DFSCode,DFSEmbedding>[] apply(CachedGraph graph, DFSCode parentCode, int[] rightmostPath, DFSEmbedding parentEmbedding);
+public class GFSMGraph extends FSMGraph implements WithTaxonomyPaths {
+  private final int[][] taxonomyPaths;
+
+  public GFSMGraph(CachedGraph graph, int[][] taxonomyPaths) {
+    super(graph);
+    this.taxonomyPaths = taxonomyPaths;
+  }
+
+  @Override
+  public int[][] getTaxonomyPaths() {
+    return taxonomyPaths;
+  }
 }
