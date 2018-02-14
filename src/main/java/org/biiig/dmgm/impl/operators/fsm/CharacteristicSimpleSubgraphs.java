@@ -37,9 +37,9 @@ package org.biiig.dmgm.impl.operators.fsm;
 import javafx.util.Pair;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.operators.fsm.characteristic.CharacteristicSubgraphsBase;
 import org.biiig.dmgm.impl.operators.fsm.characteristic.EmbeddingWithCategory;
 import org.biiig.dmgm.impl.operators.fsm.characteristic.GraphWithCategory;
-import org.biiig.dmgm.impl.operators.fsm.characteristic.CharacteristicSubgraphsBase;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSCode;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
 
@@ -59,7 +59,7 @@ public class CharacteristicSimpleSubgraphs extends CharacteristicSubgraphsBase<G
    * @param minSupportRel minimum support threshold
    * @param maxEdgeCount  maximum result edge count
    */
-  protected CharacteristicSimpleSubgraphs(PropertyGraphDB db, boolean parallel, float minSupportRel, int maxEdgeCount) {
+  public CharacteristicSimpleSubgraphs(PropertyGraphDB db, boolean parallel, float minSupportRel, int maxEdgeCount) {
     super(db, parallel, minSupportRel, maxEdgeCount);
   }
 

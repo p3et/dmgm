@@ -35,7 +35,6 @@
 package org.biiig.dmgm.impl.operators.fsm.common;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.WithGraphId;
 
 import java.util.Arrays;
 
@@ -162,6 +161,8 @@ public class DFSEmbedding implements WithGraphId {
     }
     return result;
   }
+
+
 
   public long getGraphId() {
     return graphId;

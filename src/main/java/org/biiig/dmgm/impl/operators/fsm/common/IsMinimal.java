@@ -54,10 +54,9 @@ public class IsMinimal implements java.util.function.Predicate<DFSCode> {
 
     List<FSMEmbedding> minEmbeddings = minPair.getValue();
 
+    int i = 1;
     while (minCode != null && minimal) {
-      DFSCode parentCode = minPair.getKey();
-
-      GrowAllChildren<FSMGraph, FSMEmbedding> growAllChildren = new GrowAllChildren<>(parentCode, EMBEDDING_FACTORY);
+      GrowAllChildren<FSMGraph, FSMEmbedding> growAllChildren = new GrowAllChildren<>(minCode, EMBEDDING_FACTORY);
 
       List<Pair<DFSCode, FSMEmbedding>> children = Lists.newArrayList();
       minEmbeddings
@@ -65,6 +64,7 @@ public class IsMinimal implements java.util.function.Predicate<DFSCode> {
 
       if (!children.isEmpty()) {
         children.sort(Comparator.comparing(Pair::getKey));
+
         minCode = children.get(0).getKey();
         minimal = minCode.parentOf(dfsCode);
 
@@ -75,11 +75,13 @@ public class IsMinimal implements java.util.function.Predicate<DFSCode> {
             .filter(p -> p.getKey().equals(finalMinCode))
             .map(Pair::getValue)
             .collect(Collectors.toList());
+
         }
       } else {
         minCode = null;
       }
     }
+
 
     return minimal;
   }

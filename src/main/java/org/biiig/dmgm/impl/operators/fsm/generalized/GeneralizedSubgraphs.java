@@ -118,6 +118,7 @@ public interface GeneralizedSubgraphs<G extends GraphWithTaxonomyPaths, E extend
 
         return childParents.stream();
       })
+      .distinct()
       .collect(Collectors.toMap(
         p -> dictionary.encode(p.getKey()),
         p -> dictionary.encode(p.getValue())

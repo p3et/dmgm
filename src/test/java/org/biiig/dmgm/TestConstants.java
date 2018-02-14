@@ -29,5 +29,5 @@ public interface TestConstants {
   /**
    * Default value for parallel execution flag.
    */
-  boolean PARALLEL = true;
+  boolean PARALLEL = false;
 }

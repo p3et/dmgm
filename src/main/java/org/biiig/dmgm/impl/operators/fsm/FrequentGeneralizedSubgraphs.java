@@ -23,10 +23,10 @@ import org.biiig.dmgm.api.model.CachedGraph;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSCode;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
 import org.biiig.dmgm.impl.operators.fsm.common.SubgraphMiningBase;
-import org.biiig.dmgm.impl.operators.fsm.simple.FrequentSupportMethods;
 import org.biiig.dmgm.impl.operators.fsm.generalized.EmbeddingWithTaxonomyPaths;
-import org.biiig.dmgm.impl.operators.fsm.generalized.GraphWithTaxonomyPaths;
 import org.biiig.dmgm.impl.operators.fsm.generalized.GeneralizedSubgraphs;
+import org.biiig.dmgm.impl.operators.fsm.generalized.GraphWithTaxonomyPaths;
+import org.biiig.dmgm.impl.operators.fsm.simple.FrequentSupportMethods;
 
 import java.util.Collection;
 import java.util.List;
@@ -47,7 +47,7 @@ public class FrequentGeneralizedSubgraphs
    * @param minSupportRel minimum support threshold
    * @param maxEdgeCount  maximum result edge count
    */
-  protected FrequentGeneralizedSubgraphs(PropertyGraphDB db, boolean parallel, float minSupportRel, int maxEdgeCount) {
+  public FrequentGeneralizedSubgraphs(PropertyGraphDB db, boolean parallel, float minSupportRel, int maxEdgeCount) {
     super(db, parallel, minSupportRel, maxEdgeCount);
   }
 
@@ -55,9 +55,16 @@ public class FrequentGeneralizedSubgraphs
   public Stream<GraphWithTaxonomyPaths> preProcess(Collection<CachedGraph> input) {
     Map<Integer, int[]> taxonomyPathIndex = getTaxonomyPathIndex(database, input);
 
-
     return getParallelizableStream(input)
-      .map(graph -> new GraphWithTaxonomyPaths(graph, getTaxonomyPaths(graph, taxonomyPathIndex)));
+      .map(graph -> {
+        int[][] taxonomyPaths = getTaxonomyPaths(graph, taxonomyPathIndex);
+
+        for (int i = 0; i < graph.getVertexCount(); i++) {
+          graph.getVertexLabels()[i] = taxonomyPaths[i][0];
+        }
+
+        return new GraphWithTaxonomyPaths(graph, taxonomyPaths);
+      });
   }
 
   @Override

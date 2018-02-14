@@ -24,6 +24,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.config.DMGMConstants;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.model.AdjacencyList;
 import org.biiig.dmgm.impl.operators.DMGMOperatorBase;
 import org.biiig.dmgm.impl.operators.fsm.characteristic.WithEmbeddingAndCategory;
 
@@ -90,6 +91,16 @@ public abstract class SubgraphMiningBase<G extends WithGraph, E extends WithEmbe
   @Override
   public Long apply(Long inputCollectionId) {
     Collection<CachedGraph> input = database.getCachedCollection(inputCollectionId);
+
+    input = input.stream().map(g -> new AdjacencyList(
+      g.getId(),
+      g.getLabel(),
+      g.getVertexLabels(),
+      g.getEdgeLabels(),
+      g.getSourceIds(),
+      g.getTargetIds()
+      )).collect(Collectors.toList());
+
     S minSupportAbsolute = getMinSupportAbsolute(input, minSupportRel);
 
     // create an index of graphs specific to the mining variant
@@ -110,10 +121,11 @@ public abstract class SubgraphMiningBase<G extends WithGraph, E extends WithEmbe
 
     int edgeCount = 1;
     while (!frequentPatterns.isEmpty() && edgeCount < maxEdgeCount) {
-
-      patternEmbeddings = getParallelizableStream(patternEmbeddings.entrySet())
+      Map<DFSCode, List<E>> finalPatternEmbeddings = patternEmbeddings;
+      patternEmbeddings = getParallelizableStream(frequentPatterns)
         // => (pattern, embedding...)
-        .map(parentEmbeddings -> growPatternChildren(graphIndex, parentEmbeddings))
+        .map(Pair::getKey)
+        .map(p -> growPatternChildren(p, finalPatternEmbeddings.get(p), graphIndex))
         // => map: pattern -> embedding...
         .flatMap(m -> m.entrySet().stream())
         // => (pattern, embedding...)
@@ -121,9 +133,8 @@ public abstract class SubgraphMiningBase<G extends WithGraph, E extends WithEmbe
 
       frequentPatterns = addSupportAndFilter(patternEmbeddings, minSupportAbsolute, false)
         // additionally verify non-minimal DFS codes
-//        .peek(p -> System.out.println(p.getKey().toString(database) + " : " + p.getValue()))
         .filter(p -> new IsMinimal().test(p.getKey()))
-//        .peek(p -> System.out.println("\t" + p.getKey().toString(database) + " : " + p.getValue()))
+//        .peek(p -> System.out.println("\t" + p.getKey().toString(database) + " : " + p.getValue() + " - " ))
         .collect(Collectors.toList());
 
       graphIds = ArrayUtils.addAll(graphIds, output(frequentPatterns, patternEmbeddings, minSupportAbsolute));
@@ -140,28 +151,25 @@ public abstract class SubgraphMiningBase<G extends WithGraph, E extends WithEmbe
    * Note: Since most of the complexity and memory usage of FSM happens here
    * the code is optimized to performance and intently breaking with functional concepts.
    *
-   * @param graphIndex map: graph id -> graph (with attached data)
-   * @param parentEmbeddings (parent, embedding...)
    *
    * @return map: child -> embedding...
    */
   private Map<DFSCode, List<E>> growPatternChildren(
-    Map<Long, G> graphIndex, Map.Entry<DFSCode, List<E>> parentEmbeddings) {
+    DFSCode parent, List<E> embeddings, Map<Long, G> graphIndex) {
 
     // set parent and pattern growth logic
-    DFSCode parent = parentEmbeddings.getKey();
     GrowAllChildren<G, E> growAllChildren = new GrowAllChildren<>(parent, getEmbeddingFactory());
+
 
     // A single list for all children.
     // The list is passed through the pattern growth process.
     List<Pair<DFSCode, E>> children = Lists.newArrayList();
 
-    // order embeddings by graph id and use iterator
-    // to avoid loading the same graph multiple times from the graph index
-    List<E> embeddings = parentEmbeddings.getValue();
     embeddings.sort(Comparator.comparing(e -> e.getEmbedding().getGraphId()));
     Iterator<E> iterator = embeddings.iterator();
     G withGraph = null;
+
+//    System.out.println(parent + " : " + embeddings.size());
 
     // for each embedding
     while (iterator.hasNext()) {
@@ -173,7 +181,7 @@ public abstract class SubgraphMiningBase<G extends WithGraph, E extends WithEmbe
       if (withGraph == null || graphId != withGraph.getGraph().getId())
         withGraph = graphIndex.get(graphId);
 
-      System.out.println(parent + " "  + graphId + " " + embedding);
+//      System.out.println(parent + " "  + graphId + " " + embedding);
 
       // grow all children and add to list
       growAllChildren.addChildren(withGraph, embedding, children);

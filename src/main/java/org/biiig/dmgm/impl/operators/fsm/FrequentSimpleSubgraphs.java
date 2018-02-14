@@ -44,7 +44,7 @@ public class FrequentSimpleSubgraphs
    * @param minSupportRel minimum support threshold
    * @param maxEdgeCount  maximum result edge count
    */
-  protected FrequentSimpleSubgraphs(PropertyGraphDB db, boolean parallel, float minSupportRel, int maxEdgeCount) {
+  public FrequentSimpleSubgraphs(PropertyGraphDB db, boolean parallel, float minSupportRel, int maxEdgeCount) {
     super(db, parallel, minSupportRel, maxEdgeCount);
   }
 

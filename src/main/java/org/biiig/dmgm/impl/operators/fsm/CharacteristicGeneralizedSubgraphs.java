@@ -23,9 +23,9 @@ import org.biiig.dmgm.api.model.CachedGraph;
 import org.biiig.dmgm.impl.operators.fsm.characteristic.CharacteristicSubgraphsBase;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSCode;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
+import org.biiig.dmgm.impl.operators.fsm.generalized.GeneralizedSubgraphs;
 import org.biiig.dmgm.impl.operators.fsm.mixed.EmbeddingWithCategoryAndTaxonomyPaths;
 import org.biiig.dmgm.impl.operators.fsm.mixed.GraphWithCategoryAndTaxonomyPaths;
-import org.biiig.dmgm.impl.operators.fsm.generalized.GeneralizedSubgraphs;
 
 import java.util.Collection;
 import java.util.List;
@@ -47,7 +47,7 @@ public class CharacteristicGeneralizedSubgraphs
    * @param minSupportRel minimum support threshold
    * @param maxEdgeCount  maximum result edge count
    */
-  protected CharacteristicGeneralizedSubgraphs(PropertyGraphDB db, boolean parallel, float minSupportRel, int maxEdgeCount) {
+  public CharacteristicGeneralizedSubgraphs(PropertyGraphDB db, boolean parallel, float minSupportRel, int maxEdgeCount) {
     super(db, parallel, minSupportRel, maxEdgeCount);
   }
 

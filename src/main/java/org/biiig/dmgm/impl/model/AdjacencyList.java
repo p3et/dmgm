@@ -50,7 +50,7 @@ public class AdjacencyList extends CachedGraphBase {
    * @param sourceIds source ids of edges
    * @param targetIds target ids of edges
    */
-  protected AdjacencyList(long id, int label, int[] vertexLabels, int[] edgeLabels, int[] sourceIds, int[] targetIds) {
+  public AdjacencyList(long id, int label, int[] vertexLabels, int[] edgeLabels, int[] sourceIds, int[] targetIds) {
     super(id, label, vertexLabels, edgeLabels, sourceIds, targetIds);
 
     int vertexCount = getVertexCount();

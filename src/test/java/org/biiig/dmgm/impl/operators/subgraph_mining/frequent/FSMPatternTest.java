@@ -37,7 +37,7 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.frequent;
 import org.biiig.dmgm.TestConstants;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
-import org.biiig.dmgm.impl.operators.subgraph_mining.FrequentSubgraphs;
+import org.biiig.dmgm.impl.operators.fsm.FrequentSimpleSubgraphs;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SubgraphMiningPatternTest;
 
 import java.util.function.Function;
@@ -47,7 +47,7 @@ public class FSMPatternTest extends SubgraphMiningPatternTest {
 
   @Override
   protected Function<PropertyGraphDB, CollectionToCollectionOperator> getOperator() {
-    return db -> new FrequentSubgraphs(db, TestConstants.PARALLEL, 0.6f, 10);
+    return db -> new FrequentSimpleSubgraphs(db, TestConstants.PARALLEL, 0.6f, 10);
   }
 
 }

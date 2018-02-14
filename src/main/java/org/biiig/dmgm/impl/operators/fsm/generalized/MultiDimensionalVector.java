@@ -20,7 +20,7 @@ package org.biiig.dmgm.impl.operators.fsm.generalized;
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.impl.operators.fsm.characteristic.WithEmbeddingAndCategory;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.WithGraphId;
+import org.biiig.dmgm.impl.operators.fsm.common.WithGraphId;
 
 import java.util.Arrays;
 

@@ -17,8 +17,6 @@
 
 package org.biiig.dmgm.impl.operators.fsm.common;
 
-import org.biiig.dmgm.impl.operators.subgraph_mining.common.WithGraphId;
-
 public interface WithEmbedding extends WithGraphId {
   DFSEmbedding getEmbedding();
 

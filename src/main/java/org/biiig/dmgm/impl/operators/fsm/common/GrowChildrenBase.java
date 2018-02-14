@@ -18,6 +18,7 @@
 package org.biiig.dmgm.impl.operators.fsm.common;
 
 import javafx.util.Pair;
+import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.model.CachedGraph;
 
 import java.util.Collection;
@@ -37,6 +38,13 @@ public abstract class GrowChildrenBase<G extends WithGraph, E extends WithEmbedd
   public void addChildren(G withGraph, DFSEmbedding parentEmbedding, Collection<Pair<DFSCode, E>> output) {
     boolean rightmost = true;
     for (int fromTime : parent.getRightmostPath()) {
+      if (fromTime >= parentEmbedding.getVertexCount()) {
+        System.out.println(parent);
+        System.out.println(parent.getVertexCount());
+        System.out.println(parentEmbedding);
+        System.out.println(ArrayUtils.toString(parent.getRightmostPath()));
+      }
+
       int fromId = parentEmbedding.getVertexId(fromTime);
 
       CachedGraph graph = withGraph.getGraph();
@@ -53,21 +61,22 @@ public abstract class GrowChildrenBase<G extends WithGraph, E extends WithEmbedd
           // grow backwards
           if (rightmost && toTime >= 0) {
             int toLabel = graph.getVertexLabel(toId);
-            DFSCode childCode = parent.addEdge(fromTime, toTime, graph.getEdgeLabel(edgeId), isOutgoing(), toLabel);
+            DFSCode childCode = parent.addBackwardsEdge(fromTime, toTime, graph.getEdgeLabel(edgeId), isOutgoing());
 
             DFSEmbedding childEmbedding = parentEmbedding.expandByEdgeId(edgeId);
 
             add(output, withGraph, childCode, childEmbedding);
 
-            // grow backwards from to
+            // grow forwards
           } else if (toTime < 0) {
             int toLabel = graph.getVertexLabel(toId);
             toTime = parent.getVertexCount();
-            DFSCode childCode = parent.addEdge(fromTime, toTime, graph.getEdgeLabel(edgeId), isOutgoing(), toLabel);
+            DFSCode childCode = parent.addForwardsEdge(fromTime, toTime, graph.getEdgeLabel(edgeId), isOutgoing(), toLabel);
 
             DFSEmbedding childEmbedding = parentEmbedding.expandByEdgeIdAndVertexId(edgeId, toId);
 
             add(output, withGraph, childCode, childEmbedding);
+
           }
         }
       }

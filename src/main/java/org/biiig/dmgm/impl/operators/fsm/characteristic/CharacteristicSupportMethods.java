@@ -18,6 +18,7 @@
 package org.biiig.dmgm.impl.operators.fsm.characteristic;
 
 import javafx.util.Pair;
+import org.biiig.dmgm.api.config.DMGMConstants;
 import org.biiig.dmgm.api.db.GetProperties;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.db.SetProperties;
@@ -43,6 +44,7 @@ public interface CharacteristicSupportMethods
 
     return getParallelizableStream(input)
       .map(g -> db.getString(g.getId(), getCategoryKey()))
+      .map(c -> c == null ? DMGMConstants.PropertyDefaultValues.STRING : c)
       .map(db::encode)
       .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
       .entrySet()

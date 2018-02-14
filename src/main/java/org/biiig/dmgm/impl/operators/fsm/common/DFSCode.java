@@ -100,7 +100,7 @@ public class DFSCode extends CachedGraphBase implements Comparable<DFSCode> {
   private int[] rightmostPath;
 
   public DFSCode(int label, int[] vertexLabels, int[] edgeLabels, int[] sourceIds, int[] targetIds, boolean[] outgoings) {
-    super(-1l, label, vertexLabels, edgeLabels, sourceIds, targetIds);
+    super(-1L, label, vertexLabels, edgeLabels, sourceIds, targetIds);
     this.outgoings = outgoings;
   }
 
@@ -179,12 +179,21 @@ public class DFSCode extends CachedGraphBase implements Comparable<DFSCode> {
     return parent;
   }
 
-  public DFSCode addEdge(int fromTime, int toTime, int edgeLabel, boolean outgoing, int toLabel) {
+  public DFSCode addForwardsEdge(int fromTime, int toTime, int edgeLabel, boolean outgoing, int toLabel) {
     return new DFSCode(
       this.label,
-      toTime > fromTime ?
-        ArrayUtils.add(vertexLabels, toLabel) :
-        Arrays.copyOf(vertexLabels, vertexLabels.length),
+      ArrayUtils.add(vertexLabels, toLabel),
+      ArrayUtils.add(edgeLabels, edgeLabel),
+      ArrayUtils.add(sourceIds, outgoing ? fromTime : toTime),
+      ArrayUtils.add(targetIds, outgoing ? toTime : fromTime),
+      ArrayUtils.add(outgoings, outgoing)
+    );
+  }
+
+  public DFSCode addBackwardsEdge(int fromTime, int toTime, int edgeLabel, boolean outgoing) {
+    return new DFSCode(
+      this.label,
+      Arrays.copyOf(vertexLabels, vertexLabels.length),
       ArrayUtils.add(edgeLabels, edgeLabel),
       ArrayUtils.add(sourceIds, outgoing ? fromTime : toTime),
       ArrayUtils.add(targetIds, outgoing ? toTime : fromTime),
@@ -273,7 +282,7 @@ public class DFSCode extends CachedGraphBase implements Comparable<DFSCode> {
         .append(" ");
     }
 
-    return builder.toString();
+    return builder.toString() + ArrayUtils.toString(vertexLabels);
   }
 
   public int[] getVertexLabels() {

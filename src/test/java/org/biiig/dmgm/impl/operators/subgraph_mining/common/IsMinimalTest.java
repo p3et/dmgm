@@ -4,6 +4,8 @@ import org.biiig.dmgm.impl.operators.fsm.common.DFSCode;
 import org.biiig.dmgm.impl.operators.fsm.common.IsMinimal;
 import org.junit.Test;
 
+import static junit.framework.TestCase.assertTrue;
+
 public class IsMinimalTest {
 
   @Test
@@ -18,6 +20,6 @@ public class IsMinimalTest {
       new int[] { 1, 0},
       new boolean[] {true, false});
 
-    System.out.println(new IsMinimal().test(dfsCode));
+    assertTrue(new IsMinimal().test(dfsCode));
   }
 }
