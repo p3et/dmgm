@@ -121,7 +121,9 @@ public abstract class SubgraphMiningBase<G extends WithGraph, E extends WithEmbe
 
       frequentPatterns = addSupportAndFilter(patternEmbeddings, minSupportAbsolute, false)
         // additionally verify non-minimal DFS codes
+//        .peek(p -> System.out.println(p.getKey().toString(database) + " : " + p.getValue()))
         .filter(p -> new IsMinimal().test(p.getKey()))
+//        .peek(p -> System.out.println("\t" + p.getKey().toString(database) + " : " + p.getValue()))
         .collect(Collectors.toList());
 
       graphIds = ArrayUtils.addAll(graphIds, output(frequentPatterns, patternEmbeddings, minSupportAbsolute));
@@ -170,6 +172,8 @@ public abstract class SubgraphMiningBase<G extends WithGraph, E extends WithEmbe
       // load new graph if required
       if (withGraph == null || graphId != withGraph.getGraph().getId())
         withGraph = graphIndex.get(graphId);
+
+      System.out.println(parent + " "  + graphId + " " + embedding);
 
       // grow all children and add to list
       growAllChildren.addChildren(withGraph, embedding, children);
