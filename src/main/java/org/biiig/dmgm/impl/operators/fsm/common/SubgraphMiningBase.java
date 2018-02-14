@@ -25,7 +25,6 @@ import org.biiig.dmgm.api.config.DMGMConstants;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.model.CachedGraph;
 import org.biiig.dmgm.impl.operators.DMGMOperatorBase;
-import org.biiig.dmgm.impl.operators.fsm.SubgraphMining;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -106,7 +105,7 @@ public abstract class SubgraphMiningBase<G extends WithCachedGraph, E extends Wi
     List<Pair<DFSCode, S>> frequentPatterns = addSupportAndFilter(patternEmbeddings, minSupportAbsolute, parallel)
       .collect(Collectors.toList());
 
-    long[] graphIds = output(frequentPatterns, patternEmbeddings);
+    long[] graphIds = output(frequentPatterns, patternEmbeddings, minSupportAbsolute);
 
     int edgeCount = 1;
     while (!frequentPatterns.isEmpty() && edgeCount < maxEdgeCount) {
@@ -124,7 +123,7 @@ public abstract class SubgraphMiningBase<G extends WithCachedGraph, E extends Wi
         .filter(p -> new IsMinimal().test(p.getKey()))
         .collect(Collectors.toList());
 
-      graphIds = ArrayUtils.addAll(graphIds, output(frequentPatterns, patternEmbeddings));
+      graphIds = ArrayUtils.addAll(graphIds, output(frequentPatterns, patternEmbeddings, minSupportAbsolute));
 
       edgeCount++;
     }

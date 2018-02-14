@@ -25,10 +25,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.config.DMGMConstants;
 import org.biiig.dmgm.api.db.SymbolDictionary;
 import org.biiig.dmgm.api.model.CachedGraph;
-import org.biiig.dmgm.impl.operators.fsm.SubgraphMining;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSCode;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.subgraph_mining.generalized.MultiDimensionalVector;
+import org.biiig.dmgm.impl.operators.fsm.common.SubgraphMining;
 
 import java.util.Collection;
 import java.util.List;
@@ -144,12 +143,11 @@ public interface GeneralizedSubgraphs<G extends GFSMGraph, E extends GFSMEmbeddi
    * @param topLevel top-level pattern
    * @param embeddings the top-level pattern's embeddings
    * @param support top-level support
-   * @param <F> embedding type
-   *
+   * @param minSupportAbsolute
    * @return frequent specializations with support
    */
-  default <F extends GFSMEmbedding> Stream<Pair<DFSCode, S>> getFrequentSpecializations(
-    DFSCode topLevel, List<F> embeddings, S support) {
+  default Stream<Pair<DFSCode, S>> getFrequentSpecializations(
+    DFSCode topLevel, List<E> embeddings, S support, S minSupportAbsolute) {
 
     // init output
     List<Pair<DFSCode, S>> frequentSpecializations = Lists.newArrayList(new Pair<>(topLevel, support));
@@ -173,7 +171,7 @@ public interface GeneralizedSubgraphs<G extends GFSMGraph, E extends GFSMEmbeddi
       Map<MultiDimensionalVector, List<MultiDimensionalVector>> aggregated = specializeVectors(vectors, dimCount)
         .collect(new GroupByKeyListValues<>(Function.identity(), Function.identity()));
 
-      Stream<Pair<MultiDimensionalVector, S>> frequent = addSupportAndFilter(aggregated, S, parallel);
+      Stream<Pair<MultiDimensionalVector, S>> frequent = addSupportAndFilter(aggregated, minSupportAbsolute, false);
 
       vectors = frequent
         .peek(p -> frequentSpecializations.add(new Pair<>(specializePattern(topLevel, p.getKey()), p.getValue())))

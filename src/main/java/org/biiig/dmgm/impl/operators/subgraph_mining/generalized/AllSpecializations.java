@@ -1,6 +1,7 @@
 package org.biiig.dmgm.impl.operators.subgraph_mining.generalized;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.biiig.dmgm.impl.operators.fsm.gfsm.MultiDimensionalVector;
 
 import java.util.function.Function;
 import java.util.stream.Stream;

@@ -15,7 +15,7 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.fsm;
+package org.biiig.dmgm.impl.operators.fsm.cfsm;
 
 import javafx.util.Pair;
 import org.biiig.dmgm.api.db.GetProperties;
@@ -23,8 +23,8 @@ import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.db.SetProperties;
 import org.biiig.dmgm.api.model.CachedGraph;
 import org.biiig.dmgm.impl.operators.DMGMOperator;
-import org.biiig.dmgm.impl.operators.fsm.cfsm.WithEmbeddingAndCategory;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSCode;
+import org.biiig.dmgm.impl.operators.fsm.common.SubgraphMiningSupportMethods;
 
 import java.util.Collection;
 import java.util.List;
@@ -34,7 +34,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public interface CharacteristicSubgraphs<E extends WithEmbeddingAndCategory> extends SubgraphMiningSupportMethods<E, Map<Integer, Long>>, DMGMOperator {
+public interface CharacteristicSupportMethods<E extends WithEmbeddingAndCategory>
+  extends SubgraphMiningSupportMethods<E, Map<Integer, Long>>, DMGMOperator {
 
   @Override
   default Map<Integer, Long> getMinSupportAbsolute(Collection<CachedGraph> input, float minSupportRel) {
@@ -69,7 +70,7 @@ public interface CharacteristicSubgraphs<E extends WithEmbeddingAndCategory> ext
       );
   }
 
-  default <K> Pair<K, Map<Integer, Long>> addSupport(Map.Entry<K, List<E>> entry) {
+  default <K, F extends WithEmbeddingAndCategory> Pair<K, Map<Integer, Long>> addSupport(Map.Entry<K, List<F>> entry) {
 
     Map<Integer, Long> support = entry.getValue()
       .stream()
