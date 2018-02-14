@@ -15,27 +15,20 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.fsm.gfsm;
+package org.biiig.dmgm.impl.operators.fsm.simple;
 
+import org.biiig.dmgm.impl.operators.fsm.characteristic.WithEmbeddingAndCategory;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.fsm.fsm.FSMEmbedding;
 
-public class GFSMEmbedding extends FSMEmbedding implements WithTaxonomyPaths {
+public class FSMEmbedding implements WithEmbeddingAndCategory {
+  private final DFSEmbedding embedding;
 
-  private final int[][] taxonomyPaths;
-
-  public GFSMEmbedding(DFSEmbedding embedding, int[][] taxonomyPaths) {
-    super(embedding);
-    this.taxonomyPaths = taxonomyPaths;
+  public FSMEmbedding(DFSEmbedding embedding) {
+    this.embedding = embedding;
   }
 
   @Override
-  public int[] getTaxonomyPath(int vertexTime) {
-    return taxonomyPaths[vertexTime];
-  }
-
-  @Override
-  public int[][] getTaxonomyPaths() {
-    return taxonomyPaths;
+  public DFSEmbedding getEmbedding() {
+    return embedding;
   }
 }

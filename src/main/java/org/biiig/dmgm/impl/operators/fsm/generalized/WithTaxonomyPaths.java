@@ -15,8 +15,10 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.fsm.cfsm;
+package org.biiig.dmgm.impl.operators.fsm.generalized;
 
-public interface WithCategory {
-  int getCategory();
+public interface WithTaxonomyPaths {
+  int[] getTaxonomyPath(int vertexId);
+
+  int[][] getTaxonomyPaths();
 }

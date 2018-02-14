@@ -54,7 +54,7 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.common;
 import javafx.util.Pair;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSCode;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.fsm.common.WithCachedGraph;
+import org.biiig.dmgm.impl.operators.fsm.common.WithGraph;
 import org.biiig.dmgm.impl.operators.fsm.common.WithEmbedding;
 
 import java.util.List;
@@ -62,7 +62,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class GrowAllChildren<G extends WithCachedGraph>
+public class GrowAllChildren<G extends WithGraph>
   implements Function<Pair<DFSCode,List<DFSEmbedding>>, Stream<Pair<DFSCode,DFSEmbedding>>> {
 
   private final Map<Long, G> input;
@@ -78,6 +78,6 @@ public class GrowAllChildren<G extends WithCachedGraph>
     return dfsCodeEmbeddingsPair
       .getValue()
       .stream()
-      .flatMap(new org.biiig.dmgm.impl.operators.fsm.common.GrowAllChildren<WithCachedGraph, WithEmbedding>(parent, getEmbeddingFactory()));
+      .flatMap(new org.biiig.dmgm.impl.operators.fsm.common.GrowAllChildren<WithGraph, WithEmbedding>(parent, getEmbeddingFactory()));
   }
 }

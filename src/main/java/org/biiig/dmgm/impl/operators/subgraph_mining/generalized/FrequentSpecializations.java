@@ -22,7 +22,7 @@ import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSCode;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.fsm.gfsm.MultiDimensionalVector;
+import org.biiig.dmgm.impl.operators.fsm.generalized.MultiDimensionalVector;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.SupportSpecialization;
 
 import java.util.Collection;

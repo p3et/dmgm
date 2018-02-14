@@ -36,7 +36,7 @@ package org.biiig.dmgm.impl.operators.subgraph_mining.generalized;
 
 import org.biiig.dmgm.api.db.GetProperties;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.fsm.gfsm.MultiDimensionalVector;
+import org.biiig.dmgm.impl.operators.fsm.generalized.MultiDimensionalVector;
 
 import java.util.function.Function;
 

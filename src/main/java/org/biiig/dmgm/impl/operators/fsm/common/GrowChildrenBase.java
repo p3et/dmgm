@@ -23,7 +23,7 @@ import org.biiig.dmgm.api.model.CachedGraph;
 import java.util.Collection;
 import java.util.function.BiFunction;
 
-public abstract class GrowChildrenBase<G extends WithCachedGraph, E extends WithEmbedding> implements GrowChildren<G, E> {
+public abstract class GrowChildrenBase<G extends WithGraph, E extends WithEmbedding> implements GrowChildren<G, E> {
 
   private final DFSCode parent;
   private final BiFunction<G, DFSEmbedding, E> embeddingFactory;

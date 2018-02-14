@@ -72,7 +72,7 @@ import org.biiig.dmgm.api.model.CachedGraph;
 
 import java.util.function.BiFunction;
 
-public class GrowChildrenByIncomingEdges<G extends WithCachedGraph, E extends WithEmbedding>
+public class GrowChildrenByIncomingEdges<G extends WithGraph, E extends WithEmbedding>
   extends GrowChildrenBase<G, E> {
 
   public GrowChildrenByIncomingEdges(DFSCode parent, BiFunction<G, DFSEmbedding, E> embeddingFactory) {

@@ -15,22 +15,26 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.fsm.gcfsm;
+package org.biiig.dmgm.impl.operators.fsm.generalized;
 
-import org.biiig.dmgm.impl.operators.fsm.cfsm.WithEmbeddingAndCategory;
-import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.fsm.gfsm.GFSMEmbedding;
+import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.operators.fsm.simple.FSMGraph;
 
-public class GCFSMEmbedding extends GFSMEmbedding implements WithEmbeddingAndCategory {
-  private final int category;
+public class GraphWithTaxonomyPaths extends FSMGraph implements WithTaxonomyPaths {
+  private final int[][] taxonomyPaths;
 
-  public GCFSMEmbedding(DFSEmbedding embedding, int[][] taxonomyPaths, int category) {
-    super(embedding, taxonomyPaths);
-    this.category = category;
+  public GraphWithTaxonomyPaths(CachedGraph graph, int[][] taxonomyPaths) {
+    super(graph);
+    this.taxonomyPaths = taxonomyPaths;
   }
 
   @Override
-  public int getCategory() {
-    return category;
+  public int[] getTaxonomyPath(int vertexId) {
+    return taxonomyPaths[vertexId];
+  }
+
+  @Override
+  public int[][] getTaxonomyPaths() {
+    return taxonomyPaths;
   }
 }

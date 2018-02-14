@@ -15,7 +15,7 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.fsm.gfsm;
+package org.biiig.dmgm.impl.operators.fsm.generalized;
 
 import com.google.common.collect.Lists;
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public interface GeneralizedSubgraphs<G extends GFSMGraph, E extends GFSMEmbedding, S> extends SubgraphMining<G, E, S> {
+public interface GeneralizedSubgraphs<G extends GraphWithTaxonomyPaths, E extends EmbeddingWithTaxonomyPaths, S> extends SubgraphMining<G, E, S> {
   /**
    * Create an array of taxonomy paths where indices correspond to the vertex ids of the graph.
    *

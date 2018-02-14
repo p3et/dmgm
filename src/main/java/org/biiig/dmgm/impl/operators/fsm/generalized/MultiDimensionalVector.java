@@ -15,16 +15,16 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.fsm.gfsm;
+package org.biiig.dmgm.impl.operators.fsm.generalized;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.biiig.dmgm.impl.operators.fsm.characteristic.WithEmbeddingAndCategory;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.fsm.common.WithEmbedding;
 import org.biiig.dmgm.impl.operators.subgraph_mining.common.WithGraphId;
 
 import java.util.Arrays;
 
-public class MultiDimensionalVector implements WithGraphId, WithEmbedding {
+public class MultiDimensionalVector implements WithGraphId, WithEmbeddingAndCategory {
 
   private final DFSEmbedding embedding;
   private final int lastSpecialization;

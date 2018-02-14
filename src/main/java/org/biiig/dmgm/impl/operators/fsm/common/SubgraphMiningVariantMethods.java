@@ -43,7 +43,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
-public interface SubgraphMiningVariantMethods<G extends WithCachedGraph, E extends WithEmbedding, S> {
+public interface SubgraphMiningVariantMethods<G extends WithGraph, E extends WithEmbedding, S> {
   /**
    * Generalize vertex labels and add taxonomy paths.
    * Only for generalized variant.

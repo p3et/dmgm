@@ -38,6 +38,6 @@ import javafx.util.Pair;
 
 import java.util.Collection;
 
-public interface GrowChildren<G extends WithCachedGraph, E extends WithEmbedding> {
+public interface GrowChildren<G extends WithGraph, E extends WithEmbedding> {
   void addChildren(G withGraph, DFSEmbedding embedding, Collection<Pair<DFSCode, E>> output);
 }

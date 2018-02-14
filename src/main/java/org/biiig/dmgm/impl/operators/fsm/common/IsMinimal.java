@@ -20,8 +20,8 @@ package org.biiig.dmgm.impl.operators.fsm.common;
 import com.google.common.collect.Lists;
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
 import javafx.util.Pair;
-import org.biiig.dmgm.impl.operators.fsm.fsm.FSMEmbedding;
-import org.biiig.dmgm.impl.operators.fsm.fsm.FSMGraph;
+import org.biiig.dmgm.impl.operators.fsm.simple.FSMEmbedding;
+import org.biiig.dmgm.impl.operators.fsm.simple.FSMGraph;
 
 import java.util.Comparator;
 import java.util.List;

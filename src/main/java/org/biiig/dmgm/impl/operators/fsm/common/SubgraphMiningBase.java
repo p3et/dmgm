@@ -25,6 +25,7 @@ import org.biiig.dmgm.api.config.DMGMConstants;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.model.CachedGraph;
 import org.biiig.dmgm.impl.operators.DMGMOperatorBase;
+import org.biiig.dmgm.impl.operators.fsm.characteristic.WithEmbeddingAndCategory;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -35,7 +36,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class SubgraphMiningBase<G extends WithCachedGraph, E extends WithEmbedding, S>
+public abstract class SubgraphMiningBase<G extends WithGraph, E extends WithEmbeddingAndCategory, S>
   extends DMGMOperatorBase implements SubgraphMining<G, E, S> {
 
   /**

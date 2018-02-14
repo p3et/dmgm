@@ -42,7 +42,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class InitializeSingleEdgePatterns<G extends WithCachedGraph, E extends WithEmbedding>
+public class InitializeSingleEdgePatterns<G extends WithGraph, E extends WithEmbedding>
   implements Function<G, Stream<Pair<DFSCode, E>>> {
 
   private final int label;

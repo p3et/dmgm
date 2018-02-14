@@ -15,20 +15,14 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.fsm.fsm;
+package org.biiig.dmgm.impl.operators.fsm.characteristic;
 
-import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
 import org.biiig.dmgm.impl.operators.fsm.common.WithEmbedding;
 
-public class FSMEmbedding implements WithEmbedding {
-  private final DFSEmbedding embedding;
-
-  public FSMEmbedding(DFSEmbedding embedding) {
-    this.embedding = embedding;
-  }
+public interface WithEmbeddingAndCategory extends WithEmbedding, WithCategory {
 
   @Override
-  public DFSEmbedding getEmbedding() {
-    return embedding;
+  default int getCategory() {
+    return 0;
   }
 }

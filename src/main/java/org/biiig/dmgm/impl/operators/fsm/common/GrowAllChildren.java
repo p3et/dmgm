@@ -22,7 +22,7 @@ import javafx.util.Pair;
 import java.util.Collection;
 import java.util.function.BiFunction;
 
-public class GrowAllChildren<G extends WithCachedGraph, E extends WithEmbedding> implements GrowChildren<G, E> {
+public class GrowAllChildren<G extends WithGraph, E extends WithEmbedding> implements GrowChildren<G, E> {
 
   private final GrowChildren<G, E> outgoing;
   private final GrowChildren<G, E> incoming;

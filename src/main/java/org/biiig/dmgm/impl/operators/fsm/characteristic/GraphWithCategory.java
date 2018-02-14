@@ -15,17 +15,18 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.fsm.gcfsm;
+package org.biiig.dmgm.impl.operators.fsm.characteristic;
 
 import org.biiig.dmgm.api.model.CachedGraph;
-import org.biiig.dmgm.impl.operators.fsm.cfsm.WithCategory;
-import org.biiig.dmgm.impl.operators.fsm.gfsm.GFSMGraph;
+import org.biiig.dmgm.impl.operators.fsm.simple.FSMGraph;
 
-public class GCFSMGraph extends GFSMGraph implements WithCategory {
+public class GraphWithCategory extends FSMGraph implements WithGraphAndCategory {
+
+
   private final int category;
 
-  public GCFSMGraph(CachedGraph graph, int[][] taxonomyPaths, int category) {
-    super(graph, taxonomyPaths);
+  public GraphWithCategory(CachedGraph graph, int category) {
+    super(graph);
     this.category = category;
   }
 

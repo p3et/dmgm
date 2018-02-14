@@ -18,16 +18,15 @@
 package org.biiig.dmgm.impl.operators.fsm;
 
 import javafx.util.Pair;
-import org.biiig.dmgm.api.config.DMGMConstants;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.model.CachedGraph;
-import org.biiig.dmgm.impl.operators.fsm.cfsm.CharacteristicSupportMethods;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSCode;
 import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
 import org.biiig.dmgm.impl.operators.fsm.common.SubgraphMiningBase;
-import org.biiig.dmgm.impl.operators.fsm.gcfsm.GCFSMEmbedding;
-import org.biiig.dmgm.impl.operators.fsm.gcfsm.GCFSMGraph;
-import org.biiig.dmgm.impl.operators.fsm.gfsm.GeneralizedSubgraphs;
+import org.biiig.dmgm.impl.operators.fsm.simple.FrequentSupportMethods;
+import org.biiig.dmgm.impl.operators.fsm.generalized.EmbeddingWithTaxonomyPaths;
+import org.biiig.dmgm.impl.operators.fsm.generalized.GraphWithTaxonomyPaths;
+import org.biiig.dmgm.impl.operators.fsm.generalized.GeneralizedSubgraphs;
 
 import java.util.Collection;
 import java.util.List;
@@ -36,19 +35,9 @@ import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class GeneralizedCharacteristicSubgraphs
-  extends SubgraphMiningBase<GCFSMGraph, GCFSMEmbedding, Map<Integer, Long>>
-  implements GeneralizedSubgraphs<GCFSMGraph, GCFSMEmbedding, Map<Integer, Long>>,
-  CharacteristicSupportMethods<GCFSMEmbedding> {
-
-  /**
-   * Get the category property key.
-   */
-  private final int categoryKey;
-  /**
-   * Get the default category property value.
-   */
-  private final int defaultCategory;
+public class FrequentGeneralizedSubgraphs
+  extends SubgraphMiningBase<GraphWithTaxonomyPaths, EmbeddingWithTaxonomyPaths, Long>
+  implements GeneralizedSubgraphs<GraphWithTaxonomyPaths, EmbeddingWithTaxonomyPaths, Long>, FrequentSupportMethods {
 
   /**
    * Constructor.
@@ -58,29 +47,22 @@ public class GeneralizedCharacteristicSubgraphs
    * @param minSupportRel minimum support threshold
    * @param maxEdgeCount  maximum result edge count
    */
-  protected GeneralizedCharacteristicSubgraphs(PropertyGraphDB db, boolean parallel, float minSupportRel, int maxEdgeCount) {
+  protected FrequentGeneralizedSubgraphs(PropertyGraphDB db, boolean parallel, float minSupportRel, int maxEdgeCount) {
     super(db, parallel, minSupportRel, maxEdgeCount);
-    categoryKey = db.encode(DMGMConstants.PropertyKeys.CATEGORY);
-    defaultCategory = db.encode(DMGMConstants.PropertyDefaultValues.STRING);
   }
 
   @Override
-  public Stream<GCFSMGraph> preProcess(Collection<CachedGraph> input) {
+  public Stream<GraphWithTaxonomyPaths> preProcess(Collection<CachedGraph> input) {
     Map<Integer, int[]> taxonomyPathIndex = getTaxonomyPathIndex(database, input);
 
 
     return getParallelizableStream(input)
-      .map(graph -> {
-
-        int category = getCategory(database, graph.getId());
-        int[][] taxonomyPaths = getTaxonomyPaths(graph, taxonomyPathIndex);
-        return new GCFSMGraph(graph, taxonomyPaths, category);
-      });
+      .map(graph -> new GraphWithTaxonomyPaths(graph, getTaxonomyPaths(graph, taxonomyPathIndex)));
   }
 
   @Override
   public long[] output(
-    List<Pair<DFSCode, Map<Integer, Long>>> frequentPatterns, Map<DFSCode, List<GCFSMEmbedding>> patternEmbeddings, Map<Integer, Long> minSupportAbsolute) {
+    List<Pair<DFSCode, Long>> frequentPatterns, Map<DFSCode, List<EmbeddingWithTaxonomyPaths>> patternEmbeddings, Long minSupportAbsolute) {
 
     // specialize
     frequentPatterns = getParallelizableStream(frequentPatterns)
@@ -88,21 +70,11 @@ public class GeneralizedCharacteristicSubgraphs
       .collect(Collectors.toList());
 
     // use output of characteristic subgraphs
-    return output(frequentPatterns, database);
+    return output(frequentPatterns);
   }
 
   @Override
-  public BiFunction<GCFSMGraph, DFSEmbedding, GCFSMEmbedding> getEmbeddingFactory() {
-    return (g, e) -> new GCFSMEmbedding(e, g.getTaxonomyPaths(), g.getCategory());
-  }
-
-  @Override
-  public int getCategoryKey() {
-    return categoryKey;
-  }
-
-  @Override
-  public int getDefaultCategory() {
-    return defaultCategory;
+  public BiFunction<GraphWithTaxonomyPaths, DFSEmbedding, EmbeddingWithTaxonomyPaths> getEmbeddingFactory() {
+    return (g, e) -> new EmbeddingWithTaxonomyPaths(e, g.getTaxonomyPaths());
   }
 }

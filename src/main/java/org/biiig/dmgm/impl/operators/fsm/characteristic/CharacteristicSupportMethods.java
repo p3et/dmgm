@@ -15,7 +15,7 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.fsm.cfsm;
+package org.biiig.dmgm.impl.operators.fsm.characteristic;
 
 import javafx.util.Pair;
 import org.biiig.dmgm.api.db.GetProperties;
@@ -34,8 +34,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public interface CharacteristicSupportMethods<E extends WithEmbeddingAndCategory>
-  extends SubgraphMiningSupportMethods<E, Map<Integer, Long>>, DMGMOperator {
+public interface CharacteristicSupportMethods
+  extends SubgraphMiningSupportMethods<Map<Integer, Long>>, DMGMOperator {
 
   @Override
   default Map<Integer, Long> getMinSupportAbsolute(Collection<CachedGraph> input, float minSupportRel) {
@@ -51,7 +51,7 @@ public interface CharacteristicSupportMethods<E extends WithEmbeddingAndCategory
   }
 
   @Override
-  default <K> Stream<Pair<K, Map<Integer, Long>>> addSupportAndFilter(
+  default <K, E extends WithEmbeddingAndCategory> Stream<Pair<K, Map<Integer, Long>>> addSupportAndFilter(
     Map<K, List<E>> patternEmbeddings, Map<Integer, Long> minSupportAbsolute, boolean parallel) {
 
     Set<Map.Entry<K, List<E>>> entrySet = patternEmbeddings
@@ -86,7 +86,7 @@ public interface CharacteristicSupportMethods<E extends WithEmbeddingAndCategory
   }
 
   @Override
-  default long[] output(List<Pair<DFSCode, Map<Integer, Long>>> frequentPatterns, SetProperties setProperties) {
+  default long[] output(List<Pair<DFSCode, Map<Integer, Long>>> frequentPatterns) {
     return frequentPatterns
       .stream()
       .flatMapToLong( ps -> ps.getValue()
@@ -99,6 +99,7 @@ public interface CharacteristicSupportMethods<E extends WithEmbeddingAndCategory
 
           long graphId = createGraph(dfsCode);
 
+          SetProperties setProperties = getDatabase();
           setProperties.set(graphId, getDfsCodeKey(), dfsCode.toString(setProperties));
           setProperties.set(graphId, getCategoryKey(), setProperties.decode(category));
           setProperties.set(graphId, getSupportKey(), support);

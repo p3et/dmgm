@@ -36,6 +36,6 @@ package org.biiig.dmgm.impl.operators.fsm.common;
 
 import org.biiig.dmgm.api.model.CachedGraph;
 
-public interface WithCachedGraph {
+public interface WithGraph {
   CachedGraph getGraph();
 }

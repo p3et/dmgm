@@ -43,6 +43,6 @@ import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
  * @param <E> embedding data
  * @param <S> support type
  */
-public interface SubgraphMining<G extends WithCachedGraph, E extends WithEmbedding, S>
-  extends CollectionToCollectionOperator, SubgraphMiningSupportMethods<E, S>, SubgraphMiningVariantMethods<G, E, S> {
+public interface SubgraphMining<G extends WithGraph, E extends WithEmbedding, S>
+  extends CollectionToCollectionOperator, SubgraphMiningSupportMethods<S>, SubgraphMiningVariantMethods<G, E, S> {
 }

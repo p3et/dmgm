@@ -15,7 +15,21 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.fsm.cfsm;
+package org.biiig.dmgm.impl.operators.fsm.characteristic;
 
-public class CFSMGraph {
+import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
+import org.biiig.dmgm.impl.operators.fsm.simple.FSMEmbedding;
+
+public class EmbeddingWithCategory extends FSMEmbedding implements WithEmbeddingAndCategory {
+  private final int category;
+
+  public EmbeddingWithCategory(DFSEmbedding embedding, int category) {
+    super(embedding);
+    this.category = category;
+  }
+
+  @Override
+  public int getCategory() {
+    return category;
+  }
 }

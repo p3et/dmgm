@@ -35,20 +35,21 @@
 package org.biiig.dmgm.impl.operators.fsm.common;
 
 import javafx.util.Pair;
-import org.biiig.dmgm.api.db.SetProperties;
 import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.operators.fsm.characteristic.WithEmbeddingAndCategory;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public interface SubgraphMiningSupportMethods<E extends WithEmbedding, S> {
-  long[] output(List<Pair<DFSCode, Map<Integer, Long>>> frequentPatterns, SetProperties setProperties);
+public interface SubgraphMiningSupportMethods<S> {
+  long[] output(List<Pair<DFSCode, S>> frequentPatterns);
 
   long getAbsoluteSupport(long count, float rel);
 
-  <K> Stream<Pair<K, S>> addSupportAndFilter(Map<K, List<E>> patternEmbeddings, S minSupportAbsolute, boolean parallel);
+  <K, F extends WithEmbeddingAndCategory> Stream<Pair<K, S>> addSupportAndFilter(
+    Map<K, List<F>> patternEmbeddings, S minSupportAbsolute, boolean parallel);
 
   S getMinSupportAbsolute(Collection<CachedGraph> input, float minSupportRel);
 
