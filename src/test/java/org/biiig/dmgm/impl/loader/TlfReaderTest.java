@@ -15,18 +15,34 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.fsm;
+package org.biiig.dmgm.impl.loader;
 
-import org.biiig.dmgm.TestConstants;
+import org.biiig.dmgm.DmgmTestBase;
 import org.biiig.dmgm.api.db.PropertyGraphDb;
-import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
+import org.biiig.dmgm.api.model.CachedGraph;
+import org.junit.Test;
 
-import java.util.function.Function;
+import java.util.List;
 
-public class GCSMGeneralizationTest extends GeneralizationTestBase {
+import static org.junit.Assert.assertEquals;
 
-  @Override
-  public Function<PropertyGraphDb, CollectionToCollectionOperator> getOperator() {
-    return db -> new CharacteristicGeneralizedSubgraphs(db, TestConstants.PARALLEL, 1.0f, 10);
+
+public class TlfReaderTest extends DmgmTestBase {
+
+  @Test
+  public void testRead() {
+    PropertyGraphDb database = getPredictableDatabase();
+
+    int graphLabel = database.encode(TlfConstants.GRAPH_SYMBOL);
+    int colLabel = database.encode("COL");
+
+    long[] graphIds = database.queryElements(i -> i == graphLabel);
+    long cid = database.createCollection(colLabel, graphIds);
+
+
+    List<CachedGraph> graphCollection = database.getCachedCollection(cid);
+
+    assertEquals("model count", 10, graphCollection.size());
   }
+
 }

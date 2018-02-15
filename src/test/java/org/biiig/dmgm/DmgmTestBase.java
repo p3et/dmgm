@@ -57,7 +57,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Superclass of tests to provide them with useful utils.
  */
-public class DMGMTestBase {
+public class DmgmTestBase {
   /**
    *
    */

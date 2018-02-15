@@ -23,7 +23,8 @@ import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
 
 public class FSMThresholdTest extends SubgraphMiningThresholdTestBase {
 
-  protected CollectionToCollectionOperator getOperator(PropertyGraphDb db, boolean b, float minSupportRel, int maxEdgeCount) {
+  protected CollectionToCollectionOperator getOperator(
+      PropertyGraphDb db, boolean b, float minSupportRel, int maxEdgeCount) {
     return new FrequentSimpleSubgraphs(db, TestConstants.PARALLEL, minSupportRel, maxEdgeCount);
   }
 }

@@ -24,21 +24,25 @@ import org.junit.Test;
 
 import java.util.function.Function;
 
-public abstract class GeneralizationTestBase extends DmgmTestBase {
+
+public abstract class CharTestBase extends DmgmTestBase {
   @Test
   public void testAlgorithm() {
-    Function<PropertyGraphDb, CollectionToCollectionOperator> operator = getOperator();
-
-    String inputGDL = ":IN[(:A_A)-[:a]->(:B_B)-[:a]->(:C)]"
-        + ":IN[(:A_B)-[:a]->(:B_B_B)-[:a]->(:C)]"
-        + ":EX[(:A)-[:a]->(:B)]"
-        + ":EX[(:A)-[:a]->(:B_B)]"
+    String gdl = ":IN{_category:\"X\"}[(:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(:D)]"
+        + ":IN{_category:\"X\"}[(:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(:D)]"
+        + ":IN{_category:\"Y\"}[(:A)-[:a]->(:B)-[:b]->(:C)-[:b]->(:D)]"
+        + ":IN{_category:\"Y\"}[(:A)-[:a]->(:B)-[:b]->(:C)-[:b]->(:E)]"
+        + ":EX[(:A)-[:a]->(:B)-[:a]->(:C)-[:a]->(:D)]"
+        + ":EX[(:A)-[:a]->(:B)-[:a]->(:C)]"
+        + ":EX[(:B)-[:a]->(:C)-[:a]->(:D)]"
         + ":EX[(:B)-[:a]->(:C)]"
-        + ":EX[(:B_B)-[:a]->(:C)]"
-        + ":EX[(:A)-[:a]->(:B_B)-[:a]->(:C)]"
-        + ":EX[(:A)-[:a]->(:B)-[:a]->(:C)]";
+        + ":EX[(:C)-[:a]->(:D)]"
+        + ":EX{_category:\"X\"}[(:A)-[:a]->(:B)]"
+        + ":EX{_category:\"Y\"}[(:A)-[:a]->(:B)]"
+        + ":EX[(:A)-[:a]->(:B)-[:b]->(:C)]"
+        + ":EX[(:B)-[:b]->(:C)]";
 
-    runAndTestExpectation(operator, inputGDL, false);
+    runAndTestExpectation(getOperator(), gdl, false);
   }
 
   public abstract Function<PropertyGraphDb, CollectionToCollectionOperator> getOperator();

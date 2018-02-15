@@ -17,7 +17,7 @@
 
 package org.biiig.dmgm.impl.model;
 
-import org.biiig.dmgm.DMGMTestBase;
+import org.biiig.dmgm.DmgmTestBase;
 import org.biiig.dmgm.api.model.CachedGraph;
 
 import java.util.Objects;
@@ -29,7 +29,7 @@ import static org.junit.Assert.assertArrayEquals;
 /**
  * Created by peet on 02.08.17.
  */
-public abstract class CachedGraphTestBase extends DMGMTestBase {
+public abstract class CachedGraphTestBase extends DmgmTestBase {
 
   protected void test(CachedGraph graph, int lab0, int lab1) {
     assertEquals("vertex count", 2, graph.getVertexCount());

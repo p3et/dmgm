@@ -51,7 +51,10 @@ public class FilterVerticesAndEdgesByLabel implements UnaryOperator<CachedGraph>
    * @param edgeLabelPredicate edge predicate
    * @param dropIsolatedVertices flag to trigger the deletion of isolated vertices
    */
-  public FilterVerticesAndEdgesByLabel(IntPredicate vertexLabelPredicate, IntPredicate edgeLabelPredicate, Boolean dropIsolatedVertices) {
+  public FilterVerticesAndEdgesByLabel(
+      IntPredicate vertexLabelPredicate, IntPredicate edgeLabelPredicate,
+      Boolean dropIsolatedVertices) {
+
     this.vertexLabelPredicate = vertexLabelPredicate;
     this.edgeLabelPredicate = edgeLabelPredicate;
     this.dropIsolatedVertices = dropIsolatedVertices;
@@ -80,18 +83,18 @@ public class FilterVerticesAndEdgesByLabel implements UnaryOperator<CachedGraph>
     if (dropIsolatedVertices) {
       // drop vertices without edges
       IntStream sourceIds = IntStream
-        .of(outEdgeIds)
-        .map(graph::getSourceId);
+          .of(outEdgeIds)
+          .map(graph::getSourceId);
 
       IntStream targetIds = IntStream
-        .of(outEdgeIds)
-        .map(graph::getTargetId);
+          .of(outEdgeIds)
+          .map(graph::getTargetId);
 
       outVertexIds = IntStream
-        .concat(sourceIds, targetIds)
-        .distinct()
-        .filter(v -> ArrayUtils.contains(candidateVertexIds, v))
-        .toArray();
+          .concat(sourceIds, targetIds)
+          .distinct()
+          .filter(v -> ArrayUtils.contains(candidateVertexIds, v))
+          .toArray();
     } else {
       // keep all vertices
       outVertexIds = candidateVertexIds;
@@ -103,7 +106,7 @@ public class FilterVerticesAndEdgesByLabel implements UnaryOperator<CachedGraph>
     // create out vertex data
     int outVertexCount = outVertexIds.length;
     int[] outVertexLabels = new int[outVertexCount];
-    for(int outVertexId = 0; outVertexId < outVertexCount; outVertexId++)  {
+    for (int outVertexId = 0; outVertexId < outVertexCount; outVertexId++)  {
       int inVertexId = outVertexIds[outVertexId];
       vertexIdMap[inVertexId] = outVertexId;
       outVertexLabels[outVertexId] = graph.getVertexLabel(inVertexId);

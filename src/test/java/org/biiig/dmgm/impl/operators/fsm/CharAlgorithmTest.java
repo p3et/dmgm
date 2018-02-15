@@ -23,10 +23,11 @@ import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
 
 import java.util.function.Function;
 
-public class GCSMGeneralizationTest extends GeneralizationTestBase {
+public class CharAlgorithmTest extends CharTestBase {
 
   @Override
   public Function<PropertyGraphDb, CollectionToCollectionOperator> getOperator() {
-    return db -> new CharacteristicGeneralizedSubgraphs(db, TestConstants.PARALLEL, 1.0f, 10);
+    return db -> new CharacteristicSimpleSubgraphs(
+      db, TestConstants.PARALLEL, 1.0f,10);
   }
 }

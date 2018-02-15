@@ -15,18 +15,7 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.fsm;
-
-import org.biiig.dmgm.TestConstants;
-import org.biiig.dmgm.api.db.PropertyGraphDb;
-import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
-
-import java.util.function.Function;
-
-public class GCSMGeneralizationTest extends GeneralizationTestBase {
-
-  @Override
-  public Function<PropertyGraphDb, CollectionToCollectionOperator> getOperator() {
-    return db -> new CharacteristicGeneralizedSubgraphs(db, TestConstants.PARALLEL, 1.0f, 10);
-  }
-}
+/**
+ * Configurations of DMGM.
+ */
+package org.biiig.dmgm.api.config;
