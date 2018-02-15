@@ -20,24 +20,17 @@ package org.biiig.dmgm.impl.operators.fsm;
 import javafx.util.Pair;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.model.CachedGraph;
-import org.biiig.dmgm.impl.operators.fsm.common.DFSCode;
-import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.fsm.common.SubgraphMiningBase;
-import org.biiig.dmgm.impl.operators.fsm.generalized.EmbeddingWithTaxonomyPaths;
-import org.biiig.dmgm.impl.operators.fsm.generalized.GeneralizedSubgraphs;
-import org.biiig.dmgm.impl.operators.fsm.generalized.GraphWithTaxonomyPaths;
-import org.biiig.dmgm.impl.operators.fsm.simple.FrequentSupportMethods;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FrequentGeneralizedSubgraphs
-  extends SubgraphMiningBase<GraphWithTaxonomyPaths, EmbeddingWithTaxonomyPaths, Long>
-  implements GeneralizedSubgraphs<GraphWithTaxonomyPaths, EmbeddingWithTaxonomyPaths, Long>, FrequentSupportMethods {
+  extends SubgraphMiningBase<GraphWithOnlyTaxonomyPaths, Long>
+  implements GeneralizedSubgraphs<GraphWithOnlyTaxonomyPaths, Long>,
+  FrequentSupportMethods<GraphWithOnlyTaxonomyPaths> {
 
   /**
    * Constructor.
@@ -52,7 +45,7 @@ public class FrequentGeneralizedSubgraphs
   }
 
   @Override
-  public Stream<GraphWithTaxonomyPaths> preProcess(Collection<CachedGraph> input) {
+  public Stream<GraphWithOnlyTaxonomyPaths> preProcess(Collection<CachedGraph> input) {
     Map<Integer, int[]> taxonomyPathIndex = getTaxonomyPathIndex(database, input);
 
     return getParallelizableStream(input)
@@ -63,25 +56,22 @@ public class FrequentGeneralizedSubgraphs
           graph.getVertexLabels()[i] = taxonomyPaths[i][0];
         }
 
-        return new GraphWithTaxonomyPaths(graph, taxonomyPaths);
+        return new GraphWithOnlyTaxonomyPaths(graph, taxonomyPaths);
       });
   }
 
   @Override
-  public long[] output(
-    List<Pair<DFSCode, Long>> frequentPatterns, Map<DFSCode, List<EmbeddingWithTaxonomyPaths>> patternEmbeddings, Long minSupportAbsolute) {
+  public long[] output(List<Pair<DFSCode, Long>> frequentPatterns,
+                       Map<DFSCode, List<WithDFSEmbedding>> patternEmbeddings,
+                       Map<Long, GraphWithOnlyTaxonomyPaths> graphIndex, Long minSupportAbsolute) {
 
     // specialize
     frequentPatterns = getParallelizableStream(frequentPatterns)
-      .flatMap(p -> getFrequentSpecializations(p.getKey(), patternEmbeddings.get(p.getKey()), p.getValue(), minSupportAbsolute))
+      .flatMap(p -> getFrequentSpecializations(
+        p.getKey(), patternEmbeddings.get(p.getKey()), p.getValue(), graphIndex, minSupportAbsolute))
       .collect(Collectors.toList());
 
     // use output of characteristic subgraphs
     return output(frequentPatterns);
-  }
-
-  @Override
-  public BiFunction<GraphWithTaxonomyPaths, DFSEmbedding, EmbeddingWithTaxonomyPaths> getEmbeddingFactory() {
-    return (g, e) -> new EmbeddingWithTaxonomyPaths(e, g.getTaxonomyPaths());
   }
 }

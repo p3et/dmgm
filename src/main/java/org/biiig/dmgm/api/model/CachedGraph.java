@@ -18,6 +18,7 @@
 package org.biiig.dmgm.api.model;
 
 import org.biiig.dmgm.api.db.SymbolDictionary;
+import org.biiig.dmgm.impl.operators.fsm.WithGraph;
 
 /**
  * A materialized model, i.e., a model including all its vertices and edges.
@@ -28,7 +29,13 @@ import org.biiig.dmgm.api.db.SymbolDictionary;
  *        Thus, the structure of cached graphs is immutable.
  *
  */
-public interface CachedGraph {
+public interface CachedGraph extends WithGraph {
+
+  @Override
+  default CachedGraph getGraph() {
+    return this;
+  }
+
   /**
    * Get the model's identifier.
    *

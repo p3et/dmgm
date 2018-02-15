@@ -20,24 +20,22 @@ package org.biiig.dmgm.impl.operators.fsm;
 import javafx.util.Pair;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.model.CachedGraph;
-import org.biiig.dmgm.impl.operators.fsm.characteristic.CharacteristicSubgraphsBase;
-import org.biiig.dmgm.impl.operators.fsm.common.DFSCode;
-import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.fsm.generalized.GeneralizedSubgraphs;
-import org.biiig.dmgm.impl.operators.fsm.mixed.EmbeddingWithCategoryAndTaxonomyPaths;
-import org.biiig.dmgm.impl.operators.fsm.mixed.GraphWithCategoryAndTaxonomyPaths;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * This algorithm extracts generalized subgraph pattern that are frequent in at least one category of input graphs.
+ *
+ * @see <a href="http://ieeexplore.ieee.org/document/8244685/">Generalized Subgraph Mining</a>
+ * @see <a href="https://www.degruyter.com/view/j/itit.2016.58.issue-4/itit-2016-0006/itit-2016-0006.xml">Characteristic Subgraph Mining</a>
+ */
 public class CharacteristicGeneralizedSubgraphs
-  extends CharacteristicSubgraphsBase<GraphWithCategoryAndTaxonomyPaths, EmbeddingWithCategoryAndTaxonomyPaths>
-  implements GeneralizedSubgraphs
-  <GraphWithCategoryAndTaxonomyPaths, EmbeddingWithCategoryAndTaxonomyPaths, Map<Integer, Long>> {
+  extends CharacteristicSubgraphsBase<GraphWithCategoriesAndTaxonomyPaths>
+  implements GeneralizedSubgraphs<GraphWithCategoriesAndTaxonomyPaths, Map<Integer, Long>> {
 
   /**
    * Constructor.
@@ -52,35 +50,34 @@ public class CharacteristicGeneralizedSubgraphs
   }
 
   @Override
-  public Stream<GraphWithCategoryAndTaxonomyPaths> preProcess(Collection<CachedGraph> input) {
+  public Stream<GraphWithCategoriesAndTaxonomyPaths> preProcess(Collection<CachedGraph> input) {
     Map<Integer, int[]> taxonomyPathIndex = getTaxonomyPathIndex(database, input);
 
 
     return getParallelizableStream(input)
       .map(graph -> {
 
-        int category = getCategory(database, graph.getId());
+        int[] category = getCategories(database, graph.getId());
         int[][] taxonomyPaths = getTaxonomyPaths(graph, taxonomyPathIndex);
-        return new GraphWithCategoryAndTaxonomyPaths(graph, taxonomyPaths, category);
+
+        for (int i = 0; i < graph.getVertexCount(); i++) {
+          graph.getVertexLabels()[i] = taxonomyPaths[i][0];
+        }
+
+        return new GraphWithCategoriesAndTaxonomyPaths(graph, taxonomyPaths, category);
       });
   }
 
-  @Override
   public long[] output(
-    List<Pair<DFSCode, Map<Integer, Long>>> frequentPatterns, Map<DFSCode, List<EmbeddingWithCategoryAndTaxonomyPaths>> patternEmbeddings, Map<Integer, Long> minSupportAbsolute) {
+    List<Pair<DFSCode, Map<Integer, Long>>> frequentPatterns, Map<DFSCode, List<WithDFSEmbedding>> patternEmbeddings, Map<Long, GraphWithCategoriesAndTaxonomyPaths> graphIndex, Map<Integer, Long> minSupportAbsolute) {
 
     // specialize
     frequentPatterns = getParallelizableStream(frequentPatterns)
-      .flatMap(p -> getFrequentSpecializations(p.getKey(), patternEmbeddings.get(p.getKey()), p.getValue(), minSupportAbsolute))
+      .flatMap(p -> getFrequentSpecializations(p.getKey(), patternEmbeddings.get(p.getKey()), p.getValue(), graphIndex, minSupportAbsolute))
       .collect(Collectors.toList());
 
     // use output of characteristic subgraphs
     return output(frequentPatterns);
-  }
-
-  @Override
-  public BiFunction<GraphWithCategoryAndTaxonomyPaths, DFSEmbedding, EmbeddingWithCategoryAndTaxonomyPaths> getEmbeddingFactory() {
-    return (g, e) -> new EmbeddingWithCategoryAndTaxonomyPaths(e, g.getCategory(), g.getTaxonomyPaths());
   }
 
 }

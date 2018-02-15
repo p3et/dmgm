@@ -20,21 +20,19 @@ package org.biiig.dmgm.impl.operators.fsm;
 import javafx.util.Pair;
 import org.biiig.dmgm.api.db.PropertyGraphDB;
 import org.biiig.dmgm.api.model.CachedGraph;
-import org.biiig.dmgm.impl.operators.fsm.common.DFSCode;
-import org.biiig.dmgm.impl.operators.fsm.common.DFSEmbedding;
-import org.biiig.dmgm.impl.operators.fsm.common.SubgraphMiningBase;
-import org.biiig.dmgm.impl.operators.fsm.simple.FSMEmbedding;
-import org.biiig.dmgm.impl.operators.fsm.simple.FSMGraph;
-import org.biiig.dmgm.impl.operators.fsm.simple.FrequentSupportMethods;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
+/**
+ * Simple frequent subgraph mining. This is the multi-threaded version of DIMSpan.
+ *
+ * @see <a href="https://dl.acm.org/citation.cfm?id=3148064">Paper</a>
+ */
 public class FrequentSimpleSubgraphs
-  extends SubgraphMiningBase<FSMGraph, FSMEmbedding, Long> implements FrequentSupportMethods {
+  extends SubgraphMiningBase<CachedGraph, Long> implements FrequentSupportMethods<CachedGraph> {
 
   /**
    * Constructor.
@@ -49,20 +47,17 @@ public class FrequentSimpleSubgraphs
   }
 
   @Override
-  public Stream<FSMGraph> preProcess(Collection<CachedGraph> input) {
-    return getParallelizableStream(input)
-      .map(FSMGraph::new);
+  public Stream<CachedGraph> preProcess(Collection<CachedGraph> input) {
+    // just forward the input
+    return getParallelizableStream(input);
   }
 
   @Override
-  public long[] output(
-    List<Pair<DFSCode, Long>> frequentPatterns, Map<DFSCode, List<FSMEmbedding>> patternEmbeddings, Long minSupportAbsolute) {
-    // use output of characteristic subgraphs
+  public long[] output(List<Pair<DFSCode, Long>> frequentPatterns,
+                       Map<DFSCode, List<WithDFSEmbedding>> patternEmbeddings, Map<Long, CachedGraph> graphIndex, Long minSupportAbsolute) {
+
+    // just output a single pattern
     return output(frequentPatterns);
   }
 
-  @Override
-  public BiFunction<FSMGraph, DFSEmbedding, FSMEmbedding> getEmbeddingFactory() {
-    return (g, e) -> new FSMEmbedding(e);
-  }
 }
