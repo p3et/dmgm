@@ -17,12 +17,12 @@
 
 package org.biiig.dmgm.to_string.cam;
 
-import org.biiig.dmgm.api.db.PropertyGraphDB;
+import org.biiig.dmgm.api.db.PropertyGraphDb;
 import org.biiig.dmgm.api.model.CachedGraph;
 
 public class CAMIncomingEdgesFormatter extends CAMAdjacentEdgesFormatter {
 
-  public CAMIncomingEdgesFormatter(PropertyGraphDB db) {
+  public CAMIncomingEdgesFormatter(PropertyGraphDb db) {
     super(db);
   }
 

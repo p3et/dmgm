@@ -17,16 +17,22 @@
 
 package org.biiig.dmgm.impl.operators.fsm;
 
-import javafx.util.Pair;
-import org.biiig.dmgm.api.model.CachedGraph;
-
 import java.lang.reflect.Array;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class InitializeSingleEdgePatterns
-  implements Function<CachedGraph, Stream<Pair<DFSCode, WithDFSEmbedding>>> {
+import javafx.util.Pair;
+import org.biiig.dmgm.api.model.CachedGraph;
 
+/**
+ * Extract all 1-edge DFS codes and embeddings from a graph.
+ */
+public class InitializeSingleEdgePatterns
+    implements Function<CachedGraph, Stream<Pair<DfsCode, WithEmbedding>>> {
+
+  /**
+   * Pattern label.
+   */
   private final int label;
 
   InitializeSingleEdgePatterns(int label) {
@@ -35,10 +41,11 @@ public class InitializeSingleEdgePatterns
 
   @SuppressWarnings("unchecked")
   @Override
-  public Stream<Pair<DFSCode,WithDFSEmbedding>> apply(CachedGraph graph) {
+  public Stream<Pair<DfsCode,WithEmbedding>> apply(CachedGraph graph) {
 
     int edgeCount = graph.getEdgeCount();
-    Pair<DFSCode, WithDFSEmbedding>[] pairs = (Pair<DFSCode, WithDFSEmbedding>[]) Array.newInstance(Pair.class, edgeCount);
+    Pair<DfsCode, WithEmbedding>[] pairs =
+        (Pair<DfsCode, WithEmbedding>[]) Array.newInstance(Pair.class, edgeCount);
 
     for (int edgeId = 0; edgeId < edgeCount; edgeId++) {
 
@@ -78,16 +85,16 @@ public class InitializeSingleEdgePatterns
         toLabel = sourceLabel;
       }
 
-      DFSCode dfsCode = new DFSCode(
-        label, loop ? new int[] {fromLabel} : new int[] {fromLabel, toLabel},
-        new int[] {edgeLabel},
-        new int[] {outgoing ? fromTime : toTime},
-        new int[] {outgoing ? toTime : fromTime},
-        new boolean[] {outgoing}
+      DfsCode dfsCode = new DfsCode(
+          label, loop ? new int[] {fromLabel} : new int[] {fromLabel, toLabel},
+          new int[] {edgeLabel},
+          new int[] {outgoing ? fromTime : toTime},
+          new int[] {outgoing ? toTime : fromTime},
+          new boolean[] {outgoing}
       );
 
 
-      DFSEmbedding embedding = new DFSEmbedding(graph.getId(), fromId, edgeId, toId);
+      DfsEmbedding embedding = new DfsEmbedding(graph.getId(), fromId, edgeId, toId);
 
       pairs[edgeId] = new Pair<>(dfsCode, embedding);
     }

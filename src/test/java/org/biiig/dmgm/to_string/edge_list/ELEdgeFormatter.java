@@ -17,14 +17,14 @@
 
 package org.biiig.dmgm.to_string.edge_list;
 
-import org.biiig.dmgm.api.db.PropertyGraphDB;
+import org.biiig.dmgm.api.db.PropertyGraphDb;
 import org.biiig.dmgm.api.model.CachedGraph;
 
 public class ELEdgeFormatter {
 
-  private final PropertyGraphDB db;
+  private final PropertyGraphDb db;
 
-  public ELEdgeFormatter(PropertyGraphDB db) {
+  public ELEdgeFormatter(PropertyGraphDb db) {
     this.db = db;
   }
 

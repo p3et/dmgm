@@ -17,13 +17,13 @@
 
 package org.biiig.dmgm.impl.model;
 
-import org.apache.commons.lang3.StringUtils;
-import org.biiig.dmgm.api.config.DMGMConstants;
-import org.biiig.dmgm.api.db.SymbolDictionary;
-import org.biiig.dmgm.api.model.CachedGraph;
-
 import java.util.function.Function;
 import java.util.stream.IntStream;
+
+import org.apache.commons.lang3.StringUtils;
+import org.biiig.dmgm.api.config.DmgmConstants;
+import org.biiig.dmgm.api.db.SymbolDictionary;
+import org.biiig.dmgm.api.model.CachedGraph;
 
 /**
  * Superclass of input graph representations.
@@ -69,7 +69,9 @@ public class CachedGraphBase implements CachedGraph {
    * @param sourceIds source ids of edges
    * @param targetIds target ids of edges
    */
-  public CachedGraphBase(long id, int label, int[] vertexLabels, int[] edgeLabels, int[] sourceIds, int[] targetIds) {
+  public CachedGraphBase(
+      long id, int label, int[] vertexLabels, int[] edgeLabels, int[] sourceIds, int[] targetIds) {
+
     this.id = id;
     this.label = label;
     this.vertexLabels = vertexLabels;
@@ -171,16 +173,16 @@ public class CachedGraphBase implements CachedGraph {
   private String formatGraph(Function<Integer, String> labelFormatter) {
 
     String[] edgeStrings = new String[getEdgeCount()];
-    for (int edgeId = 0; edgeId < getEdgeCount(); edgeId++)
+    for (int edgeId = 0; edgeId < getEdgeCount(); edgeId++) {
       edgeStrings[edgeId] = formatEdge(edgeId, labelFormatter);
+    }
 
-    return id +
-      DMGMConstants.Separators.ID_LABEL +
-      labelFormatter.apply(label) +
-      DMGMConstants.Separators.KEY_VALUE +
-      DMGMConstants.Elements.Collection.OPEN +
-      StringUtils.join(edgeStrings, DMGMConstants.Separators.LIST) +
-      DMGMConstants.Elements.Collection.CLOSE;
+    return id + DmgmConstants.Separators.ID_LABEL
+        + labelFormatter.apply(label)
+        + DmgmConstants.Separators.KEY_VALUE
+        + DmgmConstants.Elements.Collection.OPEN
+        + StringUtils.join(edgeStrings, DmgmConstants.Separators.LIST)
+        + DmgmConstants.Elements.Collection.CLOSE;
   }
 
   /**
@@ -192,11 +194,11 @@ public class CachedGraphBase implements CachedGraph {
    */
   private String formatEdge(int edgeId, Function<Integer, String> labelFormatter) {
     return formatVertex(getSourceId(edgeId), labelFormatter)
-      + DMGMConstants.Elements.Edge.OPEN_OUTGOING
+      + DmgmConstants.Elements.Edge.OPEN_OUTGOING
       + edgeId
-      + DMGMConstants.Separators.ID_LABEL
+      + DmgmConstants.Separators.ID_LABEL
       + labelFormatter.apply(getEdgeLabel(edgeId))
-      + DMGMConstants.Elements.Edge.CLOSE_OUTGOING
+      + DmgmConstants.Elements.Edge.CLOSE_OUTGOING
       + formatVertex(getTargetId(edgeId), labelFormatter);
   }
 
@@ -208,10 +210,10 @@ public class CachedGraphBase implements CachedGraph {
    * @return string representation
    */
   private String formatVertex(int vertexId, Function<Integer, String> labelFormatter) {
-    return DMGMConstants.Elements.Vertex.OPEN +
-      vertexId +
-      DMGMConstants.Separators.ID_LABEL +
-      labelFormatter.apply(getVertexLabel(vertexId)) +
-      DMGMConstants.Elements.Vertex.CLOSE;
+    return DmgmConstants.Elements.Vertex.OPEN
+        + vertexId
+        + DmgmConstants.Separators.ID_LABEL
+        + labelFormatter.apply(getVertexLabel(vertexId))
+        + DmgmConstants.Elements.Vertex.CLOSE;
   }
 }

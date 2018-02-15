@@ -31,27 +31,33 @@ import java.util.function.BiConsumer;
  * @param <G> graph type (e.g., with category or with taxonomy paths)
  * @param <S> support type (e.g., simple support or map: category -> support
  */
-public interface SubgraphMining<G extends WithGraph, S>
-  extends CollectionToCollectionOperator, SubgraphMiningSupportMethods<G, S>, SubgraphMiningVariantMethods<G, S> {
+public interface SubgraphMining<G extends WithGraph, S> extends CollectionToCollectionOperator,
+    SubgraphMiningSupport<G, S>, SubgraphMiningVariant<G, S> {
+
   /**
+   * Generalized functionality used for pattern growth,
+   * vector mining and characteristic support counting.
    * 1. Sort embeddings by graph id.
    * 2. Iterate over embeddings
    * 3. Load graph for any new graph id
-   * 4. Execute biconsumer for any embedding-graph pair
+   * 4. Execute function for any embedding-graph pair
    *
    * @param embeddings embedding ...
    * @param graphIndex map: graph id -> graph
    * @param joinFunction action executed for every pair
    */
-  default void mergeJoinAndExecute(List<WithDFSEmbedding> embeddings, Map<Long, G> graphIndex, BiConsumer<G, WithDFSEmbedding> joinFunction) {
+  default void joinAndExecute(
+      List<WithEmbedding> embeddings, Map<Long, G> graphIndex,
+      BiConsumer<G, WithEmbedding> joinFunction) {
+
     embeddings.sort(Comparator.comparing(e -> e.getEmbedding().getGraphId()));
-    Iterator<WithDFSEmbedding> iterator = embeddings.iterator();
+    Iterator<WithEmbedding> iterator = embeddings.iterator();
     G withGraph = null;
 
     // for each embedding
     while (iterator.hasNext()) {
-      WithDFSEmbedding withEmbedding = iterator.next();
-      DFSEmbedding embedding = withEmbedding.getEmbedding();
+      WithEmbedding withEmbedding = iterator.next();
+      DfsEmbedding embedding = withEmbedding.getEmbedding();
       long graphId = embedding.getGraphId();
 
       // load new graph if required

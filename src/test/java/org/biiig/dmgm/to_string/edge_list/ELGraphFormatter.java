@@ -18,7 +18,7 @@
 package org.biiig.dmgm.to_string.edge_list;
 
 import org.apache.commons.lang3.StringUtils;
-import org.biiig.dmgm.api.db.PropertyGraphDB;
+import org.biiig.dmgm.api.db.PropertyGraphDb;
 import org.biiig.dmgm.api.model.CachedGraph;
 
 import java.util.function.Function;
@@ -28,7 +28,7 @@ public class ELGraphFormatter implements Function<CachedGraph, String> {
 
   private final ELTripleFormatter edgeFormatter;
 
-  public ELGraphFormatter(PropertyGraphDB db) {
+  public ELGraphFormatter(PropertyGraphDb db) {
     this.edgeFormatter = new ELTripleFormatter(db);
   }
 

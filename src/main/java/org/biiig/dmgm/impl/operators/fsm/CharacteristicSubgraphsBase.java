@@ -17,18 +17,20 @@
 
 package org.biiig.dmgm.impl.operators.fsm;
 
-import org.biiig.dmgm.api.config.DMGMConstants;
-import org.biiig.dmgm.api.db.PropertyGraphDB;
-
 import java.util.Map;
+
+import org.biiig.dmgm.api.config.DmgmConstants;
+import org.biiig.dmgm.api.db.PropertyGraphDb;
+
 
 /**
  * Superclass of characteristic subgraph mining variants.
  *
  * @param <G> input graph type
  */
-public abstract class CharacteristicSubgraphsBase<G extends WithGraph & WithCategories>
-  extends SubgraphMiningBase<G, Map<Integer, Long>> implements CharacteristicSupportMethods<G> {
+abstract class CharacteristicSubgraphsBase<G extends WithGraph & WithCategories>
+    extends SubgraphMiningBase<G, Map<Integer, Long>>
+    implements CharacteristicSupport<G> {
 
   /**
    * Get the category property key.
@@ -39,10 +41,20 @@ public abstract class CharacteristicSubgraphsBase<G extends WithGraph & WithCate
    */
   private final int[] defaultCategories;
 
-  CharacteristicSubgraphsBase(PropertyGraphDB db, boolean parallel, float minSupportRel, int maxEdgeCount) {
+  /**
+   * Constructor.
+   *
+   * @param db database
+   * @param parallel true <=> parallel execution
+   * @param minSupportRel min support threshold
+   * @param maxEdgeCount max edge count
+   */
+  CharacteristicSubgraphsBase(
+      PropertyGraphDb db, boolean parallel, float minSupportRel, int maxEdgeCount) {
+
     super(db, parallel, minSupportRel, maxEdgeCount);
-    categoryKey = db.encode(DMGMConstants.PropertyKeys.CATEGORY);
-    defaultCategories = new int[] {db.encode(DMGMConstants.PropertyDefaultValues.STRING)};
+    categoryKey = db.encode(DmgmConstants.PropertyKeys.CATEGORY);
+    defaultCategories = new int[] {db.encode(DmgmConstants.PropertyDefaultValues.STRING)};
   }
 
   @Override

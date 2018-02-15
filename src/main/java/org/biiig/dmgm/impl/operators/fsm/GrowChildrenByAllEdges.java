@@ -45,14 +45,14 @@ public class GrowChildrenByAllEdges implements GrowChildren {
   private final GrowChildren incoming;
 
 
-  public GrowChildrenByAllEdges(DFSCode parent) {
+  public GrowChildrenByAllEdges(DfsCode parent) {
     outgoing = new GrowChildrenByOutgoingEdges(parent);
     incoming = new GrowChildrenByIncomingEdges(parent);
   }
 
   @Override
-  public void addChildren(CachedGraph withGraph, DFSEmbedding embedding, Collection<Pair<DFSCode, WithDFSEmbedding>> output) {
-    outgoing.addChildren(withGraph, embedding, output);
-    incoming.addChildren(withGraph, embedding, output);
+  public void addChildren(CachedGraph graph, DfsEmbedding embedding, Collection<Pair<DfsCode, WithEmbedding>> output) {
+    outgoing.addChildren(graph, embedding, output);
+    incoming.addChildren(graph, embedding, output);
   }
 }

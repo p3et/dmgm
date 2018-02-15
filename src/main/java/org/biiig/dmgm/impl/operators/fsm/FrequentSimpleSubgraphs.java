@@ -17,22 +17,22 @@
 
 package org.biiig.dmgm.impl.operators.fsm;
 
-import javafx.util.Pair;
-import org.biiig.dmgm.api.db.PropertyGraphDB;
-import org.biiig.dmgm.api.model.CachedGraph;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+
+import javafx.util.Pair;
+import org.biiig.dmgm.api.db.PropertyGraphDb;
+import org.biiig.dmgm.api.model.CachedGraph;
 
 /**
  * Simple frequent subgraph mining. This is the multi-threaded version of DIMSpan.
  *
  * @see <a href="https://dl.acm.org/citation.cfm?id=3148064">Paper</a>
  */
-public class FrequentSimpleSubgraphs
-  extends SubgraphMiningBase<CachedGraph, Long> implements FrequentSupportMethods<CachedGraph> {
+class FrequentSimpleSubgraphs
+    extends SubgraphMiningBase<CachedGraph, Long> implements FrequentSupport<CachedGraph> {
 
   /**
    * Constructor.
@@ -42,7 +42,9 @@ public class FrequentSimpleSubgraphs
    * @param minSupportRel minimum support threshold
    * @param maxEdgeCount  maximum result edge count
    */
-  public FrequentSimpleSubgraphs(PropertyGraphDB db, boolean parallel, float minSupportRel, int maxEdgeCount) {
+  FrequentSimpleSubgraphs(
+      PropertyGraphDb db, boolean parallel, float minSupportRel, int maxEdgeCount) {
+
     super(db, parallel, minSupportRel, maxEdgeCount);
   }
 
@@ -53,8 +55,9 @@ public class FrequentSimpleSubgraphs
   }
 
   @Override
-  public long[] output(List<Pair<DFSCode, Long>> frequentPatterns,
-                       Map<DFSCode, List<WithDFSEmbedding>> patternEmbeddings, Map<Long, CachedGraph> graphIndex, Long minSupportAbsolute) {
+  public long[] output(List<Pair<DfsCode, Long>> frequentPatterns,
+                       Map<DfsCode, List<WithEmbedding>> patternEmbeddings,
+                       Map<Long, CachedGraph> graphIndex, Long minSupportAbsolute) {
 
     // just output a single pattern
     return output(frequentPatterns);

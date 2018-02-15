@@ -17,11 +17,11 @@
 
 package org.biiig.dmgm.impl.db;
 
-import org.apache.commons.lang3.StringUtils;
-import org.biiig.dmgm.api.config.DMGMConstants;
-import org.biiig.dmgm.api.db.VertexIdsEdgeIds;
-
 import java.util.Arrays;
+
+import org.apache.commons.lang3.StringUtils;
+import org.biiig.dmgm.api.config.DmgmConstants;
+import org.biiig.dmgm.api.db.VertexIdsEdgeIds;
 
 /**
  * Reference implementation of a basic graph.
@@ -68,7 +68,8 @@ public class LongsPair implements VertexIdsEdgeIds {
     boolean equal;
     if (obj != null && obj.getClass().equals(this.getClass())) {
       LongsPair that = (LongsPair) obj;
-      equal = Arrays.equals(this.vertexIds, that.vertexIds) && Arrays.equals(this.edgeIds, that.edgeIds);
+      equal = Arrays.equals(this.vertexIds, that.vertexIds)
+          && Arrays.equals(this.edgeIds, that.edgeIds);
     } else {
       equal = false;
     }
@@ -78,14 +79,14 @@ public class LongsPair implements VertexIdsEdgeIds {
 
   @Override
   public String toString() {
-    return DMGMConstants.Elements.Graph.OPEN +
-      DMGMConstants.Elements.Collection.OPEN +
-      StringUtils.join(vertexIds, DMGMConstants.Separators.LIST) +
-      DMGMConstants.Elements.Collection.CLOSE +
-      DMGMConstants.Elements.Collection.OPEN +
-      DMGMConstants.Separators.KEY_VALUE +
-      StringUtils.join(edgeIds, DMGMConstants.Separators.LIST) +
-      DMGMConstants.Elements.Collection.CLOSE +
-      DMGMConstants.Elements.Graph.CLOSE;
+    return DmgmConstants.Elements.Graph.OPEN
+        + DmgmConstants.Elements.Collection.OPEN
+        + StringUtils.join(vertexIds, DmgmConstants.Separators.LIST)
+        + DmgmConstants.Elements.Collection.CLOSE
+        + DmgmConstants.Elements.Collection.OPEN
+        + DmgmConstants.Separators.KEY_VALUE
+        + StringUtils.join(edgeIds, DmgmConstants.Separators.LIST)
+        + DmgmConstants.Elements.Collection.CLOSE
+        + DmgmConstants.Elements.Graph.CLOSE;
   }
 }

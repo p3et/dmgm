@@ -52,7 +52,7 @@
 package org.biiig.dmgm.impl.loader;
 
 import org.biiig.dmgm.DMGMTestBase;
-import org.biiig.dmgm.api.db.PropertyGraphDB;
+import org.biiig.dmgm.api.db.PropertyGraphDb;
 import org.biiig.dmgm.api.model.CachedGraph;
 import org.junit.Test;
 
@@ -64,9 +64,9 @@ public class TLFReaderTest extends DMGMTestBase {
 
   @Test
   public void testRead() {
-    PropertyGraphDB database = getPredictableDatabase();
+    PropertyGraphDb database = getPredictableDatabase();
 
-    int graphLabel = database.encode(TLFConstants.GRAPH_SYMBOL);
+    int graphLabel = database.encode(TlfConstants.GRAPH_SYMBOL);
     int colLabel = database.encode("COL");
 
     long[] graphIds = database.queryElements(i -> i == graphLabel);
@@ -76,8 +76,6 @@ public class TLFReaderTest extends DMGMTestBase {
     List<CachedGraph> graphCollection = database.getCachedCollection(cid);
 
     assertEquals("model count", 10, graphCollection.size());
-
-    System.out.println(database);
   }
 
 }

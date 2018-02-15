@@ -17,25 +17,26 @@
 
 package org.biiig.dmgm.impl.operators.fsm;
 
-import javafx.util.Pair;
-import org.biiig.dmgm.api.db.PropertyGraphDB;
-import org.biiig.dmgm.api.model.CachedGraph;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javafx.util.Pair;
+import org.biiig.dmgm.api.db.PropertyGraphDb;
+import org.biiig.dmgm.api.model.CachedGraph;
+
 /**
- * This algorithm extracts generalized subgraph pattern that are frequent in at least one category of input graphs.
+ * This algorithm extracts generalized subgraph pattern that
+ * are frequent in at least one category of input graphs.
  *
  * @see <a href="http://ieeexplore.ieee.org/document/8244685/">Generalized Subgraph Mining</a>
  * @see <a href="https://www.degruyter.com/view/j/itit.2016.58.issue-4/itit-2016-0006/itit-2016-0006.xml">Characteristic Subgraph Mining</a>
  */
-public class CharacteristicGeneralizedSubgraphs
-  extends CharacteristicSubgraphsBase<GraphWithCategoriesAndTaxonomyPaths>
-  implements GeneralizedSubgraphs<GraphWithCategoriesAndTaxonomyPaths, Map<Integer, Long>> {
+class CharacteristicGeneralizedSubgraphs
+    extends CharacteristicSubgraphsBase<GraphWithCategoriesAndTaxonomyPaths>
+    implements GeneralizedSubgraphs<GraphWithCategoriesAndTaxonomyPaths, Map<Integer, Long>> {
 
   /**
    * Constructor.
@@ -45,7 +46,9 @@ public class CharacteristicGeneralizedSubgraphs
    * @param minSupportRel minimum support threshold
    * @param maxEdgeCount  maximum result edge count
    */
-  public CharacteristicGeneralizedSubgraphs(PropertyGraphDB db, boolean parallel, float minSupportRel, int maxEdgeCount) {
+  CharacteristicGeneralizedSubgraphs(
+      PropertyGraphDb db, boolean parallel, float minSupportRel, int maxEdgeCount) {
+
     super(db, parallel, minSupportRel, maxEdgeCount);
   }
 
@@ -53,28 +56,31 @@ public class CharacteristicGeneralizedSubgraphs
   public Stream<GraphWithCategoriesAndTaxonomyPaths> preProcess(Collection<CachedGraph> input) {
     Map<Integer, int[]> taxonomyPathIndex = getTaxonomyPathIndex(database, input);
 
-
     return getParallelizableStream(input)
-      .map(graph -> {
+        .map(graph -> {
 
-        int[] category = getCategories(database, graph.getId());
-        int[][] taxonomyPaths = getTaxonomyPaths(graph, taxonomyPathIndex);
+          int[] category = getCategories(database, graph.getId());
+          int[][] taxonomyPaths = getTaxonomyPaths(graph, taxonomyPathIndex);
 
-        for (int i = 0; i < graph.getVertexCount(); i++) {
-          graph.getVertexLabels()[i] = taxonomyPaths[i][0];
-        }
+          for (int i = 0; i < graph.getVertexCount(); i++) {
+            graph.getVertexLabels()[i] = taxonomyPaths[i][0];
+          }
 
-        return new GraphWithCategoriesAndTaxonomyPaths(graph, taxonomyPaths, category);
-      });
+          return new GraphWithCategoriesAndTaxonomyPaths(graph, taxonomyPaths, category);
+        });
   }
 
-  public long[] output(
-    List<Pair<DFSCode, Map<Integer, Long>>> frequentPatterns, Map<DFSCode, List<WithDFSEmbedding>> patternEmbeddings, Map<Long, GraphWithCategoriesAndTaxonomyPaths> graphIndex, Map<Integer, Long> minSupportAbsolute) {
+  @Override
+  public long[] output(List<Pair<DfsCode, Map<Integer, Long>>> frequentPatterns,
+                       Map<DfsCode, List<WithEmbedding>> patternEmbeddings,
+                       Map<Long, GraphWithCategoriesAndTaxonomyPaths> graphIndex,
+                       Map<Integer, Long> minSupportAbsolute) {
 
     // specialize
     frequentPatterns = getParallelizableStream(frequentPatterns)
-      .flatMap(p -> getFrequentSpecializations(p.getKey(), patternEmbeddings.get(p.getKey()), p.getValue(), graphIndex, minSupportAbsolute))
-      .collect(Collectors.toList());
+        .flatMap(p -> getFrequentSpecializations(p.getKey(),
+            patternEmbeddings.get(p.getKey()), p.getValue(), graphIndex, minSupportAbsolute))
+        .collect(Collectors.toList());
 
     // use output of characteristic subgraphs
     return output(frequentPatterns);

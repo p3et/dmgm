@@ -17,7 +17,7 @@
 
 package org.biiig.dmgm.impl.db;
 
-import org.biiig.dmgm.api.config.DMGMConstants;
+import org.biiig.dmgm.api.config.DmgmConstants;
 import org.biiig.dmgm.api.db.SourceIdTargetId;
 
 /**
@@ -75,10 +75,10 @@ public class LongPair implements SourceIdTargetId {
 
   @Override
   public String toString() {
-    return DMGMConstants.Elements.Vertex.OPEN +
-      sourceId +
-      DMGMConstants.Separators.KEY_VALUE +
-      targetId +
-      DMGMConstants.Elements.Vertex.CLOSE;
+    return DmgmConstants.Elements.Vertex.OPEN
+        + sourceId
+        + DmgmConstants.Separators.KEY_VALUE
+        + targetId
+        + DmgmConstants.Elements.Vertex.CLOSE;
   }
 }

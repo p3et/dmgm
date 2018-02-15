@@ -17,20 +17,25 @@
 
 package org.biiig.dmgm.impl.operators.fsm;
 
-import javafx.util.Pair;
-import org.biiig.dmgm.api.db.PropertyGraphDB;
-import org.biiig.dmgm.api.model.CachedGraph;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class FrequentGeneralizedSubgraphs
-  extends SubgraphMiningBase<GraphWithOnlyTaxonomyPaths, Long>
-  implements GeneralizedSubgraphs<GraphWithOnlyTaxonomyPaths, Long>,
-  FrequentSupportMethods<GraphWithOnlyTaxonomyPaths> {
+import javafx.util.Pair;
+import org.biiig.dmgm.api.db.PropertyGraphDb;
+import org.biiig.dmgm.api.model.CachedGraph;
+
+/**
+ * This algorithm extracts generalized frequent subgraphs.
+ *
+ * @see <a href="http://ieeexplore.ieee.org/document/8244685/">Generalized Subgraph Mining</a>
+ */
+class FrequentGeneralizedSubgraphs
+    extends SubgraphMiningBase<GraphWithTaxonomyPaths, Long>
+    implements GeneralizedSubgraphs<GraphWithTaxonomyPaths, Long>,
+    FrequentSupport<GraphWithTaxonomyPaths> {
 
   /**
    * Constructor.
@@ -40,12 +45,14 @@ public class FrequentGeneralizedSubgraphs
    * @param minSupportRel minimum support threshold
    * @param maxEdgeCount  maximum result edge count
    */
-  public FrequentGeneralizedSubgraphs(PropertyGraphDB db, boolean parallel, float minSupportRel, int maxEdgeCount) {
+  FrequentGeneralizedSubgraphs(
+      PropertyGraphDb db, boolean parallel, float minSupportRel, int maxEdgeCount) {
+
     super(db, parallel, minSupportRel, maxEdgeCount);
   }
 
   @Override
-  public Stream<GraphWithOnlyTaxonomyPaths> preProcess(Collection<CachedGraph> input) {
+  public Stream<GraphWithTaxonomyPaths> preProcess(Collection<CachedGraph> input) {
     Map<Integer, int[]> taxonomyPathIndex = getTaxonomyPathIndex(database, input);
 
     return getParallelizableStream(input)
@@ -56,19 +63,19 @@ public class FrequentGeneralizedSubgraphs
           graph.getVertexLabels()[i] = taxonomyPaths[i][0];
         }
 
-        return new GraphWithOnlyTaxonomyPaths(graph, taxonomyPaths);
+        return new GraphWithTaxonomyPaths(graph, taxonomyPaths);
       });
   }
 
   @Override
-  public long[] output(List<Pair<DFSCode, Long>> frequentPatterns,
-                       Map<DFSCode, List<WithDFSEmbedding>> patternEmbeddings,
-                       Map<Long, GraphWithOnlyTaxonomyPaths> graphIndex, Long minSupportAbsolute) {
+  public long[] output(List<Pair<DfsCode, Long>> frequentPatterns,
+                       Map<DfsCode, List<WithEmbedding>> patternEmbeddings,
+                       Map<Long, GraphWithTaxonomyPaths> graphIndex, Long minSupportAbs) {
 
     // specialize
     frequentPatterns = getParallelizableStream(frequentPatterns)
       .flatMap(p -> getFrequentSpecializations(
-        p.getKey(), patternEmbeddings.get(p.getKey()), p.getValue(), graphIndex, minSupportAbsolute))
+        p.getKey(), patternEmbeddings.get(p.getKey()), p.getValue(), graphIndex, minSupportAbs))
       .collect(Collectors.toList());
 
     // use output of characteristic subgraphs

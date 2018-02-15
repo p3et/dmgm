@@ -20,7 +20,7 @@ package org.biiig.dmgm.to_string.cam;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.biiig.dmgm.api.db.PropertyGraphDB;
+import org.biiig.dmgm.api.db.PropertyGraphDb;
 import org.biiig.dmgm.api.model.CachedGraph;
 
 import java.util.Arrays;
@@ -31,9 +31,9 @@ public abstract class CAMAdjacentEdgesFormatter {
   protected static final char OUTGOING = '>';
   protected static final char INCOMING = '<';
   protected static final char EDGE_START_END = '-';
-  protected final PropertyGraphDB db;
+  protected final PropertyGraphDb db;
 
-  public CAMAdjacentEdgesFormatter(PropertyGraphDB db) {
+  public CAMAdjacentEdgesFormatter(PropertyGraphDb db) {
     this.db = db;
   }
 

@@ -17,16 +17,16 @@
 
 package org.biiig.dmgm.to_string.cam;
 
-import org.biiig.dmgm.api.db.PropertyGraphDB;
+import org.biiig.dmgm.api.db.PropertyGraphDb;
 import org.biiig.dmgm.api.model.CachedGraph;
 
 public class CAMVertexFormatter {
 
-  private final PropertyGraphDB db;
+  private final PropertyGraphDb db;
   private final CAMOutgoingEdgesFormatter outgoingEdgesFormatter;
   private final CAMIncomingEdgesFormatter incomingEdgesFormatter;
 
-  public CAMVertexFormatter(PropertyGraphDB db) {
+  public CAMVertexFormatter(PropertyGraphDb db) {
     this.db = db;
     this.outgoingEdgesFormatter = new CAMOutgoingEdgesFormatter(db);
     this.incomingEdgesFormatter = new CAMIncomingEdgesFormatter(db);

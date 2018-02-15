@@ -17,14 +17,14 @@
 
 package org.biiig.dmgm.to_string.edge_list;
 
-import org.biiig.dmgm.api.db.PropertyGraphDB;
+import org.biiig.dmgm.api.db.PropertyGraphDb;
 import org.biiig.dmgm.api.model.CachedGraph;
 
 public class ELVertexFormatter {
 
-  private final PropertyGraphDB vertexDictionary;
+  private final PropertyGraphDb vertexDictionary;
 
-  public ELVertexFormatter(PropertyGraphDB db) {
+  public ELVertexFormatter(PropertyGraphDb db) {
     this.vertexDictionary = db;
   }
 

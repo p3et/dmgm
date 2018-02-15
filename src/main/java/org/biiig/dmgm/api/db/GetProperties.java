@@ -36,69 +36,6 @@ public interface GetProperties extends SymbolDictionary {
   boolean is(long id, int key);
 
   /**
-   * Get a long value.
-   *
-   * @param id element id
-   * @param key property key
-   * @return value
-   */
-  long getLong(long id, int key);
-
-  /**
-   * Get a double value.
-   *
-   * @param id element id
-   * @param key property key
-   * @return value
-   */
-  double getDouble(long id, int key);
-
-  /**
-   * Get a string value.
-   *
-   * @param id element id
-   * @param key property key
-   * @return value
-   */
-  String getString(long id, int key);
-
-  /**
-   * Get a decimal value.
-   *
-   * @param id element id
-   * @param key property key
-   * @return value
-   */
-  BigDecimal getBigDecimal(long id, int key);
-
-  /**
-   * Get a date value.
-   *
-   * @param id element id
-   * @param key property key
-   * @return value
-   */
-  LocalDate getLocalDate(long id, int key);
-
-  /**
-   * Get get an array of integer values.
-   *
-   * @param id element id
-   * @param key property key
-   * @return value
-   */
-  int[] getInts(long id, int key);
-
-  /**
-   * Get get an array of integer values.
-   *
-   * @param id element id
-   * @param key property key
-   * @return value
-   */
-  String[] getStrings(long id, int key);
-
-  /**
    * Get a boolean value.
    *
    * @param id element id
@@ -116,9 +53,28 @@ public interface GetProperties extends SymbolDictionary {
    * @param key property key
    * @return value
    */
-  default long getLong(long id, String key){
+  long getLong(long id, int key);
+
+  /**
+   * Get a long value.
+   *
+   * @param id element id
+   * @param key property key
+   * @return value
+   */
+  default long getLong(long id, String key) {
     return getLong(id, encode(key));
   }
+
+
+  /**
+   * Get a double value.
+   *
+   * @param id element id
+   * @param key property key
+   * @return value
+   */
+  double getDouble(long id, int key);
 
   /**
    * Get a double value.
@@ -138,6 +94,15 @@ public interface GetProperties extends SymbolDictionary {
    * @param key property key
    * @return value
    */
+  String getString(long id, int key);
+
+  /**
+   * Get a string value.
+   *
+   * @param id element id
+   * @param key property key
+   * @return value
+   */
   default String getString(long id, String key) {
     return getString(id, encode(key));
   }
@@ -149,9 +114,28 @@ public interface GetProperties extends SymbolDictionary {
    * @param key property key
    * @return value
    */
-  default BigDecimal getBigDecimal(long id, String key){
+  BigDecimal getBigDecimal(long id, int key);
+
+  /**
+   * Get a decimal value.
+   *
+   * @param id element id
+   * @param key property key
+   * @return value
+   */
+  default BigDecimal getBigDecimal(long id, String key) {
     return getBigDecimal(id, encode(key));
   }
+
+
+  /**
+   * Get a date value.
+   *
+   * @param id element id
+   * @param key property key
+   * @return value
+   */
+  LocalDate getLocalDate(long id, int key);
 
   /**
    * Get a date value.
@@ -171,9 +155,27 @@ public interface GetProperties extends SymbolDictionary {
    * @param key property key
    * @return value
    */
+  int[] getInts(long id, int key);
+
+  /**
+   * Get get an array of integer values.
+   *
+   * @param id element id
+   * @param key property key
+   * @return value
+   */
   default int[] getInts(long id, String key) {
     return getInts(id, encode(key));
   }
+
+  /**
+   * Get get an array of integer values.
+   *
+   * @param id element id
+   * @param key property key
+   * @return value
+   */
+  String[] getStrings(long id, int key);
 
   /**
    * Get get an array of integer values.

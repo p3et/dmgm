@@ -30,6 +30,16 @@ public interface CreateElements extends SymbolDictionary {
   long createVertex(int label);
 
   /**
+   * Create a vertex.
+   *
+   * @param label label
+   * @return id
+   */
+  default long createVertex(String label) {
+    return createVertex(encode(label));
+  }
+
+  /**
    * Create an edge.
    * Edges may connect arbitrary elements, i.e., vertices, edges, graphs or model collections.
    *
@@ -39,6 +49,18 @@ public interface CreateElements extends SymbolDictionary {
    * @return id
    */
   long createEdge(int label, long sourceId, long targetId);
+
+  /**
+   * Create an edge.
+   *
+   * @param label label
+   * @param sourceId source element id
+   * @param targetId target element id
+   * @return id
+   */
+  default long createEdge(String label, long sourceId, long targetId) {
+    return createEdge(encode(label), sourceId, targetId);
+  }
 
   /**
    * Create a model.
@@ -51,37 +73,6 @@ public interface CreateElements extends SymbolDictionary {
   long createGraph(int label, long[] vertexIds, long[] edgeIds);
 
   /**
-   * Create a model collection.
-   *
-   * @param label label
-   * @param graphIds model ids
-   * @return id
-   */
-  long createCollection(int label, long[] graphIds);
-
-  /**
-   * Create a vertex.
-   *
-   * @param label label
-   * @return id
-   */
-  default long createVertex(String label){
-    return createVertex(encode(label));
-  }
-
-  /**
-   * Create an edge.
-   *
-   * @param label label
-   * @param sourceId source element id
-   * @param targetId target element id
-   * @return id
-   */
-  default long createEdge(String label, long sourceId, long targetId){
-    return createEdge(encode(label), sourceId, targetId);
-  }
-
-  /**
    * Create a model (Hypervertex).
    *
    * @param label label
@@ -89,9 +80,18 @@ public interface CreateElements extends SymbolDictionary {
    * @param edgeIds element ids in the role of edges
    * @return id
    */
-  default long createGraph(String label, long[] vertexIds, long[] edgeIds){
+  default long createGraph(String label, long[] vertexIds, long[] edgeIds) {
     return createGraph(encode(label), vertexIds, edgeIds);
   }
+
+  /**
+   * Create a model collection.
+   *
+   * @param label label
+   * @param graphIds model ids
+   * @return id
+   */
+  long createCollection(int label, long[] graphIds);
 
   /**
    * Create a model collection (Hypervertex without edges).
@@ -103,5 +103,4 @@ public interface CreateElements extends SymbolDictionary {
   default long createCollection(String label, long[] graphIds) {
     return createCollection(encode(label), graphIds);
   }
-
 }

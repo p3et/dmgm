@@ -52,6 +52,15 @@ public interface GetElements {
    */
   long[] getGraphIds(Long collectionId);
 
+
+  /**
+   * Get all ids of elements that appear in the role of a model,
+   * i.e., have associated vertices and edges.
+   *
+   * @return element ids
+   */
+  long[] getGraphIds();
+
   /**
    * Get all model ids in which a vertex appears.
    *
@@ -83,14 +92,6 @@ public interface GetElements {
    * @return element ids
    */
   long[] getEdgeIds();
-
-  /**
-   * Get all ids of elements that appear in the role of a model,
-   * i.e., have associated vertices and edges.
-   *
-   * @return element ids
-   */
-  long[] getGraphIds();
 
   /**
    * Get all ids of elements that appear in the role of a model collection,

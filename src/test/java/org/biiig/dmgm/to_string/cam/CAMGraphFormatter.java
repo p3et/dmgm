@@ -18,7 +18,7 @@
 package org.biiig.dmgm.to_string.cam;
 
 import org.apache.commons.lang3.StringUtils;
-import org.biiig.dmgm.api.db.PropertyGraphDB;
+import org.biiig.dmgm.api.db.PropertyGraphDb;
 import org.biiig.dmgm.api.model.CachedGraph;
 
 import java.util.Arrays;
@@ -30,7 +30,7 @@ public class CAMGraphFormatter implements Function<CachedGraph, String> {
 
   private final CAMVertexFormatter vertexFormatter;
 
-  public CAMGraphFormatter(PropertyGraphDB db) {
+  public CAMGraphFormatter(PropertyGraphDb db) {
     this.vertexFormatter = new CAMVertexFormatter(db);
   }
 

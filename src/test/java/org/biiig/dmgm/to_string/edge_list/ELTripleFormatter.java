@@ -17,7 +17,7 @@
 
 package org.biiig.dmgm.to_string.edge_list;
 
-import org.biiig.dmgm.api.db.PropertyGraphDB;
+import org.biiig.dmgm.api.db.PropertyGraphDb;
 import org.biiig.dmgm.api.model.CachedGraph;
 
 public class ELTripleFormatter {
@@ -25,7 +25,7 @@ public class ELTripleFormatter {
   private final ELVertexFormatter vertexFormatter;
   private final ELEdgeFormatter edgeFormatter;
 
-  public ELTripleFormatter(PropertyGraphDB db) {
+  public ELTripleFormatter(PropertyGraphDb db) {
     vertexFormatter = new ELVertexFormatter(db);
     edgeFormatter = new ELEdgeFormatter(db);
 

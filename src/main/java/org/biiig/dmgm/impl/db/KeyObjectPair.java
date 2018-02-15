@@ -17,7 +17,7 @@
 
 package org.biiig.dmgm.impl.db;
 
-import org.biiig.dmgm.api.config.DMGMConstants;
+import org.biiig.dmgm.api.config.DmgmConstants;
 import org.biiig.dmgm.api.db.Property;
 
 /**
@@ -25,11 +25,11 @@ import org.biiig.dmgm.api.db.Property;
  */
 public class KeyObjectPair implements Property {
   /**
-   * Encoded key
+   * Encoded key.
    */
   private final int key;
   /**
-   * Value
+   * Value.
    */
   private final Object value;
 
@@ -56,6 +56,6 @@ public class KeyObjectPair implements Property {
 
   @Override
   public String toString() {
-    return key + DMGMConstants.Separators.KEY_VALUE + value;
+    return key + DmgmConstants.Separators.KEY_VALUE + value;
   }
 }

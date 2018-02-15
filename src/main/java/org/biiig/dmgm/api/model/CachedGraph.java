@@ -22,7 +22,6 @@ import org.biiig.dmgm.impl.operators.fsm.WithGraph;
 
 /**
  * A materialized model, i.e., a model including all its vertices and edges.
- *
  * NOTE:  There are global ids (long) and local ids (int).
  *        The latter are only valid in the scope of a model.
  *        Local ids typically correspond to indexes of vertex and edge arrays.

@@ -37,13 +37,13 @@ package org.biiig.dmgm;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.db.Property;
-import org.biiig.dmgm.api.db.PropertyGraphDB;
-import org.biiig.dmgm.api.loader.PropertyGraphDBFactory;
+import org.biiig.dmgm.api.db.PropertyGraphDb;
+import org.biiig.dmgm.api.loader.PropertyGraphDbFactory;
 import org.biiig.dmgm.api.model.CachedGraph;
 import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
-import org.biiig.dmgm.impl.loader.GDLLoader;
-import org.biiig.dmgm.impl.loader.InMemoryGraphDBFactory;
-import org.biiig.dmgm.impl.loader.TLFLoader;
+import org.biiig.dmgm.impl.loader.GdlLoader;
+import org.biiig.dmgm.impl.loader.InMemoryGraphDbFactory;
+import org.biiig.dmgm.impl.loader.TlfLoader;
 import org.biiig.dmgm.to_string.cam.CAMGraphFormatter;
 import org.biiig.dmgm.to_string.edge_list.ELGraphFormatter;
 
@@ -61,7 +61,7 @@ public class DMGMTestBase {
   /**
    *
    */
-  protected static final PropertyGraphDBFactory DB_FACTORY = new InMemoryGraphDBFactory(true);
+  protected static final PropertyGraphDbFactory DB_FACTORY = new InMemoryGraphDbFactory(true);
 
   /**
    * Returns a sample database with a predictable amount of frequent patterns.
@@ -71,12 +71,12 @@ public class DMGMTestBase {
    *
    * @return
    */
-  protected PropertyGraphDB getPredictableDatabase() {
-    String inputPath = TLFLoader.class.getResource("/samples/predictable.tlf").getFile();
-    return new TLFLoader(DB_FACTORY, inputPath).get();
+  protected PropertyGraphDb getPredictableDatabase() {
+    String inputPath = TlfLoader.class.getResource("/samples/predictable.tlf").getFile();
+    return new TlfLoader(DB_FACTORY, inputPath).get();
   }
 
-  private boolean equal(PropertyGraphDB db, long expId, long resId, boolean includeProperties) {
+  private boolean equal(PropertyGraphDb db, long expId, long resId, boolean includeProperties) {
     Collection<CachedGraph> expected = db.getCachedCollection(expId);
     Collection<CachedGraph> result = db.getCachedCollection(resId);
 
@@ -92,7 +92,7 @@ public class DMGMTestBase {
     return equalSize && allFound && allExpected;
   }
 
-  private boolean compare(PropertyGraphDB db, String msg, Collection<CachedGraph> aCol, Collection<CachedGraph> bCol, boolean includeProperties) {
+  private boolean compare(PropertyGraphDb db, String msg, Collection<CachedGraph> aCol, Collection<CachedGraph> bCol, boolean includeProperties) {
     Map<String, String> aMap = getLabelMap(aCol, db, includeProperties);
     Map<String, String> bMap = getLabelMap(bCol, db, includeProperties);
 
@@ -108,7 +108,7 @@ public class DMGMTestBase {
     return notInB.isEmpty();
   }
 
-  private Map<String, String> getLabelMap(Collection<CachedGraph> expected, PropertyGraphDB db, boolean includeProperties) {
+  private Map<String, String> getLabelMap(Collection<CachedGraph> expected, PropertyGraphDb db, boolean includeProperties) {
     Function<CachedGraph, String> keyFormatter = new CAMGraphFormatter(db);
 
     Function<CachedGraph, String> valueFormatter = new ELGraphFormatter(db);
@@ -139,9 +139,9 @@ public class DMGMTestBase {
   }
 
   protected void runAndTestExpectation(
-    Function<PropertyGraphDB, CollectionToCollectionOperator> operatorFactory, String gdl, boolean includeProperties) {
+    Function<PropertyGraphDb, CollectionToCollectionOperator> operatorFactory, String gdl, boolean includeProperties) {
 
-    PropertyGraphDB db = new GDLLoader(DB_FACTORY, gdl).get();
+    PropertyGraphDb db = new GdlLoader(DB_FACTORY, gdl).get();
 
     int inLabel = db.encode(TestConstants.INPUT_GRAPH_LABEL);
     long[] inIds = db.queryElements(l -> l == inLabel);

@@ -19,13 +19,28 @@ package org.biiig.dmgm.impl.operators.fsm;
 
 import org.biiig.dmgm.api.model.CachedGraph;
 
-public class GraphWithCategories implements WithGraph, WithCategories {
+/**
+ * A graph associated to n categories.
+ */
+class GraphWithCategories implements WithGraph, WithCategories {
 
-
-  private final int[] categories;
+  /**
+   * Graph.
+   */
   private CachedGraph graph;
 
-  public GraphWithCategories(CachedGraph graph, int[] categories) {
+  /**
+   * Categories.
+   */
+  private final int[] categories;
+
+  /**
+   * Constructor.
+   *
+   * @param graph graph
+   * @param categories categories
+   */
+  GraphWithCategories(CachedGraph graph, int[] categories) {
     this.graph = graph;
     this.categories = categories;
   }

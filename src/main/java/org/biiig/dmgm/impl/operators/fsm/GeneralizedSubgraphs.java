@@ -19,12 +19,6 @@ package org.biiig.dmgm.impl.operators.fsm;
 
 import com.google.common.collect.Lists;
 import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
-import javafx.util.Pair;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.biiig.dmgm.api.config.DMGMConstants;
-import org.biiig.dmgm.api.db.SymbolDictionary;
-import org.biiig.dmgm.api.model.CachedGraph;
 
 import java.util.Collection;
 import java.util.List;
@@ -35,7 +29,22 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public interface GeneralizedSubgraphs<G extends WithGraph & WithTaxonomyPaths, S> extends SubgraphMining<G, S> {
+import javafx.util.Pair;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.biiig.dmgm.api.config.DmgmConstants;
+import org.biiig.dmgm.api.db.SymbolDictionary;
+import org.biiig.dmgm.api.model.CachedGraph;
+
+
+/**
+ * Mixin to create a generalized version of a subgraph mining algorithm.
+ * @param <G> graph type
+ * @param <S> support type
+ */
+interface GeneralizedSubgraphs<G extends WithGraph & WithTaxonomyPaths, S>
+    extends SubgraphMining<G, S> {
+
   /**
    * Create an array of taxonomy paths where indices correspond to the vertex ids of the graph.
    *
@@ -50,7 +59,6 @@ public interface GeneralizedSubgraphs<G extends WithGraph & WithTaxonomyPaths, S
       taxonomyPaths[vertexId] = taxonomyPathIndex.get(graph.getVertexLabel(vertexId));
 
     }
-
     return taxonomyPaths;
   }
 
@@ -61,7 +69,9 @@ public interface GeneralizedSubgraphs<G extends WithGraph & WithTaxonomyPaths, S
    * @param input cached graph collection
    * @return map: child label -> parent label...
    */
-  default Map<Integer, int[]> getTaxonomyPathIndex(SymbolDictionary dictionary, Collection<CachedGraph> input) {
+  default Map<Integer, int[]> getTaxonomyPathIndex(
+      SymbolDictionary dictionary, Collection<CachedGraph> input) {
+
     // get distinct bottom level labels
     int[] vertexLabels = getDistinctVertexLabels(input);
 
@@ -70,9 +80,9 @@ public interface GeneralizedSubgraphs<G extends WithGraph & WithTaxonomyPaths, S
 
     // get all generalizations
     IntStream generalizedLabelStream = taxonomies
-      .values()
-      .stream()
-      .mapToInt(i -> i);
+        .values()
+        .stream()
+        .mapToInt(i -> i);
 
     // create index
     return IntStream.concat(IntStream.of(vertexLabels), generalizedLabelStream)
@@ -102,16 +112,18 @@ public interface GeneralizedSubgraphs<G extends WithGraph & WithTaxonomyPaths, S
    * @param distinctVertexLabels array of bottom level vertex labels
    * @return map: child -> parent
    */
-  default Map<Integer, Integer> getVertexLabelTaxonomies(SymbolDictionary dictionary, int[] distinctVertexLabels) {
+  default Map<Integer, Integer> getVertexLabelTaxonomies(
+      SymbolDictionary dictionary, int[] distinctVertexLabels) {
 
     return IntStream.of(distinctVertexLabels)
       .mapToObj(dictionary::decode)
-      .filter(s -> s.contains(DMGMConstants.Separators.TAXONOMY_PATH_LEVEL))
+      .filter(s -> s.contains(DmgmConstants.Separators.TAXONOMY_PATH_LEVEL))
       .flatMap(child -> {
         Collection<Pair<String, String>> childParents = Lists.newArrayList();
 
-        while (child.contains(DMGMConstants.Separators.TAXONOMY_PATH_LEVEL)) {
-          String parent = StringUtils.substringBeforeLast(child, DMGMConstants.Separators.TAXONOMY_PATH_LEVEL);
+        while (child.contains(DmgmConstants.Separators.TAXONOMY_PATH_LEVEL)) {
+          String parent =
+              StringUtils.substringBeforeLast(child, DmgmConstants.Separators.TAXONOMY_PATH_LEVEL);
           childParents.add(new Pair<>(child, parent));
           child = parent;
         }
@@ -126,7 +138,7 @@ public interface GeneralizedSubgraphs<G extends WithGraph & WithTaxonomyPaths, S
   }
 
   /**
-   * Get an array of distinct vertex labels
+   * Get an array of distinct vertex labels.
    *
    * @param input cached graph collection
    * @return array of all vertex labels
@@ -148,20 +160,22 @@ public interface GeneralizedSubgraphs<G extends WithGraph & WithTaxonomyPaths, S
    * @param minSupportAbsolute minimum support threshold
    * @return frequent specializations with support
    */
-  default Stream<Pair<DFSCode, S>> getFrequentSpecializations(
-    DFSCode topLevel, List<WithDFSEmbedding> embeddings, S support, Map<Long, G> graphIndex, S minSupportAbsolute) {
+  default Stream<Pair<DfsCode, S>> getFrequentSpecializations(
+      DfsCode topLevel, List<WithEmbedding> embeddings,
+      S support, Map<Long, G> graphIndex, S minSupportAbsolute) {
 
     // init output
-    List<Pair<DFSCode, S>> frequentSpecializations = Lists.newArrayList(new Pair<>(topLevel, support));
+    List<Pair<DfsCode, S>> frequentSpecializations =
+        Lists.newArrayList(new Pair<>(topLevel, support));
 
     // create a vector for each embedding
     int dimCount = topLevel.getVertexCount();
 
-    List<MultiDimensionalVector> vectors = Lists.newArrayList();
+    List<SpecializableVector> vectors = Lists.newArrayList();
 
-    List<MultiDimensionalVector> finalVectors = vectors;
-    BiConsumer<G, WithDFSEmbedding> joinFunction = (wg, we) -> {
-      DFSEmbedding embedding = we.getEmbedding();
+    List<SpecializableVector> finalVectors = vectors;
+    BiConsumer<G, WithEmbedding> joinFunction = (wg, we) -> {
+      DfsEmbedding embedding = we.getEmbedding();
       int vertexCount = embedding.getVertexCount();
       int[][] dimensionPaths = new int[vertexCount][];
 
@@ -172,19 +186,22 @@ public interface GeneralizedSubgraphs<G extends WithGraph & WithTaxonomyPaths, S
       }
 
       // grow all children and add to list
-      finalVectors.add(MultiDimensionalVector.create(embedding, dimensionPaths));
+      finalVectors.add(SpecializableVector.create(embedding, dimensionPaths));
     };
 
-    mergeJoinAndExecute(embeddings, graphIndex, joinFunction);
+    joinAndExecute(embeddings, graphIndex, joinFunction);
 
     while (!vectors.isEmpty()) {
-      Map<MultiDimensionalVector, List<MultiDimensionalVector>> aggregated = specializeVectors(vectors, dimCount)
-        .collect(new GroupByKeyListValues<>(Function.identity(), Function.identity()));
+      Map<SpecializableVector, List<SpecializableVector>>
+          aggregated = specializeVectors(vectors, dimCount)
+          .collect(new GroupByKeyListValues<>(Function.identity(), Function.identity()));
 
-      Stream<Pair<MultiDimensionalVector, S>> frequent = addSupportAndFilter(aggregated, minSupportAbsolute, graphIndex, false);
+      Stream<Pair<SpecializableVector, S>> frequent =
+          addSupportAndFilter(aggregated, minSupportAbsolute, graphIndex, false);
 
       vectors = frequent
-        .peek(p -> frequentSpecializations.add(new Pair<>(specializePattern(topLevel, p.getKey()), p.getValue())))
+        .peek(p -> frequentSpecializations
+            .add(new Pair<>(specializePattern(topLevel, p.getKey()), p.getValue())))
         .map(Pair::getKey)
         .map(aggregated::get)
         .flatMap(Collection::stream)
@@ -202,16 +219,19 @@ public interface GeneralizedSubgraphs<G extends WithGraph & WithTaxonomyPaths, S
    *
    * @return all specializations of all vectors
    */
-  default Stream<MultiDimensionalVector> specializeVectors(List<MultiDimensionalVector> vectors, int dimCount) {
+  default Stream<SpecializableVector> specializeVectors(
+      List<SpecializableVector> vectors, int dimCount) {
+
     return vectors
       .stream()
       .flatMap(parent -> {
-        MultiDimensionalVector[] specializations = new MultiDimensionalVector[0];
+        SpecializableVector[] specializations = new SpecializableVector[0];
 
         for (int dim = parent.getLastSpecialization(); dim < dimCount; dim++) {
-          MultiDimensionalVector child = parent.getSpecialization(dim);
-          if (child != null)
+          SpecializableVector child = parent.getSpecialization(dim);
+          if (child != null) {
             specializations = ArrayUtils.add(specializations, child);
+          }
         }
 
         return Stream.of(specializations);
@@ -226,15 +246,16 @@ public interface GeneralizedSubgraphs<G extends WithGraph & WithTaxonomyPaths, S
    *
    * @return specialized pattern
    */
-  default DFSCode specializePattern(DFSCode topLevel, MultiDimensionalVector vector) {
+  default DfsCode specializePattern(DfsCode topLevel, SpecializableVector vector) {
 
     int dimCount = vector.size();
     int[] specializedVertexLabels = new int[dimCount];
 
-    for (int i = 0; i < dimCount; i++)
+    for (int i = 0; i < dimCount; i++) {
       specializedVertexLabels[i] = vector.getSpecializedValue(i);
+    }
 
-    return new DFSCode(
+    return new DfsCode(
       topLevel.getLabel(),
       specializedVertexLabels,
       topLevel.getEdgeLabels(),

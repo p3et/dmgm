@@ -20,7 +20,7 @@ package org.biiig.dmgm.api.operators;
 /**
  * An operator that creates a new model collection from an existing one.
  */
-public interface CollectionToCollectionOperator extends DMGMUnaryOperator {
+public interface CollectionToCollectionOperator extends DmgmUnaryOperator {
 
   /**
    * Execute the operation.
