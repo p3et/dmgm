@@ -19,7 +19,14 @@ package org.biiig.dmgm.impl.db;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import de.jesemann.paralleasy.collectors.GroupByKeyArrayValues;
+import javafx.util.Pair;
+import org.apache.commons.lang3.ArrayUtils;
+import org.biiig.dmgm.api.db.Property;
+import org.biiig.dmgm.api.db.PropertyGraphDb;
+import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.model.CachedGraphBase;
+import org.biiig.dmgm.impl.util.collectors.GroupByKeyArrayValues;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -33,13 +40,6 @@ import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
-import javafx.util.Pair;
-import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.api.db.Property;
-import org.biiig.dmgm.api.db.PropertyGraphDb;
-import org.biiig.dmgm.api.model.CachedGraph;
-import org.biiig.dmgm.impl.model.CachedGraphBase;
-
 
 /**
  * Pragmatic reference implementation of {@code PropertyGraphDB}.

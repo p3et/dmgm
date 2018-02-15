@@ -18,14 +18,13 @@
 package org.biiig.dmgm.impl.operators.fsm;
 
 import com.google.common.collect.Lists;
-import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
+import javafx.util.Pair;
+import org.biiig.dmgm.impl.util.collectors.GroupByKeyListValues;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import javafx.util.Pair;
 
 /**
  * Test, if a DFS code is minimal, i.e., canonical.
@@ -52,7 +51,6 @@ public class IsMinimal implements Predicate<DfsCode> {
 
     List<WithEmbedding> minEmbeddings = minPair.getValue();
 
-    int i = 1;
     while (minCode != null && minimal) {
       GrowChildrenByAllEdges growChildrenByAllEdges = new GrowChildrenByAllEdges(minCode);
 

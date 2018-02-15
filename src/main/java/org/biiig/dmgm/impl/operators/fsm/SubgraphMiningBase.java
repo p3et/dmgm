@@ -18,7 +18,14 @@
 package org.biiig.dmgm.impl.operators.fsm;
 
 import com.google.common.collect.Lists;
-import de.jesemann.paralleasy.collectors.GroupByKeyListValues;
+import javafx.util.Pair;
+import org.apache.commons.lang3.ArrayUtils;
+import org.biiig.dmgm.api.config.DmgmConstants;
+import org.biiig.dmgm.api.db.PropertyGraphDb;
+import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.model.AdjacencyList;
+import org.biiig.dmgm.impl.operators.DmgmOperatorBase;
+import org.biiig.dmgm.impl.util.collectors.GroupByKeyListValues;
 
 import java.util.Collection;
 import java.util.List;
@@ -27,15 +34,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import javafx.util.Pair;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.api.config.DmgmConstants;
-import org.biiig.dmgm.api.db.PropertyGraphDb;
-import org.biiig.dmgm.api.model.CachedGraph;
-import org.biiig.dmgm.impl.model.AdjacencyList;
-import org.biiig.dmgm.impl.operators.DmgmOperatorBase;
 
 /**
  * Superclass of all subgraph miners.

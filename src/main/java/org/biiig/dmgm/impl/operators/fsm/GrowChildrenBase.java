@@ -18,11 +18,10 @@
 
 package org.biiig.dmgm.impl.operators.fsm;
 
-import java.util.Collection;
-
 import javafx.util.Pair;
-import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.model.CachedGraph;
+
+import java.util.Collection;
 
 /**
  * Superclass of pattern growers.
@@ -45,13 +44,6 @@ public abstract class GrowChildrenBase implements GrowChildren {
 
     boolean rightmost = true;
     for (int fromTime : parent.getRightmostPath()) {
-      if (fromTime >= parentEmbedding.getVertexCount()) {
-        System.out.println(parent);
-        System.out.println(parent.getVertexCount());
-        System.out.println(parentEmbedding);
-        System.out.println(ArrayUtils.toString(parent.getRightmostPath()));
-      }
-
       int fromId = parentEmbedding.getVertexId(fromTime);
 
       CachedGraph graph = withGraph.getGraph();

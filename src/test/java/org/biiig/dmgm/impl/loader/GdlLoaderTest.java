@@ -43,8 +43,6 @@ public class GdlLoaderTest extends DmgmTestBase {
     List<CachedGraph> graphCollection = db.getCachedCollection(colId);
 
     assertEquals("model count", 2, graphCollection.size());
-
-    System.out.println(db);
   }
 
 }

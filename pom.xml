@@ -67,13 +67,6 @@
             <version>0.3</version>
         </dependency>
         <dependency>
-            <groupId>de.jesemann</groupId>
-            <artifactId>paralleasy</artifactId>
-            <version>0.1</version>
-            <scope>system</scope>
-            <systemPath>/home/peet/git/QueueStream/target/paralleasy-0.1.jar</systemPath>
-        </dependency>
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.6</version>
