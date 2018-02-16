@@ -15,19 +15,7 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm;
-
-public interface TestConstants {
-  /**
-   * Convention: Graphs showing this label are considered to be input graphs.
-   */
-  String INPUT_GRAPH_LABEL = "IN";
-  /**
-   * Convention: Graphs showing this label are considered to be expected output graphs.
-   */
-  String EXPECTATION_GRAPH_LABEL = "EX";
-  /**
-   * Default value for parallel execution flag.
-   */
-  boolean PARALLEL = true;
-}
+/**
+ * Functionality shared by different kinds of operators
+ */
+package org.biiig.dmgm.impl.operators.common;

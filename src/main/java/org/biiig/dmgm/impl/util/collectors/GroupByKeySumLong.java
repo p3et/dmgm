@@ -17,11 +17,9 @@
 
 package org.biiig.dmgm.impl.util.collectors;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -31,24 +29,23 @@ import java.util.function.Supplier;
 import java.util.stream.Collector;
 
 /**
- * Group by a key and list all values.
+ * Group by a key and sum all long values.
  * Keys and values are user defined.
  *
  * @param <I> input type
  * @param <K> key type
- * @param <V> value type
  */
-public class GroupByKeyListValues<I, K, V>
-    implements Collector<I, Map<K, List<V>>, Map<K, List<V>>> {
+public class GroupByKeySumLong<I, K>
+    implements Collector<I, Map<K, Long>, Map<K, Long>> {
 
   /**
    * f: input -> key.
    */
   private final Function<I, K> keySelector;
   /**
-   * f: input -> value.
+   * f: input -> long.
    */
-  private final Function<I, V> valueSelector;
+  private final Function<I, Long> valueSelector;
 
   /**
    * Constructor.
@@ -56,45 +53,40 @@ public class GroupByKeyListValues<I, K, V>
    * @param keySelector input -> key
    * @param valueSelector input -> value
    */
-  public GroupByKeyListValues(Function<I, K> keySelector, Function<I, V> valueSelector) {
+  public GroupByKeySumLong(Function<I, K> keySelector, Function<I, Long> valueSelector) {
     this.keySelector = keySelector;
     this.valueSelector = valueSelector;
   }
 
   @Override
-  public Supplier<Map<K, List<V>>> supplier() {
+  public Supplier<Map<K, Long>> supplier() {
     return Maps::newHashMap;
   }
 
   @Override
-  public BiConsumer<Map<K, List<V>>, I> accumulator() {
+  public BiConsumer<Map<K, Long>, I> accumulator() {
     return (map, input) -> {
       K key = keySelector.apply(input);
-      V value = valueSelector.apply(input);
+      Long increment = valueSelector.apply(input);
 
-      List<V> values = map.get(key);
+      Long sum = map.get(key);
+      sum = sum == null ? increment : sum + increment;
 
-      if (values == null) {
-        map.put(key, Lists.newArrayList(value));
-      } else {
-        values.add(value);
-      }
+      map.put(key, sum);
     };
   }
 
   @Override
-  public BinaryOperator<Map<K, List<V>>> combiner() {
+  public BinaryOperator<Map<K, Long>> combiner() {
     return (keep, merge) -> {
-      for (Map.Entry<K, List<V>> entry : merge.entrySet()) {
+      for (Map.Entry<K, Long> entry : merge.entrySet()) {
         K key = entry.getKey();
-        List<V> keepValues = keep.get(key);
-        List<V> mergeValues = entry.getValue();
+        Long sum = keep.get(key);
+        Long increment = entry.getValue();
 
-        if (keepValues == null) {
-          keep.put(key, mergeValues);
-        } else {
-          keepValues.addAll(mergeValues);
-        }
+        sum = sum == null ? increment : sum + increment;
+
+        keep.put(key, sum);
       }
 
       return keep;
@@ -102,7 +94,7 @@ public class GroupByKeyListValues<I, K, V>
   }
 
   @Override
-  public Function<Map<K, List<V>>, Map<K, List<V>>> finisher() {
+  public Function<Map<K, Long>, Map<K, Long>> finisher() {
     return Function.identity();
   }
 

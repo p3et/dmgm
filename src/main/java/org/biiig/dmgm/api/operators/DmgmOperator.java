@@ -18,22 +18,15 @@
 package org.biiig.dmgm.api.operators;
 
 import java.util.Collection;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
-import org.biiig.dmgm.api.db.PropertyGraphDb;
 import org.biiig.dmgm.api.model.CachedGraph;
 
 /**
  * An operator for directed multigraphs.
  */
-public interface DmgmOperator {
-
-  /**
-   * Access the database.
-   *
-   * @return database
-   */
-  PropertyGraphDb getDatabase();
+public interface DmgmOperator extends WithDatabaseAccess {
 
   /**
    * Add a graph to the database and get its id.
@@ -52,4 +45,12 @@ public interface DmgmOperator {
    * @return sequential or parallel stream
    */
   <T> Stream<T> getParallelizableStream(Collection<T> collection);
+
+  /**
+   * Stream an array of longs according to the operators parallelization options.
+   *
+   * @param longs array to stream
+   * @return sequential or parallel stream
+   */
+  LongStream getParallelizableLongStream(long[] longs);
 }
