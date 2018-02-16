@@ -26,7 +26,7 @@ public class SimFreqPatternTest extends SubgraphMiningPatternTest {
 
   @Override
   protected Function<PropertyGraphDb, CollectionToCollectionOperator> getOperator() {
-    return db -> getBuilder(db).get();
+    return db -> getBuilder(db).simple();
   }
 
 }

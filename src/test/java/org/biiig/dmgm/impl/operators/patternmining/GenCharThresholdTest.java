@@ -25,6 +25,6 @@ public class GenCharThresholdTest extends SubgraphMiningThresholdTestBase {
   @Override
   protected CollectionToCollectionOperator getOperator(
       PropertyGraphDb db, boolean b, float minSupportRel, int maxEdgeCount) {
-    return getBuilder(db, b, minSupportRel, maxEdgeCount).getGeneralizedCharacteristic();  }
+    return getBuilder(db, b, minSupportRel, maxEdgeCount).generalizedCharacteristic();  }
 
 }

@@ -77,7 +77,7 @@ public abstract class SubgraphMiningPatternTest extends DmgmTestBase {
   protected abstract Function<PropertyGraphDb, CollectionToCollectionOperator> getOperator();
 
   protected CollectionFrequentSubgraphsMinerBuilder getBuilder(PropertyGraphDb db) {
-    return new PatternMinerBuilder(db, TestConstants.PARALLEL)
+    return new PatternMiningBuilder(db, TestConstants.PARALLEL)
         .fromCollection().extractFrequentSubgraphs(0.6f, 10);
   }
 }

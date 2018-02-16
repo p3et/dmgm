@@ -61,7 +61,7 @@ public abstract class SubgraphMiningThresholdTestBase extends DmgmTestBase {
   }
 
   protected CollectionFrequentSubgraphsMinerBuilder getBuilder(PropertyGraphDb db, boolean b, float minSupportRel, int maxEdgeCount) {
-    return new PatternMinerBuilder(db, b)
+    return new PatternMiningBuilder(db, b)
         .fromCollection()
         .extractFrequentSubgraphs(minSupportRel, maxEdgeCount);
   }

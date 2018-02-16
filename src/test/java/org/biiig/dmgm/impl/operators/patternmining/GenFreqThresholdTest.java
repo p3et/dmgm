@@ -25,6 +25,6 @@ public class GenFreqThresholdTest extends SubgraphMiningThresholdTestBase {
   @Override
   protected CollectionToCollectionOperator getOperator(
       PropertyGraphDb db, boolean b, float minSupportRel, int maxEdgeCount) {
-    return getBuilder(db, b, minSupportRel, maxEdgeCount).getGeneralized();
+    return getBuilder(db, b, minSupportRel, maxEdgeCount).generalized();
   }
 }

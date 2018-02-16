@@ -23,7 +23,7 @@ import org.biiig.dmgm.impl.operators.common.WithDatabaseAccessBase;
 /**
  * Root for all pattern miner builder.
  */
-public class PatternMinerBuilder extends WithDatabaseAccessBase {
+public class PatternMiningBuilder extends WithDatabaseAccessBase {
 
   /**
    * Constructor.
@@ -31,7 +31,7 @@ public class PatternMinerBuilder extends WithDatabaseAccessBase {
    * @param database database
    * @param parallel true <=> parallel operator execution
    */
-  public PatternMinerBuilder(PropertyGraphDb database, boolean parallel) {
+  public PatternMiningBuilder(PropertyGraphDb database, boolean parallel) {
     super(database, parallel);
   }
 
@@ -40,7 +40,7 @@ public class PatternMinerBuilder extends WithDatabaseAccessBase {
    *
    * @return builder
    */
-  public CollectionPatternMinerBuilder fromCollection() {
-    return new CollectionPatternMinerBuilder(database, parallel);
+  public CollectionPatternMiningBuilder fromCollection() {
+    return new CollectionPatternMiningBuilder(database, parallel);
   }
 }

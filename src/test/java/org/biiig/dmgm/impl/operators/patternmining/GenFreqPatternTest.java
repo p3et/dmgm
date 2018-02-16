@@ -26,7 +26,7 @@ public class GenFreqPatternTest extends SubgraphMiningPatternTest {
 
   @Override
   protected Function<PropertyGraphDb, CollectionToCollectionOperator> getOperator() {
-    return db -> getBuilder(db).getGeneralized();
+    return db -> getBuilder(db).generalized();
   }
 
 }

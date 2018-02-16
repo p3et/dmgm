@@ -24,7 +24,7 @@ import org.biiig.dmgm.impl.operators.common.WithDatabaseAccessBase;
 /**
  * Get a pattern miner for graph collections.
  */
-public class CollectionPatternMinerBuilder extends WithDatabaseAccessBase {
+public class CollectionPatternMiningBuilder extends WithDatabaseAccessBase {
 
   /**
    * Constructor.
@@ -32,7 +32,7 @@ public class CollectionPatternMinerBuilder extends WithDatabaseAccessBase {
    * @param database database
    * @param parallel true <=> parallel operator execution
    */
-  CollectionPatternMinerBuilder(PropertyGraphDb database, boolean parallel) {
+  CollectionPatternMiningBuilder(PropertyGraphDb database, boolean parallel) {
     super(database, parallel);
   }
 
