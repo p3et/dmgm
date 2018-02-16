@@ -19,24 +19,21 @@ package org.biiig.dmgm.impl.operators.fsm;
 
 import org.biiig.dmgm.api.db.PropertyGraphDb;
 import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
+import org.biiig.dmgm.impl.operators.common.WithDatabaseAccessBase;
 
 /**
  * Factory for frequent subgraph miners.
  */
-public class FrequentSubgraphMiningFactory {
-
-  /**
-   * Database.
-   */
-  private final PropertyGraphDb db;
+public class FrequentSubgraphMiningFactory extends WithDatabaseAccessBase {
 
   /**
    * Constructor.
    *
-   * @param db database in which the operations should be executed
+   * @param database database in which the operations should be executed
+   * @param parallel true <=> parallel operator execution
    */
-  public FrequentSubgraphMiningFactory(PropertyGraphDb db) {
-    this.db = db;
+  public FrequentSubgraphMiningFactory(PropertyGraphDb database, boolean parallel) {
+    super(database, parallel);
   }
 
   /**
@@ -62,15 +59,20 @@ public class FrequentSubgraphMiningFactory {
 
     CollectionToCollectionOperator operator;
     if (generalized && characteristic) {
-      operator = new CharacteristicGeneralizedSubgraphs(db, parallel, minSupportRel, maxEdgeCount);
+      operator =
+          new CharacteristicGeneralizedSubgraphs(database, parallel, minSupportRel, maxEdgeCount);
     } else  if (generalized) {
-      operator = new FrequentGeneralizedSubgraphs(db, parallel, minSupportRel, maxEdgeCount);
+      operator =
+          new FrequentGeneralizedSubgraphs(database, parallel, minSupportRel, maxEdgeCount);
     } else  if (characteristic) {
-      operator = new CharacteristicSimpleSubgraphs(db, parallel, minSupportRel, maxEdgeCount);
+      operator =
+          new CharacteristicSimpleSubgraphs(database, parallel, minSupportRel, maxEdgeCount);
     } else {
-      operator = new FrequentSimpleSubgraphs(db, parallel, minSupportRel, maxEdgeCount);
+      operator =
+          new FrequentSimpleSubgraphs(database, parallel, minSupportRel, maxEdgeCount);
     }
 
     return operator;
   }
+
 }

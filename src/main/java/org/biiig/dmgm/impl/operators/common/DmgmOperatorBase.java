@@ -15,11 +15,12 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-package org.biiig.dmgm.impl.operators;
+package org.biiig.dmgm.impl.operators.common;
 
 import java.util.Collection;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
+
 import org.biiig.dmgm.api.db.PropertyGraphDb;
 import org.biiig.dmgm.api.model.CachedGraph;
 import org.biiig.dmgm.api.operators.DmgmOperator;
@@ -27,37 +28,21 @@ import org.biiig.dmgm.api.operators.DmgmOperator;
 /**
  * Superclass of DMGM operators.
  */
-public abstract class DmgmOperatorBase implements DmgmOperator {
-
-  /**
-   * Flag to enable parallel execution of the operator.
-   * true <=> enabled
-   */
-  protected final boolean parallel;
-  /**
-   * Database of in- and output elements.
-   */
-  protected final PropertyGraphDb database;
+public abstract class DmgmOperatorBase extends WithDatabaseAccessBase implements DmgmOperator {
 
   /**
    * Constructor.
    *
-   * @param parallel parallel execution flag
    * @param database database
+   * @param parallel parallel execution flag
    */
-  protected DmgmOperatorBase(boolean parallel, PropertyGraphDb database) {
-    this.parallel = parallel;
-    this.database = database;
+  protected DmgmOperatorBase(PropertyGraphDb database, boolean parallel) {
+    super(database, parallel);
   }
 
   @Override
   public <T> Stream<T> getParallelizableStream(Collection<T> collection) {
     return parallel ? collection.parallelStream() : collection.stream();
-  }
-
-  @Override
-  public PropertyGraphDb getDatabase() {
-    return database;
   }
 
   @Override
@@ -78,5 +63,14 @@ public abstract class DmgmOperatorBase implements DmgmOperator {
     }
 
     return database.createGraph(graph.getLabel(), vertexIds, edgeIds);
+  }
+
+  @Override
+  public LongStream getParallelizableLongStream(long[] graphIds) {
+    LongStream stream = LongStream.of(graphIds);
+    if (parallel) {
+      stream = stream.parallel();
+    }
+    return stream;
   }
 }

@@ -48,14 +48,14 @@ public abstract class SubgraphMiningThresholdTestBase extends DmgmTestBase {
     long inId = db.createCollection(0, db.getGraphIds());
 
     Long outId = fsm.apply(inId);
-    long[] graphIds = db.getGraphIds(outId);
+    long[] graphIds = db.getGraphIdsOfCollection(outId);
     assertEquals(
         "sequential @ " + minSupportThreshold,expectedResultSize, graphIds.length);
 
     fsm = getOperator(db, true, minSupportThreshold, 20);
 
     outId = fsm.apply(inId);
-    graphIds = db.getGraphIds(outId);
+    graphIds = db.getGraphIdsOfCollection(outId);
     assertEquals(
         "parallel @ " + minSupportThreshold, expectedResultSize, graphIds.length);
   }

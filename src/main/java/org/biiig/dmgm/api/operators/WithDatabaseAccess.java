@@ -15,19 +15,19 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm;
+package org.biiig.dmgm.api.operators;
 
-public interface TestConstants {
+import org.biiig.dmgm.api.db.PropertyGraphDb;
+
+/**
+ * Something with database access.
+ */
+public interface WithDatabaseAccess {
+
   /**
-   * Convention: Graphs showing this label are considered to be input graphs.
+   * Get it.
+   *
+   * @return database
    */
-  String INPUT_GRAPH_LABEL = "IN";
-  /**
-   * Convention: Graphs showing this label are considered to be expected output graphs.
-   */
-  String EXPECTATION_GRAPH_LABEL = "EX";
-  /**
-   * Default value for parallel execution flag.
-   */
-  boolean PARALLEL = true;
+  PropertyGraphDb getDatabase();
 }

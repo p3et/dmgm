@@ -15,19 +15,25 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm;
+package org.biiig.dmgm.impl.operators.statistics;
 
-public interface TestConstants {
+import org.biiig.dmgm.api.db.PropertyGraphDb;
+import org.biiig.dmgm.impl.operators.common.WithDatabaseAccessBase;
+
+public class CollectionStatisticsBuilder extends WithDatabaseAccessBase {
+
   /**
-   * Convention: Graphs showing this label are considered to be input graphs.
+   * Constructor.
+   *
+   * @param database database
+   * @param parallel true <=> parallel operator execution
    */
-  String INPUT_GRAPH_LABEL = "IN";
-  /**
-   * Convention: Graphs showing this label are considered to be expected output graphs.
-   */
-  String EXPECTATION_GRAPH_LABEL = "EX";
-  /**
-   * Default value for parallel execution flag.
-   */
-  boolean PARALLEL = true;
+  CollectionStatisticsBuilder(PropertyGraphDb database, boolean parallel) {
+    super(database, parallel);
+  }
+
+  public CollectionVertexLabelsStatisticsBuilder ofVertexLabels() {
+    return new CollectionVertexLabelsStatisticsBuilder(database, parallel);
+  }
+
 }

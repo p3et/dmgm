@@ -50,8 +50,7 @@ public interface GetElements {
    * @param collectionId collection id
    * @return graphId...
    */
-  long[] getGraphIds(Long collectionId);
-
+  long[] getGraphIdsOfCollection(Long collectionId);
 
   /**
    * Get all ids of elements that appear in the role of a model,

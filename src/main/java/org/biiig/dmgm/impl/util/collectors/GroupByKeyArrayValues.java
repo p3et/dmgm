@@ -18,9 +18,9 @@
 package org.biiig.dmgm.impl.util.collectors;
 
 import com.google.common.collect.Maps;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.lang.reflect.Array;
+
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
@@ -30,9 +30,12 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
+import org.apache.commons.lang3.ArrayUtils;
+
+
 /**
  * Group by a key and create an array of all values.
- * Keys and values can be user defined.
+ * Keys and values are user defined.
  *
  * @param <I> input type
  * @param <K> key type
