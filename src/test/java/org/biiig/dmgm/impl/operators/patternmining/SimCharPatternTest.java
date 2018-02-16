@@ -26,7 +26,7 @@ public class SimCharPatternTest extends SubgraphMiningPatternTest {
 
   @Override
   protected Function<PropertyGraphDb, CollectionToCollectionOperator> getOperator() {
-    return db -> getBuilder(db).getCharacteristic();
+    return db -> getBuilder(db).characteristic();
   }
 
 }

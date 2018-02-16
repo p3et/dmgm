@@ -26,6 +26,6 @@ public class SimCharCharacteristicTest extends CharTestBase {
 
   @Override
   public Function<PropertyGraphDb, CollectionToCollectionOperator> getOperator() {
-    return db -> getBuilder(db).getCharacteristic();
+    return db -> getBuilder(db).characteristic();
   }
 }

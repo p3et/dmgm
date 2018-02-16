@@ -43,7 +43,7 @@ public class CollectionFrequentSubgraphsMinerBuilder extends CollectionSubgraphM
    *
    * @return miner
    */
-  public CollectionToCollectionOperator get() {
+  public CollectionToCollectionOperator simple() {
     return new FrequentSimpleSubgraphs(
         database, parallel, minSupportThreshold, maxEdgeCount);
   }
@@ -58,7 +58,7 @@ public class CollectionFrequentSubgraphsMinerBuilder extends CollectionSubgraphM
    *
    * @return miner
    */
-  public CollectionToCollectionOperator getGeneralized() {
+  public CollectionToCollectionOperator generalized() {
     return new FrequentGeneralizedSubgraphs(
         database, parallel, minSupportThreshold, maxEdgeCount);
   }
@@ -73,7 +73,7 @@ public class CollectionFrequentSubgraphsMinerBuilder extends CollectionSubgraphM
    *
    * @return miner
    */
-  public CollectionToCollectionOperator getCharacteristic() {
+  public CollectionToCollectionOperator characteristic() {
     return new CharacteristicSimpleSubgraphs(
         database, parallel, minSupportThreshold, maxEdgeCount);
   }
@@ -92,7 +92,7 @@ public class CollectionFrequentSubgraphsMinerBuilder extends CollectionSubgraphM
    *
    * @return miner
    */
-  public CollectionToCollectionOperator getGeneralizedCharacteristic() {
+  public CollectionToCollectionOperator generalizedCharacteristic() {
     return new CharacteristicGeneralizedSubgraphs(
         database, parallel, minSupportThreshold, maxEdgeCount);
   }

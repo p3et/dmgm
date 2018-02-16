@@ -26,6 +26,6 @@ public class GenFreqGeneralizationTest extends GeneralizationTestBase {
 
   @Override
   public Function<PropertyGraphDb, CollectionToCollectionOperator> getOperator() {
-    return db -> getBuilder(db).getGeneralized();
+    return db -> getBuilder(db).generalized();
   }
 }

@@ -24,6 +24,6 @@ public class SimFreqThresholdTest extends SubgraphMiningThresholdTestBase {
 
   protected CollectionToCollectionOperator getOperator(
       PropertyGraphDb db, boolean b, float minSupportRel, int maxEdgeCount) {
-    return getBuilder(db, b, minSupportRel, maxEdgeCount).get();
+    return getBuilder(db, b, minSupportRel, maxEdgeCount).simple();
   }
 }

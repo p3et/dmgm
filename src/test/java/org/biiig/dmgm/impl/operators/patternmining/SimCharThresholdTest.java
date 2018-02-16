@@ -26,6 +26,6 @@ public class SimCharThresholdTest extends SubgraphMiningThresholdTestBase {
   protected CollectionToCollectionOperator getOperator(
       PropertyGraphDb db, boolean b, float minSupportRel, int maxEdgeCount) {
 
-    return getBuilder(db, b, minSupportRel, maxEdgeCount).getCharacteristic();
+    return getBuilder(db, b, minSupportRel, maxEdgeCount).characteristic();
   }
 }

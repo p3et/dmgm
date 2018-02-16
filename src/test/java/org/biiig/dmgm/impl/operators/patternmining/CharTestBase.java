@@ -49,7 +49,7 @@ public abstract class CharTestBase extends DmgmTestBase {
   public abstract Function<PropertyGraphDb, CollectionToCollectionOperator> getOperator();
 
   protected CollectionFrequentSubgraphsMinerBuilder getBuilder(PropertyGraphDb db) {
-    return new PatternMinerBuilder(db, TestConstants.PARALLEL)
+    return new PatternMiningBuilder(db, TestConstants.PARALLEL)
         .fromCollection().extractFrequentSubgraphs(1.0f, 10);
   }
 }

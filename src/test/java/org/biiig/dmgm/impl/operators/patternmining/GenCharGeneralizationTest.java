@@ -26,6 +26,6 @@ public class GenCharGeneralizationTest extends GeneralizationTestBase {
 
   @Override
   public Function<PropertyGraphDb, CollectionToCollectionOperator> getOperator() {
-    return db -> getBuilder(db).getGeneralizedCharacteristic();  }
+    return db -> getBuilder(db).generalizedCharacteristic();  }
 
 }
