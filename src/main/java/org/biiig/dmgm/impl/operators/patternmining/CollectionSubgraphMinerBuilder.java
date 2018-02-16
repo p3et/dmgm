@@ -15,35 +15,37 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.statistics;
+package org.biiig.dmgm.impl.operators.patternmining;
 
 import org.biiig.dmgm.api.db.PropertyGraphDb;
 import org.biiig.dmgm.impl.operators.common.WithDatabaseAccessBase;
 
 /**
- * Get a statistics extractor for vertex labels in graph collections.
+ * Get a subgraph miner for graph collections.
  */
-public class CollectionVertexLabelsStatisticsBuilder extends WithDatabaseAccessBase {
+public class CollectionSubgraphMinerBuilder extends WithDatabaseAccessBase {
+
+  /**
+   * Relative min support.
+   */
+  protected final float minSupportThreshold;
+  /**
+   * Max edge count of patterns.
+   */
+  protected final int maxEdgeCount;
 
   /**
    * Constructor.
-   *
-   * @param database database
+   *  @param database database
    * @param parallel true <=> parallel operator execution
+   * @param minSupportThreshold relative min support
+   * @param maxEdgeCount max edge count
    */
-  CollectionVertexLabelsStatisticsBuilder(PropertyGraphDb database, boolean parallel) {
+  CollectionSubgraphMinerBuilder(
+      PropertyGraphDb database, boolean parallel, int maxEdgeCount, float minSupportThreshold) {
+
     super(database, parallel);
+    this.maxEdgeCount = maxEdgeCount;
+    this.minSupportThreshold = minSupportThreshold;
   }
-
-  /**
-   * Return extractor for vertex label support.
-   *
-   * @param generalized true <=> include generalized labels
-   *
-   * @return extractor
-   */
-  public CollectionVertexLabelSupport getSupport(boolean generalized) {
-    return new CollectionVertexLabelSupport(database, parallel, generalized);
-  }
-
 }

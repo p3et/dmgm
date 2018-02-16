@@ -22,8 +22,8 @@ import org.biiig.dmgm.DmgmTestBase;
 import org.biiig.dmgm.TestConstants;
 import org.biiig.dmgm.api.db.PropertyGraphDb;
 import org.biiig.dmgm.api.operators.StatisticsExtractor;
-import org.biiig.dmgm.impl.loader.GdlLoader;
-import org.biiig.dmgm.impl.loader.InMemoryGraphDbFactory;
+import org.biiig.dmgm.impl.db.GdlLoader;
+import org.biiig.dmgm.impl.db.InMemoryGraphDbSupplier;
 import org.junit.Test;
 
 import java.util.Map;
@@ -81,7 +81,7 @@ public class CollectionVertexLabelSupportTest extends DmgmTestBase {
   @Test
   public void testGeneralized() {
     PropertyGraphDb database =
-        new GdlLoader(new InMemoryGraphDbFactory(true), GENERALIZED_GDL).get();
+        new GdlLoader(new InMemoryGraphDbSupplier(true), GENERALIZED_GDL).get();
 
     Long collectionId = database.createCollection(0, database.getGraphIds());
 
@@ -99,7 +99,7 @@ public class CollectionVertexLabelSupportTest extends DmgmTestBase {
   @Test
   public void testGeneralizedDisabled() {
     PropertyGraphDb database =
-        new GdlLoader(new InMemoryGraphDbFactory(true), GENERALIZED_GDL).get();
+        new GdlLoader(new InMemoryGraphDbSupplier(true), GENERALIZED_GDL).get();
 
     Long collectionId = database.createCollection(0, database.getGraphIds());
 

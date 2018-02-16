@@ -20,6 +20,7 @@ package org.biiig.dmgm.impl.loader;
 import org.biiig.dmgm.DmgmTestBase;
 import org.biiig.dmgm.api.db.PropertyGraphDb;
 import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.impl.db.GdlLoader;
 import org.junit.Test;
 
 import java.util.List;

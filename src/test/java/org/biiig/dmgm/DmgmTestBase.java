@@ -15,35 +15,17 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * This file is part of Directed Multigraph Miner (DMGM).
- *
- * DMGM is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * DMGM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
- */
-
 package org.biiig.dmgm;
 
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.db.Property;
 import org.biiig.dmgm.api.db.PropertyGraphDb;
-import org.biiig.dmgm.api.loader.PropertyGraphDbFactory;
 import org.biiig.dmgm.api.model.CachedGraph;
 import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
-import org.biiig.dmgm.impl.loader.GdlLoader;
-import org.biiig.dmgm.impl.loader.InMemoryGraphDbFactory;
-import org.biiig.dmgm.impl.loader.TlfLoader;
+import org.biiig.dmgm.impl.db.GdlLoader;
+import org.biiig.dmgm.impl.db.InMemoryGraphDbSupplier;
+import org.biiig.dmgm.impl.db.TlfLoader;
 import org.biiig.dmgm.to_string.cam.CAMGraphFormatter;
 import org.biiig.dmgm.to_string.edge_list.ELGraphFormatter;
 
@@ -51,6 +33,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static org.junit.Assert.assertTrue;
 
@@ -61,15 +44,15 @@ public class DmgmTestBase {
   /**
    *
    */
-  protected static final PropertyGraphDbFactory DB_FACTORY = new InMemoryGraphDbFactory(true);
+  protected static final Supplier<PropertyGraphDb> DB_FACTORY = new InMemoryGraphDbSupplier(true);
 
   /**
    * Returns a sample database with a predictable amount of frequent patterns.
    * A description of this database can be found in Section 5.3 of
    * Petermann et al. "DIMSpan: Transactional Frequent Subgraph Mining with Distributed In-Memory Dataflow Systems"
-   * @see <a href = "https://dl.acm.org/citation.cfm?id=3148064">ACM Digital Library</a>
+   * @see <a href="https://dl.acm.org/citation.cfm?id=3148064">ACM Digital Library</a>
    *
-   * @return
+   * @return database
    */
   protected PropertyGraphDb getPredictableDatabase() {
     String inputPath = TlfLoader.class.getResource("/samples/predictable.tlf").getFile();

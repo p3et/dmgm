@@ -15,33 +15,18 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.statistics;
+package org.biiig.dmgm.impl.operators.patternmining;
 
 import org.biiig.dmgm.api.db.PropertyGraphDb;
-import org.biiig.dmgm.impl.operators.common.WithDatabaseAccessBase;
+import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
 
-/**
- * Get a statistics extractor for graph collections.
- */
-public class CollectionStatisticsBuilder extends WithDatabaseAccessBase {
+import java.util.function.Function;
 
-  /**
-   * Constructor.
-   *
-   * @param database database
-   * @param parallel true <=> parallel operator execution
-   */
-  CollectionStatisticsBuilder(PropertyGraphDb database, boolean parallel) {
-    super(database, parallel);
-  }
+public class SimCharPatternTest extends SubgraphMiningPatternTest {
 
-  /**
-   * Get a statistics extractor for vertex labels in graph collections.
-   *
-   * @return builder
-   */
-  public CollectionVertexLabelsStatisticsBuilder ofVertexLabels() {
-    return new CollectionVertexLabelsStatisticsBuilder(database, parallel);
+  @Override
+  protected Function<PropertyGraphDb, CollectionToCollectionOperator> getOperator() {
+    return db -> getBuilder(db).getCharacteristic();
   }
 
 }

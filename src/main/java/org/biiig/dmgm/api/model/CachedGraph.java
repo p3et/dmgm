@@ -18,7 +18,7 @@
 package org.biiig.dmgm.api.model;
 
 import org.biiig.dmgm.api.db.SymbolDictionary;
-import org.biiig.dmgm.impl.operators.fsm.WithGraph;
+import org.biiig.dmgm.impl.operators.patternmining.WithGraph;
 
 /**
  * A materialized model, i.e., a model including all its vertices and edges.
@@ -53,7 +53,7 @@ public interface CachedGraph extends WithGraph {
    * Get the label of a vertex.
    *
    * @param vertexId local vertex id.
-   * @return
+   * @return label
    */
   int getVertexLabel(int vertexId);
 
