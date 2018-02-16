@@ -1,3 +1,4 @@
+
 /*
  * This file is part of Directed Multigraph Miner (DMGM).
  *
@@ -15,15 +16,15 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.statistics;
+package org.biiig.dmgm.impl.operators.patternmining;
 
 import org.biiig.dmgm.api.db.PropertyGraphDb;
 import org.biiig.dmgm.impl.operators.common.WithDatabaseAccessBase;
 
 /**
- * Get a statistics extractor for vertex labels in graph collections.
+ * Get a pattern miner for graph collections.
  */
-public class CollectionVertexLabelsStatisticsBuilder extends WithDatabaseAccessBase {
+public class CollectionPatternMinerBuilder extends WithDatabaseAccessBase {
 
   /**
    * Constructor.
@@ -31,19 +32,21 @@ public class CollectionVertexLabelsStatisticsBuilder extends WithDatabaseAccessB
    * @param database database
    * @param parallel true <=> parallel operator execution
    */
-  CollectionVertexLabelsStatisticsBuilder(PropertyGraphDb database, boolean parallel) {
+  CollectionPatternMinerBuilder(PropertyGraphDb database, boolean parallel) {
     super(database, parallel);
   }
 
   /**
-   * Return extractor for vertex label support.
+   * Extract subgraph patterns which occur in at least a minimum number of graphs of a collection.
    *
-   * @param generalized true <=> include generalized labels
-   *
-   * @return extractor
+   * @param minSupportThreshold patterns above this threshold will be considered as frequent
+   * @param maxEdgeCount pattern above this size will not be extracted
+   * @return frequent subgraph miner builder
    */
-  public CollectionVertexLabelSupport getSupport(boolean generalized) {
-    return new CollectionVertexLabelSupport(database, parallel, generalized);
-  }
+  public CollectionFrequentSubgraphsMinerBuilder extractFrequentSubgraphs(
+      float minSupportThreshold, int maxEdgeCount) {
 
+    return new CollectionFrequentSubgraphsMinerBuilder(
+        database, parallel, minSupportThreshold, maxEdgeCount);
+  }
 }

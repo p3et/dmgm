@@ -15,33 +15,27 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.statistics;
+package org.biiig.dmgm.impl.db;
+
+import java.util.function.Supplier;
 
 import org.biiig.dmgm.api.db.PropertyGraphDb;
-import org.biiig.dmgm.impl.operators.common.WithDatabaseAccessBase;
 
 /**
- * Get a statistics extractor for graph collections.
+ * Superclass of database loaders.
  */
-public class CollectionStatisticsBuilder extends WithDatabaseAccessBase {
+abstract class PropertyGraphDbLoaderBase implements Supplier<PropertyGraphDb> {
+  /**
+   * Factory to create database objects.
+   */
+  final Supplier<PropertyGraphDb> dbSupplier;
 
   /**
    * Constructor.
    *
-   * @param database database
-   * @param parallel true <=> parallel operator execution
+   * @param dbSupplier a factory for databases
    */
-  CollectionStatisticsBuilder(PropertyGraphDb database, boolean parallel) {
-    super(database, parallel);
+  PropertyGraphDbLoaderBase(Supplier<PropertyGraphDb> dbSupplier) {
+    this.dbSupplier = dbSupplier;
   }
-
-  /**
-   * Get a statistics extractor for vertex labels in graph collections.
-   *
-   * @return builder
-   */
-  public CollectionVertexLabelsStatisticsBuilder ofVertexLabels() {
-    return new CollectionVertexLabelsStatisticsBuilder(database, parallel);
-  }
-
 }

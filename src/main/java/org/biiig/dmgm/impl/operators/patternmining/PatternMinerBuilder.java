@@ -15,15 +15,15 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.operators.statistics;
+package org.biiig.dmgm.impl.operators.patternmining;
 
 import org.biiig.dmgm.api.db.PropertyGraphDb;
 import org.biiig.dmgm.impl.operators.common.WithDatabaseAccessBase;
 
 /**
- * Get a statistics extractor for vertex labels in graph collections.
+ * Root for all pattern miner builder.
  */
-public class CollectionVertexLabelsStatisticsBuilder extends WithDatabaseAccessBase {
+public class PatternMinerBuilder extends WithDatabaseAccessBase {
 
   /**
    * Constructor.
@@ -31,19 +31,16 @@ public class CollectionVertexLabelsStatisticsBuilder extends WithDatabaseAccessB
    * @param database database
    * @param parallel true <=> parallel operator execution
    */
-  CollectionVertexLabelsStatisticsBuilder(PropertyGraphDb database, boolean parallel) {
+  public PatternMinerBuilder(PropertyGraphDb database, boolean parallel) {
     super(database, parallel);
   }
 
   /**
-   * Return extractor for vertex label support.
+   * Get a builder for graph collection statistics.
    *
-   * @param generalized true <=> include generalized labels
-   *
-   * @return extractor
+   * @return builder
    */
-  public CollectionVertexLabelSupport getSupport(boolean generalized) {
-    return new CollectionVertexLabelSupport(database, parallel, generalized);
+  public CollectionPatternMinerBuilder fromCollection() {
+    return new CollectionPatternMinerBuilder(database, parallel);
   }
-
 }

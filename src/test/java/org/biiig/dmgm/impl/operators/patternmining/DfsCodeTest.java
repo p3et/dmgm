@@ -15,35 +15,28 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.impl.loader;
+package org.biiig.dmgm.impl.operators.patternmining;
 
-import org.biiig.dmgm.DmgmTestBase;
-import org.biiig.dmgm.api.db.PropertyGraphDb;
 import org.biiig.dmgm.api.model.CachedGraph;
-import org.biiig.dmgm.impl.db.TlfConstants;
+import org.biiig.dmgm.impl.model.CachedGraphTestBase;
 import org.junit.Test;
 
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-
-
-public class TlfReaderTest extends DmgmTestBase {
+public class DfsCodeTest extends CachedGraphTestBase {
 
   @Test
-  public void testRead() {
-    PropertyGraphDb database = getPredictableDatabase();
+  public void testGetterAndSetter() {
+    int lab0 = 0;
+    int lab1 = 1;
 
-    int graphLabel = database.encode(TlfConstants.GRAPH_SYMBOL);
-    int colLabel = database.encode("COL");
+    CachedGraph graph = new DfsCode(
+      0, new int[] {lab0, lab1},
+      new int[] {lab0, lab1},
+      new int[] {0, 0},
+      new int[] {0, 1},
+      new boolean[] {true, true}
+    );
 
-    long[] graphIds = database.queryElements(i -> i == graphLabel);
-    long cid = database.createCollection(colLabel, graphIds);
-
-
-    List<CachedGraph> graphCollection = database.getCachedCollection(cid);
-
-    assertEquals("model count", 10, graphCollection.size());
+    test(graph, lab0, lab1);
   }
 
 }
