@@ -17,39 +17,37 @@
 
 package org.biiig.dmgm.impl.operators.statistics;
 
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.biiig.dmgm.api.db.PropertyGraphDb;
-import org.biiig.dmgm.impl.operators.common.WithDatabaseAccessBase;
+import org.biiig.dmgm.api.db.VertexIdsEdgeIds;
 
 /**
- * Get a statistics extractor for graph collections.
+ * Extract a map: vertex label -> support.
  */
-public class CollectionStatisticsBuilder extends WithDatabaseAccessBase {
+public class CollectionEdgeLabelSupport extends CollectionElementLabelSupportBase {
 
   /**
    * Constructor.
    *
    * @param database database
-   * @param parallel true <=> parallel operator execution
+   * @param parallel true <=> parallel extraction
    */
-  CollectionStatisticsBuilder(PropertyGraphDb database, boolean parallel) {
+  CollectionEdgeLabelSupport(PropertyGraphDb database, boolean parallel) {
     super(database, parallel);
   }
 
-  /**
-   * Get a statistics extractor for vertex labels in a graph collections.
-   *
-   * @return builder
-   */
-  public CollectionVertexLabelsStatisticsBuilder ofVertexLabels() {
-    return new CollectionVertexLabelsStatisticsBuilder(database, parallel);
-  }
+  @Override
+  public Map<Integer, Long> apply(Long elementId) {
+    Stream<VertexIdsEdgeIds> graphStream = getGraphStream(elementId);
 
-  /**
-   * Get a statistics extractor for edge labels in a graph collections.
-   *
-   * @return builder
-   */
-  public CollectionEdgeLabelsStatisticsBuilder ofEdgeLabels() {
-    return new CollectionEdgeLabelsStatisticsBuilder(database, parallel);
+    return graphStream
+        .map(VertexIdsEdgeIds::getEdgeIds)
+        .flatMapToInt(this::getDistinctLabels)
+        .boxed()
+        .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
   }
 }

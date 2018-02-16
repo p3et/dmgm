@@ -22,26 +22,20 @@ import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.config.DmgmConstants;
 import org.biiig.dmgm.api.db.PropertyGraphDb;
 import org.biiig.dmgm.api.db.VertexIdsEdgeIds;
-import org.biiig.dmgm.api.operators.StatisticsExtractor;
-import org.biiig.dmgm.impl.operators.common.DmgmOperatorBase;
 import org.biiig.dmgm.impl.util.collectors.GroupByKeySumLong;
 
 /**
  * Extract a map: vertex label -> support.
  */
-public class CollectionVertexLabelSupport extends DmgmOperatorBase
-    implements StatisticsExtractor<Map<Integer, Long>> {
+public class CollectionVertexLabelSupport extends CollectionElementLabelSupportBase {
 
   /**
    * Flag to enable the inclusion of generalized vertex labels.
@@ -65,15 +59,9 @@ public class CollectionVertexLabelSupport extends DmgmOperatorBase
 
   @Override
   public Map<Integer, Long> apply(Long elementId) {
-    long[] graphIds = database.getGraphIdsOfCollection(elementId);
-
-    LongStream stream = getParallelizableLongStream(graphIds);
-
-    Map<Integer, Long> support = stream
-        .mapToObj(database::getVertexIdsEdgeIds)
-        .filter(Objects::nonNull)
+    Map<Integer, Long> support = getGraphStream(elementId)
         .map(VertexIdsEdgeIds::getVertexIds)
-        .flatMapToInt(this::getVertexLabels)
+        .flatMapToInt(this::getDistinctLabels)
         .boxed()
         .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
@@ -111,18 +99,6 @@ public class CollectionVertexLabelSupport extends DmgmOperatorBase
     }
 
     return output == null ? Stream.of(bottomLevel) : output.stream();
-  }
-
-  /**
-   * To determine support, return only distinct labels of each graph.
-   *
-   * @param vertexIds vertex ids of a single graph
-   * @return distinct vertex labels
-   */
-  private IntStream getVertexLabels(long[] vertexIds) {
-    return LongStream.of(vertexIds)
-        .mapToInt(database::getLabel)
-        .distinct();
   }
 
 }

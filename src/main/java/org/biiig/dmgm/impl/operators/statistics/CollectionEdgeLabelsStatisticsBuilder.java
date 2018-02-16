@@ -21,9 +21,9 @@ import org.biiig.dmgm.api.db.PropertyGraphDb;
 import org.biiig.dmgm.impl.operators.common.WithDatabaseAccessBase;
 
 /**
- * Get a statistics extractor for graph collections.
+ * Get a statistics extractor for edge labels in graph collections.
  */
-public class CollectionStatisticsBuilder extends WithDatabaseAccessBase {
+public class CollectionEdgeLabelsStatisticsBuilder extends WithDatabaseAccessBase {
 
   /**
    * Constructor.
@@ -31,25 +31,17 @@ public class CollectionStatisticsBuilder extends WithDatabaseAccessBase {
    * @param database database
    * @param parallel true <=> parallel operator execution
    */
-  CollectionStatisticsBuilder(PropertyGraphDb database, boolean parallel) {
+  CollectionEdgeLabelsStatisticsBuilder(PropertyGraphDb database, boolean parallel) {
     super(database, parallel);
   }
 
   /**
-   * Get a statistics extractor for vertex labels in a graph collections.
+   * Return extractor for edge label support.
    *
-   * @return builder
+   * @return extractor
    */
-  public CollectionVertexLabelsStatisticsBuilder ofVertexLabels() {
-    return new CollectionVertexLabelsStatisticsBuilder(database, parallel);
+  public CollectionEdgeLabelSupport getSupport() {
+    return new CollectionEdgeLabelSupport(database, parallel);
   }
 
-  /**
-   * Get a statistics extractor for edge labels in a graph collections.
-   *
-   * @return builder
-   */
-  public CollectionEdgeLabelsStatisticsBuilder ofEdgeLabels() {
-    return new CollectionEdgeLabelsStatisticsBuilder(database, parallel);
-  }
 }
