@@ -29,6 +29,7 @@ import org.biiig.dmgm.impl.db.TlfLoader;
 import org.biiig.dmgm.to_string.cam.CAMGraphFormatter;
 import org.biiig.dmgm.to_string.edge_list.ELGraphFormatter;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -56,6 +57,7 @@ public class DmgmTestBase {
    */
   protected PropertyGraphDb getPredictableDatabase() {
     String inputPath = TlfLoader.class.getResource("/samples/predictable.tlf").getFile();
+    inputPath = new File(inputPath).toString();
     return new TlfLoader(DB_FACTORY, inputPath).get();
   }
 
@@ -75,7 +77,8 @@ public class DmgmTestBase {
     return equalSize && allFound && allExpected;
   }
 
-  private boolean compare(PropertyGraphDb db, String msg, Collection<CachedGraph> aCol, Collection<CachedGraph> bCol, boolean includeProperties) {
+  private boolean compare(PropertyGraphDb db, String msg, Collection<CachedGraph> aCol,
+                          Collection<CachedGraph> bCol, boolean includeProperties) {
     Map<String, String> aMap = getLabelMap(aCol, db, includeProperties);
     Map<String, String> bMap = getLabelMap(bCol, db, includeProperties);
 
@@ -91,7 +94,8 @@ public class DmgmTestBase {
     return notInB.isEmpty();
   }
 
-  private Map<String, String> getLabelMap(Collection<CachedGraph> expected, PropertyGraphDb db, boolean includeProperties) {
+  private Map<String, String> getLabelMap(Collection<CachedGraph> expected,
+                                          PropertyGraphDb db, boolean includeProperties) {
     Function<CachedGraph, String> keyFormatter = new CAMGraphFormatter(db);
 
     Function<CachedGraph, String> valueFormatter = new ELGraphFormatter(db);
@@ -122,7 +126,8 @@ public class DmgmTestBase {
   }
 
   protected void runAndTestExpectation(
-    Function<PropertyGraphDb, CollectionToCollectionOperator> operatorFactory, String gdl, boolean includeProperties) {
+    Function<PropertyGraphDb, CollectionToCollectionOperator> operatorFactory,
+    String gdl, boolean includeProperties) {
 
     PropertyGraphDb db = new GdlLoader(DB_FACTORY, gdl).get();
 
