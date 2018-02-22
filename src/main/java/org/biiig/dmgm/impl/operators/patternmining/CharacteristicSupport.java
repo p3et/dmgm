@@ -31,7 +31,7 @@ import org.biiig.dmgm.api.config.DmgmConstants;
 import org.biiig.dmgm.api.db.GetProperties;
 import org.biiig.dmgm.api.db.PropertyGraphDb;
 import org.biiig.dmgm.api.db.SetProperties;
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 import org.biiig.dmgm.api.operators.DmgmOperator;
 
 /**
@@ -40,12 +40,12 @@ import org.biiig.dmgm.api.operators.DmgmOperator;
  *
  * @param <G> graph type
  */
-interface CharacteristicSupport<G extends WithGraph & WithCategories>
+interface CharacteristicSupport<G extends WithGraphView & WithCategories>
     extends SubgraphMiningSupport<G, Map<Integer, Long>>, DmgmOperator {
 
   @Override
   default Map<Integer, Long> getMinSupportAbsolute(
-      Collection<CachedGraph> input, float minSupportRel) {
+      Collection<GraphView> input, float minSupportRel) {
 
     PropertyGraphDb db = getDatabase();
 

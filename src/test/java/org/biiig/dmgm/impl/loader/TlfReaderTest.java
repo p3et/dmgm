@@ -19,7 +19,7 @@ package org.biiig.dmgm.impl.loader;
 
 import org.biiig.dmgm.DmgmTestBase;
 import org.biiig.dmgm.api.db.PropertyGraphDb;
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 import org.biiig.dmgm.impl.db.TlfConstants;
 import org.junit.Test;
 
@@ -41,7 +41,7 @@ public class TlfReaderTest extends DmgmTestBase {
     long cid = database.createCollection(colLabel, graphIds);
 
 
-    List<CachedGraph> graphCollection = database.getCachedCollection(cid);
+    List<GraphView> graphCollection = database.getGraphCollectionView(cid);
 
     assertEquals("model count", 10, graphCollection.size());
   }

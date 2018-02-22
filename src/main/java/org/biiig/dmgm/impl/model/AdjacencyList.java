@@ -24,7 +24,7 @@ import org.apache.commons.lang3.ArrayUtils;
  * These indexes may improve performance for algorithms that include many traversals.
  * However, this representation requires additional memory and initialization time.
  */
-public class AdjacencyList extends CachedGraphBase {
+public class AdjacencyList extends GraphViewBase {
 
   /**
    * Outgoing edge ids of all vertices,

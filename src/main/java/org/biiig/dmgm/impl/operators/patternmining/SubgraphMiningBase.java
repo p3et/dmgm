@@ -31,7 +31,7 @@ import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.config.DmgmConstants;
 import org.biiig.dmgm.api.db.PropertyGraphDb;
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 import org.biiig.dmgm.impl.model.AdjacencyList;
 import org.biiig.dmgm.impl.operators.common.DmgmOperatorBase;
 import org.biiig.dmgm.impl.util.collectors.GroupByKeyListValues;
@@ -42,7 +42,7 @@ import org.biiig.dmgm.impl.util.collectors.GroupByKeyListValues;
  * @param <G> graph type
  * @param <S> support type
  */
-public abstract class SubgraphMiningBase<G extends WithGraph, S>
+public abstract class SubgraphMiningBase<G extends WithGraphView, S>
     extends DmgmOperatorBase implements SubgraphMining<G, S> {
 
   /**
@@ -95,7 +95,7 @@ public abstract class SubgraphMiningBase<G extends WithGraph, S>
 
   @Override
   public Long apply(Long inputCollectionId) {
-    Collection<CachedGraph> input = database.getCachedCollection(inputCollectionId);
+    Collection<GraphView> input = database.getGraphCollectionView(inputCollectionId);
 
     input = input.stream().map(g -> new AdjacencyList(
       g.getId(),
@@ -116,7 +116,7 @@ public abstract class SubgraphMiningBase<G extends WithGraph, S>
     // init aggregate single edge patterns
     Map<DfsCode, List<WithEmbedding>> patternEmbeddings =
         getParallelizableStream(graphIndex.values())
-            .map(WithGraph::getGraph)
+            .map(WithGraphView::getGraph)
           .flatMap(new InitializeSingleEdgePatterns(patternLabel))
           .collect(new GroupByKeyListValues<>(Pair::getKey, Pair::getValue));
 

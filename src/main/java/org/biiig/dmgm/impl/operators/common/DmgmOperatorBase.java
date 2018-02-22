@@ -22,7 +22,7 @@ import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import org.biiig.dmgm.api.db.PropertyGraphDb;
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 import org.biiig.dmgm.api.operators.DmgmOperator;
 
 /**
@@ -46,7 +46,7 @@ public abstract class DmgmOperatorBase extends WithDatabaseAccessBase implements
   }
 
   @Override
-  public long createGraph(CachedGraph graph) {
+  public long createGraph(GraphView graph) {
     int vertexCount = graph.getVertexCount();
     long[] vertexIds = new long[vertexCount];
     for (int v = 0; v < vertexCount; v++) {

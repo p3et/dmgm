@@ -18,7 +18,7 @@
 package org.biiig.dmgm.to_string.edge_list;
 
 import org.biiig.dmgm.api.db.PropertyGraphDb;
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 
 public class ELTripleFormatter {
 
@@ -31,7 +31,7 @@ public class ELTripleFormatter {
 
   }
 
-  public String format(CachedGraph graph, int edgeId) {
+  public String format(GraphView graph, int edgeId) {
     String sourceString = vertexFormatter.format(graph, graph.getSourceId(edgeId));
     String edgeString = edgeFormatter.format(graph, edgeId);
     String targetString = vertexFormatter.format(graph, graph.getTargetId(edgeId));

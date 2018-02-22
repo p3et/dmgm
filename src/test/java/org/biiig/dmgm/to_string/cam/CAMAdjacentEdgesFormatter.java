@@ -21,7 +21,7 @@ import com.google.common.collect.Maps;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.db.PropertyGraphDb;
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -37,7 +37,7 @@ public abstract class CAMAdjacentEdgesFormatter {
     this.db = db;
   }
 
-  public String format(CachedGraph graph, int vertexId) {
+  public String format(GraphView graph, int vertexId) {
     // determine outgoing edge labels
     Map<Integer, String[]> edgeLabels = Maps.newHashMap();
 
@@ -79,7 +79,7 @@ public abstract class CAMAdjacentEdgesFormatter {
 
   protected abstract String formatEdge(String edgeLabelsString);
 
-  protected abstract int getAdjacentVertexId(CachedGraph graph, int edgeId);
+  protected abstract int getAdjacentVertexId(GraphView graph, int edgeId);
 
-  protected abstract int[] getEdgeIds(CachedGraph graph, int vertexId);
+  protected abstract int[] getEdgeIds(GraphView graph, int vertexId);
 }

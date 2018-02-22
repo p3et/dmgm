@@ -19,7 +19,7 @@ package org.biiig.dmgm.impl.loader;
 
 import org.biiig.dmgm.DmgmTestBase;
 import org.biiig.dmgm.api.db.PropertyGraphDb;
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 import org.biiig.dmgm.impl.db.GdlLoader;
 import org.junit.Test;
 
@@ -41,7 +41,7 @@ public class GdlLoaderTest extends DmgmTestBase {
 
     long[] graphIds = db.queryElements(i -> i == graphLabel);
     Long colId = db.createCollection(colLabel, graphIds);
-    List<CachedGraph> graphCollection = db.getCachedCollection(colId);
+    List<GraphView> graphCollection = db.getGraphCollectionView(colId);
 
     assertEquals("model count", 2, graphCollection.size());
   }

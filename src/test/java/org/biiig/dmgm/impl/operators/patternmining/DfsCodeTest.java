@@ -17,18 +17,18 @@
 
 package org.biiig.dmgm.impl.operators.patternmining;
 
-import org.biiig.dmgm.api.model.CachedGraph;
-import org.biiig.dmgm.impl.model.CachedGraphTestBase;
+import org.biiig.dmgm.api.model.GraphView;
+import org.biiig.dmgm.impl.model.GraphViewTestBase;
 import org.junit.Test;
 
-public class DfsCodeTest extends CachedGraphTestBase {
+public class DfsCodeTest extends GraphViewTestBase {
 
   @Test
   public void testGetterAndSetter() {
     int lab0 = 0;
     int lab1 = 1;
 
-    CachedGraph graph = new DfsCode(
+    GraphView graph = new DfsCode(
       0, new int[] {lab0, lab1},
       new int[] {lab0, lab1},
       new int[] {0, 0},

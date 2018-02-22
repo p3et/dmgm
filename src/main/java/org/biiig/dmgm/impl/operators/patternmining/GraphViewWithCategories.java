@@ -17,17 +17,41 @@
 
 package org.biiig.dmgm.impl.operators.patternmining;
 
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 
 /**
- * Something with a graph.
+ * A graph associated to n categories.
  */
-public interface WithGraph {
+class GraphViewWithCategories implements WithGraphView, WithCategories {
 
   /**
-   * Get it.
-   *
-   * @return graph
+   * Graph.
    */
-  CachedGraph getGraph();
+  private GraphView graph;
+
+  /**
+   * Categories.
+   */
+  private final int[] categories;
+
+  /**
+   * Constructor.
+   *
+   * @param graph graph
+   * @param categories categories
+   */
+  GraphViewWithCategories(GraphView graph, int[] categories) {
+    this.graph = graph;
+    this.categories = categories;
+  }
+
+  @Override
+  public int[] getCategories() {
+    return categories;
+  }
+
+  @Override
+  public GraphView getGraph() {
+    return graph;
+  }
 }

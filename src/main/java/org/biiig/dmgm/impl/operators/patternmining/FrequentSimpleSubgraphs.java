@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 
 import javafx.util.Pair;
 import org.biiig.dmgm.api.db.PropertyGraphDb;
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 
 /**
  * Simple frequent subgraph mining. This is the multi-threaded version of DIMSpan.
@@ -32,7 +32,7 @@ import org.biiig.dmgm.api.model.CachedGraph;
  * @see <a href="https://dl.acm.org/citation.cfm?id=3148064">Paper</a>
  */
 class FrequentSimpleSubgraphs
-    extends SubgraphMiningBase<CachedGraph, Long> implements FrequentSupport<CachedGraph> {
+    extends SubgraphMiningBase<GraphView, Long> implements FrequentSupport<GraphView> {
 
   /**
    * Constructor.
@@ -49,7 +49,7 @@ class FrequentSimpleSubgraphs
   }
 
   @Override
-  public Stream<CachedGraph> preProcess(Collection<CachedGraph> input) {
+  public Stream<GraphView> preProcess(Collection<GraphView> input) {
     // just forward the input
     return getParallelizableStream(input);
   }
@@ -57,7 +57,7 @@ class FrequentSimpleSubgraphs
   @Override
   public long[] output(List<Pair<DfsCode, Long>> frequentPatterns,
                        Map<DfsCode, List<WithEmbedding>> patternEmbeddings,
-                       Map<Long, CachedGraph> graphIndex, Long minSupportAbsolute) {
+                       Map<Long, GraphView> graphIndex, Long minSupportAbsolute) {
 
     // just output a single pattern
     return output(frequentPatterns);

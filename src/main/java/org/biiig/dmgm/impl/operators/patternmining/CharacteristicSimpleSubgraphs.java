@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 
 import javafx.util.Pair;
 import org.biiig.dmgm.api.db.PropertyGraphDb;
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 
 /**
  * This algorithm extracts subgraph pattern
@@ -33,7 +33,7 @@ import org.biiig.dmgm.api.model.CachedGraph;
  * @see <a href="https://www.degruyter.com/view/j/itit.2016.58.issue-4/itit-2016-0006/itit-2016-0006.xml">Characteristic Subgraph Mining</a>
  */
 public class CharacteristicSimpleSubgraphs
-    extends CharacteristicSubgraphsBase<GraphWithCategories> {
+    extends CharacteristicSubgraphsBase<GraphViewWithCategories> {
 
   /**
    * Constructor.
@@ -50,15 +50,15 @@ public class CharacteristicSimpleSubgraphs
   }
 
   @Override
-  public Stream<GraphWithCategories> preProcess(Collection<CachedGraph> input) {
+  public Stream<GraphViewWithCategories> preProcess(Collection<GraphView> input) {
     return getParallelizableStream(input)
-      .map(graph -> new GraphWithCategories(graph, getCategories(database, graph.getId())));
+      .map(graph -> new GraphViewWithCategories(graph, getCategories(database, graph.getId())));
   }
 
   @Override
   public long[] output(List<Pair<DfsCode, Map<Integer, Long>>> frequentPatterns,
                        Map<DfsCode, List<WithEmbedding>> patternEmbeddings,
-                       Map<Long, GraphWithCategories> graphIndex,
+                       Map<Long, GraphViewWithCategories> graphIndex,
                        Map<Integer, Long> minSupportAbsolute) {
 
     // use output of characteristic subgraphs

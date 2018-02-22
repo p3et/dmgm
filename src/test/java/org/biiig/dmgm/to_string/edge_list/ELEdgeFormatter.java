@@ -18,7 +18,7 @@
 package org.biiig.dmgm.to_string.edge_list;
 
 import org.biiig.dmgm.api.db.PropertyGraphDb;
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 
 public class ELEdgeFormatter {
 
@@ -28,7 +28,7 @@ public class ELEdgeFormatter {
     this.db = db;
   }
 
-  public String format(CachedGraph graph, int edgeId) {
+  public String format(GraphView graph, int edgeId) {
     return "-" + db.decode(graph.getEdgeLabel(edgeId)) + ">";
   }
 }

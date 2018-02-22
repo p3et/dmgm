@@ -15,7 +15,19 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
+package org.biiig.dmgm.impl.operators.patternmining;
+
+import org.biiig.dmgm.api.model.GraphView;
+
 /**
- * Load graph data from sources like input files.
+ * Something with a graph.
  */
-package org.biiig.dmgm.api.loader;
+public interface WithGraphView {
+
+  /**
+   * Get it.
+   *
+   * @return graph
+   */
+  GraphView getGraph();
+}

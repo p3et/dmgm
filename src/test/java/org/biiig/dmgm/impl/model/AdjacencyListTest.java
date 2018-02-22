@@ -17,17 +17,17 @@
 
 package org.biiig.dmgm.impl.model;
 
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 import org.junit.Test;
 
-public class AdjacencyListTest extends CachedGraphTestBase {
+public class AdjacencyListTest extends GraphViewTestBase {
 
   @Test
   public void testGetterAndSetter() {
     int lab0 = 0;
     int lab1 = 1;
 
-    CachedGraph graph = new AdjacencyList(
+    GraphView graph = new AdjacencyList(
       0L,
       0,
       new int[] {lab0, lab1},

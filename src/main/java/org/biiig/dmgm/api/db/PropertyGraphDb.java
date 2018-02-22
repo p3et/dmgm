@@ -19,7 +19,7 @@ package org.biiig.dmgm.api.db;
 
 import java.util.List;
 
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 
 /**
  * Describes a database that supports:
@@ -37,7 +37,7 @@ public interface PropertyGraphDb extends
    * @param graphId model id
    * @return cached immutable model pojo
    */
-  CachedGraph getCachedGraph(long graphId);
+  GraphView getGraphView(long graphId);
 
   /**
    * Materialize a single model and return a List of it's graphs pojo representations.
@@ -45,6 +45,6 @@ public interface PropertyGraphDb extends
    * @param collectionId hypervertex id
    * @return list of cached immutable model pojos
    */
-  List<CachedGraph> getCachedCollection(long collectionId);
+  List<GraphView> getGraphCollectionView(long collectionId);
 
 }
