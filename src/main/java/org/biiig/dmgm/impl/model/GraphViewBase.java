@@ -23,12 +23,12 @@ import java.util.stream.IntStream;
 import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.config.DmgmConstants;
 import org.biiig.dmgm.api.db.SymbolDictionary;
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 
 /**
  * Superclass of input graph representations.
  */
-public class CachedGraphBase implements CachedGraph {
+public class GraphViewBase implements GraphView {
 
   /**
    * Global graph id.
@@ -69,7 +69,7 @@ public class CachedGraphBase implements CachedGraph {
    * @param sourceIds source ids of edges
    * @param targetIds target ids of edges
    */
-  public CachedGraphBase(
+  public GraphViewBase(
       long id, int label, int[] vertexLabels, int[] edgeLabels, int[] sourceIds, int[] targetIds) {
 
     this.id = id;

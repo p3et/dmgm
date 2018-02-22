@@ -18,7 +18,7 @@
 package org.biiig.dmgm.to_string.cam;
 
 import org.biiig.dmgm.api.db.PropertyGraphDb;
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 
 public class CAMIncomingEdgesFormatter extends CAMAdjacentEdgesFormatter {
 
@@ -32,12 +32,12 @@ public class CAMIncomingEdgesFormatter extends CAMAdjacentEdgesFormatter {
   }
 
   @Override
-  protected int getAdjacentVertexId(CachedGraph graph, int edgeId) {
+  protected int getAdjacentVertexId(GraphView graph, int edgeId) {
     return graph.getSourceId(edgeId);
   }
 
   @Override
-  protected int[] getEdgeIds(CachedGraph graph, int vertexId) {
+  protected int[] getEdgeIds(GraphView graph, int vertexId) {
     return graph.getIncomingEdgeIds(vertexId);
   }
 }

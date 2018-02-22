@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 
 /**
  * An operator for directed multigraphs.
@@ -35,7 +35,7 @@ public interface DmgmOperator extends WithDatabaseAccess {
    *
    * @return graph id
    */
-  long createGraph(CachedGraph graph);
+  long createGraph(GraphView graph);
 
   /**
    * Stream a collection according to the operators parallelization options.

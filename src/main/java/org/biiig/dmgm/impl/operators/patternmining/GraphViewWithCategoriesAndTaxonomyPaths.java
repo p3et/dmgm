@@ -15,27 +15,36 @@
  * along with DMGM. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.biiig.dmgm.to_string.cam;
+package org.biiig.dmgm.impl.operators.patternmining;
 
-import org.biiig.dmgm.api.db.PropertyGraphDb;
 import org.biiig.dmgm.api.model.GraphView;
 
-public class CAMVertexFormatter {
+/**
+ * A graph associated to n categories and
+ * whose vertices are associated to taxonomy paths.
+ */
+class GraphViewWithCategoriesAndTaxonomyPaths
+    extends GraphViewWithTaxonomyPaths implements WithCategories {
 
-  private final PropertyGraphDb db;
-  private final CAMOutgoingEdgesFormatter outgoingEdgesFormatter;
-  private final CAMIncomingEdgesFormatter incomingEdgesFormatter;
+  /**
+   * Categories.
+   */
+  private final int[] categories;
 
-  public CAMVertexFormatter(PropertyGraphDb db) {
-    this.db = db;
-    this.outgoingEdgesFormatter = new CAMOutgoingEdgesFormatter(db);
-    this.incomingEdgesFormatter = new CAMIncomingEdgesFormatter(db);
+  /**
+   * Constructor.
+   *
+   * @param graph graph
+   * @param taxonomyPaths taxonomy paths
+   * @param categories categories
+   */
+  GraphViewWithCategoriesAndTaxonomyPaths(GraphView graph, int[][] taxonomyPaths, int[] categories) {
+    super(graph, taxonomyPaths);
+    this.categories = categories;
   }
 
-  public String format(GraphView graph, int vertexId) {
-    return db.decode(graph.getVertexLabel(vertexId)) +
-      outgoingEdgesFormatter.format(graph, vertexId) +
-      incomingEdgesFormatter.format(graph, vertexId);
+  @Override
+  public int[] getCategories() {
+    return categories;
   }
-
 }

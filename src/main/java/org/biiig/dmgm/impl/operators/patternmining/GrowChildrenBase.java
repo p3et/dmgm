@@ -20,7 +20,7 @@ package org.biiig.dmgm.impl.operators.patternmining;
 
 import java.util.Collection;
 import javafx.util.Pair;
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 
 /**
  * Superclass of pattern growers.
@@ -38,14 +38,14 @@ public abstract class GrowChildrenBase implements GrowChildren {
 
   @Override
   public void addChildren(
-      CachedGraph withGraph, DfsEmbedding parentEmbedding,
+      GraphView withGraph, DfsEmbedding parentEmbedding,
       Collection<Pair<DfsCode, WithEmbedding>> output) {
 
     boolean rightmost = true;
     for (int fromTime : parent.getRightmostPath()) {
       int fromId = parentEmbedding.getVertexId(fromTime);
 
-      CachedGraph graph = withGraph.getGraph();
+      GraphView graph = withGraph.getGraph();
       for (int edgeId : getEdgeIds(graph, fromId)) {
         // if not contained in parent embedding
         if (! parentEmbedding.containsEdgeId(edgeId)) {
@@ -92,7 +92,7 @@ public abstract class GrowChildrenBase implements GrowChildren {
    * @param fromId vertex id
    * @return edge ids
    */
-  protected abstract int[] getEdgeIds(CachedGraph graph, int fromId);
+  protected abstract int[] getEdgeIds(GraphView graph, int fromId);
 
   /**
    * Get source or target vertex id of en edge.
@@ -101,7 +101,7 @@ public abstract class GrowChildrenBase implements GrowChildren {
    * @param edgeId edge id
    * @return vertex id
    */
-  protected abstract int getToId(CachedGraph graph, int edgeId);
+  protected abstract int getToId(GraphView graph, int edgeId);
 
   /**
    * Get the direction of the current edge traversal.

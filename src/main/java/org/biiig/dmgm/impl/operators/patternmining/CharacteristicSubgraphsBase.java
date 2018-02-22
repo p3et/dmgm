@@ -28,7 +28,7 @@ import org.biiig.dmgm.api.db.PropertyGraphDb;
  *
  * @param <G> input graph type
  */
-abstract class CharacteristicSubgraphsBase<G extends WithGraph & WithCategories>
+abstract class CharacteristicSubgraphsBase<G extends WithGraphView & WithCategories>
     extends SubgraphMiningBase<G, Map<Integer, Long>>
     implements CharacteristicSupport<G> {
 

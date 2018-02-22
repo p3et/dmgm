@@ -34,7 +34,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.config.DmgmConstants;
 import org.biiig.dmgm.api.db.SymbolDictionary;
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 import org.biiig.dmgm.impl.util.collectors.GroupByKeyListValues;
 
 /**
@@ -42,7 +42,7 @@ import org.biiig.dmgm.impl.util.collectors.GroupByKeyListValues;
  * @param <G> graph type
  * @param <S> support type
  */
-interface GeneralizedSubgraphs<G extends WithGraph & WithTaxonomyPaths, S>
+interface GeneralizedSubgraphs<G extends WithGraphView & WithTaxonomyPaths, S>
     extends SubgraphMining<G, S> {
 
   /**
@@ -52,7 +52,7 @@ interface GeneralizedSubgraphs<G extends WithGraph & WithTaxonomyPaths, S>
    * @param taxonomyPathIndex map: label -> taxonomy path
    * @return array of taxonomy paths
    */
-  default int[][] getTaxonomyPaths(CachedGraph graph, Map<Integer, int[]> taxonomyPathIndex) {
+  default int[][] getTaxonomyPaths(GraphView graph, Map<Integer, int[]> taxonomyPathIndex) {
     int[][] taxonomyPaths = new int[graph.getVertexCount()][];
 
     for (int vertexId = 0; vertexId < graph.getVertexCount(); vertexId++) {
@@ -70,7 +70,7 @@ interface GeneralizedSubgraphs<G extends WithGraph & WithTaxonomyPaths, S>
    * @return map: child label -> parent label...
    */
   default Map<Integer, int[]> getTaxonomyPathIndex(
-      SymbolDictionary dictionary, Collection<CachedGraph> input) {
+      SymbolDictionary dictionary, Collection<GraphView> input) {
 
     // get distinct bottom level labels
     int[] vertexLabels = getDistinctVertexLabels(input);
@@ -143,7 +143,7 @@ interface GeneralizedSubgraphs<G extends WithGraph & WithTaxonomyPaths, S>
    * @param input cached graph collection
    * @return array of all vertex labels
    */
-  default int[] getDistinctVertexLabels(Collection<CachedGraph> input) {
+  default int[] getDistinctVertexLabels(Collection<GraphView> input) {
     return getParallelizableStream(input)
       .flatMapToInt(g -> IntStream.of(g.getVertexLabels()))
       .distinct()

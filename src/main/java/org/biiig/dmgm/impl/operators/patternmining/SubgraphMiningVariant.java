@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 
 import javafx.util.Pair;
 
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 
 /**
  * The methods of a subgraph mining algorithm that are related
@@ -33,7 +33,7 @@ import org.biiig.dmgm.api.model.CachedGraph;
  * @param <G> graph type
  * @param <S> support type
  */
-public interface SubgraphMiningVariant<G extends WithGraph, S> {
+public interface SubgraphMiningVariant<G extends WithGraphView, S> {
 
   /**
    * Only for generalized variants: Generalize vertex labels and add taxonomy paths.
@@ -42,7 +42,7 @@ public interface SubgraphMiningVariant<G extends WithGraph, S> {
    * @param input raw cached graphs
    * @return graphs with additional information
    */
-  Stream<G> preProcess(Collection<CachedGraph> input);
+  Stream<G> preProcess(Collection<GraphView> input);
 
   /**
    * Write patterns to the database.

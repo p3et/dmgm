@@ -19,12 +19,12 @@ package org.biiig.dmgm.to_string.cam;
 
 import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.db.PropertyGraphDb;
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 
 import java.util.Arrays;
 import java.util.function.Function;
 
-public class CAMGraphFormatter implements Function<CachedGraph, String> {
+public class CAMGraphFormatter implements Function<GraphView, String> {
 
   private static final char VERTEX_SEPARATOR = ',';
 
@@ -36,7 +36,7 @@ public class CAMGraphFormatter implements Function<CachedGraph, String> {
 
 
   @Override
-  public String apply(CachedGraph graph) {
+  public String apply(GraphView graph) {
 
     String[] vertexStrings = new String[graph.getVertexCount()];
 

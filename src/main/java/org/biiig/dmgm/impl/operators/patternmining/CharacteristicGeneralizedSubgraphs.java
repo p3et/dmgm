@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 
 import javafx.util.Pair;
 import org.biiig.dmgm.api.db.PropertyGraphDb;
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 
 /**
  * This algorithm extracts generalized subgraph pattern that
@@ -35,8 +35,8 @@ import org.biiig.dmgm.api.model.CachedGraph;
  * @see <a href="https://www.degruyter.com/view/j/itit.2016.58.issue-4/itit-2016-0006/itit-2016-0006.xml">Characteristic Subgraph Mining</a>
  */
 public class CharacteristicGeneralizedSubgraphs
-    extends CharacteristicSubgraphsBase<GraphWithCategoriesAndTaxonomyPaths>
-    implements GeneralizedSubgraphs<GraphWithCategoriesAndTaxonomyPaths, Map<Integer, Long>> {
+    extends CharacteristicSubgraphsBase<GraphViewWithCategoriesAndTaxonomyPaths>
+    implements GeneralizedSubgraphs<GraphViewWithCategoriesAndTaxonomyPaths, Map<Integer, Long>> {
 
   /**
    * Constructor.
@@ -53,7 +53,7 @@ public class CharacteristicGeneralizedSubgraphs
   }
 
   @Override
-  public Stream<GraphWithCategoriesAndTaxonomyPaths> preProcess(Collection<CachedGraph> input) {
+  public Stream<GraphViewWithCategoriesAndTaxonomyPaths> preProcess(Collection<GraphView> input) {
     Map<Integer, int[]> taxonomyPathIndex = getTaxonomyPathIndex(database, input);
 
     return getParallelizableStream(input)
@@ -66,14 +66,14 @@ public class CharacteristicGeneralizedSubgraphs
             graph.getVertexLabels()[i] = taxonomyPaths[i][0];
           }
 
-          return new GraphWithCategoriesAndTaxonomyPaths(graph, taxonomyPaths, category);
+          return new GraphViewWithCategoriesAndTaxonomyPaths(graph, taxonomyPaths, category);
         });
   }
 
   @Override
   public long[] output(List<Pair<DfsCode, Map<Integer, Long>>> frequentPatterns,
                        Map<DfsCode, List<WithEmbedding>> patternEmbeddings,
-                       Map<Long, GraphWithCategoriesAndTaxonomyPaths> graphIndex,
+                       Map<Long, GraphViewWithCategoriesAndTaxonomyPaths> graphIndex,
                        Map<Integer, Long> minSupportAbsolute) {
 
     // specialize

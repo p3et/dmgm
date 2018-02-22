@@ -31,7 +31,7 @@ import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
  * @param <G> graph type (e.g., with category or with taxonomy paths)
  * @param <S> support type (e.g., simple support or map: category -> support
  */
-public interface SubgraphMining<G extends WithGraph, S> extends CollectionToCollectionOperator,
+public interface SubgraphMining<G extends WithGraphView, S> extends CollectionToCollectionOperator,
     SubgraphMiningSupport<G, S>, SubgraphMiningVariant<G, S> {
 
   /**

@@ -17,16 +17,16 @@
 
 package org.biiig.dmgm.impl.model;
 
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 import org.junit.Test;
 
-public class CachedGraphBaseTest extends CachedGraphTestBase {
+public class GraphViewBaseTest extends GraphViewTestBase {
   @Test
   public void testGetterAndSetter() throws Exception {
     int lab0 = 0;
     int lab1 = 1;
 
-    CachedGraph graph = new CachedGraphBase(
+    GraphView graph = new GraphViewBase(
       0L,
       0,
       new int[] {lab0, lab1},

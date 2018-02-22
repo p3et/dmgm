@@ -18,7 +18,7 @@
 package org.biiig.dmgm.to_string.edge_list;
 
 import org.biiig.dmgm.api.db.PropertyGraphDb;
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 
 public class ELVertexFormatter {
 
@@ -28,7 +28,7 @@ public class ELVertexFormatter {
     this.vertexDictionary = db;
   }
 
-  public String format(CachedGraph graph, int vertexId) {
+  public String format(GraphView graph, int vertexId) {
     return "(" + vertexId + ":" + vertexDictionary.decode(graph.getVertexLabel(vertexId)) + ")";
   }
 }

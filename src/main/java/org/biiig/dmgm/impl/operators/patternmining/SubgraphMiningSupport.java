@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 import javafx.util.Pair;
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 
 /**
  * The methods of a subgraph mining algorithm that are related
@@ -30,7 +30,7 @@ import org.biiig.dmgm.api.model.CachedGraph;
  *
  * @param <S> support type
  */
-public interface SubgraphMiningSupport<G extends WithGraph, S> {
+public interface SubgraphMiningSupport<G extends WithGraphView, S> {
 
   /**
    * Calculate the absolute min support threshold regarding to the mining variant,
@@ -41,7 +41,7 @@ public interface SubgraphMiningSupport<G extends WithGraph, S> {
    *
    * @return absolute min support threshold
    */
-  S getMinSupportAbsolute(Collection<CachedGraph> input, float minSupportRel);
+  S getMinSupportAbsolute(Collection<GraphView> input, float minSupportRel);
 
   /**
    * Generalization of absolute value calculation.

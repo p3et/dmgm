@@ -19,7 +19,7 @@ package org.biiig.dmgm.impl.operators.patternmining;
 
 import java.util.Collection;
 import javafx.util.Pair;
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 
 
 /**
@@ -49,7 +49,7 @@ public class GrowChildrenByAllEdges implements GrowChildren {
 
   @Override
   public void addChildren(
-      CachedGraph graph, DfsEmbedding embedding, Collection<Pair<DfsCode, WithEmbedding>> output) {
+      GraphView graph, DfsEmbedding embedding, Collection<Pair<DfsCode, WithEmbedding>> output) {
 
     outgoing.addChildren(graph, embedding, output);
     incoming.addChildren(graph, embedding, output);

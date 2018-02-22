@@ -18,8 +18,8 @@
 package org.biiig.dmgm.impl.operators.subgraph;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.biiig.dmgm.api.model.CachedGraph;
-import org.biiig.dmgm.impl.model.CachedGraphBase;
+import org.biiig.dmgm.api.model.GraphView;
+import org.biiig.dmgm.impl.model.GraphViewBase;
 
 import java.util.function.IntPredicate;
 import java.util.function.UnaryOperator;
@@ -28,7 +28,7 @@ import java.util.stream.IntStream;
 /**
  * Take a graph an filter vertices and edges by given label predicates.
  */
-public class FilterVerticesAndEdgesByLabel implements UnaryOperator<CachedGraph> {
+public class FilterVerticesAndEdgesByLabel implements UnaryOperator<GraphView> {
 
   /**
    * Vertex label predicate.
@@ -61,7 +61,7 @@ public class FilterVerticesAndEdgesByLabel implements UnaryOperator<CachedGraph>
   }
 
   @Override
-  public CachedGraph apply(CachedGraph graph) {
+  public GraphView apply(GraphView graph) {
     // apply vertex predicate
     int inVertexCount = graph.getVertexCount();
     int[] candidateVertexIds = IntStream
@@ -126,7 +126,7 @@ public class FilterVerticesAndEdgesByLabel implements UnaryOperator<CachedGraph>
       outId++;
     }
 
-    return new CachedGraphBase(
+    return new GraphViewBase(
       graph.getId(), graph.getLabel(), outVertexLabels, outEdgeLabels, outSourceIds, outTargetIds);
   }
 }

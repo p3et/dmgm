@@ -21,7 +21,7 @@ import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.biiig.dmgm.api.db.Property;
 import org.biiig.dmgm.api.db.PropertyGraphDb;
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 import org.biiig.dmgm.api.operators.CollectionToCollectionOperator;
 import org.biiig.dmgm.impl.db.GdlLoader;
 import org.biiig.dmgm.impl.db.InMemoryGraphDbSupplier;
@@ -62,8 +62,8 @@ public class DmgmTestBase {
   }
 
   private boolean equal(PropertyGraphDb db, long expId, long resId, boolean includeProperties) {
-    Collection<CachedGraph> expected = db.getCachedCollection(expId);
-    Collection<CachedGraph> result = db.getCachedCollection(resId);
+    Collection<GraphView> expected = db.getGraphCollectionView(expId);
+    Collection<GraphView> result = db.getGraphCollectionView(resId);
 
     boolean equalSize = expected.size() == result.size();
 
@@ -77,8 +77,8 @@ public class DmgmTestBase {
     return equalSize && allFound && allExpected;
   }
 
-  private boolean compare(PropertyGraphDb db, String msg, Collection<CachedGraph> aCol,
-                          Collection<CachedGraph> bCol, boolean includeProperties) {
+  private boolean compare(PropertyGraphDb db, String msg, Collection<GraphView> aCol,
+                          Collection<GraphView> bCol, boolean includeProperties) {
     Map<String, String> aMap = getLabelMap(aCol, db, includeProperties);
     Map<String, String> bMap = getLabelMap(bCol, db, includeProperties);
 
@@ -94,14 +94,14 @@ public class DmgmTestBase {
     return notInB.isEmpty();
   }
 
-  private Map<String, String> getLabelMap(Collection<CachedGraph> expected,
+  private Map<String, String> getLabelMap(Collection<GraphView> expected,
                                           PropertyGraphDb db, boolean includeProperties) {
-    Function<CachedGraph, String> keyFormatter = new CAMGraphFormatter(db);
+    Function<GraphView, String> keyFormatter = new CAMGraphFormatter(db);
 
-    Function<CachedGraph, String> valueFormatter = new ELGraphFormatter(db);
+    Function<GraphView, String> valueFormatter = new ELGraphFormatter(db);
 
     Map<String, String> canonicalLabels = Maps.newHashMapWithExpectedSize(expected.size());
-    for (CachedGraph graph : expected) {
+    for (GraphView graph : expected) {
 
       String propertyLabel;
       if (includeProperties) {

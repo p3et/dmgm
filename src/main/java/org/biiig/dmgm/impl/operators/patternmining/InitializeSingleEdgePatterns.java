@@ -22,13 +22,13 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import javafx.util.Pair;
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 
 /**
  * Extract all 1-edge DFS codes and embeddings from a graph.
  */
 public class InitializeSingleEdgePatterns
-    implements Function<CachedGraph, Stream<Pair<DfsCode, WithEmbedding>>> {
+    implements Function<GraphView, Stream<Pair<DfsCode, WithEmbedding>>> {
 
   /**
    * Pattern label.
@@ -41,7 +41,7 @@ public class InitializeSingleEdgePatterns
 
   @SuppressWarnings("unchecked")
   @Override
-  public Stream<Pair<DfsCode,WithEmbedding>> apply(CachedGraph graph) {
+  public Stream<Pair<DfsCode,WithEmbedding>> apply(GraphView graph) {
 
     int edgeCount = graph.getEdgeCount();
     Pair<DfsCode, WithEmbedding>[] pairs =

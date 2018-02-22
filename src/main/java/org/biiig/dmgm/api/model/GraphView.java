@@ -18,7 +18,7 @@
 package org.biiig.dmgm.api.model;
 
 import org.biiig.dmgm.api.db.SymbolDictionary;
-import org.biiig.dmgm.impl.operators.patternmining.WithGraph;
+import org.biiig.dmgm.impl.operators.patternmining.WithGraphView;
 
 /**
  * A materialized model, i.e., a model including all its vertices and edges.
@@ -28,10 +28,10 @@ import org.biiig.dmgm.impl.operators.patternmining.WithGraph;
  *        Thus, the structure of cached graphs is immutable.
  *
  */
-public interface CachedGraph extends WithGraph {
+public interface GraphView extends WithGraphView {
 
   @Override
-  default CachedGraph getGraph() {
+  default GraphView getGraph() {
     return this;
   }
 

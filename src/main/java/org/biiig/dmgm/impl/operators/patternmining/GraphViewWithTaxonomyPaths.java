@@ -17,23 +17,40 @@
 
 package org.biiig.dmgm.impl.operators.patternmining;
 
-import java.util.Collection;
-import javafx.util.Pair;
-
 import org.biiig.dmgm.api.model.GraphView;
 
 /**
- * Grow children of DFS Codes.
+ * A graph whose vertices are associated to taxonomy paths.
  */
-interface GrowChildren {
+class GraphViewWithTaxonomyPaths implements WithGraphView, WithTaxonomyPaths {
+  /**
+   * Graph.
+   */
+  private final GraphView graph;
+  /**
+   * Taxonomy paths.
+   * Outer array indexes correspond to local vertex ids of the graph.
+   */
+  private final int[][] taxonomyPaths;
 
   /**
-   * Grow children and add to output.
+   * Constructor.
    *
    * @param graph graph
-   * @param embedding parent embedding
-   * @param output collector for children
+   * @param taxonomyPaths taxonomy paths
    */
-  void addChildren(GraphView graph, DfsEmbedding embedding,
-                   Collection<Pair<DfsCode, WithEmbedding>> output);
+  GraphViewWithTaxonomyPaths(GraphView graph, int[][] taxonomyPaths) {
+    this.taxonomyPaths = taxonomyPaths;
+    this.graph = graph;
+  }
+
+  @Override
+  public GraphView getGraph() {
+    return graph;
+  }
+
+  @Override
+  public int[] getTaxonomyPath(int vertexId) {
+    return taxonomyPaths[vertexId];
+  }
 }

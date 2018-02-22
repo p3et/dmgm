@@ -25,13 +25,13 @@ import javax.annotation.Nonnull;
 import org.apache.commons.lang3.ArrayUtils;
 
 import org.biiig.dmgm.api.db.SymbolDictionary;
-import org.biiig.dmgm.impl.model.CachedGraphBase;
+import org.biiig.dmgm.impl.model.GraphViewBase;
 
 /**
  * A canonical representation of graph patterns.
  * @see <a href="http://ieeexplore.ieee.org/document/1184038/">gSpan</a>
  */
-class DfsCode extends CachedGraphBase implements Comparable<DfsCode> {
+class DfsCode extends GraphViewBase implements Comparable<DfsCode> {
   //TODO: Optimize this class to not inherit from {@code CachedGraphBase}.
 
   /**

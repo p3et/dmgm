@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 
 import javafx.util.Pair;
 import org.biiig.dmgm.api.db.SetProperties;
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 import org.biiig.dmgm.api.operators.DmgmOperator;
 
 /**
@@ -33,11 +33,11 @@ import org.biiig.dmgm.api.operators.DmgmOperator;
  *
  * @param <G> graph type
  */
-interface FrequentSupport<G extends WithGraph>
+interface FrequentSupport<G extends WithGraphView>
     extends SubgraphMiningSupport<G, Long>, DmgmOperator {
 
   @Override
-  default Long getMinSupportAbsolute(Collection<CachedGraph> input, float minSupportRel) {
+  default Long getMinSupportAbsolute(Collection<GraphView> input, float minSupportRel) {
     return getAbsoluteSupport(input.size(), minSupportRel);
   }
 

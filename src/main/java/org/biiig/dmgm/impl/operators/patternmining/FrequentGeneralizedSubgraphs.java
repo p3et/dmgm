@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 
 import javafx.util.Pair;
 import org.biiig.dmgm.api.db.PropertyGraphDb;
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 
 /**
  * This algorithm extracts generalized frequent subgraphs.
@@ -33,9 +33,9 @@ import org.biiig.dmgm.api.model.CachedGraph;
  * @see <a href="http://ieeexplore.ieee.org/document/8244685/">Generalized Frequent Subgraph Miningg</a>
  */
 class FrequentGeneralizedSubgraphs
-    extends SubgraphMiningBase<GraphWithTaxonomyPaths, Long>
-    implements GeneralizedSubgraphs<GraphWithTaxonomyPaths, Long>,
-    FrequentSupport<GraphWithTaxonomyPaths> {
+    extends SubgraphMiningBase<GraphViewWithTaxonomyPaths, Long>
+    implements GeneralizedSubgraphs<GraphViewWithTaxonomyPaths, Long>,
+    FrequentSupport<GraphViewWithTaxonomyPaths> {
 
   /**
    * Constructor.
@@ -52,7 +52,7 @@ class FrequentGeneralizedSubgraphs
   }
 
   @Override
-  public Stream<GraphWithTaxonomyPaths> preProcess(Collection<CachedGraph> input) {
+  public Stream<GraphViewWithTaxonomyPaths> preProcess(Collection<GraphView> input) {
     Map<Integer, int[]> taxonomyPathIndex = getTaxonomyPathIndex(database, input);
 
     return getParallelizableStream(input)
@@ -63,14 +63,14 @@ class FrequentGeneralizedSubgraphs
           graph.getVertexLabels()[i] = taxonomyPaths[i][0];
         }
 
-        return new GraphWithTaxonomyPaths(graph, taxonomyPaths);
+        return new GraphViewWithTaxonomyPaths(graph, taxonomyPaths);
       });
   }
 
   @Override
   public long[] output(List<Pair<DfsCode, Long>> frequentPatterns,
                        Map<DfsCode, List<WithEmbedding>> patternEmbeddings,
-                       Map<Long, GraphWithTaxonomyPaths> graphIndex, Long minSupportAbs) {
+                       Map<Long, GraphViewWithTaxonomyPaths> graphIndex, Long minSupportAbs) {
 
     // specialize
     frequentPatterns = getParallelizableStream(frequentPatterns)

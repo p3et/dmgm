@@ -38,8 +38,8 @@ import javafx.util.Pair;
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.db.Property;
 import org.biiig.dmgm.api.db.PropertyGraphDb;
-import org.biiig.dmgm.api.model.CachedGraph;
-import org.biiig.dmgm.impl.model.CachedGraphBase;
+import org.biiig.dmgm.api.model.GraphView;
+import org.biiig.dmgm.impl.model.GraphViewBase;
 import org.biiig.dmgm.impl.util.collectors.GroupByKeyArrayValues;
 
 /**
@@ -632,7 +632,7 @@ public class InMemoryGraphDb implements PropertyGraphDb {
   // PropertyGraphDB
 
   @Override
-  public CachedGraph getCachedGraph(long graphId) {
+  public GraphView getGraphView(long graphId) {
     int graphLabel = labels.get(graphId);
 
     LongsPair globalVertexIdsEdgeIds = graphs.get(graphId);
@@ -666,11 +666,11 @@ public class InMemoryGraphDb implements PropertyGraphDb {
       edgeLabels[localEdgeId] = labels.get(globalEdgeId);
     }
 
-    return new CachedGraphBase(graphId, graphLabel, vertexLabels, edgeLabels, sourceIds, targetIds);
+    return new GraphViewBase(graphId, graphLabel, vertexLabels, edgeLabels, sourceIds, targetIds);
   }
 
   @Override
-  public List<CachedGraph> getCachedCollection(long collectionId) {
+  public List<GraphView> getGraphCollectionView(long collectionId) {
     LongStream graphIdStream = LongStream
         .of(collections.get(collectionId));
 
@@ -679,7 +679,7 @@ public class InMemoryGraphDb implements PropertyGraphDb {
     }
 
     return graphIdStream
-      .mapToObj(this::getCachedGraph)
+      .mapToObj(this::getGraphView)
       .collect(Collectors.toList());
   }
 

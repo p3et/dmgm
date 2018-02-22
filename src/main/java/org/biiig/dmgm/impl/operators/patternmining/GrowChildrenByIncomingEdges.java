@@ -17,7 +17,7 @@
 
 package org.biiig.dmgm.impl.operators.patternmining;
 
-import org.biiig.dmgm.api.model.CachedGraph;
+import org.biiig.dmgm.api.model.GraphView;
 
 /**
  * Grow patterns by traversing outgoing edges.
@@ -29,12 +29,12 @@ class GrowChildrenByIncomingEdges extends GrowChildrenBase {
   }
 
   @Override
-  protected int[] getEdgeIds(CachedGraph graph, int fromId) {
+  protected int[] getEdgeIds(GraphView graph, int fromId) {
     return graph.getIncomingEdgeIds(fromId);
   }
 
   @Override
-  protected int getToId(CachedGraph graph, int edgeId) {
+  protected int getToId(GraphView graph, int edgeId) {
     return graph.getSourceId(edgeId);
   }
 
