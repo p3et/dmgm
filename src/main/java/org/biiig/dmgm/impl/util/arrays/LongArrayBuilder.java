@@ -22,7 +22,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.util.Arrays;
 
 /**
- * Create int[]s of previously unknown size.
+ * Create long[]s of previously unknown size.
  * Internally, an array and the current maximum index are stored.
  * To avoid object instantiations the internal array has an initial size
  * and will be extended only if this size is exceeded.
@@ -30,12 +30,12 @@ import java.util.Arrays;
  * To further avoid instantiations, the builder can be reset.
  * In this case, the internal array is kept and just the maximum index is set to zero.
  */
-public class IntArrayBuilder {
+public class LongArrayBuilder {
 
   /**
    * An internal array to store values.
    */
-  private int[] array;
+  private long[] array;
 
   /**
    * Length increment in the case of internal array extensions.
@@ -58,9 +58,9 @@ public class IntArrayBuilder {
    *
    * @param increment size increment
    */
-  public IntArrayBuilder(int increment) {
+  public LongArrayBuilder(int increment) {
     this.increment = increment;
-    this.array = new int[increment];
+    this.array = new long[increment];
     this.length = increment;
     this.index = 0;
   }
@@ -70,7 +70,7 @@ public class IntArrayBuilder {
    *
    * @param value value
    */
-  public int add(int value) {
+  public int add(long value) {
     int insertIndex = index;
     index++;
 
@@ -91,7 +91,7 @@ public class IntArrayBuilder {
    *
    * @return array
    */
-  public int[] get() {
+  public long[] get() {
     return ArrayUtils.subarray(array, 0, index);
   }
 
