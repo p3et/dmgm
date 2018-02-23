@@ -20,7 +20,10 @@ package org.biiig.dmgm.impl.operators.subgraph;
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.model.GraphView;
 import org.biiig.dmgm.impl.model.GraphViewBase;
+import org.biiig.dmgm.impl.util.arrays.DmgmArrayUtils;
+import org.biiig.dmgm.impl.util.arrays.IntArrayBuilder;
 
+import java.util.Arrays;
 import java.util.function.IntPredicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.IntStream;
@@ -62,46 +65,72 @@ public class FilterVerticesAndEdgesByLabel implements UnaryOperator<GraphView> {
 
   @Override
   public GraphView apply(GraphView graph) {
-    // apply vertex predicate
+    int inEdgeCount = graph.getEdgeCount();
     int inVertexCount = graph.getVertexCount();
-    int[] candidateVertexIds = IntStream
-      .range(0, inVertexCount)
-      .filter(v -> vertexLabelPredicate.test(graph.getVertexLabel(v)))
-      .toArray();
+    int[] vertexIdMap = new int[inVertexCount];
 
-    // apply edge predicate and filter edges without source or target
-    int[] outEdgeIds = IntStream
-      .range(0, graph.getEdgeCount())
-      .filter(v -> edgeLabelPredicate.test(graph.getEdgeLabel(v)))
-      .filter(e -> ArrayUtils.contains(candidateVertexIds, graph.getSourceId(e)))
-      .filter(e -> ArrayUtils.contains(candidateVertexIds, graph.getTargetId(e)))
-      .toArray();
 
-    // vertices to keep
-    int[] outVertexIds;
+    // builder used for vertex id candidates,
+    IntArrayBuilder arrayBuilder = new IntArrayBuilder(inEdgeCount);
 
-    if (dropIsolatedVertices) {
-      // drop vertices without edges
-      IntStream sourceIds = IntStream
-          .of(outEdgeIds)
-          .map(graph::getSourceId);
+    // apply vertex predicate
 
-      IntStream targetIds = IntStream
-          .of(outEdgeIds)
-          .map(graph::getTargetId);
-
-      outVertexIds = IntStream
-          .concat(sourceIds, targetIds)
-          .distinct()
-          .filter(v -> ArrayUtils.contains(candidateVertexIds, v))
-          .toArray();
-    } else {
-      // keep all vertices
-      outVertexIds = candidateVertexIds;
+    for (int inId = 0; inId < inVertexCount; inId++) {
+      int vertexLabel = graph.getVertexLabel(inId);
+      if (vertexLabelPredicate.test(vertexLabel)) {
+        int outId = arrayBuilder.add(inId);
+        vertexIdMap[inId] = outId;
+      }
     }
 
-    // in vertex id -> out vertex id
-    int[] vertexIdMap = new int[inVertexCount];
+    int[] outVertexIds = arrayBuilder.get();
+    arrayBuilder.reset();
+
+    // apply edge predicate and filter edges without source or target
+
+    for (int eid = 0; eid < inEdgeCount; eid++) {
+      if (edgeLabelPredicate.test(graph.getEdgeLabel(eid))
+          && ArrayUtils.contains(outVertexIds, graph.getSourceId(eid))
+          && ArrayUtils.contains(outVertexIds, graph.getTargetId(eid))) {
+        arrayBuilder.add(eid);
+      }
+    }
+
+    int[] outEdgeIds = arrayBuilder.get();
+    arrayBuilder.reset();
+
+    // create out edge data
+    int[] outEdgeLabels = new int[inEdgeCount];
+    int[] outSourceIds = new int[inEdgeCount];
+    int[] outTargetIds = new int[inEdgeCount];
+
+    if (dropIsolatedVertices) {
+      for (int inId : outEdgeIds) {
+        arrayBuilder.add(graph.getSourceId(inId));
+        arrayBuilder.add(graph.getTargetId(inId));
+      }
+
+      outVertexIds = arrayBuilder.get();
+      outVertexIds = DmgmArrayUtils.distinct(outVertexIds);
+
+      for (int outId = 0; outId < outVertexIds.length; outId++) {
+        int inId = outVertexIds[outId];
+        vertexIdMap[inId] = outId;
+      }
+    }
+
+    int outId = 0;
+    for (int inId : outEdgeIds) {
+      int edgeLabel = graph.getEdgeLabel(inId);
+      int sourceId = graph.getSourceId(inId);
+      int targetId = graph.getTargetId(inId);
+
+      outEdgeLabels[outId] = edgeLabel;
+      outSourceIds[outId] = vertexIdMap[sourceId];
+      outTargetIds[outId] = vertexIdMap[targetId];
+
+      outId++;
+    }
 
     // create out vertex data
     int outVertexCount = outVertexIds.length;
@@ -110,20 +139,6 @@ public class FilterVerticesAndEdgesByLabel implements UnaryOperator<GraphView> {
       int inVertexId = outVertexIds[outVertexId];
       vertexIdMap[inVertexId] = outVertexId;
       outVertexLabels[outVertexId] = graph.getVertexLabel(inVertexId);
-    }
-
-    // create out edge data
-    int edgeCount = outEdgeIds.length;
-    int[] outEdgeLabels = new int[edgeCount];
-    int[] outSourceIds = new int[edgeCount];
-    int[] outTargetIds = new int[edgeCount];
-
-    int outId = 0;
-    for (int inId : outEdgeIds) {
-      outEdgeLabels[outId] = graph.getEdgeLabel(inId);
-      outSourceIds[outId] = vertexIdMap[graph.getSourceId(inId)];
-      outTargetIds[outId] = vertexIdMap[graph.getTargetId(inId)];
-      outId++;
     }
 
     return new GraphViewBase(

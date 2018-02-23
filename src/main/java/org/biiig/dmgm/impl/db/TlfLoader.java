@@ -60,9 +60,6 @@ public class TlfLoader extends PropertyGraphDbLoaderBase {
   public PropertyGraphDb get() {
     PropertyGraphDb db = new InMemoryGraphDb(true);
 
-
-
-
     try {
       Iterator<String> iterator = Files.lines(Paths.get(filePath)).iterator();
 
