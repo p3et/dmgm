@@ -28,11 +28,18 @@ import java.util.function.Supplier;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.db.PropertyGraphDb;
+import org.biiig.dmgm.impl.util.arrays.LongArrayBuilder;
 
 /**
  * Read a database from a TLF file (graph Transaction List Format).
  */
 public class TlfLoader extends PropertyGraphDbLoaderBase {
+
+  /**
+   * Increment for vertex and edge id array builders.
+   */
+  private static final int ARRAY_BUILDER_INCREMENT = 100;
+
   /**
    * Input file path.
    */
@@ -53,6 +60,9 @@ public class TlfLoader extends PropertyGraphDbLoaderBase {
   public PropertyGraphDb get() {
     PropertyGraphDb db = new InMemoryGraphDb(true);
 
+
+
+
     try {
       Iterator<String> iterator = Files.lines(Paths.get(filePath)).iterator();
 
@@ -60,31 +70,31 @@ public class TlfLoader extends PropertyGraphDbLoaderBase {
         // create cache for first graph
         String graphLine = iterator.next();
         Map<String, Long> vertexIdMap = Maps.newHashMap();
-        long[] vertexIds = new long[0];
-        long[] edgeIds = new long[0];
+        LongArrayBuilder vertexIdsBuilder = new LongArrayBuilder(ARRAY_BUILDER_INCREMENT);
+        LongArrayBuilder edgeIdsBuilder = new LongArrayBuilder(ARRAY_BUILDER_INCREMENT);
 
         // read vertices and edges
         while (iterator.hasNext()) {
           String line = iterator.next();
 
           if (line.startsWith(TlfConstants.VERTEX_SYMBOL)) {
-            vertexIds = ArrayUtils.add(vertexIds, readVertex(db, line, vertexIdMap));
+            vertexIdsBuilder.add(readVertex(db, line, vertexIdMap));
 
           } else if (line.startsWith(TlfConstants.EDGE_SYMBOL)) {
-            edgeIds = ArrayUtils.add(edgeIds, readEdge(db, line, vertexIdMap));
+            edgeIdsBuilder.add(readEdge(db, line, vertexIdMap));
 
           } else {
             // save graph
-            readGraph(db, graphLine, vertexIds, edgeIds);
+            readGraph(db, graphLine, vertexIdsBuilder.get(), edgeIdsBuilder.get());
             // reset cache
             vertexIdMap.clear();
-            vertexIds = new long[0];
-            edgeIds = new long[0];
+            vertexIdsBuilder.reset();
+            edgeIdsBuilder.reset();
           }
         }
 
         // save last graph
-        readGraph(db, graphLine, vertexIds, edgeIds);
+        readGraph(db, graphLine, vertexIdsBuilder.get(), edgeIdsBuilder.get());
       }
 
     } catch (IOException e) {
