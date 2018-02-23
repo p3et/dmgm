@@ -30,7 +30,7 @@ import java.util.Arrays;
  * To further avoid instantiations, the builder can be reset.
  * In this case, the internal array is kept and just the maximum index is set to zero.
  */
-public class IntArrayBuilder {
+public class IntArrayBuilder extends ArrayBuilderBase {
 
   /**
    * An internal array to store values.
@@ -38,31 +38,13 @@ public class IntArrayBuilder {
   private int[] array;
 
   /**
-   * Length increment in the case of internal array extensions.
-   * Additionally, this value is the initial size of the internal array.
-   */
-  private final int increment;
-
-  /**
-   * Current length of the internal array.
-   */
-  private int length;
-
-  /**
-   * Current maximum index of the internal array.
-   */
-  private int index;
-
-  /**
    * Constructor.
    *
    * @param increment size increment
    */
   public IntArrayBuilder(int increment) {
-    this.increment = increment;
+    super(increment);
     this.array = new int[increment];
-    this.length = increment;
-    this.index = 0;
   }
 
   /**
@@ -95,10 +77,4 @@ public class IntArrayBuilder {
     return ArrayUtils.subarray(array, 0, index);
   }
 
-  /**
-   * Logically remove all elements.
-   */
-  public void reset() {
-    index = 0;
-  }
 }
