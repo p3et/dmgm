@@ -16,6 +16,6 @@
  */
 
 /**
- * Implementation that load database from sources like input files.
+ * DMGM array utils.
  */
-package org.biiig.dmgm.impl.loader;
+package org.biiig.dmgm.impl.util.arrays;

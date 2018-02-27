@@ -20,6 +20,7 @@ package org.biiig.dmgm.impl.operators.patternmining;
 import java.util.Arrays;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.biiig.dmgm.impl.util.arrays.ImmutableIntSet;
 
 /**
  * A mapping between a DFS code and a graph.
@@ -92,6 +93,15 @@ class DfsEmbedding implements WithEmbedding {
   }
 
   /**
+   * Get a set of contained edge ids.
+   *
+   * @return set
+   */
+  public ImmutableIntSet getEdgeIds() {
+    return new ImmutableIntSet(edgeIds);
+  }
+
+  /**
    * Get the vertex id mapped to a specific initial discovery time.
    *
    * @param time discovery time
@@ -110,88 +120,6 @@ class DfsEmbedding implements WithEmbedding {
   public int getVertexTime(int vertexId) {
     return ArrayUtils.indexOf(vertexIds, vertexId);
   }
-
-  /**
-   * Check, if an embedding contains an edge id.
-   *
-   * @param edgeId edge id
-   * @return true <=> edge part of the embedding
-   */
-  public boolean containsEdgeId(int edgeId) {
-    return ArrayUtils.contains(edgeIds, edgeId);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    DfsEmbedding that = (DfsEmbedding) o;
-
-
-    boolean equal = that.getVertexCount() == that.getVertexCount();
-
-    if (equal) {
-      equal = this.getEdgeCount() == that.getEdgeCount();
-
-      if (equal) {
-        for (int vertexId : this.vertexIds) {
-          equal = ArrayUtils.contains(that.vertexIds, vertexId);
-          if (!equal) {
-            break;
-          }
-        }
-
-        if (equal) {
-          for (int vertexId : that.vertexIds) {
-            equal = ArrayUtils.contains(this.vertexIds, vertexId);
-            if (!equal) {
-              break;
-            }
-          }
-
-          if (equal) {
-            for (int vertexId : this.edgeIds) {
-              equal = ArrayUtils.contains(that.edgeIds, vertexId);
-              if (!equal) {
-                break;
-              }
-            }
-
-            if (equal) {
-              for (int vertexId : that.edgeIds) {
-                equal = ArrayUtils.contains(this.edgeIds, vertexId);
-                if (!equal) {
-                  break;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    return equal;
-  }
-
-  @Override
-  public int hashCode() {
-    int result = 1;
-
-    for (int id : vertexIds) {
-      result *= id;
-    }
-
-    for (int id : edgeIds) {
-      result *= id;
-    }
-    return result;
-  }
-
 
   @Override
   public String toString() {
