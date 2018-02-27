@@ -100,9 +100,10 @@ public class FilterVerticesAndEdgesByLabel implements UnaryOperator<GraphView> {
     arrayBuilder.reset();
 
     // create out edge data
-    int[] outEdgeLabels = new int[inEdgeCount];
-    int[] outSourceIds = new int[inEdgeCount];
-    int[] outTargetIds = new int[inEdgeCount];
+    int outEdgeCount = outEdgeIds.length;
+    int[] outEdgeLabels = new int[outEdgeCount];
+    int[] outSourceIds = new int[outEdgeCount];
+    int[] outTargetIds = new int[outEdgeCount];
 
     if (dropIsolatedVertices) {
       for (int inId : outEdgeIds) {
