@@ -93,6 +93,15 @@ class DfsEmbedding implements WithEmbedding {
   }
 
   /**
+   * Get a set of contained edge ids.
+   *
+   * @return set
+   */
+  public ImmutableIntSet getEdgeIds() {
+    return new ImmutableIntSet(edgeIds);
+  }
+
+  /**
    * Get the vertex id mapped to a specific initial discovery time.
    *
    * @param time discovery time
@@ -134,9 +143,5 @@ class DfsEmbedding implements WithEmbedding {
 
   private int getEdgeCount() {
     return this.edgeIds.length;
-  }
-
-  public ImmutableIntSet getEdgeIds() {
-    return new ImmutableIntSet(edgeIds);
   }
 }
