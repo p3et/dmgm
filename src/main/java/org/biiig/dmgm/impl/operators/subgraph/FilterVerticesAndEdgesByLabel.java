@@ -21,6 +21,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.biiig.dmgm.api.model.GraphView;
 import org.biiig.dmgm.impl.model.GraphViewBase;
 import org.biiig.dmgm.impl.util.arrays.DmgmArrayUtils;
+import org.biiig.dmgm.impl.util.arrays.ImmutableIntSet;
 import org.biiig.dmgm.impl.util.arrays.IntArrayBuilder;
 
 import java.util.Arrays;
@@ -88,10 +89,11 @@ public class FilterVerticesAndEdgesByLabel implements UnaryOperator<GraphView> {
 
     // apply edge predicate and filter edges without source or target
 
+    ImmutableIntSet outVertexIdSet = new ImmutableIntSet(outVertexIds);
     for (int eid = 0; eid < inEdgeCount; eid++) {
       if (edgeLabelPredicate.test(graph.getEdgeLabel(eid))
-          && ArrayUtils.contains(outVertexIds, graph.getSourceId(eid))
-          && ArrayUtils.contains(outVertexIds, graph.getTargetId(eid))) {
+          && outVertexIdSet.contains(graph.getSourceId(eid))
+          && outVertexIdSet.contains(graph.getTargetId(eid))) {
         arrayBuilder.add(eid);
       }
     }

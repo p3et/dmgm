@@ -18,9 +18,11 @@
 
 package org.biiig.dmgm.impl.operators.patternmining;
 
+import java.awt.geom.Ellipse2D;
 import java.util.Collection;
 import javafx.util.Pair;
 import org.biiig.dmgm.api.model.GraphView;
+import org.biiig.dmgm.impl.util.arrays.ImmutableIntSet;
 
 /**
  * Superclass of pattern growers.
@@ -48,7 +50,8 @@ public abstract class GrowChildrenBase implements GrowChildren {
       GraphView graph = withGraph.getGraph();
       for (int edgeId : getEdgeIds(graph, fromId)) {
         // if not contained in parent embedding
-        if (! parentEmbedding.containsEdgeId(edgeId)) {
+        ImmutableIntSet parentEdgeIds = parentEmbedding.getEdgeIds();
+        if (! parentEdgeIds.contains(edgeId)) {
 
           // determine times of incident vertices in parent embedding
           int toId = getToId(graph, edgeId);
