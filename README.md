@@ -38,7 +38,7 @@ All data elements may have a label and arbitrary properties.
 + *dictionary coding:* Interally, DMGM uses dictionary coding to store labels and property keys. Thus, the API allows the use of `String` or encoded `int` values for all methods related to labels and properties. For performance reasones encoded values should be used where possible to avoid dictionary lookups.
 
 ### Implementation and API
-`InMemoryGraphDb` is the reference implementation of `PropertyGraphDb`. However, the interface is designed to support arbitrary database technologies such as realtional and full-featured graph databases. Please feel free to contribute further implementaitons. 
+`InMemoryGraphDb` is the reference implementation of `PropertyGraphDb`. However, the interface is designed to support arbitrary database technologies such as realtional and full-featured graph databases. Please feel free to contribute further implementations. 
 
 ```java
 // CREATE DB
@@ -47,7 +47,6 @@ PropertyGraphDb db = new InMemoryGraphDb(parallelRead);
 
 // DICTIONARY CODING
 int vertexLabel = db.encode("Vertex");
-
 
 // CREATE DATA ELEMENTS
 long sourceVertexId = db.createVertex(vertexLabel);
@@ -90,6 +89,14 @@ db.add(graphId, numbersKey, 1);
 db.add(graphId, numbersKey, 2);
 int[] numbers = db.getInts(graphId, numbersKey);
 // => [1, 2]
+
+// QUERIES
+long[] vertexIds = database.queryElements(label -> label == vertexLabel);
+// => [sourceVertexId, targetVertexId]
+long[] confirmedIds = database.queryElements((db, id) -> db.is(id, confirmedKey));
+// => [edgeId]
+long[] confirmedEdgeIds = database.queryElements(label -> label == edgeLabel, (db, id) -> db.is(id, confirmedKey));
+// => [edgeId]
 ```
 
 ## Operators 
