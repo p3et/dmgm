@@ -6,7 +6,7 @@ Although popular graph models such as the [property graph model](https://github.
 most existing graph mining libraries lack of their support.
 DMGM is Open Source (GPL v3), open for contributions and aims to be a general framework for practical graph mining algorithms.
 
-DMGM support the [Extended Property Graph Model](http://dbs.uni-leipzig.de/file/EPGM.pdf) and implements a similar approach as [Gradoop](http://www.gradoop.com). In particular, both systems support pipelines of graph operators to enable the declarative expression of [complex analytical questions](http://dbs.uni-leipzig.de/file/Graph_Mining_for_Complex_Data_Analytics.pdf) about graph-structured data. However, while Gradoop is designed for a cluster of machines without shared memory, DMGM is optimized for parallel execution on a single computer.
+DMGM supports the [Extended Property Graph Model](http://dbs.uni-leipzig.de/file/EPGM.pdf) and implements a similar approach as [Gradoop](http://www.gradoop.com). In particular, both systems use pipelines of graph operators to enable the declarative expression of [complex analytical questions](http://dbs.uni-leipzig.de/file/Graph_Mining_for_Complex_Data_Analytics.pdf) about graph-structured data. However, while Gradoop is designed for a cluster of machines without shared memory, DMGM is optimized for parallel execution on a single computer.
 
 ## Data Model
 All DMGM programs require a database represented by the `PropertyGraphDb` interface. However, our model supports more than a typical [property graph](https://github.com/tinkerpop/blueprints/wiki/Property-Graph-Model) and even more than the [Extended Property Graph Model](http://dbs.uni-leipzig.de/file/EPGM.pdf). Let's start with a quick walk-through:
@@ -167,12 +167,12 @@ Members of the result collection have the following properties from `DmgmConstan
 
 #### Characteristic Subgraph Mining
 
-[Characteristic Subgraph Mining (CSM)](https://dbs.uni-leipzig.de/file/CCP.pdf) is a descendant of FSM. Suppose a graph collection can be categorized into two kinds of graphs, let's say As and Bs. In such cases not globally frequent but significant patterns of As and Bs can be point of interest. To calculate significance the frequency of a pattern must be known for As and Bs although it might be only frequent in A. There are two naive solutions to this problem: 
+[Characteristic Subgraph Mining (CSM)](https://dbs.uni-leipzig.de/file/CCP.pdf) is a descendant of FSM. Suppose a graph collection can be categorized into two kinds of graphs, let's say As and Bs. In such cases not globally frequent but significant patterns of As and Bs can be point of interest. To calculate a significance measure the frequency of a pattern must be known for As and Bs although it might be only frequent in A. There are two naive solutions to this problem: 
 
-+ Either determine all pattern frequencies without a support threshold 
++ Either determine all pattern frequencies in all categories without a support threshold 
 + or extract only frequent patterns from all categories and get missing values by [subgraph isomorphism testing](https://en.wikipedia.org/wiki/Subgraph_isomorphism_problem) aka graph pattern matching.
 
-Both solutions are inefficient. Thus, DMGM implements an efficient algorithm which determines all pattern that are frequent in at least one category. Thus, input graphs must be categorized by setting the `DmgmConstants.PropertyKeys.CATEGORY` property with a `String` value. If this is only done for a part of the input graphs, a default category will be used for the remaining ones. The application is similar to FSM:
+Both solutions are inefficient. DMGM implements an efficient algorithm which determines all pattern that are frequent in at least one category. Thus, input graphs must be categorized by setting the `DmgmConstants.PropertyKeys.CATEGORY` property with a `String` value. If this is only done for a part of the input graphs, a default category will be used for the remaining ones. The application is similar to FSM:
 
 ```java
 CollectionToCollectionOperator operator = new PatternMiningBuilder(database, parallel)
@@ -208,7 +208,7 @@ The result will contain all combinations across all levels.
 
 ![Generalization example](./src/media/gen_example.svg)
 
-*The illustration shows a pattern (top) and specialization lattice of three parents including increasing support values.*
+*The illustration shows a lattice of a pattern (top) and three generalized parents including increased support values.*
 
 ### Data Statistics
 As the base for the calculation of significance measures, DMGM provides a special class of operators which extract statistics such as label support. These operators can be instantiated in the following way:
