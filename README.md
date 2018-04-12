@@ -91,11 +91,21 @@ int[] numbers = db.getInts(graphId, numbersKey);
 // => [1, 2]
 
 // QUERIES
-long[] vertexIds = database.queryElements(label -> label == vertexLabel);
+long[] vertexIds = database.queryElements(
+  // label predicate
+  label -> label == vertexLabel
+);
 // => [sourceVertexId, targetVertexId]
-long[] confirmedIds = database.queryElements((db, id) -> db.is(id, confirmedKey));
+long[] confirmedIds = database.queryElements(
+  // property predicate
+  (db, id) -> db.is(id, confirmedKey)
+);
 // => [edgeId]
-long[] confirmedEdgeIds = database.queryElements(label -> label == edgeLabel, (db, id) -> db.is(id, confirmedKey));
+long[] confirmedEdgeIds = database.queryElements(
+  // label and property predicates
+  label -> label == edgeLabel, 
+  (db, id) -> db.is(id, confirmedKey)
+);
 // => [edgeId]
 ```
 
