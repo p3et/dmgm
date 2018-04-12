@@ -137,7 +137,7 @@ CollectionToCollectionOperator operator = new PatternMiningBuilder(database, par
     .extractFrequentSubgraphs(minSupport, maxEdgeCount)
     .simple();
 
-    long outputCollectionId = operator.apply(inputCollectionId);
+long outputCollectionId = operator.apply(inputCollectionId);
 
 for (Long patternId : database.getGraphIdsOfCollection(outputCollectionId)) {
   String canocialLabel = database.getString(patternId, DmgmConstants.PropertyKeys.DFS_CODE);
@@ -159,15 +159,12 @@ Memebers of the result collection have the following properties from `DmgmConsta
 
 #### Characteristic Subgraph Mining
 
-A descendant of FSM. Suppose a graph collection can be categorized into two kinds of graphs, let's say As and Bs. In such cases not globally frequent by signigicant patterns of As and Bs can be point of interest. To calculate significance the frequency of a pattern must be known for As and Bs altough it might be only frequent in A. There two naive solutions to this problem: 
+[Characteristic Subgraph Mining (CSM)](https://dbs.uni-leipzig.de/file/CCP.pdf) is a descendant of FSM. Suppose a graph collection can be categorized into two kinds of graphs, let's say As and Bs. In such cases not globally frequent by signigicant patterns of As and Bs can be point of interest. To calculate significance the frequency of a pattern must be known for As and Bs altough it might be only frequent in A. There two naive solutions to this problem: 
 
-Either
-+ determine all pattern frequencies withour a support threshold 
++ Either determine all pattern frequencies withour a support threshold 
++ or extract only frequent patterns from all categories and get missing values by [subgraph isomorphism testing](https://en.wikipedia.org/wiki/Subgraph_isomorphism_problem) aka graph pattern matching.
 
-or 
-+ extract only frequent patterns from all categories and get missing values by [subgraph isomorphism testing](https://en.wikipedia.org/wiki/Subgraph_isomorphism_problem) aka graph pattern matching.
-
-Both solutions are inefficient. Thus, DMGM implements [Characteristic Subgraph Mining](https://dbs.uni-leipzig.de/file/CCP.pdf). This algorithm determines all pattern that are frequent in at least one category. Thus, input graphs must be categorized by setting the `DmgmConstants.PropertyKeys.CATEGORY` property with a `String` value. If this is only done for a part of the input graphs, a default category will be used for the remaining ones. The application is similar to FSM:
+Both solutions are inefficient. Thus, DMGM implements an efficient algorithm which determines all pattern that are frequent in at least one category. Thus, input graphs must be categorized by setting the `DmgmConstants.PropertyKeys.CATEGORY` property with a `String` value. If this is only done for a part of the input graphs, a default category will be used for the remaining ones. The application is similar to FSM:
 
 ```java
 CollectionToCollectionOperator operator = new PatternMiningBuilder(database, parallel)
@@ -175,7 +172,7 @@ CollectionToCollectionOperator operator = new PatternMiningBuilder(database, par
     .extractFrequentSubgraphs(minSupport, maxEdgeCount)
     .characteristic();
 
-    long outputCollectionId = operator.apply(inputCollectionId);
+long outputCollectionId = operator.apply(inputCollectionId);
 
 for (Long patternId : database.getGraphIdsOfCollection(outputCollectionId)) {
   String category = database.getString(patternId, DmgmConstants.PropertyKeys.CATEGORY);
@@ -186,6 +183,7 @@ for (Long patternId : database.getGraphIdsOfCollection(outputCollectionId)) {
 The only difference is the final method call in the `PatternMiningBuilder`. Every extracted pattern will have `DmgmConstants.PropertyKeys.CATEGORY` property value. Patterns will be extracted redundantly but only once per category. The support property reflect the category support. If a pattern is not reported for a category, it's support in this category can be considered to be 0.
 
 #### Generalized Subgraph Mining
+[Generalized Subgraph Mining](https://dbs.uni-leipzig.de/file/gmdfsm.pdf) is an extension to either FSM or CSM. In some scenarios labels can be associated to taxonomies and, thus, expressed by taxonomy paths such as `Germany->Saxony->Leipzig` and not only patterns that include `Leipzig` can be infrequent while more general patterns containing `Saxony` are frequent and point of interest. DMGM supports vertex-generalized version of FSM and CSM. Therefore, taxonomy paths must used as vertex labels in the format of `Germany_Saxony_Leipzig`, i.e., level-wise from taxonomy root to leaf and separated by `_`. Please ensure, that `_` is not part of single levels. The application is analogous to FSM/CSM:
 
 ```java
 CollectionToCollectionOperator operator = new PatternMiningBuilder(database, parallel)
@@ -194,7 +192,10 @@ CollectionToCollectionOperator operator = new PatternMiningBuilder(database, par
     .generalized(); // OR .generalizedCharacteristic();
 ```
 
+The result will contain all combinations across all levels.
+
 ### Data Statistics
+As the base for the calculation of signifcance measures, DMGM provides a special class of operators which extract stratistics such as label support. These operators can be instantiated in the following way:
 
 ```java
 StatisticsExtractor<Map<Integer, Long>> operator = new StatisticsBuilder(database, parallel)
@@ -204,3 +205,5 @@ StatisticsExtractor<Map<Integer, Long>> operator = new StatisticsBuilder(databas
 
 Map<Integer, Long> labelSupport = operator.apply(collectionId);
 ```
+
+If the parameter `generalized` is set to `true`, the taxonomy path separator `_` will be used to determine also generalization frequencies. For example, the label `Germany_Saxony_Leipzig` will be counted three times because of the additional generalizations `Germany_Saxony` and `Germany`.
