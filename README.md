@@ -14,18 +14,28 @@ All DMGM programs require a database represented by the `PropertyGraphDb` interf
 ### Data elements
 Any data element in a graph database is represented by a `long` value. Data elements are vertices, edges, graphs and graph collections.
 
-+ *vertex:* The simplest data element aka node or point; a simple id.
-+ *edge:* A connection between two vertices aka line or arc, i.e., a pair of two vertex ids. 
-+ *graph* A pair with of two collections of vertex ids and edge ids.
-+ *graph collection* A collection of graph ids.
++ *vertex (aka node or point):* The simplest data element; a simple id.
++ *edge (aka line or arc):* A connection between two vertices, i.e., a pair of two vertex ids. 
++ *graph:* A pair with of two collections of vertex ids and edge ids.
++ *graph collection:* A collection of graph ids.
 
 Note that `long` which represents a data element may have multiple roles. For example, a data element may be vertex of a graph but represent a graph itself and edges may connect graphs with graph collections. This flexibility should be used for provenance (e.g., graph collection B was extractd from graph A) but not for algorithmic purposes.
 
-+ *label:* Any graph element must have a label, i.e., a `String` that adds a semantic meaning. Examples:
+### Labels and Properties
+All data elements may have a label and arbitrary properties.
+
++ *label:* Any data element must have a label, i.e., a `String` that adds a semantic meaning. Examples:
   + A vertex represents a `"User"`.
   + An edges has the type `"friendship"`.
   + A graph stores a `"SocialNetwork"`.
-  + A graph collections contains `"FrequentPatterns".
+  + A graph collections contains `"FrequentPatterns"`.
+  
++ *property:* A property is a key=value pairs, for example name=Alice. Any data element may have arbitrary properties. For performance reasons every property value has a type. Currently, DMGM supports the following data types:
+  + primitive: `boolean`, `long`, `double`
+  + array: `int[]`. `String[]`
+  + objects: `String`, `BigDecimal`, `LocalDate`
+  
++ *dictionary coding:* Interally, DMGM uses dictionary coding to store labels and property keys. Thus, the API allows the use of `String` or encoded `int` values for all methods related to labels and properties. For performance reasones once should use encoded values where possible to avoid dictionary lookups.
 
 ## Operators 
 
