@@ -146,13 +146,28 @@ for (Long patternId : database.getGraphIdsOfCollection(outputCollectionId)) {
 ```
 The code example shows the application of FSM with DMGM. There is a `PatternMiningBuilder` to instantiate a FSM operator. Besides `database` and `inputCollectionId` the operator requires three parameters:
 
-+ `parallel` to enable parallel execution
-+ `minSupport` to set the relative minimum support threshold (0f..1.0f)
-+ `maxEdgeCount` to limit the output pattern size (maximum number of edges >= 1)
++ `parallel`: to enable parallel execution
++ `minSupport`: to set the relative minimum support threshold (0f..1.0f)
++ `maxEdgeCount`: to limit the output pattern size (maximum number of edges >= 1)
 
 All three parameters highly impact the runtime. Since FSM is a [NP-complete](https://en.wikipedia.org/wiki/NP-completeness) problem, one should carefully decrease `minSupport` from 1.0 and increase `maxEdgeCount` from 1.
 
+Memebers of the result collection have the following properties from `DmgmConstants.PropertyKeys`:
+
++ `DFS_CODE`: a [canonical](https://en.wikipedia.org/wiki/Canonicalization) string representation of the pattern
++ `SUPPORT`: the absolute support of a pattern
+
 #### Characteristic Subgraph Mining
+
+A descendant of FSM. Suppose a graph collection can be categorized into two kinds of graphs, let's say As and Bs. In such cases not globally frequent by signigicant patterns of As and Bs can be point of interest. To calculate significance the frequency of a pattern must be known for As and Bs altough it might be only frequent in A. There two naive solutions to this problem: 
+
+Either
++ determine all pattern frequencies withour a support threshold 
+
+or 
++ extract only frequent patterns from all categories and get missing values by [subgraph isomorphism testing](https://en.wikipedia.org/wiki/Subgraph_isomorphism_problem) aka graph pattern matching.
+
+Both solutions are inefficient. Thus, DMGM implements [Characteristic Subgraph Mining](https://dbs.uni-leipzig.de/file/CCP.pdf). This algorithm determines all pattern that are frequent in at least one category. Thus, input graphs must be categorized by setting the `DmgmConstants.PropertyKeys.CATEGORY` property with a `String` value. If this is only done for a part of the input graphs, a default category will be used for the remaining ones. The application is similar to FSM:
 
 ```java
 CollectionToCollectionOperator operator = new PatternMiningBuilder(database, parallel)
@@ -168,6 +183,7 @@ for (Long patternId : database.getGraphIdsOfCollection(outputCollectionId)) {
   long support = database.getLong(patternId, DmgmConstants.PropertyKeys.SUPPORT);
 }
 ```
+The only difference is the final method call in the `PatternMiningBuilder`. Every extracted pattern will have `DmgmConstants.PropertyKeys.CATEGORY` property value. Patterns will be extracted redundantly but only once per category. The support property reflect the category support. If a pattern is not reported for a category, it's support in this category can be considered to be 0.
 
 #### Generalized Subgraph Mining
 
