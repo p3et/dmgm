@@ -35,7 +35,62 @@ All data elements may have a label and arbitrary properties.
   + array: `int[]`. `String[]`
   + objects: `String`, `BigDecimal`, `LocalDate`
   
-+ *dictionary coding:* Interally, DMGM uses dictionary coding to store labels and property keys. Thus, the API allows the use of `String` or encoded `int` values for all methods related to labels and properties. For performance reasones once should use encoded values where possible to avoid dictionary lookups.
++ *dictionary coding:* Interally, DMGM uses dictionary coding to store labels and property keys. Thus, the API allows the use of `String` or encoded `int` values for all methods related to labels and properties. For performance reasones encoded values should be used where possible to avoid dictionary lookups.
+
+### Implementation and API
+`InMemoryGraphDb` is the reference implementation of `PropertyGraphDb`. However, the interface is designed to support arbitrary database technologies such as realtional and full-featured graph databases. Please feel free to contribute further implementaitons. 
+
+```java
+// CREATE DB
+boolean parallelRead = true;
+PropertyGraphDb db = new InMemoryGraphDb(parallelRead);
+
+// DICTIONARY CODING
+int vertexLabel = db.encode("Vertex");
+
+
+// CREATE DATA ELEMENTS
+long sourceVertexId = db.createVertex(vertexLabel);
+long targetVertexId = db.createVertex(vertexLabel);
+long edgeId = db.createEdge("Edge", sourceVertexId, targetVertexId);
+long graphId = db.createGraph("Graph", new long[] {sourceVertexId, targetVertexId}, new long[] {edgeId});
+long collectionId = db.createCollection("Collection", new long[] {graphId});
+
+// READ DATA ELEMENTS
+SourceIdTargetId edge = db.getSourceIdTargetId(edgeId);
+// => (sourceVertexId, targetVertexId)
+VertexIdsEdgeIds graph = db.getVertexIdsEdgeIds(graphId);
+// => ([sourceVertexId, targetVertexId], [edgeId])
+long[] collection = db.getGraphIdsOfCollection(collectionId);
+// => [graphId]
+long[] sourceVertexContainedInGraphIds = db.getGraphIdsOfVertex(sourceVertexId);
+// => [graphId]
+long[] edgeContainedInGraphIds = db.getGraphIdsOfEdge(edgeId);
+// => [graphId]
+    
+// LABELS
+int encoded = db.getLabel(edgeId);
+String decoded = db.decode(encoded);
+// => "Edge"
+    
+// PROPERTIES
+int confirmedKey = db.encode("confirmedKey");
+db.set(edgeId, confirmedKey, true);
+boolean edgeConfirmed = db.is(edgeId, confirmedKey);
+// => true
+boolean graphConfirmed = db.is(graphId, confirmedKey);
+// => false
+
+db.set(graphId, "number", 1L);
+long number = db.getLong(graphId, "number");
+// => 1L
+
+int numbersKey = db.encode("numbers");
+db.add(graphId, numbersKey, 1);
+db.add(graphId, numbersKey, 2);
+int[] numbers = db.getInts(graphId, numbersKey);
+// => [1, 2]
+```
 
 ## Operators 
 
