@@ -2,43 +2,47 @@
 DMGM is a library for data mining in directed multigraphs. 
 In a directed graph edges are directed from a source vertex to a target vertex.
 In a multigraph there may be multiple edges between any pair of vertices. 
-Altough popular graph models such as the [property graph model](https://github.com/tinkerpop/blueprints/wiki/Property-Graph-Model) or [RDF](https://www.w3.org/TR/rdf-concepts/) show these features, 
+Alhtough popular graph models such as the [property graph model](https://github.com/tinkerpop/blueprints/wiki/Property-Graph-Model) or [RDF](https://www.w3.org/TR/rdf-concepts/) show these features, 
 most existing graph mining libraries lack of their support.
 DMGM is Open Source (GPL v3), open for contributions and aims to be a general framework for practical graph mining algorithms.
 
-DMGM support the [Extended Property Graph Model](http://dbs.uni-leipzig.de/file/EPGM.pdf) and impliments a similar approach as [Gradoop](http://www.gradoop.com). In particular, both systems support pipelines of graph operators to enable the declarative expression of [complex analytical questions](http://dbs.uni-leipzig.de/file/Graph_Mining_for_Complex_Data_Analytics.pdf) about graph-structured data. However, while Gradoop is designed for a cluster of machines without shared memory, DMGM is optimized for parallel execution on a single computer.
+DMGM support the [Extended Property Graph Model](http://dbs.uni-leipzig.de/file/EPGM.pdf) and implements a similar approach as [Gradoop](http://www.gradoop.com). In particular, both systems support pipelines of graph operators to enable the declarative expression of [complex analytical questions](http://dbs.uni-leipzig.de/file/Graph_Mining_for_Complex_Data_Analytics.pdf) about graph-structured data. However, while Gradoop is designed for a cluster of machines without shared memory, DMGM is optimized for parallel execution on a single computer.
 
-## Database Model
-All DMGM programs require a database represented by the `PropertyGraphDb` interface. However, our model supports more than a typical [property graph](https://github.com/tinkerpop/blueprints/wiki/Property-Graph-Model) and even more than the [Extended Property Graph Model](http://dbs.uni-leipzig.de/file/EPGM.pdf). Let's start with a quick walkthrough:
+## Data Model
+All DMGM programs require a database represented by the `PropertyGraphDb` interface. However, our model supports more than a typical [property graph](https://github.com/tinkerpop/blueprints/wiki/Property-Graph-Model) and even more than the [Extended Property Graph Model](http://dbs.uni-leipzig.de/file/EPGM.pdf). Let's start with a quick walk-through:
 
 ### Data elements
 Any data element in a graph database is represented by a `long` value. Data elements are vertices, edges, graphs and graph collections.
 
-+ *vertex (aka node or point):* The simplest data element; a simple id.
-+ *edge (aka line or arc):* A connection between two vertices, i.e., a pair of two vertex ids. 
-+ *graph:* A pair with of two collections of vertex ids and edge ids.
-+ *graph collection:* A collection of graph ids.
++ **vertex (aka node or point):** The simplest data element; a simple id.
++ **edge (aka line or arc):** A connection between two vertices, i.e., a pair of two vertex ids. 
++ **graph:** A pair with of two collections of vertex ids and edge ids.
++ **graph collection:** A collection of graph ids.
 
-Note that a `long` which represents a data element may have multiple roles. For example, a data element may be vertex of a graph but represent a graph itself and edges may connect graphs with graph collections. This flexibility should be used for provenance (e.g., graph collection B was extractd from graph A) but not for algorithmic purposes.
+Note that a `long` which represents a data element may have multiple roles. For example, a data element may be vertex of a graph but represent a graph itself and edges may connect graphs with graph collections. This flexibility should be used for provenance (e.g., graph collection B was extracted from graph A) but not for algorithmic purposes.
 
 ### Labels and Properties
 All data elements may have a label and arbitrary properties.
 
-+ *label:* Any data element must have a label, i.e., a `String` that adds a semantic meaning. Examples:
++ **label:** Any data element must have a label, i.e., a `String` that adds a semantic meaning. Examples:
   + A vertex represents a `"User"`.
   + An edges has the type `"friendship"`.
   + A graph stores a `"SocialNetwork"`.
   + A graph collections contains `"FrequentPatterns"`.
   
-+ *property:* A property is a key=value pairs, for example name=Alice. Any data element may have arbitrary properties. For performance reasons every property value has a type. Currently, DMGM supports the following data types:
-  + primitive: `boolean`, `long`, `double`
-  + array: `int[]`. `String[]`
++ **property:** A property is a key=value pairs, for example name=Alice. Any data element may have arbitrary properties. For performance reasons every property value has a type. Currently, DMGM supports the following data types:
+  + primitives: `boolean`, `long`, `double`
+  + arrays: `int[]`. `String[]`
   + objects: `String`, `BigDecimal`, `LocalDate`
   
-+ *dictionary coding:* Interally, DMGM uses dictionary coding to store labels and property keys. Thus, the API allows the use of `String` or encoded `int` values for all methods related to labels and properties. For performance reasones encoded values should be used where possible to avoid dictionary lookups.
++ **dictionary coding:** Internally, DMGM uses dictionary coding to store labels and property keys. Thus, the API allows the use of `String` or encoded `int` values for all methods related to labels and properties. For performance reasons encoded values should be used where possible to avoid dictionary lookups.
+
+![DMGM Data Model](./src/media/data_model.svg)
+
+*The illustration shows all types of data elements with ids, labels and properties.*
 
 ### Implementation and API
-`InMemoryGraphDb` is the reference implementation of `PropertyGraphDb`. However, the interface is designed to support arbitrary database technologies such as realtional and full-featured graph databases. Please feel free to contribute further implementations. 
+`InMemoryGraphDb` is the reference implementation of `PropertyGraphDb`. However, the interface is designed to support arbitrary database technologies such as relational and full-featured graph databases. Please feel free to contribute further implementations. 
 
 ```java
 // CREATE DB
@@ -112,7 +116,7 @@ long[] confirmedEdgeIds = database.queryElements(
 
 ## Operators 
 
-DMGM support operators with different domains and codomains. Currenty, the only implemented combination is `CollectionToCollectionOperator`. The interface describes an operation that derives an output graph collection from an input graph collection. For example, frequent subgraph mininig extracts a collection of frequent patterns (graphs) from an data graph collection. The follwing operators are already implemented:
+DMGM support operators with different domains and co-domains. Currently, the only implemented combination is `CollectionToCollectionOperator`. The interface describes an operation that derives an output graph collection from an input graph collection. For example, frequent subgraph mining extracts a collection of frequent patterns (graphs) from an data graph collection. The following operators are already implemented:
 
 ### Graph Pattern Mining
 
@@ -120,9 +124,8 @@ DMGM supports different operators that support graph patterns of interest:
 
 #### Frequent Subgraph Mining
 
-[Frequent subgraph mining (FSM)](https://www.cambridge.org/core/journals/knowledge-engineering-review/article/a-survey-of-frequent-subgraph-mining-algorithms/A58904230A6680001F17FCE91CB8C65F) is an algorithm that extracts a collection of patterns which are frequently supported within the collection of input graphs. In this context a pattern is a graph itself. An input graph supports a pattern if there is at least one isomorhic subgraph. [Graph isomorphism](https://en.wikipedia.org/wiki/Graph_isomorphism) is the existence of a complete [bijective](https://en.wikipedia.org/wiki/Bijection) mapping between vertex and edge sets of instance graphs, where even source and target vertices correspond to each other. A pattern will be frequent if the number of input graph that support it are gte a given minimum support threshold. In DMDM, the minimus support is set by a relative value, for example 50%. 
-
-DMGM's implementation is based on [gSpan](https://www.cs.ucsb.edu/~xyan/software/gSpan.htm). The algorithm was adopted to [support directed multigraphs](http://dbs.uni-leipzig.de/file/Graph_Mining_for_Complex_Data_Analytics.pdf) and parallized using the Java Stream abstraction. The algorithm considers only labels of vertices and edges. Thus, relant property information must be integrated in labels if required, for example a vertex with label `"User"` and name=Alice can be relabeled to `"User_Alice"`. FSM is used as follows:
+[Frequent subgraph mining (FSM)](https://www.cambridge.org/core/journals/knowledge-engineering-review/article/a-survey-of-frequent-subgraph-mining-algorithms/A58904230A6680001F17FCE91CB8C65F) is an algorithm that extracts a collection of patterns which are frequently supported within the collection of input graphs. In this context a pattern is a graph itself. An input graph supports a pattern if there is at least one isomorphic subgraph. [Graph isomorphism](https://en.wikipedia.org/wiki/Graph_isomorphism) is the existence of a complete [bijective](https://en.wikipedia.org/wiki/Bijection) mapping between vertex and edge sets of instance graphs, where even source and target vertices correspond to each other. A pattern will be frequent if the number of input graph that support it are gte a given minimum support threshold. In DMGM, the minimum support is set by a relative value such as 50%. 
+DMGM's implementation is based on [gSpan](https://www.cs.ucsb.edu/~xyan/software/gSpan.htm). The algorithm was adopted to [support directed multigraphs](http://dbs.uni-leipzig.de/file/Graph_Mining_for_Complex_Data_Analytics.pdf) and parallelized using Java's stream abstraction. The algorithm considers only labels of vertices and edges. Thus, relevant property information must be integrated in labels if required, for example a vertex with label `"User"` and name=Alice can be relabeled to `"User|Alice"`. FSM is used as follows:
 
 ```java
 boolean parallel = true;
@@ -152,16 +155,20 @@ The code example shows the application of FSM with DMGM. There is a `PatternMini
 
 All three parameters highly impact the runtime. Since FSM is a [NP-complete](https://en.wikipedia.org/wiki/NP-completeness) problem, one should carefully decrease `minSupport` from 1.0 and increase `maxEdgeCount` from 1.
 
-Memebers of the result collection have the following properties from `DmgmConstants.PropertyKeys`:
+Members of the result collection have the following properties from `DmgmConstants.PropertyKeys`:
 
 + `DFS_CODE`: a [canonical](https://en.wikipedia.org/wiki/Canonicalization) string representation of the pattern
 + `SUPPORT`: the absolute support of a pattern
 
+![Frequent Subgraph Mining example](./src/media/fsm_example.svg)
+
+*The illustration shows a FSM example with a minimum support threshold of 66%.*
+
 #### Characteristic Subgraph Mining
 
-[Characteristic Subgraph Mining (CSM)](https://dbs.uni-leipzig.de/file/CCP.pdf) is a descendant of FSM. Suppose a graph collection can be categorized into two kinds of graphs, let's say As and Bs. In such cases not globally frequent by signigicant patterns of As and Bs can be point of interest. To calculate significance the frequency of a pattern must be known for As and Bs altough it might be only frequent in A. There two naive solutions to this problem: 
+[Characteristic Subgraph Mining (CSM)](https://dbs.uni-leipzig.de/file/CCP.pdf) is a descendant of FSM. Suppose a graph collection can be categorized into two kinds of graphs, let's say As and Bs. In such cases not globally frequent by significant patterns of As and Bs can be point of interest. To calculate significance the frequency of a pattern must be known for As and Bs although it might be only frequent in A. There two naive solutions to this problem: 
 
-+ Either determine all pattern frequencies withour a support threshold 
++ Either determine all pattern frequencies without a support threshold 
 + or extract only frequent patterns from all categories and get missing values by [subgraph isomorphism testing](https://en.wikipedia.org/wiki/Subgraph_isomorphism_problem) aka graph pattern matching.
 
 Both solutions are inefficient. Thus, DMGM implements an efficient algorithm which determines all pattern that are frequent in at least one category. Thus, input graphs must be categorized by setting the `DmgmConstants.PropertyKeys.CATEGORY` property with a `String` value. If this is only done for a part of the input graphs, a default category will be used for the remaining ones. The application is similar to FSM:
@@ -176,11 +183,15 @@ long outputCollectionId = operator.apply(inputCollectionId);
 
 for (Long patternId : database.getGraphIdsOfCollection(outputCollectionId)) {
   String category = database.getString(patternId, DmgmConstants.PropertyKeys.CATEGORY);
-  String canocialLabel = database.getString(patternId, DmgmConstants.PropertyKeys.DFS_CODE);
+  String canonicalLabel = database.getString(patternId, DmgmConstants.PropertyKeys.DFS_CODE);
   long support = database.getLong(patternId, DmgmConstants.PropertyKeys.SUPPORT);
 }
 ```
 The only difference is the final method call in the `PatternMiningBuilder`. Every extracted pattern will have `DmgmConstants.PropertyKeys.CATEGORY` property value. Patterns will be extracted redundantly but only once per category. The support property reflect the category support. If a pattern is not reported for a category, it's support in this category can be considered to be 0.
+
+![Characteristic Subgraph Mining example](./src/media/csm_example.svg)
+
+*The illustration shows a CSM example with a minimum support threshold of 66%.*
 
 #### Generalized Subgraph Mining
 [Generalized Subgraph Mining](https://dbs.uni-leipzig.de/file/gmdfsm.pdf) is an extension to either FSM or CSM. In some scenarios labels can be associated to taxonomies and, thus, expressed by taxonomy paths such as `Germany->Saxony->Leipzig` and not only patterns that include `Leipzig` can be infrequent while more general patterns containing `Saxony` are frequent and point of interest. DMGM supports vertex-generalized version of FSM and CSM. Therefore, taxonomy paths must used as vertex labels in the format of `Germany_Saxony_Leipzig`, i.e., level-wise from taxonomy root to leaf and separated by `_`. Please ensure, that `_` is not part of single levels. The application is analogous to FSM/CSM:
@@ -194,8 +205,12 @@ CollectionToCollectionOperator operator = new PatternMiningBuilder(database, par
 
 The result will contain all combinations across all levels.
 
+![Generalization example](./src/media/gen_example.svg)
+
+*The illustration shows a pattern (top) and specialization lattice of three parents including increasing support values.*
+
 ### Data Statistics
-As the base for the calculation of signifcance measures, DMGM provides a special class of operators which extract stratistics such as label support. These operators can be instantiated in the following way:
+As the base for the calculation of significance measures, DMGM provides a special class of operators which extract statistics such as label support. These operators can be instantiated in the following way:
 
 ```java
 StatisticsExtractor<Map<Integer, Long>> operator = new StatisticsBuilder(database, parallel)
