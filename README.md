@@ -43,68 +43,69 @@ All data elements may have a label and arbitrary properties.
 ```java
 // CREATE DB
 boolean parallelRead = true;
-PropertyGraphDb db = new InMemoryGraphDb(parallelRead);
+PropertyGraphDb database = new InMemoryGraphDb(parallelRead);
 
 // DICTIONARY CODING
-int vertexLabel = db.encode("Vertex");
+int vertexLabel = database.encode("Vertex");
 
 // CREATE DATA ELEMENTS
-long sourceVertexId = db.createVertex(vertexLabel);
-long targetVertexId = db.createVertex(vertexLabel);
-long edgeId = db.createEdge("Edge", sourceVertexId, targetVertexId);
-long graphId = db.createGraph("Graph", new long[] {sourceVertexId, targetVertexId}, new long[] {edgeId});
-long collectionId = db.createCollection("Collection", new long[] {graphId});
+long sourceVertexId = database.createVertex(vertexLabel);
+long targetVertexId = database.createVertex(vertexLabel);
+long edgeId = database.createEdge("Edge", sourceVertexId, targetVertexId);
+long graphId = database.createGraph(
+    "Graph", new long[] {sourceVertexId, targetVertexId}, new long[] {edgeId});
+long collectionId = database.createCollection("Collection", new long[] {graphId});
 
 // READ DATA ELEMENTS
-SourceIdTargetId edge = db.getSourceIdTargetId(edgeId);
+SourceIdTargetId edge = database.getSourceIdTargetId(edgeId);
 // => (sourceVertexId, targetVertexId)
-VertexIdsEdgeIds graph = db.getVertexIdsEdgeIds(graphId);
+VertexIdsEdgeIds graph = database.getVertexIdsEdgeIds(graphId);
 // => ([sourceVertexId, targetVertexId], [edgeId])
-long[] collection = db.getGraphIdsOfCollection(collectionId);
+long[] collection = database.getGraphIdsOfCollection(collectionId);
 // => [graphId]
-long[] sourceVertexContainedInGraphIds = db.getGraphIdsOfVertex(sourceVertexId);
+long[] sourceVertexContainedInGraphIds = database.getGraphIdsOfVertex(sourceVertexId);
 // => [graphId]
-long[] edgeContainedInGraphIds = db.getGraphIdsOfEdge(edgeId);
+long[] edgeContainedInGraphIds = database.getGraphIdsOfEdge(edgeId);
 // => [graphId]
-    
+
 // LABELS
-int encoded = db.getLabel(edgeId);
-String decoded = db.decode(encoded);
+int edgeLabel = database.getLabel(edgeId);
+String decoded = database.decode(edgeLabel);
 // => "Edge"
-    
+
 // PROPERTIES
-int confirmedKey = db.encode("confirmedKey");
-db.set(edgeId, confirmedKey, true);
-boolean edgeConfirmed = db.is(edgeId, confirmedKey);
+int confirmedKey = database.encode("confirmedKey");
+database.set(edgeId, confirmedKey, true);
+boolean edgeConfirmed = database.is(edgeId, confirmedKey);
 // => true
-boolean graphConfirmed = db.is(graphId, confirmedKey);
+boolean graphConfirmed = database.is(graphId, confirmedKey);
 // => false
 
-db.set(graphId, "number", 1L);
-long number = db.getLong(graphId, "number");
+database.set(graphId, "number", 1L);
+long number = database.getLong(graphId, "number");
 // => 1L
 
-int numbersKey = db.encode("numbers");
-db.add(graphId, numbersKey, 1);
-db.add(graphId, numbersKey, 2);
-int[] numbers = db.getInts(graphId, numbersKey);
+int numbersKey = database.encode("numbers");
+database.add(graphId, numbersKey, 1);
+database.add(graphId, numbersKey, 2);
+int[] numbers = database.getInts(graphId, numbersKey);
 // => [1, 2]
 
 // QUERIES
 long[] vertexIds = database.queryElements(
-  // label predicate
-  label -> label == vertexLabel
+    // label predicate
+    label -> label == vertexLabel
 );
 // => [sourceVertexId, targetVertexId]
 long[] confirmedIds = database.queryElements(
-  // property predicate
-  (db, id) -> db.is(id, confirmedKey)
+    // property predicate
+    (db, id) -> db.is(id, confirmedKey)
 );
 // => [edgeId]
 long[] confirmedEdgeIds = database.queryElements(
-  // label and property predicates
-  label -> label == edgeLabel, 
-  (db, id) -> db.is(id, confirmedKey)
+    // label and property predicates
+    label -> label == edgeLabel,
+    (db, id) -> db.is(id, confirmedKey)
 );
 // => [edgeId]
 ```
