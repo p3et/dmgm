@@ -112,19 +112,25 @@ long[] confirmedEdgeIds = database.queryElements(
 
 ## Operators 
 
-### Subgraph
+DMGM support operators with different domains and codomains. Currenty, the only implemented combination is `CollectionToCollectionOperator`. The interface describes an operation that derives an output graph collection from an input graph collection. For example, frequent subgraph mininig extracts a collection of frequent patterns (graphs) from an data graph collection. The follwing operators are already implemented:
 
 ### Graph Pattern Mining
 
+DMGM supports different operators that support graph patterns of interest:
+
 #### Frequent Subgraph Mining
+
+[Frequent subgraph mining (FSM)](https://www.cambridge.org/core/journals/knowledge-engineering-review/article/a-survey-of-frequent-subgraph-mining-algorithms/A58904230A6680001F17FCE91CB8C65F) is an algorithm that extracts a collection of patterns which are frequently supported within the collection of input graphs. In this context a pattern is a graph itself. An input graph supports a pattern if there is at least one isomorhic subgraph. [Graph isomorphism](https://en.wikipedia.org/wiki/Graph_isomorphism) is the existence of a complete [bijective](https://en.wikipedia.org/wiki/Bijection) mapping between vertex and edge sets of instance graphs, where even source and target vertices correspond to each other. A pattern will be frequent if the number of input graph that support it are gte a given minimum support threshold. In DMDM, the minimus support is set by a relative value, for example 50%. 
+
+DMGM's implementation is based on [gSpan](https://www.cs.ucsb.edu/~xyan/software/gSpan.htm). The algorithm was adopted to [support directed multigraphs](http://dbs.uni-leipzig.de/file/Graph_Mining_for_Complex_Data_Analytics.pdf) and parallized using the Java Stream abstraction. The algorithm considers only labels of vertices and edges. Thus, relant property information must be integrated in labels if required, for example a vertex with label `"User"` and name=Alice can be relabeled to `"User_Alice"`. FSM is used as follows:
 
 ```java
 boolean parallel = true;
 float minSupport = 0.8f;
 int maxEdgeCount = 4;
 
-PropertyGraphDb database = new InMemoryGraphDb(parallel);
-long inputCollectionId = 0L;
+PropertyGraphDb database = // input database;
+long inputCollectionId = // input id;
 
 CollectionToCollectionOperator operator = new PatternMiningBuilder(database, parallel)
     .fromCollection()
@@ -138,6 +144,13 @@ for (Long patternId : database.getGraphIdsOfCollection(outputCollectionId)) {
   long support = database.getLong(patternId, DmgmConstants.PropertyKeys.SUPPORT);
 }
 ```
+The code example shows the application of FSM with DMGM. There is a `PatternMiningBuilder` to instantiate a FSM operator. Besides `database` and `inputCollectionId` the operator requires three parameters:
+
++ `parallel` to enable parallel execution
++ `minSupport` to set the relative minimum support threshold (0f..1.0f)
++ `maxEdgeCount` to limit the output pattern size (maximum number of edges >= 1)
+
+All three parameters highly impact the runtime. Since FSM is a [NP-complete](https://en.wikipedia.org/wiki/NP-completeness) problem, one should carefully decrease `minSupport` from 1.0 and increase `maxEdgeCount` from 1.
 
 #### Characteristic Subgraph Mining
 
@@ -167,4 +180,11 @@ CollectionToCollectionOperator operator = new PatternMiningBuilder(database, par
 
 ### Data Statistics
 
+```java
+StatisticsExtractor<Map<Integer, Long>> operator = new StatisticsBuilder(database, parallel)
+    .fromCollection()
+    .ofVertexLabels() // OR .ofEdgeLabels()
+    .getSupport(generalized);
 
+Map<Integer, Long> labelSupport = operator.apply(collectionId);
+```
