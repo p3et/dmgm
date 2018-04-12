@@ -19,7 +19,7 @@ Any data element in a graph database is represented by a `long` value. Data elem
 + *graph:* A pair with of two collections of vertex ids and edge ids.
 + *graph collection:* A collection of graph ids.
 
-Note that `long` which represents a data element may have multiple roles. For example, a data element may be vertex of a graph but represent a graph itself and edges may connect graphs with graph collections. This flexibility should be used for provenance (e.g., graph collection B was extractd from graph A) but not for algorithmic purposes.
+Note that a `long` which represents a data element may have multiple roles. For example, a data element may be vertex of a graph but represent a graph itself and edges may connect graphs with graph collections. This flexibility should be used for provenance (e.g., graph collection B was extractd from graph A) but not for algorithmic purposes.
 
 ### Labels and Properties
 All data elements may have a label and arbitrary properties.
@@ -112,10 +112,59 @@ long[] confirmedEdgeIds = database.queryElements(
 
 ## Operators 
 
-### Frequent Subgraph Mining
+### Subgraph
 
-#### Basic Frequent Subgraph Mining
+### Graph Pattern Mining
+
+#### Frequent Subgraph Mining
+
+```java
+boolean parallel = true;
+float minSupport = 0.8f;
+int maxEdgeCount = 4;
+
+PropertyGraphDb database = new InMemoryGraphDb(parallel);
+long inputCollectionId = 0L;
+
+CollectionToCollectionOperator operator = new PatternMiningBuilder(database, parallel)
+    .fromCollection()
+    .extractFrequentSubgraphs(minSupport, maxEdgeCount)
+    .simple();
+
+    long outputCollectionId = operator.apply(inputCollectionId);
+
+for (Long patternId : database.getGraphIdsOfCollection(outputCollectionId)) {
+  String canocialLabel = database.getString(patternId, DmgmConstants.PropertyKeys.DFS_CODE);
+  long support = database.getLong(patternId, DmgmConstants.PropertyKeys.SUPPORT);
+}
+```
+
+#### Characteristic Subgraph Mining
+
+```java
+CollectionToCollectionOperator operator = new PatternMiningBuilder(database, parallel)
+    .fromCollection()
+    .extractFrequentSubgraphs(minSupport, maxEdgeCount)
+    .characteristic();
+
+    long outputCollectionId = operator.apply(inputCollectionId);
+
+for (Long patternId : database.getGraphIdsOfCollection(outputCollectionId)) {
+  String category = database.getString(patternId, DmgmConstants.PropertyKeys.CATEGORY);
+  String canocialLabel = database.getString(patternId, DmgmConstants.PropertyKeys.DFS_CODE);
+  long support = database.getLong(patternId, DmgmConstants.PropertyKeys.SUPPORT);
+}
+```
 
 #### Generalized Subgraph Mining
 
-#### Characteristic Subgraph Mining
+```java
+CollectionToCollectionOperator operator = new PatternMiningBuilder(database, parallel)
+    .fromCollection()
+    .extractFrequentSubgraphs(minSupport, maxEdgeCount)
+    .generalized(); // OR .generalizedCharacteristic();
+```
+
+### Data Statistics
+
+
